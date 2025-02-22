@@ -1,16 +1,28 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import UIkit from 'uikit'
-import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
-import { Register } from '@userfrosting/sprinkle-account/composables'
-import type { UserInterface, RegisterForm } from '@userfrosting/sprinkle-account/interfaces'
+import { useRegisterApi } from '@userfrosting/sprinkle-account/composables'
+import type { RegisterRequest } from '@userfrosting/sprinkle-account/interfaces'
 import { useConfigStore, useTranslator } from '@userfrosting/sprinkle-core/stores'
 
-// Variables
-const { getDefaultForm, doRegister, getAvailableLocales, getCaptchaUrl } = Register
-const loading = ref(false)
-const error = ref<AlertInterface | null>()
-let form: RegisterForm = getDefaultForm()
+/**
+ * API - Use the group edit API.
+ */
+const {
+    submitRegistration,
+    defaultRegistrationForm,
+    availableLocales,
+    captchaUrl,
+    apiLoading,
+    apiError
+} = useRegisterApi()
+
+/**
+ * Variables - Copy the group data to a reactive variable.
+ */
+const formData = ref<RegisterRequest>(defaultRegistrationForm())
+const router = useRouter()
 
 /**
  * TODO :
@@ -19,29 +31,26 @@ let form: RegisterForm = getDefaultForm()
  *  3. Add password strength, other config
  */
 
-// Form action
-async function submitForm() {
-    loading.value = true
-    error.value = null
-    await doRegister(form)
-        .then((user: UserInterface) => {
-            // TODO : The notification message should be from the API since
-            // there's two type of message.
-            UIkit.notification({
-                message: 'Succesfully registered ' + user?.full_name + '!',
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
+/**
+ * Methods - Submit the form to the API and handle the response.
+ */
+const submitForm = async () => {
+    await submitRegistration(formData.value).then((response) => {
+        UIkit.notification({
+            message: response.message,
+            status: 'success',
+            pos: 'top-right',
+            timeout: 4000
         })
-        .catch((err: AlertInterface) => {
-            error.value = err
-        })
-        .finally(() => {
-            loading.value = false
-        })
+
+        // Redirect to login page
+        router.push({ name: 'account.login' })
+    })
 }
 
+/**
+ * Computed - Generate the TOS agreement localized link
+ */
 const tos = computed(() => {
     const config = useConfigStore()
     const { translate } = useTranslator()
@@ -55,7 +64,7 @@ const tos = computed(() => {
 <template>
     <form v-on:submit.prevent="submitForm()">
         <fieldset class="uk-fieldset uk-form-stacked">
-            <UFAlert data-test="error" v-if="error" :alert="error" />
+            <UFAlert data-test="error" v-if="apiError" :alert="apiError" />
 
             <div class="uk-margin">
                 <label class="uk-form-label" for="first_name">{{ $t('NAME_AND_EMAIL') }}</label>
@@ -68,7 +77,7 @@ const tos = computed(() => {
                             aria-label="First Name"
                             id="first_name"
                             data-test="first_name"
-                            v-model="form.first_name" />
+                            v-model="formData.first_name" />
                     </div>
                     <div class="uk-width-1-2">
                         <input
@@ -77,7 +86,7 @@ const tos = computed(() => {
                             :placeholder="$t('LAST_NAME')"
                             aria-label="Last Name"
                             data-test="last_name"
-                            v-model="form.last_name" />
+                            v-model="formData.last_name" />
                     </div>
                     <div class="uk-width-1-1">
                         <input
@@ -86,7 +95,7 @@ const tos = computed(() => {
                             :placeholder="$t('EMAIL')"
                             aria-label="Email"
                             data-test="email"
-                            v-model="form.email" />
+                            v-model="formData.email" />
                         <!-- TODO -->
                         <!-- {% if site.registration.require_email_verification %}{{ $t('EMAIL.VERIFICATION_REQUIRED') }}{% else %}{{ $t('EMAIL.YOUR') }}{% endif %} -->
                     </div>
@@ -103,7 +112,7 @@ const tos = computed(() => {
                     :placeholder="$t('USERNAME')"
                     aria-label="Username"
                     data-test="username"
-                    v-model="form.user_name" />
+                    v-model="formData.user_name" />
             </div>
 
             <div class="uk-margin">
@@ -116,7 +125,7 @@ const tos = computed(() => {
                             :placeholder="$t('PASSWORD')"
                             aria-label="Password"
                             data-test="password"
-                            v-model="form.password" />
+                            v-model="formData.password" />
                     </div>
                     <div class="uk-width-1-2">
                         <input
@@ -125,7 +134,7 @@ const tos = computed(() => {
                             :placeholder="$t('PASSWORD.CONFIRM')"
                             aria-label="Confirm Password"
                             data-test="passwordc"
-                            v-model="form.passwordc" />
+                            v-model="formData.passwordc" />
                     </div>
                     <!-- TODO -->
                     <!-- {{translate('PASSWORD.BETWEEN', {min: site.password.length.min, max: site.password.length.max})}} -->
@@ -139,8 +148,8 @@ const tos = computed(() => {
                     class="uk-select"
                     id="form-stacked-select"
                     data-test="locale"
-                    v-model="form.locale">
-                    <option v-for="(value, key) in getAvailableLocales()" :value="key" :key="key">
+                    v-model="formData.locale">
+                    <option v-for="(value, key) in availableLocales()" :value="key" :key="key">
                         {{ value }}
                     </option>
                 </select>
@@ -158,10 +167,10 @@ const tos = computed(() => {
                             aria-label="Captcha"
                             id="r-form-captcha"
                             data-test="captcha"
-                            v-model="form.captcha" />
+                            v-model="formData.captcha" />
                     </div>
                     <div class="uk-width-1-3">
-                        <img :src="getCaptchaUrl()" id="captcha" data-target="#r-form-captcha" />
+                        <img :src="captchaUrl()" id="captcha" data-target="#r-form-captcha" />
                     </div>
                 </div>
             </div>
@@ -171,7 +180,7 @@ const tos = computed(() => {
             <p v-html="tos"></p>
 
             <div class="uk-text-center">
-                <button class="uk-button uk-button-primary" :disabled="loading">
+                <button class="uk-button uk-button-primary" :disabled="apiLoading ? true : false">
                     {{ $t('REGISTER_ME') }}
                 </button>
             </div>

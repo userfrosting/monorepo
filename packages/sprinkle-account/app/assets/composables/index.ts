@@ -1,6 +1,6 @@
-export * as Register from './register'
 export { forgotPassword } from './forgotPassword'
 export { resendVerification } from './resendVerification'
+export { useRegisterApi } from './useRegisterApi'
 export { useUserProfileEditApi } from './useUserProfileEditApi'
 export { useUserPasswordEditApi } from './useUserPasswordEditApi'
 export { useUserEmailEditApi } from './useUserEmailEditApi'

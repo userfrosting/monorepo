@@ -3,10 +3,11 @@ import axios from 'axios'
 import type { UserInterface } from 'app/assets/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
-import type { RegisterForm } from '../../interfaces'
-import { Register } from '../../composables'
+import type { RegisterRequest } from '../../interfaces'
+import { useRegisterApi } from '../../composables'
 
-const { getDefaultForm, doRegister, getAvailableLocales, getCaptchaUrl } = Register
+const { submitRegistration, defaultRegistrationForm, availableLocales, captchaUrl } =
+    useRegisterApi()
 
 const testUser: UserInterface = {
     id: 1,
@@ -25,7 +26,7 @@ const testUser: UserInterface = {
     deleted_at: null
 }
 
-const form: RegisterForm = {
+const form: RegisterRequest = {
     first_name: 'John',
     last_name: 'Doe',
     email: 'john.doe@example.com',
@@ -55,7 +56,7 @@ describe('register', () => {
         vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
 
         // Act
-        const result = getDefaultForm()
+        const result = defaultRegistrationForm()
 
         // Assert
         expect(useConfigStore).toHaveBeenCalled()
@@ -83,7 +84,7 @@ describe('register', () => {
         vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
 
         // Act
-        const result = getAvailableLocales()
+        const result = availableLocales()
 
         // Assert
         expect(useConfigStore).toHaveBeenCalled()
@@ -92,7 +93,7 @@ describe('register', () => {
     })
 
     test('should return captcha URL', () => {
-        expect(getCaptchaUrl()).toBe('/account/captcha')
+        expect(captchaUrl()).toBe('/account/captcha')
     })
 
     test('should register successfully', async () => {
@@ -101,7 +102,7 @@ describe('register', () => {
         vi.spyOn(axios, 'post').mockResolvedValue(response as any)
 
         // Act
-        const result = await doRegister(form)
+        const result = await submitRegistration(form)
 
         // Assert
         expect(axios.post).toHaveBeenCalledWith('/account/register', form)
@@ -114,7 +115,7 @@ describe('register', () => {
         vi.spyOn(axios, 'post').mockRejectedValue(error as any)
 
         // Act & Assert
-        await expect(doRegister(form)).rejects.toEqual({
+        await expect(submitRegistration(form)).rejects.toEqual({
             description: 'Registration failed',
             style: Severity.Danger,
             closeBtn: true
