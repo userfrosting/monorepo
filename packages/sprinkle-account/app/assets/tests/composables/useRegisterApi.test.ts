@@ -6,7 +6,7 @@ import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import type { RegisterRequest } from '../../interfaces'
 import { useRegisterApi } from '../../composables'
 
-const { submitRegistration, defaultRegistrationForm, availableLocales, captchaUrl } =
+const { submitRegistration, defaultRegistrationForm, availableLocales, captchaUrl, apiLoading } =
     useRegisterApi()
 
 const testUser: UserInterface = {
@@ -121,5 +121,17 @@ describe('register', () => {
             closeBtn: true
         })
         expect(axios.post).toHaveBeenCalledWith('/account/register', form)
+    })
+
+    test('should set loading state to true', async () => {
+        // Arrange
+        vi.spyOn(axios, 'post').mockResolvedValue({ data: testUser } as any)
+
+        // Act
+        expect(apiLoading.value).toBe(false)
+        const submitPromise = submitRegistration(form)
+        expect(apiLoading.value).toBe(true)
+        await submitPromise
+        expect(apiLoading.value).toBe(false)
     })
 })

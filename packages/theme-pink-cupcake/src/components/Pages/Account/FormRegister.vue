@@ -162,7 +162,7 @@ const tos = computed(() => {
                     <div class="uk-width-2-3">
                         <input
                             class="uk-input"
-                            type="password"
+                            type="text"
                             :placeholder="$t('CAPTCHA.SPECIFY')"
                             aria-label="Captcha"
                             id="r-form-captcha"
@@ -180,7 +180,10 @@ const tos = computed(() => {
             <p v-html="tos"></p>
 
             <div class="uk-text-center">
-                <button class="uk-button uk-button-primary" :disabled="apiLoading ? true : false">
+                <button
+                    class="uk-button uk-button-primary"
+                    :disabled="apiLoading ? true : false"
+                    data-test="submit">
                     {{ $t('REGISTER_ME') }}
                 </button>
             </div>

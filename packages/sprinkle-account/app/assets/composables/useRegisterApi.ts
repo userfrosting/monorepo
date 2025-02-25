@@ -29,7 +29,7 @@ export function useRegisterApi() {
         }
     }
 
-    function availableLocales(): string[] {
+    function availableLocales(): Record<string, string> {
         return useConfigStore().get('locales.available')
     }
 

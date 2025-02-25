@@ -1,7 +1,9 @@
+import { ref } from 'vue'
 import { mount, config } from '@vue/test-utils'
 import { describe, test, expect, vi, afterEach } from 'vitest'
 import UIkit from 'uikit'
 import type { UserInterface, RegisterRequest } from '@userfrosting/sprinkle-account/interfaces'
+import { useRegisterApi } from '@userfrosting/sprinkle-account/composables'
 import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import FormRegister from '../../../components/Pages/Account/FormRegister.vue'
 import UFAlert from '../../../components/UFAlert.vue'
@@ -68,17 +70,6 @@ const uikitNotification = {
     timeout: 4000
 }
 
-// Mock the register composable
-const mockedSubmitRegistration = vi.fn()
-vi.mock('@userfrosting/sprinkle-account/composables', () => ({
-    useRegisterApi: () => ({
-        defaultRegistrationForm: vi.fn(() => defaultForm),
-        availableLocales: vi.fn(() => availableLocales),
-        captchaUrl: vi.fn(() => '/account/captcha'),
-        submitRegistration: mockedSubmitRegistration
-    })
-}))
-
 // Mock the config & translator store
 vi.mock('@userfrosting/sprinkle-core/stores', () => ({
     useConfigStore: () => ({
@@ -97,20 +88,41 @@ vi.mock('vue-router', () => ({
     })
 }))
 
+vi.mock('@userfrosting/sprinkle-account/composables', () => ({
+    useRegisterApi: vi.fn()
+}))
+
 describe('FormRegister.vue', () => {
     afterEach(() => {
         vi.clearAllMocks()
     })
 
     test('renders correctly', () => {
+        vi.mocked(useRegisterApi).mockReturnValue({
+            submitRegistration: vi.fn(),
+            defaultRegistrationForm: vi.fn(() => defaultForm),
+            availableLocales: vi.fn(() => availableLocales),
+            captchaUrl: vi.fn(() => '/account/captcha'),
+            apiLoading: ref(false),
+            apiError: ref(null)
+        })
+
         const wrapper = mount(FormRegister)
         expect(wrapper.exists()).toBe(true)
     })
 
     test('handles successful register', async () => {
-        vi.mocked(mockedSubmitRegistration).mockResolvedValueOnce({
+        const mockedSubmitRegistration = vi.fn().mockResolvedValueOnce({
             user: testUser,
             message: 'Succesfully registered John Doe!'
+        })
+        vi.mocked(useRegisterApi).mockReturnValue({
+            submitRegistration: mockedSubmitRegistration,
+            defaultRegistrationForm: vi.fn(() => defaultForm),
+            availableLocales: vi.fn(() => availableLocales),
+            captchaUrl: vi.fn(() => '/account/captcha'),
+            apiLoading: ref(true),
+            apiError: ref(null)
         })
         vi.spyOn(UIkit, 'notification')
 
@@ -126,28 +138,58 @@ describe('FormRegister.vue', () => {
         expect(UIkit.notification).toHaveBeenCalledWith(uikitNotification)
     })
 
-    test('handles registration failure', async () => {
-        const mockError: AlertInterface = { title: 'Invalid credentials' }
-        vi.mocked(mockedSubmitRegistration).mockRejectedValueOnce(mockError)
-        vi.spyOn(UIkit, 'notification')
+    test('disables submit button when loading', () => {
+        vi.mocked(useRegisterApi).mockReturnValue({
+            submitRegistration: vi.fn(),
+            defaultRegistrationForm: vi.fn(() => defaultForm),
+            availableLocales: vi.fn(() => availableLocales),
+            captchaUrl: vi.fn(() => '/account/captcha'),
+            apiLoading: ref(true), // Set loading state to true
+            apiError: ref(null)
+        })
 
         const wrapper = mount(FormRegister)
-        // @ts-ignore
-        wrapper.vm.formData = testForm
-        await (wrapper.vm as any).submitForm()
+        expect(wrapper.find('[data-test="submit"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="submit"]').text()).toBe('REGISTER_ME')
+        expect(wrapper.find('[data-test="submit"]').attributes().disabled).toBeDefined()
+    })
+
+    test('handles registration failure', async () => {
+        const mockedApiError: AlertInterface = {
+            title: 'Registration error',
+            description: 'You did not enter the captcha code correctly.',
+            style: 'Danger',
+            closeBtn: true
+        }
+        vi.mocked(useRegisterApi).mockReturnValue({
+            submitRegistration: vi.fn(),
+            defaultRegistrationForm: vi.fn(() => defaultForm),
+            availableLocales: vi.fn(() => availableLocales),
+            captchaUrl: vi.fn(() => '/account/captcha'),
+            apiLoading: ref(true),
+            apiError: ref(mockedApiError)
+        })
+        const wrapper = mount(FormRegister)
 
         // Spy on the authStore & UIkit notification method
-        expect(mockedSubmitRegistration).toHaveBeenCalledTimes(1)
-        expect(mockedSubmitRegistration).toHaveBeenCalledWith(testForm)
-        expect(UIkit.notification).not.toHaveBeenCalled()
         expect(wrapper.find('[data-test="error"]').exists()).toBe(true)
-        expect(wrapper.get('[data-test="error"]').text()).toMatch('Invalid credentials')
+        expect(wrapper.get('[data-test="error"]').text()).toMatch(
+            'Registration error You did not enter the captcha code correctly.'
+        )
     })
 
     test('Handle form using the v-model', async () => {
-        vi.mocked(mockedSubmitRegistration).mockResolvedValueOnce({
+        const mockedSubmitRegistration = vi.fn().mockResolvedValueOnce({
             user: testUser,
             message: 'Succesfully registered John Doe!'
+        })
+        vi.mocked(useRegisterApi).mockReturnValue({
+            submitRegistration: mockedSubmitRegistration,
+            defaultRegistrationForm: vi.fn(() => defaultForm),
+            availableLocales: vi.fn(() => availableLocales),
+            captchaUrl: vi.fn(() => '/account/captcha'),
+            apiLoading: ref(true),
+            apiError: ref(null)
         })
         vi.spyOn(UIkit, 'notification')
 
