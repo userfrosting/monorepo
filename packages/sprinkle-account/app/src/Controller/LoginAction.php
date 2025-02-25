@@ -15,13 +15,14 @@ namespace UserFrosting\Sprinkle\Account\Controller;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Alert\AlertStream;
 use UserFrosting\Config\Config;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\RequestSchema\RequestSchemaInterface;
 use UserFrosting\Fortress\Transformer\RequestDataTransformer;
 use UserFrosting\Fortress\Validator\ServerSideValidator;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Event\UserRedirectedAfterLoginEvent;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountException;
 use UserFrosting\Sprinkle\Account\Exceptions\InvalidCredentialsException;
@@ -57,7 +58,7 @@ class LoginAction
      * @param \UserFrosting\Event\EventDispatcher $eventDispatcher
      */
     public function __construct(
-        protected AlertStream $alert,
+        protected Translator $translator,
         protected Authenticator $authenticator,
         protected Config $config,
         protected EventDispatcherInterface $eventDispatcher,
@@ -76,8 +77,8 @@ class LoginAction
      */
     public function __invoke(Request $request, Response $response): Response
     {
-        $this->handle($request);
-        $response = $this->writeResponse($response);
+        $user = $this->handle($request);
+        $response = $this->writeResponse($response, $user);
 
         return $response->withHeader('Content-Type', 'application/json');
     }
@@ -85,11 +86,12 @@ class LoginAction
     /**
      * Write to the response object.
      *
-     * @param Response $response
+     * @param Response      $response
+     * @param UserInterface $user
      *
      * @return Response
      */
-    protected function writeResponse(Response $response): Response
+    protected function writeResponse(Response $response, UserInterface $user): Response
     {
         // Get redirect target and add Header
         $event = $this->eventDispatcher->dispatch(new UserRedirectedAfterLoginEvent());
@@ -97,8 +99,15 @@ class LoginAction
             $response = $response->withHeader('UF-Redirect', $event->getRedirect());
         }
 
+        // Define payload
+        $data = [
+            'user'     => $user,
+            'message'  => $this->translator->translate('WELCOME', $user->toArray()),
+            'redirect' => $event->getRedirect() ?? '',
+        ];
+
         // Write response with the user info in it
-        $payload = json_encode($this->authenticator->user(), JSON_THROW_ON_ERROR);
+        $payload = json_encode($data, JSON_THROW_ON_ERROR);
         $response->getBody()->write($payload);
 
         return $response;
@@ -108,8 +117,10 @@ class LoginAction
      * Handle the request and return the payload.
      *
      * @param Request $request
+     *
+     * @return UserInterface
      */
-    protected function handle(Request $request): void
+    protected function handle(Request $request): UserInterface
     {
         // Get POST parameters
         $params = (array) $request->getParsedBody();
@@ -156,8 +167,7 @@ class LoginAction
             throw new InvalidCredentialsException();
         }
 
-        // Add success message
-        $this->alert->addMessage('success', 'WELCOME', $currentUser->toArray());
+        return $currentUser;
     }
 
     /**

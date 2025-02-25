@@ -14,7 +14,6 @@ namespace UserFrosting\Sprinkle\Account\Tests\Controller;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use UserFrosting\Alert\AlertStream;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Account;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
@@ -59,17 +58,13 @@ class LoginActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse($user->toArray(), $response);
+        $this->assertJsonResponse($user->toArray(), $response, 'user');
+        $this->assertJsonResponse('Welcome back, ' . $user->full_name . '!', $response, 'message');
+        $this->assertJsonResponse('/home', $response, 'redirect');
         $this->assertResponseStatus(200, $response);
 
         // Assert Event Redirect
         $this->assertSame('/home', $response->getHeaderLine('UF-Redirect'));
-
-        // Test message
-        /** @var AlertStream */
-        $ms = $this->ci->get(AlertStream::class);
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('success', array_reverse($messages)[0]['type']);
 
         // We have to logout the user to avoid problem
         /** @var Authenticator */
@@ -93,7 +88,7 @@ class LoginActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse($user->toArray(), $response);
+        $this->assertJsonResponse($user->toArray(), $response, 'user');
         $this->assertResponseStatus(200, $response);
 
         // We have to logout the user to avoid problem
@@ -215,7 +210,7 @@ class LoginActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse($user->toArray(), $response);
+        $this->assertJsonResponse($user->toArray(), $response, 'user');
         $this->assertResponseStatus(200, $response);
 
         // We have to logout the user to avoid problem

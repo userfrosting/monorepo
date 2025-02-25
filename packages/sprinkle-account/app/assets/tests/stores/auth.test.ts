@@ -2,7 +2,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { useAuthStore } from '../../stores/auth'
 import axios from 'axios'
-import type { LoginForm, UserInterface } from 'app/assets/interfaces'
+import type { LoginRequest, LoginResponse, UserInterface } from 'app/assets/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 
 const testUser: UserInterface = {
@@ -22,7 +22,7 @@ const testUser: UserInterface = {
     deleted_at: null
 }
 
-const form: LoginForm = {
+const form: LoginRequest = {
     user_name: 'john',
     password: 'password'
 }
@@ -62,8 +62,12 @@ describe('authStore', () => {
     test('should login successfully', async () => {
         // Arrange
         const authStore = useAuthStore()
-        const response = { data: testUser }
-        vi.spyOn(axios, 'post').mockResolvedValue(response as any)
+        const response: LoginResponse = {
+            user: testUser,
+            message: 'Welcome back John Doe!',
+            redirect: '/dashboard'
+        }
+        vi.spyOn(axios, 'post').mockResolvedValue({ data: response })
 
         // Assert initial state
         expect(authStore.user).toBeNull()
@@ -73,7 +77,7 @@ describe('authStore', () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalledWith('/account/login', form)
-        expect(result).toStrictEqual(testUser)
+        expect(result).toStrictEqual(response)
         expect(authStore.user).toStrictEqual(testUser)
         expect(loadTranslator).toHaveBeenCalled()
     })

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import type { UserInterface, LoginForm } from '../interfaces'
+import type { UserInterface, LoginRequest, LoginResponse } from '../interfaces'
 import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
 import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 
@@ -26,16 +26,16 @@ export const useAuthStore = defineStore('auth', {
         unsetUser(): void {
             this.user = null
         },
-        async login(form: LoginForm) {
+        async login(form: LoginRequest) {
             return axios
-                .post<UserInterface>('/account/login', form)
+                .post<LoginResponse>('/account/login', form)
                 .then((response) => {
-                    this.setUser(response.data)
+                    this.setUser(response.data.user)
 
                     // Reload the translator dictionary to reflect the user's language
                     useTranslator().load()
 
-                    return this.user
+                    return response.data
                 })
                 .catch((err) => {
                     const error: AlertInterface = {

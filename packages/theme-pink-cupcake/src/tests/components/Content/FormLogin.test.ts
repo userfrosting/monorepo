@@ -4,7 +4,7 @@ import FormLogin from '../../../components/Pages/Account/FormLogin.vue'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
 import UFAlert from '../../../components/UFAlert.vue'
 import UIkit from 'uikit'
-import type { LoginForm } from '@userfrosting/sprinkle-account/interfaces'
+import type { LoginRequest } from '@userfrosting/sprinkle-account/interfaces'
 import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 
 // Register the UFAlert component stub globally
@@ -18,7 +18,7 @@ const mockUseAuthStore = {
 }
 
 // Login form data
-const form: LoginForm = {
+const form: LoginRequest = {
     user_name: 'john.doe',
     password: 'password'
 }
@@ -42,19 +42,12 @@ describe('FormLogin.vue', () => {
     })
 
     test('handles successful login', async () => {
-        mockUseAuthStore.login.mockResolvedValueOnce({ full_name: 'John Doe' })
+        mockUseAuthStore.login.mockResolvedValueOnce({ message: 'Welcome back John Doe!' })
         vi.mocked(useAuthStore).mockReturnValue(mockUseAuthStore as any)
         vi.spyOn(UIkit, 'notification')
 
         const wrapper = mount(FormLogin)
         await (wrapper.vm as any).sendLogin(form)
-
-        // Mock the useTranslator store
-        vi.mock('@userfrosting/sprinkle-core/stores', () => ({
-            useTranslator: () => ({
-                translate: vi.fn(() => 'Welcome back John Doe!')
-            })
-        }))
 
         // Spy on the authStore & UIkit notification method
         expect(useAuthStore).toHaveBeenCalled()
@@ -93,16 +86,9 @@ describe('FormLogin.vue', () => {
     })
 
     test('Handle login using the v-model', async () => {
-        mockUseAuthStore.login.mockResolvedValueOnce({ full_name: 'John Doe' })
+        mockUseAuthStore.login.mockResolvedValueOnce({ message: 'Welcome back John Doe!' })
         vi.mocked(useAuthStore).mockReturnValue(mockUseAuthStore as any)
         vi.spyOn(UIkit, 'notification')
-
-        // Mock the useTranslator store
-        vi.mock('@userfrosting/sprinkle-core/stores', () => ({
-            useTranslator: () => ({
-                translate: vi.fn(() => 'Welcome back John Doe!')
-            })
-        }))
 
         const wrapper = mount(FormLogin)
         wrapper.find('[data-test="username"]').setValue('john.doe')

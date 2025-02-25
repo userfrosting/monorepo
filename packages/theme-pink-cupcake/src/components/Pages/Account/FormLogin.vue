@@ -2,14 +2,13 @@
 import { ref } from 'vue'
 import UIkit from 'uikit'
 import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
-import type { LoginForm } from '@userfrosting/sprinkle-account/interfaces'
+import type { LoginRequest } from '@userfrosting/sprinkle-account/interfaces'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 
 // Variables
 const loading = ref(false)
 const error = ref<AlertInterface | null>()
-let form: LoginForm = {
+let form: LoginRequest = {
     user_name: '',
     password: ''
 }
@@ -21,17 +20,19 @@ async function sendLogin() {
     const auth = useAuthStore()
     await auth
         .login(form)
-        .then((user) => {
-            // TODO : If the notification can be defined in sprinkle-core, and
-            // implemented in the theme, this notification could be moved to the
-            // API directly.
-            const { translate } = useTranslator()
+        .then((response) => {
             UIkit.notification({
-                message: translate('WELCOME', user ?? {}), // TODO : Same error as before, the locale is not updated yet and this is not a reactive variable.
+                message: response.message,
                 status: 'primary',
                 pos: 'top-right',
                 timeout: 4000
             })
+
+            // If a redirect is set, redirect to it
+            // TODO : Dilemma, should we redirect using VueRouter or not?
+            // if (response.redirect) {
+            //     window.location.href = response.redirect
+            // }
         })
         .catch((err: AlertInterface) => {
             error.value = err
