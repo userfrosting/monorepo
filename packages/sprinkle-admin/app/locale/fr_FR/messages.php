@@ -59,7 +59,6 @@ return [
         'ICON'                => 'Icône',
         'ICON_EXPLAIN'        => 'Icône des membres du groupe',
         'INFO_PAGE'           => 'Afficher et modifier les détails du groupe.',
-        'MANAGE'              => 'Gérer le groupe',
         'NAME'                => 'Nom du groupe',
         'NAME_IN_USE'         => 'Un groupe nommé <strong>{{name}}</strong> existe déjà',
         'NAME_EXPLAIN'        => 'Spécifiez le nom du groupe',
@@ -73,12 +72,6 @@ return [
     ],
 
     'MANUALLY_ACTIVATED'    => 'Le compte de {{user_name}} a été activé manuellement',
-    'MASTER_ACCOUNT_EXISTS' => 'Le compte principal existe déjà !',
-    'MIGRATION'             => [
-        'REQUIRED' => 'Mise à jour de la base de données requise',
-    ],
-
-    'NO_FEATURES_YET'     => 'It doesn\'t look like any features have been set up for this account...yet.  Maybe they haven\'t been implemented yet, or maybe someone forgot to give you access.  Either way, we\'re glad to have you aboard!',
 
     'PERMISSION' => [
         1                  => 'Autorisation',
@@ -91,8 +84,7 @@ return [
         'HOOK_CONDITION'   => 'Hook/Conditions',
         'ID'               => 'ID de l\'autorisation',
         'INFO_PAGE'        => 'Afficher et modifier les détails des autorisations.',
-        'MANAGE'           => 'Gestion des autorisations',
-        'NOTE_READ_ONLY'   => '<strong>N.B.:</strong> les autorisations sont considérés comme une partie du code et ne peuvent pas être modifiés via l\'interface. Pour ajouter, supprimer ou modifier des autorisations, les responsables du site devront utiliser une <a href="https://learn.userfrosting.com/database/extending-the-database" target="about:_blank">migration.</a>',
+        'NOT_FOUND'        => 'Autorisation non trouvée',
         'PAGE'             => 'Autorisations',
         'PAGE_DESCRIPTION' => 'Une liste des autorisations pour votre site. Fournit des outils de gestion pour modifier et supprimer des autorisations.',
         'UPDATE'           => 'Mettre à jour les autorisations',
@@ -142,17 +134,13 @@ return [
         'UF_VERSION'    => 'Version de UserFrosting',
     ],
 
-    'TOGGLE_COLUMNS' => 'Alterner les colonnes',
-
     'USER'           => [
         1       => 'Utilisateur',
         2       => 'Utilisateurs',
 
         'ADMIN' => [
             'CHANGE_PASSWORD'    => 'Changer le mot de passe',
-            'SEND_PASSWORD_LINK' => 'Envoyer à l\'utilisateur un lien qui lui permettra de choisir son propre mot de passe',
-            'SET_PASSWORD'       => 'Définissez le mot de passe de l\'utilisateur comme',
-            'PASSWORD_RESET'     => 'A password reset link will be sent to <strong>{{email}}</strong>.',
+            'PASSWORD_RESET'     => 'Un lien de réinitialisation du mot de passe sera envoyé à <strong>{{email}}</strong>.',
         ],
         'ACTIVATE'         => 'Autoriser l\'utilisateur',
         'ACTIVATE_CONFIRM' => 'Êtes-vous sûr de vouloir activer <strong>{{full_name}} ({{user_name}})</strong> ?',
@@ -171,11 +159,5 @@ return [
         'PAGE'             => 'Utilisateurs',
         'PAGE_DESCRIPTION' => 'Une liste des utilisateurs de votre site. Fournit des outils de gestion incluant la possibilité de modifier les détails de l\'utilisateur, d\'activer manuellement les utilisateurs, d\'activer / désactiver les utilisateurs et plus.',
         'VIEW_ALL'         => 'Voir tous les utilisateurs',
-    ],
-
-    'X_USER' => [
-        0 => 'Aucun utilisateur',
-        1 => '{{plural}} utilisateur',
-        2 => '{{plural}} utilisateurs',
     ],
 ];

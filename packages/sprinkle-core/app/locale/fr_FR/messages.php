@@ -27,53 +27,50 @@ return [
     'COPYRIGHT'     => 'Copyright {{year}}',
     'CSRF_MISSING'  => 'Jeton CSRF manquant. Essayez de rafraîchir la page et de soumettre de nouveau?',
 
-    'DB_INVALID'   => 'Impossible de se connecter à la base de données. Si vous êtes un administrateur, vérifiez votre journal d\'erreurs.',
-    'DOWNLOAD'     => [
-        '@TRANSLATION' => 'Télécharger',
-        'CSV'          => 'Télécharger CSV',
-    ],
+    // TODO - Implement
+    // 'DOWNLOAD'     => [
+    //     '@TRANSLATION' => 'Télécharger',
+    //     'CSV'          => 'Télécharger CSV',
+    // ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'Courriel',
         'YOUR'         => 'Votre adresse courriel',
     ],
 
-    'HOME'  => 'Accueil',
-    
-    'LEGAL' => [
-        '@TRANSLATION' => 'Politique légale',
-        'DESCRIPTION'  => 'Notre politique légale s\'applique à votre utilisation de ce site et de nos services.',
-    ],
+    // TODO - Implement
+    // 'LEGAL' => [
+    //     '@TRANSLATION' => 'Politique légale',
+    //     'DESCRIPTION'  => 'Notre politique légale s\'applique à votre utilisation de ce site et de nos services.',
+    // ],
     'LOCALE' => [
         '@TRANSLATION' => 'Langue',
     ],
 
-    'NAME'       => 'Nom',
-    'NAVIGATION' => 'Menu principal',
-    'NO_RESULTS' => 'Aucun résultat trouvé.',
-    
+    // TODO - Implement
     'PAGINATION' => [
         // 'GOTO'     => 'Aller à la page',
         // 'SHOW'     => 'Afficher',
         'OUTPUT'   => 'Affichage de {{first}} à {{last}} sur {{count}}',
         // 'NEXT'     => 'Prochaine page',
-        'PAGE_X_OF_Y' => 'Page {{current}} de {{last}}', //OK
-        'PER_PAGE' => '{{count}} par page', //OK
+        'PAGE_X_OF_Y' => 'Page {{current}} de {{last}}',
+        'PER_PAGE'    => '{{count}} par page',
         // 'PREVIOUS' => 'Page précédente',
         // 'FIRST'    => 'Première page',
         // 'LAST'     => 'Dernière page',
     ],
+    // TODO - Implement
     'PRIVACY' => [
         '@TRANSLATION' => 'Politique de confidentialité',
         'DESCRIPTION'  => 'Notre politique de confidentialité décrit le type d\'informations que nous recueillons de votre part et comment nous les utiliserons.',
     ],
 
     'SLUG'                     => 'Jeton',
-    'SLUG_CONDITION'           => 'Jeton/Conditions',
     'SLUG_IN_USE'              => 'Un jeton <strong>{{slug}}</strong> existe déjà',
     'SPRUNJE'                  => [
         'FILTERS'      => 'Filtres',
         'FILTER_CLEAR' => 'Effacer filtres',
+        'NO_RESULTS'   => 'Aucun résultat trouvé.',
         'SEARCH'       => 'Rechercher {{term}}...',
     ],
     'STATUS'                   => 'État',

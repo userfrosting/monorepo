@@ -109,7 +109,7 @@ const tos = computed(() => {
                 <input
                     class="uk-input"
                     type="text"
-                    :placeholder="$t('USERNAME')"
+                    :placeholder="$t('USERNAME.CHOOSE')"
                     aria-label="Username"
                     data-test="username"
                     v-model="formData.user_name" />
@@ -157,7 +157,7 @@ const tos = computed(() => {
 
             <!-- {% if site.registration.captcha %} -->
             <div class="uk-margin">
-                <label class="uk-form-label" for="r-form-captcha">{{ $t('CAPTCHA.VERIFY') }}</label>
+                <label class="uk-form-label" for="r-form-captcha">{{ $t('CAPTCHA') }}</label>
                 <div class="uk-form-controls uk-grid-small" uk-grid>
                     <div class="uk-width-2-3">
                         <input

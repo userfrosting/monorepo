@@ -100,6 +100,7 @@ class SetPasswordAction
             throw new PasswordResetInvalidException();
         }
 
+        // TODO : Remove dependency on AlertStream
         $this->alert->addMessage('success', 'PASSWORD.UPDATED');
     }
 

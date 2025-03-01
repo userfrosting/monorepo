@@ -13,7 +13,6 @@ declare(strict_types=1);
 /**
  * US English message token translations for the 'core' sprinkle.
  */
-
 return [
     'ERROR' => [
         '@TRANSLATION' => 'Error',

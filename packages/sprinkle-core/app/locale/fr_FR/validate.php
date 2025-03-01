@@ -12,11 +12,10 @@ declare(strict_types=1);
 
 /**
  * French message token translations for the 'core' sprinkle.
- *
- * @author Louis Charette
  */
 return [
     'VALIDATE' => [
+        'ERROR'         => 'Erreur de validation',
         'ARRAY'         => 'Les valeurs de <strong>{{label}}</strong> doivent être dans un tableau.',
         'BOOLEAN'       => "La valeur de <strong>{{label}}</strong> doit être '0' ou '1'.",
         'INTEGER'       => 'La valeur de <strong>{{label}}</strong> doit être un nombre entier.',
@@ -29,9 +28,10 @@ return [
         'RANGE'         => 'Le champ <strong>{{label}}</strong> doit être une valeur entre {{min}} et {{max}}.',
         'REQUIRED'      => 'Le champ <strong>{{label}}</strong> doit être rempli.',
         'SPRUNJE'       => [
-            'BAD_FILTER' => '<strong>{{name}}</strong> ne peut pas être utilisé pour filtrer ce Sprunje.',
-            'BAD_LIST'   => '<strong>{{name}}</strong> is not a valid list for this Sprunje.',
-            'BAD_SORT'   => '<strong>{{name}}</strong> ne peut pas être utilisé pour trier Sprunje.',
+            '@TRANSLATION' => 'Erreur de validation de Sprunje',
+            'BAD_FILTER'   => '<strong>{{name}}</strong> ne peut pas être utilisé pour filtrer ce Sprunje.',
+            'BAD_LIST'     => '<strong>{{name}}</strong> n\'est pas une liste valide pour ce Sprunje.',
+            'BAD_SORT'     => '<strong>{{name}}</strong> ne peut pas être utilisé pour trier Sprunje.',
         ],
     ],
 ];

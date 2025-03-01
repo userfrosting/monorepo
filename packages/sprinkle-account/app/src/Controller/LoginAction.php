@@ -96,6 +96,7 @@ class LoginAction
         // Get redirect target and add Header
         $event = $this->eventDispatcher->dispatch(new UserRedirectedAfterLoginEvent());
         if ($event->getRedirect() !== null) {
+            // TODO : Header should be deprecated, see dilemma between overall redirect vs Vue Router redirect
             $response = $response->withHeader('UF-Redirect', $event->getRedirect());
         }
 

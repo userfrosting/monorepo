@@ -48,6 +48,8 @@ class CacheApiAction
         $this->clearCacheCommand->clearIlluminateCache();
         $this->clearCacheCommand->clearTwigCache();
         $this->clearCacheCommand->clearRouterCache();
+
+        // TODO : Remove dependency on AlertStream
         $this->alerts->addMessage('success', 'CACHE.CLEARED');
 
         // Write empty response

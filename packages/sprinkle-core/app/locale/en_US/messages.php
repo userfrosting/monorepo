@@ -16,82 +16,79 @@ declare(strict_types=1);
  * @author Alexander Weissman
  */
 return [
-    'BUILT_WITH_UF' => 'Created with <a href="http://www.userfrosting.com">UserFrosting</a>', //OK
+    'BUILT_WITH_UF' => 'Created with <a href="http://www.userfrosting.com">UserFrosting</a>',
 
     'CAPTCHA' => [
         '@TRANSLATION' => 'Captcha',
         'FAIL'         => 'You did not enter the captcha code correctly.',
-        'SPECIFY'      => 'Enter the captcha', //OK
-        'VERIFY'       => 'Verify the captcha', //OK
+        'SPECIFY'      => 'Enter the captcha',
+        'VERIFY'       => 'Verify the captcha',
     ],
-    'COPYRIGHT'     => 'Copyright {{year}}', //OK
-    'CSRF_MISSING' => 'Missing CSRF token. Try refreshing the page and then submitting again?',
+    'COPYRIGHT'     => 'Copyright {{year}}',
+    'CSRF_MISSING'  => 'Missing CSRF token. Try refreshing the page and then submitting again?',
 
-    'DB_INVALID'    => 'Cannot connect to the database. If you are an administrator, please check your error log.',
-    'DOWNLOAD'      => [
-        '@TRANSLATION' => 'Download',
-        'CSV'          => 'Download CSV',
-    ],
+    // TODO - Implement
+    // 'DOWNLOAD'      => [
+    //     '@TRANSLATION' => 'Download',
+    //     'CSV'          => 'Download CSV',
+    // ],
 
     'EMAIL' => [
-        '@TRANSLATION' => 'Email', //OK
-        'YOUR'         => 'Your email address', //OK
+        '@TRANSLATION' => 'Email',
+        'YOUR'         => 'Your email address',
     ],
 
-    'HOME'  => 'Home',
-
-    'LEGAL' => [
-        '@TRANSLATION' => 'Legal Policy',
-        'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
-    ],
+    // TODO - Implement
+    // 'LEGAL' => [
+    //     '@TRANSLATION' => 'Legal Policy',
+    //     'DESCRIPTION'  => 'Our legal policy applies to your usage of this website and our services.',
+    // ],
     'LOCALE' => [
-        '@TRANSLATION' => 'Locale', //OK
+        '@TRANSLATION' => 'Locale',
     ],
 
-    'NAME'       => 'Name',
-    'NAVIGATION' => 'Navigation',
-    'NO_RESULTS' => "Sorry, we've got nothing here.",
-
+    // TODO - Implement
     'PAGINATION' => [
         // 'GOTO' => 'Jump to Page',
         // 'SHOW' => 'Show',
-        'OUTPUT'   => 'Showing {{first}} - {{last}} of {{count}}',//OK
+        'OUTPUT'   => 'Showing {{first}} - {{last}} of {{count}}',
         // 'NEXT'     => 'Next page',
-        'PAGE_X_OF_Y' => 'Page {{current}} of {{last}}', //OK
-        'PER_PAGE' => '{{count}} per page', //OK
+        'PAGE_X_OF_Y' => 'Page {{current}} of {{last}}',
+        'PER_PAGE'    => '{{count}} per page',
         // 'PREVIOUS' => 'Previous page',
         // 'FIRST'    => 'First page',
         // 'LAST'     => 'Last page',
     ],
+    // TODO - Implement
     'PRIVACY' => [
         '@TRANSLATION' => 'Privacy Policy',
         'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
     ],
 
     'SLUG'           => 'Slug',
-    'SLUG_CONDITION' => 'Slug/Conditions',
     'SLUG_IN_USE'    => 'A <strong>{{slug}}</strong> slug already exists',
     'SPRUNJE'        => [
-        'FILTERS'      => 'Filters',//OK
-        'FILTER_CLEAR' => 'Clear filters',//OK
-        'SEARCH'       => 'Search {{term}}...',//OK
+        'FILTERS'      => 'Filters',
+        'FILTER_CLEAR' => 'Clear filters',
+        'NO_RESULTS'   => "Sorry, we've got nothing here.", // TODO : Use with Sprunje pagination -- Move to Sprune
+        'SEARCH'       => 'Search {{term}}...',
     ],
     'STATUS'         => 'Status',
     'SUGGEST'        => 'Suggest',
 
-    'THEME_BY'      => 'Theme built with', //OK
+    'THEME_BY'      => 'Theme built with',
 
     // Actions words
-    'ACTIONS'                  => 'Actions', //OK
+    'ACTIONS'                  => 'Actions',
     'ACTIVATE'                 => 'Activate',
     'ACTIVE'                   => 'Active',
     'ADD'                      => 'Add',
-    'CANCEL'                   => 'Cancel', //OK
-    'CONFIRM'                  => 'Confirm', //OK
-    'CONFIRM_ACTION'           => 'Please confirm to proceed.', //OK
-    'CONFIRMATION'             => 'Confirmation', //OK
+    'CANCEL'                   => 'Cancel',
+    'CONFIRM'                  => 'Confirm',
+    'CONFIRM_ACTION'           => 'Please confirm to proceed.',
+    'CONFIRMATION'             => 'Confirmation',
     'CREATE'                   => 'Create',
-    'CREATED_ON'               => 'Created on', //OK
+    'CREATED_ON'               => 'Created on',
     'DELETE'                   => 'Delete',
     'DELETE_CONFIRM'           => 'Are you sure you want to delete this?',
     'DELETE_CONFIRM_YES'       => 'Yes, delete',
@@ -120,6 +117,6 @@ return [
     'UNKNOWN'                  => 'Unknown',
     'UPDATE'                   => 'Update',
     'VIEW'                     => 'View',
-    'WARNING_CANNOT_UNDONE'    => 'This action cannot be undone.',//OK
+    'WARNING_CANNOT_UNDONE'    => 'This action cannot be undone.',
     'YES'                      => 'Yes',
 ];

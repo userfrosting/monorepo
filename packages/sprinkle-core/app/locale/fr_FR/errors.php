@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 /**
  * French message token translations for the 'core' sprinkle.
- *
- * @author Louis Charette
  */
 return [
     'ERROR' => [
@@ -25,7 +23,7 @@ return [
         ],
         '401' => [
             'TITLE'       => 'Non autorisé',
-            'DESCRIPTION' => "La requête nécessite une authentification utilisateur valide.",
+            'DESCRIPTION' => 'La requête nécessite une authentification utilisateur valide.',
         ],
         '403' => [
             'TITLE'       => 'Interdit',
@@ -33,7 +31,7 @@ return [
         ],
         '404' => [
             'TITLE'       => 'Non trouvé',
-            'DESCRIPTION' => "La ressource demandée est introuvable.",
+            'DESCRIPTION' => 'La ressource demandée est introuvable.',
         ],
         '405' => [
             'TITLE'       => 'Méthode non autorisée',
@@ -44,16 +42,9 @@ return [
             'DESCRIPTION' => "La ressource cible n'est plus disponible sur le serveur d'origine.",
         ],
 
-        'CONFIG' => [
-            'TITLE'       => 'Problème de configuration UserFrosting!',
-            'DESCRIPTION' => "Les exigences de configuration de UserFrosting n'ont pas été satisfaites.",
-            'DETAIL'      => 'Quelque chose cloche ici...',
-            'RETURN'      => 'Corrigez les erreurs suivantes, ensuite <a href="{{url}}"> recharger la page</a>.',
-        ],
-
         // Generic title and description for error code not handled above
-        'TITLE'       => "Nous avons détecté une grande perturbation dans la Force.",
-        'DESCRIPTION' => "Oups, il semble que notre serveur ait fait une erreur. Si vous êtes un administrateur, veuillez vérifier les logs PHP ou UserFrosting.",
+        'TITLE'       => 'Nous avons détecté une grande perturbation dans la Force.',
+        'DESCRIPTION' => 'Oups, il semble que notre serveur ait fait une erreur. Si vous êtes un administrateur, veuillez vérifier les logs PHP ou UserFrosting.',
 
         'MAIL' => "Erreur fatale lors de l'envoi du courriel. Contactez votre administrateur. Si vous êtes administrateur, consultez les logs.",
         'MISC' => "Une erreur s'est produite.",

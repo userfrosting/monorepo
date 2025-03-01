@@ -105,6 +105,7 @@ class VerifyAction
         if (count($errors) !== 0) {
             foreach ($errors as $idx => $field) {
                 foreach ($field as $eidx => $error) {
+                    // TODO : Remove dependency on AlertStream
                     $this->alert->addMessage('danger', $error);
                 }
             }
@@ -116,11 +117,13 @@ class VerifyAction
         $verification = $this->repoVerification->complete($data['token']);
 
         if ($verification !== true) {
+            // TODO : Remove dependency on AlertStream
             $this->alert->addMessage('danger', 'ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND');
 
             return;
         }
 
+        // TODO : Remove dependency on AlertStream
         $this->alert->addMessage('success', 'ACCOUNT.VERIFICATION.COMPLETE');
     }
 

@@ -105,6 +105,7 @@ class DenyResetPasswordAction
         if (count($errors) !== 0) {
             foreach ($errors as $idx => $field) {
                 foreach ($field as $eidx => $error) {
+                    // TODO : Remove dependency on AlertStream
                     $this->alert->addMessage('danger', $error);
                 }
             }
@@ -115,11 +116,13 @@ class DenyResetPasswordAction
         // Cancel repository
         $passwordReset = $this->repoPasswordReset->cancel($data['token']);
         if ($passwordReset === false) {
+            // TODO : Remove dependency on AlertStream
             $this->alert->addMessage('danger', 'ACCOUNT.EXCEPTION.PASSWORD_RESET.TITLE');
 
             return;
         }
 
+        // TODO : Remove dependency on AlertStream
         $this->alert->addMessage('success', 'PASSWORD.FORGET.REQUEST_CANNED');
     }
 
