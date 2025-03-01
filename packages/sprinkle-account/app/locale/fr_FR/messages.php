@@ -59,7 +59,7 @@ return [
             ],
             'LOGGEDIN' => [
                 'TITLE'       => 'Déjà connecté',
-                'DESCRIPTION' => "Vous ne pouvez pas accéder à cette ressource car vous êtes déjà connecté",
+                'DESCRIPTION' => 'Vous ne pouvez pas accéder à cette ressource car vous êtes déjà connecté',
             ],
             'LOGIN_REQUIRED' => [
                 'TITLE'       => 'Connexion requise',
