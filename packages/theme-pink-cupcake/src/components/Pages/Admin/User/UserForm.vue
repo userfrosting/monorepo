@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
-import type { UserEditRequest } from '@userfrosting/sprinkle-admin/interfaces'
+import type { UserCreateRequest, UserEditRequest } from '@userfrosting/sprinkle-admin/interfaces'
 import type { GroupInterface } from '@userfrosting/sprinkle-account/interfaces'
 
 /**
@@ -13,7 +13,7 @@ const { groups } = defineProps<{
 /**
  * Form Model
  */
-const formData = defineModel<UserEditRequest>({
+const formData = defineModel<UserEditRequest | UserCreateRequest>({
     default: {
         user_name: '',
         group_id: '',

@@ -5,7 +5,7 @@ import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
  */
 export interface UserCreateRequest {
     user_name: string
-    group_id: number
+    group_id: number | null
     first_name: string
     last_name: string
     email: string
