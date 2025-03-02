@@ -1,14 +1,11 @@
 name: Monorepo Split
 
 on:
-  push:
-    # Only trigger for specific branches or changes in specific paths.
-    branches:
-      - "6.0"
-    paths:
-      - packages/**
-    tags:
-      - "*"
+    push:
+        branches:
+            - "6.0"
+        tags:
+            - "*"
 
 jobs:
     sync_commits:
@@ -35,12 +32,12 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: "./.splitsh"
-                  key: '${{ runner.os }}-splitsh-d-101'
+                  key: "${{ runner.os }}-splitsh-d-101"
 
             # Sync commits and tags for the configured subtree splits
             - uses: frankdejonge/use-subsplit-publish@1.1.0
               with:
-                source-branch: '6.0'
-                config-path: '.github/subtree-splitter-config.json'
-                splitsh-path: './.splitsh/splitsh-lite'
-                splitsh-version: 'v1.0.1'
+                  source-branch: "6.0"
+                  config-path: ".github/subtree-splitter-config.json"
+                  splitsh-path: "./.splitsh/splitsh-lite"
+                  splitsh-version: "v1.0.1"
