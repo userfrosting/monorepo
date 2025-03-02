@@ -73,7 +73,7 @@ export const rule5 = (number: number): number => {
 export const rule6 = (number: number): number => {
     return number % 10 === 1 && number % 100 !== 11
         ? 1
-        : number % 10 >= 2 && (number % 100 < 10 || number % 100 >= 20)
+        : number % 10 < 2 || (number % 100 >= 10 && number % 100 < 20)
           ? 2
           : 3
 }
