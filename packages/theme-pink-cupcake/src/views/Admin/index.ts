@@ -8,6 +8,9 @@ import UFAdminRolePage from './RolePage.vue'
 import UFAdminRolesPage from './RolesPage.vue'
 import UFAdminUserPage from './UserPage.vue'
 import UFAdminUsersPage from './UsersPage.vue'
+import UFAdminConfigPage from './PageConfig.vue'
+import UFAdminConfigInfoPage from './PageConfigInfo.vue'
+import UFAdminConfigCachePage from './PageConfigCache.vue'
 
 export {
     UFAdminDashboardPage,
@@ -19,5 +22,8 @@ export {
     UFAdminRolePage,
     UFAdminRolesPage,
     UFAdminUserPage,
-    UFAdminUsersPage
+    UFAdminUsersPage,
+    UFAdminConfigPage,
+    UFAdminConfigInfoPage,
+    UFAdminConfigCachePage
 }

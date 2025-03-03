@@ -11,4 +11,5 @@
         faIcon="key"
         :label="$t('PERMISSION.PAGE')" />
     <UFSideBarItem :to="{ name: 'admin.groups' }" faIcon="users" :label="$t('GROUP.PAGE')" />
+    <UFSideBarItem :to="{ name: 'admin.config' }" faIcon="gear" :label="$t('SITE_CONFIG')" />
 </template>

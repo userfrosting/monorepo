@@ -1,6 +1,10 @@
 // Dashboard
 export { useDashboardApi } from './useDashboardApi'
 
+// Config
+export { useConfigCacheApi } from './useConfigCacheApi'
+export { useConfigSystemInfoApi } from './useConfigSystemInfoApi'
+
 // Group
 export { useGroupApi } from './useGroupApi'
 export { useGroupCreateApi } from './useGroupCreateApi'

@@ -10,12 +10,12 @@ declare(strict_types=1);
  * @license   https://github.com/userfrosting/sprinkle-admin/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Admin\Controller\Dashboard;
+namespace UserFrosting\Sprinkle\Admin\Controller\Config;
 
 use Illuminate\Cache\Repository as Cache;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Alert\AlertStream;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Core\Bakery\ClearCacheCommand;
@@ -29,7 +29,7 @@ class CacheApiAction
      * Inject dependencies.
      */
     public function __construct(
-        protected AlertStream $alerts,
+        protected Translator $translator,
         protected Authenticator $authenticator,
         protected ClearCacheCommand $clearCacheCommand,
     ) {
@@ -49,11 +49,13 @@ class CacheApiAction
         $this->clearCacheCommand->clearTwigCache();
         $this->clearCacheCommand->clearRouterCache();
 
-        // TODO : Remove dependency on AlertStream
-        $this->alerts->addMessage('success', 'CACHE.CLEARED');
+        // Message
+        $message = $this->translator->translate('SITE_CONFIG.CACHE.CLEARED');
 
         // Write empty response
-        $payload = json_encode([], JSON_THROW_ON_ERROR);
+        $payload = json_encode([
+            'message' => $message,
+        ], JSON_THROW_ON_ERROR);
         $response->getBody()->write($payload);
 
         return $response->withHeader('Content-Type', 'application/json');

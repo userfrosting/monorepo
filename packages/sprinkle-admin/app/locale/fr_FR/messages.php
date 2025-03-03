@@ -26,13 +26,6 @@ return [
     ],
     'ADMIN_PANEL' => "Panneau d'admin",
 
-    'CACHE' => [
-        'CLEAR'             => 'Vider le cache',
-        'CLEAR_CONFIRM'     => 'Voulez-vous vraiment supprimer le cache du site?',
-        'CLEAR_CONFIRM_YES' => 'Oui, vider le cache',
-        'CLEARED'           => 'Cache effacé avec succès !',
-    ],
-
     'DASHBOARD'           => 'Tableau de bord',
     'DELETE_MASTER'       => 'Vous ne pouvez pas supprimer le compte principal !',
     'DELETION_SUCCESSFUL' => 'L\'utilisateur <strong>{{user_name}}</strong> a été supprimé avec succès.',
@@ -122,16 +115,27 @@ return [
         'USERS'               => 'Utilisateurs avec ce rôle',
     ],
 
-    'SYSTEM_INFO' => [
-        '@TRANSLATION'  => 'Informations sur le système',
-        'DB_NAME'       => 'Base de donnée',
-        'DB_CONNECTION' => 'Connexion à la base de données',
-        'DB_VERSION'    => 'Version base de données',
-        'DIRECTORY'     => 'Répertoire du projet',
-        'PHP_VERSION'   => 'Version de PHP',
-        'SERVER'        => 'Logiciel serveur',
-        'SPRINKLES'     => 'Sprinkles chargés',
-        'UF_VERSION'    => 'Version de UserFrosting',
+    'SITE_CONFIG' => [
+        '@TRANSLATION'      => 'Configuration du site',
+        'CACHE'             => [
+            '@TRANSLATION'      => 'Gestion du cache',
+            'CLEAR'             => 'Vider le cache',
+            'CLEAR_CONFIRM'     => 'Voulez-vous vraiment supprimer le cache du site?',
+            'CLEAR_CONFIRM_YES' => 'Oui, vider le cache',
+            'CLEARED'           => 'Cache effacé avec succès !',
+        ],
+        'PAGE_DESCRIPTION'  => 'Utilisez les formulaires ci-dessous pour mettre à jour les paramètres de configuration de votre site.',
+        'SYSTEM_INFO'       => [
+            '@TRANSLATION'  => 'Informations sur le système',
+            'DB_NAME'       => 'Base de donnée',
+            'DB_CONNECTION' => 'Connexion à la base de données',
+            'DB_VERSION'    => 'Version base de données',
+            'DIRECTORY'     => 'Répertoire du projet',
+            'PHP_VERSION'   => 'Version de PHP',
+            'SERVER'        => 'Logiciel serveur',
+            'SPRINKLES'     => 'Sprinkles chargés',
+            'UF_VERSION'    => 'Version de UserFrosting',
+        ],
     ],
 
     'USER'           => [

@@ -12,6 +12,7 @@ namespace UserFrosting\Sprinkle\Admin;
 
 use UserFrosting\Sprinkle\Account\Account;
 use UserFrosting\Sprinkle\Admin\Routes\ActivitiesRoutes;
+use UserFrosting\Sprinkle\Admin\Routes\ConfigRoutes;
 use UserFrosting\Sprinkle\Admin\Routes\DashboardRoutes;
 use UserFrosting\Sprinkle\Admin\Routes\GroupsRoute;
 use UserFrosting\Sprinkle\Admin\Routes\PermissionsRoutes;
@@ -61,6 +62,7 @@ class Admin implements SprinkleRecipe
             PermissionsRoutes::class,
             RolesRoutes::class,
             UsersRoutes::class,
+            ConfigRoutes::class,
         ];
     }
 

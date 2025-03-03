@@ -13,13 +13,15 @@ import {
     UFAdminRolePage,
     UFAdminRolesPage,
     UFAdminUserPage,
-    UFAdminUsersPage
+    UFAdminUsersPage,
+    UFAdminConfigPage,
+    UFAdminConfigInfoPage,
+    UFAdminConfigCachePage
 } from '../views/Admin'
 import {
     DashboardActivities,
     DashboardRecentUsers,
     DashboardStats,
-    DashboardSystemInfo,
     GroupCreateModal,
     GroupDeleteModal,
     GroupEditModal,
@@ -49,10 +51,12 @@ export default {
             .component('UFAdminRolesPage', UFAdminRolesPage)
             .component('UFAdminUserPage', UFAdminUserPage)
             .component('UFAdminUsersPage', UFAdminUsersPage)
+            .component('UFAdminConfigPage', UFAdminConfigPage)
+            .component('UFAdminConfigInfoPage', UFAdminConfigInfoPage)
+            .component('UFAdminConfigCachePage', UFAdminConfigCachePage)
             .component('UFAdminDashboardActivities', DashboardActivities)
             .component('UFAdminDashboardRecentUsers', DashboardRecentUsers)
             .component('UFAdminDashboardStats', DashboardStats)
-            .component('UFAdminDashboardSystemInfo', DashboardSystemInfo)
             .component('UFAdminGroupCreateModal', GroupCreateModal)
             .component('UFAdminGroupDeleteModal', GroupDeleteModal)
             .component('UFAdminGroupEditModal', GroupEditModal)
@@ -83,10 +87,12 @@ declare module 'vue' {
         UFAdminRolesPage: typeof UFAdminRolesPage
         UFAdminUserPage: typeof UFAdminUserPage
         UFAdminUsersPage: typeof UFAdminUsersPage
+        UFAdminConfigPage: typeof UFAdminConfigPage
+        UFAdminConfigInfoPage: typeof UFAdminConfigInfoPage
+        UFAdminConfigCachePage: typeof UFAdminConfigCachePage
         UFAdminDashboardActivities: typeof DashboardActivities
         UFAdminDashboardRecentUsers: typeof DashboardRecentUsers
         UFAdminDashboardStats: typeof DashboardStats
-        UFAdminDashboardSystemInfo: typeof DashboardSystemInfo
         UFAdminGroupCreateModal: typeof GroupCreateModal
         UFAdminGroupDeleteModal: typeof GroupDeleteModal
         UFAdminGroupEditModal: typeof GroupEditModal

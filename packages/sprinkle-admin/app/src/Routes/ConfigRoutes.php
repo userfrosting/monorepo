@@ -14,18 +14,26 @@ namespace UserFrosting\Sprinkle\Admin\Routes;
 
 use Slim\App;
 use UserFrosting\Routes\RouteDefinitionInterface;
-use UserFrosting\Sprinkle\Admin\Controller\Dashboard\DashboardApi;
+use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
+use UserFrosting\Sprinkle\Admin\Controller\Config\CacheApiAction;
+use UserFrosting\Sprinkle\Admin\Controller\Config\SystemInfoApiAction;
 use UserFrosting\Sprinkle\Core\Middlewares\NoCache;
 
 /*
- * Routes for dashboard page.
+ * Routes for config apis.
  */
-class DashboardRoutes implements RouteDefinitionInterface
+class ConfigRoutes implements RouteDefinitionInterface
 {
     public function register(App $app): void
     {
-        $app->get('/api/dashboard', DashboardApi::class)
-            ->setName('dashboard')
+        $app->get('/api/config/info', SystemInfoApiAction::class)
+            ->setName('config.info')
+            ->add(AuthGuard::class)
+            ->add(NoCache::class);
+
+        $app->post('/api/config/clear-cache', CacheApiAction::class)
+            ->setName('config.cache')
+            ->add(AuthGuard::class)
             ->add(NoCache::class);
     }
 }

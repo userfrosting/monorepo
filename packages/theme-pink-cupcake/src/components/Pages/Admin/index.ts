@@ -1,7 +1,6 @@
 import DashboardActivities from './Dashboard/DashboardActivities.vue'
 import DashboardRecentUsers from './Dashboard/DashboardRecentUsers.vue'
 import DashboardStats from './Dashboard/DashboardStats.vue'
-import DashboardSystemInfo from './Dashboard/DashboardSystemInfo.vue'
 import GroupCreateModal from './Group/GroupCreateModal.vue'
 import GroupDeleteModal from './Group/GroupDeleteModal.vue'
 import GroupEditModal from './Group/GroupEditModal.vue'
@@ -22,7 +21,6 @@ export {
     DashboardActivities,
     DashboardRecentUsers,
     DashboardStats,
-    DashboardSystemInfo,
     GroupCreateModal,
     GroupDeleteModal,
     GroupEditModal,

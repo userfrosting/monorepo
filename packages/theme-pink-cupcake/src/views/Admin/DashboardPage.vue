@@ -2,7 +2,6 @@
 import { useDashboardApi } from '@userfrosting/sprinkle-admin/composables'
 import DashboardStats from '../../components/Pages/Admin/Dashboard/DashboardStats.vue'
 import DashboardRecentUsers from '../../components/Pages/Admin/Dashboard/DashboardRecentUsers.vue'
-import DashboardSystemInfo from '../../components/Pages/Admin/Dashboard/DashboardSystemInfo.vue'
 import DashboardActivities from '../../components/Pages/Admin/Dashboard/DashboardActivities.vue'
 
 const dashboard = useDashboardApi()
@@ -21,11 +20,6 @@ dashboard.load()
             <div class="uk-child-width-1-1" uk-grid>
                 <div>
                     <DashboardRecentUsers :users="dashboard.data.users" />
-                </div>
-                <div>
-                    <DashboardSystemInfo
-                        :info="dashboard.data.info"
-                        :sprinkles="dashboard.data.sprinkles" />
                 </div>
             </div>
         </div>

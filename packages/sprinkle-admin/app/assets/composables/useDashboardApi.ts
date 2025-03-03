@@ -9,19 +9,6 @@ const defaultDashboardApi: DashboardResponse = {
         roles: 0,
         groups: 0
     },
-    info: {
-        frameworkVersion: '',
-        phpVersion: '',
-        database: {
-            connection: '',
-            name: '',
-            type: '',
-            version: ''
-        },
-        server: '',
-        projectPath: ''
-    },
-    sprinkles: {},
     users: []
 }
 

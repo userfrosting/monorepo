@@ -1,5 +1,8 @@
 // Dashboard
-export type { SprinkleList, DatabaseInfo, SystemInfo, DashboardResponse } from './DashboardApi'
+export type { DashboardResponse } from './DashboardApi'
+
+// Config
+export type { SprinkleList, DatabaseInfo, ConfigSystemInfoResponse } from './ConfigSystemInfo'
 
 // Groups
 export type { GroupResponse } from './GroupApi'

@@ -1,4 +1,5 @@
 import AdminActivitiesRoutes from './ActivitiesRoutes'
+import AdminConfigRoutes from './ConfigRoutes'
 import AdminDashboardRoutes from './DashboardRoutes'
 import AdminGroupsRoutes from './GroupsRoutes'
 import AdminPermissionsRoutes from './PermissionsRoutes'
@@ -12,7 +13,8 @@ const AdminRoutes = [
     ...AdminGroupsRoutes,
     ...AdminPermissionsRoutes,
     ...AdminRolesRoutes,
-    ...AdminUsersRoutes
+    ...AdminUsersRoutes,
+    ...AdminConfigRoutes
 ]
 
 export default AdminRoutes
@@ -23,5 +25,6 @@ export {
     AdminGroupsRoutes,
     AdminPermissionsRoutes,
     AdminRolesRoutes,
-    AdminUsersRoutes
+    AdminUsersRoutes,
+    AdminConfigRoutes
 }

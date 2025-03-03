@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Controller\Dashboard;
 
-use Illuminate\Database\Connection;
-use PDO;
-use PDOException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Config\Config;
@@ -23,8 +20,6 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\SprinkleManager;
-use UserFrosting\UniformResourceLocator\ResourceLocatorInterface;
 
 /**
  * Api for /dashboard URL. Handles admin-related activities.
@@ -37,9 +32,6 @@ class DashboardApi
     public function __construct(
         protected Authenticator $authenticator,
         protected Config $config,
-        protected Connection $dbConnection,
-        protected SprinkleManager $sprinkleManager,
-        protected ResourceLocatorInterface $locator,
         protected UserInterface $userModel,
         protected RoleInterface $roleModel,
         protected GroupInterface $groupModel,
@@ -92,14 +84,6 @@ class DashboardApi
                 'roles'  => $this->roleModel::count(),
                 'groups' => $this->groupModel::count(),
             ],
-            'info'      => [
-                'frameworkVersion' => (string) \Composer\InstalledVersions::getPrettyVersion('userfrosting/framework'),
-                'phpVersion'       => phpversion(),
-                'database'         => $this->getDatabaseInfo(),
-                'server'           => $_SERVER['SERVER_SOFTWARE'] ?? '',
-                'projectPath'      => $this->locator->getBasePath(),
-            ],
-            'sprinkles' => $this->sprinkleManager->getSprinklesNames(),
             'users'     => $this->getLatestUsers(),
         ];
     }
@@ -118,34 +102,5 @@ class DashboardApi
                  ->get();
 
         return $users->toArray();
-    }
-
-    /**
-     * Returns database information.
-     *
-     * @return array{connection: string, name: string, type: string, version: string}
-     */
-    protected function getDatabaseInfo(): array
-    {
-        $database = $this->config->getString('db.default', '');
-        $pdo = $this->dbConnection->getPdo();
-        $results = [
-            'connection' => $database,
-            'name'       => $this->dbConnection->getDatabaseName(),
-        ];
-
-        try {
-            $results['type'] = strval($pdo->getAttribute(PDO::ATTR_DRIVER_NAME));
-        } catch (PDOException $e) {
-            $results['type'] = 'Unknown';
-        }
-
-        try {
-            $results['version'] = strval($pdo->getAttribute(PDO::ATTR_SERVER_VERSION));
-        } catch (PDOException $e) {
-            $results['version'] = '';
-        }
-
-        return $results;
     }
 }

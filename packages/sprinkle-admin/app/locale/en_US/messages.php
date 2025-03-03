@@ -26,13 +26,6 @@ return [
     ],
     'ADMIN_PANEL' => 'Admin Panel',
 
-    'CACHE' => [
-        'CLEAR'             => 'Clear cache',
-        'CLEAR_CONFIRM'     => 'Are you sure you want to clear the site cache?',
-        'CLEAR_CONFIRM_YES' => 'Yes, clear cache',
-        'CLEARED'           => 'Cache cleared successfully !',
-    ],
-
     'DASHBOARD'             => 'Dashboard',
     'DELETE_MASTER'         => 'You cannot delete the master account',
     'DELETION_SUCCESSFUL'   => 'User <strong>{{user_name}}</strong> has been successfully deleted.',
@@ -122,16 +115,27 @@ return [
         'USERS'               => 'Users with this role',
     ],
 
-    'SYSTEM_INFO' => [
-        '@TRANSLATION'  => 'System information',
-        'DB_NAME'       => 'Database Name',
-        'DB_CONNECTION' => 'Database Connection',
-        'DB_VERSION'    => 'Database Version',
-        'DIRECTORY'     => 'Project Directory',
-        'PHP_VERSION'   => 'PHP Version',
-        'SERVER'        => 'Webserver Software',
-        'SPRINKLES'     => 'Loaded Sprinkles',
-        'UF_VERSION'    => 'Framework Version',
+    'SITE_CONFIG' => [
+        '@TRANSLATION'      => 'Site configuration',
+        'CACHE'             => [
+            '@TRANSLATION'      => 'Cache Management',
+            'CLEAR'             => 'Clear cache',
+            'CLEAR_CONFIRM'     => 'Are you sure you want to clear the site cache?',
+            'CLEAR_CONFIRM_YES' => 'Yes, clear cache',
+            'CLEARED'           => 'Cache cleared successfully !',
+        ],
+        'PAGE_DESCRIPTION'  => 'Use the forms below to update your site configuration settings.',
+        'SYSTEM_INFO'       => [
+            '@TRANSLATION'  => 'System information',
+            'DB_NAME'       => 'Database Name',
+            'DB_CONNECTION' => 'Database Connection',
+            'DB_VERSION'    => 'Database Version',
+            'DIRECTORY'     => 'Project Directory',
+            'PHP_VERSION'   => 'PHP Version',
+            'SERVER'        => 'Webserver Software',
+            'SPRINKLES'     => 'Loaded Sprinkles',
+            'UF_VERSION'    => 'Framework Version',
+        ],
     ],
 
     'USER' => [
