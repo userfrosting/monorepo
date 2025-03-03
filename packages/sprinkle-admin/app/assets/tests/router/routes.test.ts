@@ -4,6 +4,6 @@ import AdminRoutes from '../../routes'
 
 describe('routes.test.ts', () => {
     test('AdminRoutes should contain all the individual routes', () => {
-        expect(AdminRoutes.length).toBe(7)
+        expect(AdminRoutes.length).toBe(8)
     })
 })
