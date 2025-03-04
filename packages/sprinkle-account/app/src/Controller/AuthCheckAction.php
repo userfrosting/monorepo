@@ -41,10 +41,10 @@ class AuthCheckAction
      */
     public function __invoke(Response $response): Response
     {
-        $auth = $this->authenticator->check();
+        $user = $this->authenticator->user();
         $data = [
-            'auth' => $auth,
-            'user' => $auth ? $this->authenticator->user() : null,
+            'user'        => $user?->attributesToArray(),
+            'permissions' => $user?->permissions->pluck('conditions', 'slug'),
         ];
         $payload = json_encode($data, JSON_THROW_ON_ERROR);
         $response->getBody()->write($payload);

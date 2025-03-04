@@ -1,4 +1,4 @@
-import type { UserInterface } from './models/userInterface'
+import type { UserInterface, FlattenPermissionsInterface } from './'
 
 /**
  * API Interfaces - What the API expects and what it returns
@@ -13,6 +13,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     user: UserInterface
+    permissions: FlattenPermissionsInterface
     message: string
     redirect: string
 }

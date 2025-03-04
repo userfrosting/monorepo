@@ -15,6 +15,8 @@ namespace UserFrosting\Sprinkle\Account\Tests\Controller;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
@@ -44,22 +46,33 @@ class AuthCheckActionTest extends AccountTestCase
 
         // Assert response status & body
         $this->assertJsonResponse([
-            'auth' => false,
-            'user' => null,
+            'user'        => null,
+            'permissions' => null,
         ], $response);
         $this->assertResponseStatus(200, $response);
     }
 
-    public function testNotAuth(): void
+    public function testAuth(): void
     {
         /** @var User */
         $user = User::factory([
             'password' => 'test'
         ])->create();
 
+        /** @var Role */
+        $role = Role::factory()->create();
+        $user->roles()->attach($role);
+        $permission = new Permission([
+            'slug'       => 'test_permission',
+            'name'       => 'Test Permission',
+            'conditions' => 'always()',
+        ]);
+        $permission->save();
+        $role->permissions()->attach($permission);
+        $role->save();
+
         // Mock Authenticator
         $authenticator = Mockery::mock(Authenticator::class)
-            ->shouldReceive('check')->once()->andReturn(true)
             ->shouldReceive('user')->once()->andReturn($user)
             ->getMock();
         $this->ci->set(Authenticator::class, $authenticator);
@@ -70,8 +83,8 @@ class AuthCheckActionTest extends AccountTestCase
 
         // Assert response status & body
         $this->assertJsonResponse([
-            'auth' => true,
-            'user' => $user->toArray(),
+            'user'        => $user->attributesToArray(),
+            'permissions' => ['test_permission' => 'always()'],
         ], $response);
         $this->assertResponseStatus(200, $response);
     }

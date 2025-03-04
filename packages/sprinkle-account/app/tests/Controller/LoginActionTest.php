@@ -17,6 +17,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Account;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Event\UserRedirectedAfterLoginEvent;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
@@ -50,6 +52,18 @@ class LoginActionTest extends AccountTestCase
         ])->create();
         $user->refresh();
 
+        /** @var Role */
+        $role = Role::factory()->create();
+        $user->roles()->attach($role);
+        $permission = new Permission([
+            'slug'       => 'test_permission',
+            'name'       => 'Test Permission',
+            'conditions' => 'always()',
+        ]);
+        $permission->save();
+        $role->permissions()->attach($permission);
+        $role->save();
+
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/login', [
             'user_name' => $user->user_name,
@@ -59,6 +73,7 @@ class LoginActionTest extends AccountTestCase
 
         // Assert response status & body
         $this->assertJsonResponse($user->toArray(), $response, 'user');
+        $this->assertJsonResponse(['test_permission' => 'always()'], $response, 'permissions');
         $this->assertJsonResponse('Welcome back, ' . $user->full_name . '!', $response, 'message');
         $this->assertJsonResponse('/home', $response, 'redirect');
         $this->assertResponseStatus(200, $response);

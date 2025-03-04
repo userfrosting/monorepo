@@ -24,3 +24,7 @@ export interface PermissionInterface {
     updated_at: Date | string
     deleted_at: Date | string | null
 }
+
+export interface FlattenPermissionsInterface {
+    [key: string]: string
+}

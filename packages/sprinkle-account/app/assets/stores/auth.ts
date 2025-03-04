@@ -1,36 +1,40 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import type { UserInterface, LoginRequest, LoginResponse } from '../interfaces'
+import type {
+    UserInterface,
+    LoginRequest,
+    LoginResponse,
+    AuthCheckResponse,
+    FlattenPermissionsInterface
+} from '../interfaces'
 import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
 import { useTranslator } from '@userfrosting/sprinkle-core/stores'
-
-interface AuthCheckApi {
-    auth: boolean
-    user: UserInterface
-}
 
 export const useAuthStore = defineStore('auth', {
     persist: true,
     state: () => {
         return {
-            user: null as UserInterface | null
+            user: null as UserInterface | null,
+            permissions: null as FlattenPermissionsInterface | null
         }
     },
     getters: {
         isAuthenticated: (state): boolean => state.user !== null
     },
     actions: {
-        setUser(user: UserInterface): void {
+        setUser(user: UserInterface, permissions: FlattenPermissionsInterface): void {
             this.user = user
+            this.permissions = permissions
         },
         unsetUser(): void {
             this.user = null
+            this.permissions = null
         },
         async login(form: LoginRequest) {
             return axios
                 .post<LoginResponse>('/account/login', form)
                 .then((response) => {
-                    this.setUser(response.data.user)
+                    this.setUser(response.data.user, response.data.permissions)
 
                     // Reload the translator dictionary to reflect the user's language
                     useTranslator().load()
@@ -52,9 +56,13 @@ export const useAuthStore = defineStore('auth', {
         },
         async check() {
             return axios
-                .get<AuthCheckApi>('/account/auth-check')
+                .get<AuthCheckResponse>('/account/auth-check')
                 .then((response) => {
-                    this.setUser(response.data.user)
+                    if (response.data.user === null) {
+                        this.unsetUser()
+                    } else {
+                        this.setUser(response.data.user, response.data.permissions ?? {})
+                    }
 
                     return this.user
                 })
