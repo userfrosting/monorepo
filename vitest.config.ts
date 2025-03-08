@@ -10,6 +10,8 @@ export default defineConfig({
                 'packages/**/app/assets/**/*.*',
                 'packages/**/src/**/*.*'
             ],
-        }
+        },
+        reporters: ['default', 'junit'],
+        outputFile: './_meta/junit_frontend.xml'
     }
 })
