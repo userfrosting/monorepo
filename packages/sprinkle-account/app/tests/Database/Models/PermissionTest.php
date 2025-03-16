@@ -143,8 +143,7 @@ class PermissionTest extends AccountTestCase
         $result = $user->getCachedPermissions();
         $this->assertCount(1, $result);
         $this->assertCount(1, $result[$permission->slug]);
-        $this->assertContainsOnlyInstancesOf(PermissionInterface::class, $result[$permission->slug]);
-        $this->assertSame($permission->id, $result[$permission->slug][0]->id);
+        $this->assertSame([$permission->conditions], $result[$permission->slug]);
 
         // Add new permission
         /** @var Permission */

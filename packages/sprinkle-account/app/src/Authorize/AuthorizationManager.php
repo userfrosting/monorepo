@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
-use Illuminate\Support\Arr;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Log\AuthLoggerInterface;
@@ -51,84 +50,62 @@ class AuthorizationManager implements AuthorizationManagerInterface
      */
     public function checkAccess(?UserInterface $user, string $slug, array $params = []): bool
     {
-        $debug = $this->config->getBool('debug.auth', false);
+        // Trace debug information
+        $trace = array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3), 1);
+        $this->debugAuth('Authorization check requested at: ', $trace);
 
+        // Deny access if no user is defined.
         if ($user === null) {
-            if ($debug) {
-                $this->logger->debug('No user defined. Access denied.');
-            }
+            $this->debugAuth('No user defined. Access denied.');
 
             return false;
         }
 
-        if ($debug) {
-            $trace = array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3), 1);
-            $this->logger->debug('Authorization check requested at: ', $trace);
-            $this->logger->debug("Checking authorization for user {$user->id} ('{$user->user_name}') on permission '$slug'...");
-        }
+        $this->debugAuth("Checking authorization for user {$user->id} ('{$user->user_name}') on permission '$slug'...");
 
         // The master (root) account has access to everything.
         // Need to use loose comparison for now, because some DBs return `id` as a string.
         if ($user->id === $this->config->getInt('reserved_user_ids.master')) {
-            if ($debug) {
-                $this->logger->debug('User is the master (root) user. Access granted.');
-            }
+            $this->debugAuth('User is the master (root) user. Access granted.');
 
             return true;
         }
 
         // Find all permissions that apply to this user (via roles), and check if any evaluate to true.
         $permissions = $user->getCachedPermissions();
-
         if (count($permissions) === 0 || !isset($permissions[$slug])) {
-            if ($debug) {
-                $this->logger->debug('No matching permissions found. Access denied.');
-            }
+            $this->debugAuth('No permissions found. Access denied.');
 
             return false;
         }
 
-        $permissions = $permissions[$slug];
-
-        if ($debug) {
-            $this->logger->debug("Found matching permissions: \n" . print_r($this->getPermissionsArrayDebugInfo($permissions), true));
-        }
-
-        foreach ($permissions as $permission) {
-            $pass = $this->ace->evaluate($permission->conditions, $params, $user);
+        // Find matching permission conditions
+        $conditions = $permissions[$slug];
+        $this->debugAuth("Found matching permissions conditions: \n" . print_r($conditions, true));
+        foreach ($conditions as $condition) {
+            $pass = $this->ace->evaluate($condition, $params, $user);
             if ($pass) {
-                if ($debug) {
-                    $this->logger->debug("User passed conditions '{$permission->conditions}'. Access granted.");
-                }
+                $this->debugAuth("User passed conditions '{$condition}'. Access granted.");
 
                 return true;
             }
         }
 
-        if ($debug) {
-            $this->logger->debug('User failed to pass any of the matched permissions. Access denied.');
-        }
+        $this->debugAuth('User failed to pass any of the matched permissions. Access denied.');
 
         return false;
     }
 
     /**
-     * Remove extraneous information from the permission to reduce verbosity.
+     * Send a debug message to the logger if debug.auth is enabled.
      *
-     * @param array<string, \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PermissionInterface> $permissions
-     *
-     * @return array<array<string, string>>
+     * @param string  $message
+     * @param mixed[] $payload
      */
-    protected function getPermissionsArrayDebugInfo(array $permissions): array
+    protected function debugAuth(string $message, array $payload = []): void
     {
-        $permissionsInfo = [];
-        foreach ($permissions as $permission) {
-            $permissionData = Arr::only($permission->toArray(), ['id', 'slug', 'name', 'conditions', 'description']);
-            // Remove this until we can find an efficient way to only load these once during debugging
-            //$permissionData['roles_via'] = $permission->roles_via->pluck('id')->all();
-            $permissionsInfo[] = $permissionData;
+        if ($this->config->getBool('debug.auth', false)) {
+            $this->logger->debug($message, $payload);
         }
-
-        return $permissionsInfo;
     }
 }

@@ -113,13 +113,6 @@ class User extends Model implements UserInterface
     ];
 
     /**
-     * Cached dictionary of permissions for the user.
-     *
-     * @var array<string, PermissionInterface[]>|null
-     */
-    protected ?array $cachedPermissions = null;
-
-    /**
      * Force delete this user from the database, along with any linked relations.
      *
      * @return bool|null
@@ -258,10 +251,13 @@ class User extends Model implements UserInterface
         /** @var Config */
         $config = static::$ci?->get(Config::class);
 
-        // Get config values
+        // Forget the cached version of the user
         $key = $config->get('cache.user.key') . $this->id;
-
         $cache->forget($key);
+
+        // Forget all user cache
+        // @phpstan-ignore-next-line
+        $this->getCache()->flush();
 
         return $this;
     }
@@ -269,15 +265,13 @@ class User extends Model implements UserInterface
     /**
      * Retrieve the cached permissions dictionary for this user.
      *
-     * @return array<string, PermissionInterface[]>
+     * @return array<string, string[]>
      */
     public function getCachedPermissions(): array
     {
-        if ($this->cachedPermissions === null) {
-            $this->reloadCachedPermissions();
-        }
-
-        return $this->cachedPermissions ?? [];
+        return $this->getCache()->rememberForever('permissions', function () {
+            return $this->buildPermissionsDictionary();
+        });
     }
 
     /**
@@ -287,7 +281,8 @@ class User extends Model implements UserInterface
      */
     public function reloadCachedPermissions(): static
     {
-        $this->cachedPermissions = $this->buildPermissionsDictionary();
+        $this->getCache()->forget('permissions');
+        $this->getCachedPermissions();
 
         return $this;
     }
@@ -503,18 +498,18 @@ class User extends Model implements UserInterface
      * Loads permissions for this user into a cached dictionary of slugs -> arrays of permissions,
      * so we don't need to keep requerying the DB for every call of checkAccess.
      *
-     * @return array<string, PermissionInterface[]>
+     * @return array<string, string[]>
      */
     protected function buildPermissionsDictionary(): array
     {
-        $cachedPermissions = [];
+        $permissions = [];
 
         /** @var PermissionInterface $permission */
         foreach ($this->permissions()->get() as $permission) {
-            $cachedPermissions[$permission->slug][] = $permission;
+            $permissions[$permission->slug][] = $permission->conditions;
         }
 
-        return $cachedPermissions;
+        return $permissions;
     }
 
     /**

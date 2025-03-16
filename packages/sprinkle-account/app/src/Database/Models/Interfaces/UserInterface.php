@@ -127,7 +127,7 @@ interface UserInterface
     /**
      * Retrieve the cached permissions dictionary for this user.
      *
-     * @return array<string, PermissionInterface[]>
+     * @return array<string, string[]>
      */
     public function getCachedPermissions(): array;
 

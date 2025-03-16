@@ -44,9 +44,9 @@ class AuthCheckAction
         $user = $this->authenticator->user();
         $data = [
             'user'        => $user?->attributesToArray(),
-            'permissions' => $user?->permissions->pluck('conditions', 'slug'),
+            'permissions' => $user?->getCachedPermissions(),
         ];
-        $payload = json_encode($data, JSON_THROW_ON_ERROR);
+        $payload = json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
         $response->getBody()->write($payload);
 
         return $response->withHeader('Content-Type', 'application/json');

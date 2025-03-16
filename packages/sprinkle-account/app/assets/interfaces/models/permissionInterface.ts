@@ -25,6 +25,6 @@ export interface PermissionInterface {
     deleted_at: Date | string | null
 }
 
-export interface FlattenPermissionsInterface {
-    [key: string]: string
+export interface UserPermissionsMapInterface {
+    [key: string]: string[]
 }

@@ -5,7 +5,7 @@ import type {
     LoginRequest,
     LoginResponse,
     AuthCheckResponse,
-    FlattenPermissionsInterface
+    UserPermissionsMapInterface
 } from '../interfaces'
 import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
 import { useTranslator } from '@userfrosting/sprinkle-core/stores'
@@ -15,14 +15,14 @@ export const useAuthStore = defineStore('auth', {
     state: () => {
         return {
             user: null as UserInterface | null,
-            permissions: null as FlattenPermissionsInterface | null
+            permissions: null as UserPermissionsMapInterface | null
         }
     },
     getters: {
         isAuthenticated: (state): boolean => state.user !== null
     },
     actions: {
-        setUser(user: UserInterface, permissions: FlattenPermissionsInterface): void {
+        setUser(user: UserInterface, permissions: UserPermissionsMapInterface): void {
             this.user = user
             this.permissions = permissions
         },

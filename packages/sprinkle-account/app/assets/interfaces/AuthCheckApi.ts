@@ -1,4 +1,4 @@
-import type { UserInterface, FlattenPermissionsInterface } from './'
+import type { UserInterface, UserPermissionsMapInterface } from './'
 
 /**
  * API Interfaces - What the API expects and what it returns
@@ -13,5 +13,5 @@ import type { UserInterface, FlattenPermissionsInterface } from './'
  */
 export interface AuthCheckResponse {
     user: UserInterface | null
-    permissions: FlattenPermissionsInterface | null
+    permissions: UserPermissionsMapInterface | null
 }

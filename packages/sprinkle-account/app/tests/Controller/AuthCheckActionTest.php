@@ -84,7 +84,7 @@ class AuthCheckActionTest extends AccountTestCase
         // Assert response status & body
         $this->assertJsonResponse([
             'user'        => $user->attributesToArray(),
-            'permissions' => ['test_permission' => 'always()'],
+            'permissions' => ['test_permission' => ['always()']],
         ], $response);
         $this->assertResponseStatus(200, $response);
     }

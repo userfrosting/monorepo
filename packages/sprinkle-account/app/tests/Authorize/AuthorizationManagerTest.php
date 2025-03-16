@@ -60,7 +60,8 @@ class AuthorizationManagerTest extends AccountTestCase
     {
         /** @var AuthorizationManager */
         $manager = $this->ci->get(AuthorizationManagerInterface::class);
-        $this->logger->shouldReceive('debug')->once()->with('No user defined. Access denied.');
+        $this->logger->shouldReceive('debug')->once()->with('Authorization check requested at: ', Mockery::any());
+        $this->logger->shouldReceive('debug')->once()->with('No user defined. Access denied.', []);
         $this->assertFalse($manager->checkAccess(null, 'foo'));
     }
 
@@ -72,7 +73,7 @@ class AuthorizationManagerTest extends AccountTestCase
         ])->make();
 
         // Setup AuthLoggerInterface expectations
-        $this->logger->shouldReceive('debug')->once()->with('No matching permissions found. Access denied.');
+        $this->logger->shouldReceive('debug')->once()->with('No permissions found. Access denied.', []);
         $this->logger->shouldReceive('debug')->times(2);
 
         /** @var AuthorizationManager */
@@ -88,7 +89,7 @@ class AuthorizationManagerTest extends AccountTestCase
         ])->create();
 
         // Setup AuthLoggerInterface expectations
-        $this->logger->shouldReceive('debug')->once()->with('No matching permissions found. Access denied.');
+        $this->logger->shouldReceive('debug')->once()->with('No permissions found. Access denied.', []);
         $this->logger->shouldReceive('debug')->times(2);
 
         /** @var Authenticator */
@@ -117,7 +118,7 @@ class AuthorizationManagerTest extends AccountTestCase
         ])->make();
 
         // Setup AuthLoggerInterface expectations
-        $this->logger->shouldReceive('debug')->once()->with('User is the master (root) user. Access granted.');
+        $this->logger->shouldReceive('debug')->once()->with('User is the master (root) user. Access granted.', []);
         $this->logger->shouldReceive('debug')->times(2);
 
         /** @var AuthorizationManager */
@@ -147,7 +148,7 @@ class AuthorizationManagerTest extends AccountTestCase
 
         // Setup AuthLoggerInterface expectations
         $this->logger->shouldReceive('debug')->once()->with("Evaluating callback 'always'...");
-        $this->logger->shouldReceive('debug')->once()->with("User passed conditions 'always()'. Access granted.");
+        $this->logger->shouldReceive('debug')->once()->with("User passed conditions 'always()'. Access granted.", []);
         $this->logger->shouldReceive('debug')->times(6);
 
         /** @var AuthorizationManager */
@@ -176,7 +177,7 @@ class AuthorizationManagerTest extends AccountTestCase
         $user->roles()->attach($role);
 
         // Setup AuthLoggerInterface expectations
-        $this->logger->shouldReceive('debug')->once()->with('User failed to pass any of the matched permissions. Access denied.');
+        $this->logger->shouldReceive('debug')->once()->with('User failed to pass any of the matched permissions. Access denied.', []);
         $this->logger->shouldReceive('debug')->times(7);
 
         /** @var AuthorizationManager */
