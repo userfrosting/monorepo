@@ -76,24 +76,17 @@ class GroupApi
      */
     protected function validateAccess(GroupInterface $group): void
     {
-        // TODO : Change access to "api.group" or similar
-        if (!$this->authenticator->checkAccess('uri_group', [
-            'group' => $group,
-        ])) {
-            throw new ForbiddenException();
+        // Has access to all groups
+        if ($this->authenticator->checkAccess('uri_group')) {
+            return;
         }
 
-        // Determine fields that currentUser is authorized to view
-        // TODO : Deprecated this properly,
-        // TODO : Handle view_group_field_own
-        /*$fieldNames = ['name', 'slug', 'icon', 'description'];
-        foreach ($fieldNames as $field) {
-            if (!$this->authenticator->checkAccess('view_group_field', [
-                'group'    => $group,
-                'property' => $field,
-            ])) {
-                throw new ForbiddenException();
-            }
-        }*/
+        // Allow access to group owner
+        if ($this->authenticator->checkAccess('uri_group_own') &&
+            $group->id === $this->authenticator->user()?->group_id) {
+            return;
+        }
+
+        throw new ForbiddenException();
     }
 }

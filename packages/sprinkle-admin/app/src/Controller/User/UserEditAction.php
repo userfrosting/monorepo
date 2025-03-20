@@ -115,10 +115,7 @@ class UserEditAction
         }
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this user
-        if (!$this->authenticator->checkAccess('update_user_field', [
-            'user'   => $user,
-            'fields' => array_values(array_unique($fieldNames)),
-        ])) {
+        if (!$this->authenticator->checkAccess('update_user_field')) {
             throw new ForbiddenException();
         }
 

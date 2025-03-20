@@ -200,10 +200,7 @@ class RoleUpdateFieldAction
      */
     protected function validateAccess(RoleInterface $role, string $fieldName): void
     {
-        if (!$this->authenticator->checkAccess('update_role_field', [
-            'role'   => $role,
-            'fields' => [$fieldName],
-        ])) {
+        if (!$this->authenticator->checkAccess('update_role_field')) {
             throw new ForbiddenException();
         }
     }

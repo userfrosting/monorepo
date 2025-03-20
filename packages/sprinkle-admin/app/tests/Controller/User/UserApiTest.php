@@ -14,6 +14,7 @@ namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Config\Config;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
@@ -51,8 +52,12 @@ class UserApiTest extends AdminTestCase
         $user = User::factory()->create();
         $this->actAsUser($user);
 
+        // Create a second user
+        /** @var User */
+        $user2 = User::factory()->create();
+
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('GET', '/api/users/u/' . $user->user_name);
+        $request = $this->createJsonRequest('GET', '/api/users/u/' . $user2->user_name);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -60,12 +65,97 @@ class UserApiTest extends AdminTestCase
         $this->assertResponseStatus(403, $response);
     }
 
-    // TODO : Turn into JSON API endpoint
-    public function testPage(): void
+    public function testPageAccessToSeeYourself(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        $this->actAsUser($user);
+
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('GET', '/api/users/u/' . $user->user_name);
+        $response = $this->handleRequest($request);
+
+        // Assert response status & body
+        $this->assertResponseStatus(200, $response);
+        $this->assertJsonResponse($user->user_name, $response, 'user_name');
+    }
+
+    public function testPageAccessToUserInYourGroupButNoPermissions(): void
+    {
+        /** @var Group */
+        $group = Group::factory()->create();
+
+        /** @var User */
+        $user = User::factory()->create([
+            'group_id' => $group->id,
+        ]);
+        $this->actAsUser($user);
+
+        // Create a second user
+        /** @var User */
+        $user2 = User::factory()->create([
+            'group_id' => $group->id,
+        ]);
+
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('GET', '/api/users/u/' . $user2->user_name);
+        $response = $this->handleRequest($request);
+
+        // Assert response status & body
+        $this->assertJsonResponse('Access Denied', $response, 'title');
+        $this->assertResponseStatus(403, $response);
+    }
+
+    public function testPageAccessToUserInYourGroupWithPermissions(): void
+    {
+        /** @var Group */
+        $group = Group::factory()->create();
+
+        /** @var User */
+        $user = User::factory()->create([
+            'group_id' => $group->id,
+        ]);
+        $this->actAsUser($user, permissions: ['uri_user_in_group']);
+
+        // Create a second user
+        /** @var User */
+        $user2 = User::factory()->create([
+            'group_id' => $group->id,
+        ]);
+
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('GET', '/api/users/u/' . $user2->user_name);
+        $response = $this->handleRequest($request);
+
+        // Assert response status & body
+        $this->assertResponseStatus(200, $response);
+        $this->assertJsonResponse($user2->user_name, $response, 'user_name');
+    }
+
+    public function testPageAccessWithProperPermission(): void
     {
         /** @var User */
         $user = User::factory()->create();
         $this->actAsUser($user, permissions: ['uri_user']);
+
+        // Create a second user
+        /** @var User */
+        $user2 = User::factory()->create();
+
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('GET', '/api/users/u/' . $user2->user_name);
+        $response = $this->handleRequest($request);
+
+        // Assert response status & body
+        $this->assertResponseStatus(200, $response);
+        $this->assertJsonResponse($user2->user_name, $response, 'user_name');
+    }
+
+    public function testPage(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        $this->actAsUser($user);
 
         /** @var Config */
         $config = $this->ci->get(Config::class);
@@ -104,7 +194,7 @@ class UserApiTest extends AdminTestCase
     {
         /** @var User */
         $user = User::factory()->create();
-        $this->actAsUser($user, permissions: ['uri_user']);
+        $this->actAsUser($user);
 
         /** @var Config */
         $config = $this->ci->get(Config::class);

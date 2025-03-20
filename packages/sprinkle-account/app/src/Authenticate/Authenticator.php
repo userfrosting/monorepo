@@ -311,7 +311,7 @@ class Authenticator
      * Alias for authorizationManager->checkAccess using the current user.
      *
      * @param string  $slug   The permission slug to check for access.
-     * @param mixed[] $params An array of field names => values.
+     * @param mixed[] $params An array of field names => values. @deprecated
      *
      * @return bool True if the user has access, false otherwise.
      */

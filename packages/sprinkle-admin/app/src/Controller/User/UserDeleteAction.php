@@ -119,8 +119,16 @@ class UserDeleteAction
      */
     protected function validateAccess(UserInterface $user): void
     {
-        if (!$this->authenticator->checkAccess('delete_user', ['user' => $user])) {
+        if (!$this->authenticator->checkAccess('delete_user')) {
             throw new ForbiddenException();
+        }
+
+        // Make sure the user is not a master user
+        if ($user->id === $this->config->getInt('reserved_user_ids.master')) {
+            $e = new AccountException();
+            $e->setTitle('DELETE_MASTER');
+
+            throw $e;
         }
     }
 }

@@ -116,10 +116,7 @@ class RoleEditAction
         }
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this user
-        if (!$this->authenticator->checkAccess('update_role_field', [
-            'role'   => $role,
-            'fields' => array_values(array_unique($fieldNames)),
-        ])) {
+        if (!$this->authenticator->checkAccess('update_role_field')) {
             throw new ForbiddenException();
         }
 

@@ -128,7 +128,7 @@ class RoleDeleteAction
      */
     protected function validateAccess(RoleInterface $role): void
     {
-        if (!$this->authenticator->checkAccess('delete_role', ['role' => $role])) {
+        if (!$this->authenticator->checkAccess('delete_role')) {
             throw new ForbiddenException();
         }
     }

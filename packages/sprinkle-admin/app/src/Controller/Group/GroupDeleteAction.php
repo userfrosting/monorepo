@@ -128,7 +128,7 @@ class GroupDeleteAction
      */
     protected function validateAccess(GroupInterface $group): void
     {
-        if (!$this->authenticator->checkAccess('delete_group', ['group' => $group])) {
+        if (!$this->authenticator->checkAccess('delete_group')) {
             throw new ForbiddenException();
         }
     }

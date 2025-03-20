@@ -67,10 +67,7 @@ class RoleUsersSprunje
      */
     protected function validateAccess(RoleInterface $role): void
     {
-        if (!$this->authenticator->checkAccess('view_role_field', [
-            'role'     => $role,
-            'property' => 'users',
-        ])) {
+        if (!$this->authenticator->checkAccess('view_role_field')) {
             throw new ForbiddenException();
         }
     }

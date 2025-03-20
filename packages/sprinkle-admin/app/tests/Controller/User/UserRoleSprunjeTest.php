@@ -82,7 +82,7 @@ class UserRoleSprunjeTest extends AdminTestCase
     {
         /** @var User */
         $user = User::factory()->create();
-        $this->actAsUser($user, permissions: ['view_user_field']);
+        $this->actAsUser($user, permissions: ['view_user_roles']);
 
         // Create request with method and url and fetch response
         $request = $this->createRequest('GET', '/api/users/u/' . $user->user_name . '/roles');

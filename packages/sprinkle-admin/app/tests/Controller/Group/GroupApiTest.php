@@ -92,6 +92,7 @@ class GroupApiTest extends AdminTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
+        $this->assertResponseStatus(200, $response);
         $this->assertJsonStructure([
             'id',
             'slug',
@@ -102,5 +103,41 @@ class GroupApiTest extends AdminTestCase
             'updated_at',
             'users_count',
         ], $response);
+    }
+
+    public function testAccessToOwnGroup(): void
+    {
+        /** @var Group */
+        $group = Group::factory()->create();
+
+        /** @var User */
+        $user = User::factory()->create([
+            'group_id' => $group->id,
+        ]);
+        $this->actAsUser($user, permissions: ['uri_group_own']);
+
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('GET', '/api/groups/g/' . $group->slug);
+        $response = $this->handleRequest($request);
+
+        // Assert response status
+        $this->assertResponseStatus(200, $response);
+    }
+
+    public function testAccessDeniedForNotYourGroup(): void
+    {
+        /** @var Group */
+        $group = Group::factory()->create();
+
+        /** @var User */
+        $user = User::factory()->create();
+        $this->actAsUser($user, permissions: ['uri_group_own']);
+
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('GET', '/api/groups/g/' . $group->slug);
+        $response = $this->handleRequest($request);
+
+        // Assert response status
+        $this->assertResponseStatus(403, $response);
     }
 }

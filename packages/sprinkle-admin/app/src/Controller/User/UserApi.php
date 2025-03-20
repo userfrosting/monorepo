@@ -66,12 +66,23 @@ class UserApi
      */
     protected function validateAccess(UserInterface $user): void
     {
-        // Access-controlled page
-        if (!$this->authenticator->checkAccess('uri_user', [
-            'user' => $user,
-        ])) {
-            throw new ForbiddenException();
+        // Has access to all users
+        if ($this->authenticator->checkAccess('uri_user')) {
+            return;
         }
+
+        // The user can view itself
+        if ($this->authenticator->user()?->id === $user->id) {
+            return;
+        }
+
+        // The user can view users in the same group
+        if ($this->authenticator->checkAccess('uri_user_in_group')
+            && $this->authenticator->user()?->group_id === $user->group_id) {
+            return;
+        }
+
+        throw new ForbiddenException();
 
         // Determine fields that currentUser is authorized to view
         /*
@@ -134,6 +145,7 @@ class UserApi
             $editButtons['hidden'][] = 'password';
         }
 
+        // N.B.: Renamed to `update_user_role`
         if (!$this->authenticator->checkAccess('update_user_field', [
             'user'   => $user,
             'fields' => ['roles'],

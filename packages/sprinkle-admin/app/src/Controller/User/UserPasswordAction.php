@@ -85,10 +85,7 @@ class UserPasswordAction
      */
     protected function validateAccess(UserInterface $user): void
     {
-        if (!$this->authenticator->checkAccess('update_user_field', [
-            'user'   => $user,
-            'fields' => ['password'],
-        ])) {
+        if (!$this->authenticator->checkAccess('update_user_field')) {
             throw new ForbiddenException();
         }
     }

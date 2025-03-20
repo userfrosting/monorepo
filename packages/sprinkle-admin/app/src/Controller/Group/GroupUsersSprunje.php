@@ -66,11 +66,15 @@ class GroupUsersSprunje
      */
     protected function validateAccess(GroupInterface $group): void
     {
-        if (!$this->authenticator->checkAccess('view_group_field', [
-            'group'    => $group,
-            'property' => 'users',
-        ])) {
-            throw new ForbiddenException();
+        if ($this->authenticator->checkAccess('view_group_field')) {
+            return;
         }
+
+        if ($this->authenticator->checkAccess('view_group_field_own')
+            && $this->authenticator->user()?->group_id === $group->id) {
+            return;
+        }
+
+        throw new ForbiddenException();
     }
 }

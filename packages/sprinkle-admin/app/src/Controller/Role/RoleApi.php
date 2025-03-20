@@ -63,9 +63,7 @@ class RoleApi
     protected function validateAccess(RoleInterface $role): void
     {
         // Access-controlled page
-        if (!$this->authenticator->checkAccess('uri_role', [
-            'role' => $role,
-        ])) {
+        if (!$this->authenticator->checkAccess('uri_role')) {
             throw new ForbiddenException();
         }
 

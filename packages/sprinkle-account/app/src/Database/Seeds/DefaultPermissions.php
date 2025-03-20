@@ -260,7 +260,7 @@ class DefaultPermissions implements SeedInterface
     {
         /** @var PermissionInterface $permission */
         foreach ($permissions as $slug => $permission) {
-            // Trying to find if the permission already exist
+            // Trying to find if the permission already exists
             $existingPermission = Permission::where([
                 'slug'       => $permission->slug,
                 'conditions' => $permission->conditions,

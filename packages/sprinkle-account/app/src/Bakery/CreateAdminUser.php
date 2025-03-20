@@ -23,6 +23,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultPermissions;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultRoles;
+use UserFrosting\Sprinkle\Account\Database\Seeds\UpdatePermissions;
 
 /**
  * Create root user CLI command. Same as CreateUser, but will abort if the root user already exists.
@@ -41,6 +42,9 @@ class CreateAdminUser extends CreateUser
 
     #[Inject]
     protected DefaultPermissions $defaultPermissions;
+
+    #[Inject]
+    protected UpdatePermissions $updatePermissions;
 
     #[Inject]
     protected DefaultRoles $defaultRoles;
@@ -71,6 +75,7 @@ class CreateAdminUser extends CreateUser
         if (Permission::count() === 0) {
             $this->io->note('Running default permissions seed...');
             $this->defaultPermissions->run();
+            $this->updatePermissions->run();
         }
     }
 }

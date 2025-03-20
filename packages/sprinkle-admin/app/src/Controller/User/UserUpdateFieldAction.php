@@ -247,10 +247,8 @@ class UserUpdateFieldAction
      */
     protected function validateAccess(UserInterface $user, string $fieldName): void
     {
-        if (!$this->authenticator->checkAccess('update_user_field', [
-            'user'   => $user,
-            'fields' => [$fieldName],
-        ])) {
+        // TODO Support `update_user_role`
+        if (!$this->authenticator->checkAccess('update_user_field')) {
             throw new ForbiddenException();
         }
     }

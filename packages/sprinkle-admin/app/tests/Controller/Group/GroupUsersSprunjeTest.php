@@ -99,6 +99,52 @@ class GroupUsersSprunjeTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertNotEmpty((string) $response->getBody());
+        $this->assertJsonStructure([
+            'count',
+            'count_filtered',
+            'rows',
+            'listable',
+            'sortable',
+            'filterable',
+        ], $response);
+    }
+
+    public function testPageForYourGroup(): void
+    {
+        // Create Group
+        /** @var Group */
+        $group = Group::factory()->create();
+
+        /** @var User */
+        $user = User::factory()->create([
+            'group_id' => $group->id,
+        ]);
+        $this->actAsUser($user, permissions: ['view_group_field_own']);
+
+        // Create request with method and url and fetch response
+        $request = $this->createRequest('GET', '/api/groups/g/' . $group->slug . '/users');
+        $response = $this->handleRequest($request);
+
+        // Assert response status & body
+        $this->assertResponseStatus(200, $response);
+    }
+
+    public function testPageForForbiddenExceptionNotYourGroup(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        $this->actAsUser($user, permissions: ['view_group_field_own']);
+
+        // Create Group
+        /** @var Group */
+        $group = Group::factory()->create();
+
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('GET', '/api/groups/g/' . $group->slug . '/users');
+        $response = $this->handleRequest($request);
+
+        // Assert response status & body
+        $this->assertJsonResponse('Access Denied', $response, 'title');
+        $this->assertResponseStatus(403, $response);
     }
 }

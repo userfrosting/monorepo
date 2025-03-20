@@ -33,6 +33,7 @@ use UserFrosting\Sprinkle\Account\Database\Migrations\v500\UpdateUsersTable as V
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultPermissions;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultRoles;
+use UserFrosting\Sprinkle\Account\Database\Seeds\UpdatePermissions;
 use UserFrosting\Sprinkle\Account\Event\UserAuthenticatedEvent;
 use UserFrosting\Sprinkle\Account\Event\UserCreatedEvent;
 use UserFrosting\Sprinkle\Account\Event\UserLoggedInEvent;
@@ -168,6 +169,7 @@ class Account implements
             DefaultGroups::class,
             DefaultPermissions::class,
             DefaultRoles::class,
+            UpdatePermissions::class,
         ];
     }
 
