@@ -83,7 +83,6 @@ class UserApi
         }
 
         throw new ForbiddenException();
-
         // Determine fields that currentUser is authorized to view
         /*
         // Determine fields that currentUser is authorized to view

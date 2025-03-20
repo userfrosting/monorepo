@@ -361,7 +361,7 @@ return [
     * ----------------------------------------------------------------------
     * Site Settings
     * ----------------------------------------------------------------------
-    * "Site" settings are automatically passed to Twig and exposed via an API 
+    * "Site" settings are automatically passed to Twig and exposed via an API
     * for access by the frontend.
     */
     'site' => [
