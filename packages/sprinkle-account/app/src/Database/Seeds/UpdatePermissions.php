@@ -30,10 +30,13 @@ class UpdatePermissions implements SeedInterface
         $roleSiteAdmin = Role::where('slug', 'site-admin')->first();
 
         // create_user_field - Remove this role, will be replaced by group management permissions in 6.1
-        Permission::where([
+        /** @var Permission|null */
+        $permission = Permission::where([
             'slug'       => 'create_user_field',
             'conditions' => "subset(fields,['group'])",
-        ])->delete();
+        ])->first();
+        $roleSiteAdmin?->permissions()->detach($permission);
+        $permission?->delete();
 
         // delete_user - Hard coded the master user ID verification, give up the role : Change to always()
         Permission::where([
@@ -54,10 +57,13 @@ class UpdatePermissions implements SeedInterface
         ]);
 
         // update_user_field_group - Remove this role, will be replaced by group management permissions in 6.1
-        Permission::where([
+        /** @var Permission|null */
+        $permission = Permission::where([
             'slug'        => 'update_user_field',
             'description' => 'Edit users in your own group who are not Site or Group Administrators, except yourself.',
-        ])->delete();
+        ])->first();
+        $roleSiteAdmin?->permissions()->detach($permission);
+        $permission?->delete();
 
         // update_user_field_role - Rename to `update_user_role`
         Permission::where([
@@ -143,10 +149,13 @@ class UpdatePermissions implements SeedInterface
         ]);
 
         // view_user_field_group - DELETE
-        Permission::where([
+        /** @var Permission|null */
+        $permission = Permission::where([
             'slug'        => 'view_user_field',
             'description' => 'View certain properties of any user in your own group, except the master user and Site and Group Administrators (except yourself).',
-        ])->delete();
+        ])->first();
+        $roleSiteAdmin?->permissions()->detach($permission);
+        $permission?->delete();
 
         // ADD - view_user_activities
         $view_user_activities = new Permission([
