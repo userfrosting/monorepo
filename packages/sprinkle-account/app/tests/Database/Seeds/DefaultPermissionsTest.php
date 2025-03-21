@@ -72,10 +72,11 @@ class DefaultPermissionsTest extends AccountTestCase
         $seed->run();
 
         // Assert new table state
-        $permissions = Permission::all();
+        $permissions = Permission::orderBy('slug')->get();
         $this->assertCount(32, $permissions);
 
         // Assert permissions
+        // @phpstan-ignore-next-line
         $this->assertSame($this->permissions, $permissions->setVisible([
             'slug',
             'name',
@@ -94,6 +95,12 @@ class DefaultPermissionsTest extends AccountTestCase
      * @var mixed[]
      */
     protected array $permissions = [
+        [
+            'slug'        => 'clear_cache',
+            'name'        => 'Clear system cache',
+            'conditions'  => 'always()',
+            'description' => 'Clear the system cache from the administrative dashboard.',
+        ],
         [
             'slug'        => 'create_group',
             'name'        => 'Create group',
@@ -119,16 +126,16 @@ class DefaultPermissionsTest extends AccountTestCase
             'description' => 'Delete a group.',
         ],
         [
-            'slug'        => 'delete_user',
-            'name'        => 'Delete user',
-            'conditions'  => 'always()',
-            'description' => 'Delete users.',
-        ],
-        [
             'slug'        => 'delete_role',
             'name'        => 'Delete role',
             'conditions'  => 'always()',
             'description' => 'Delete a role.',
+        ],
+        [
+            'slug'        => 'delete_user',
+            'name'        => 'Delete user',
+            'conditions'  => 'always()',
+            'description' => 'Delete users.',
         ],
         [
             'slug'        => 'update_account_settings',
@@ -143,6 +150,12 @@ class DefaultPermissionsTest extends AccountTestCase
             'description' => 'Edit basic properties of any group.',
         ],
         [
+            'slug'        => 'update_role_field',
+            'name'        => 'Edit role',
+            'conditions'  => 'always()',
+            'description' => 'Edit basic properties of any role.',
+        ],
+        [
             'slug'        => 'update_user_field',
             'name'        => 'Edit user',
             'conditions'  => 'always()',
@@ -153,12 +166,6 @@ class DefaultPermissionsTest extends AccountTestCase
             'name'        => "Edit user's role",
             'conditions'  => 'always()',
             'description' => "Edit user's roles.",
-        ],
-        [
-            'slug'        => 'update_role_field',
-            'name'        => 'Edit role',
-            'conditions'  => 'always()',
-            'description' => 'Edit basic properties of any role.',
         ],
         [
             'slug'        => 'uri_account_settings',
@@ -251,6 +258,18 @@ class DefaultPermissionsTest extends AccountTestCase
             'description' => 'View properties of any role.',
         ],
         [
+            'slug'        => 'view_system_info',
+            'name'        => 'View system info',
+            'conditions'  => 'always()',
+            'description' => 'View the system information in the administrative dashboard.',
+        ],
+        [
+            'slug'        => 'view_user_activities',
+            'name'        => "View user's Activities",
+            'conditions'  => 'always()',
+            'description' => 'View activities of any user.',
+        ],
+        [
             'slug'        => 'view_user_field',
             'name'        => 'View user',
             'conditions'  => 'always()',
@@ -261,24 +280,6 @@ class DefaultPermissionsTest extends AccountTestCase
             'name'        => "View user's permissions",
             'conditions'  => 'always()',
             'description' => 'View permissions of any user.',
-        ],
-        [
-            'slug'        => 'view_system_info',
-            'name'        => 'View system info',
-            'conditions'  => 'always()',
-            'description' => 'View the system information in the administrative dashboard.',
-        ],
-        [
-            'slug'        => 'clear_cache',
-            'name'        => 'Clear system cache',
-            'conditions'  => 'always()',
-            'description' => 'Clear the system cache from the administrative dashboard.',
-        ],
-        [
-            'slug'        => 'view_user_activities',
-            'name'        => "View user's Activities",
-            'conditions'  => 'always()',
-            'description' => 'View activities of any user.',
         ],
         [
             'slug'        => 'view_user_roles',
