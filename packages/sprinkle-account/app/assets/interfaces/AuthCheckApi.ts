@@ -1,4 +1,4 @@
-import type { UserInterface, UserPermissionsMapInterface } from './'
+import type { UserDataInterface } from './'
 
 /**
  * API Interfaces - What the API expects and what it returns
@@ -11,7 +11,4 @@ import type { UserInterface, UserPermissionsMapInterface } from './'
  *
  * This api doesn't have a corresponding Request data interface.
  */
-export interface AuthCheckResponse {
-    user: UserInterface | null
-    permissions: UserPermissionsMapInterface | null
-}
+export interface AuthCheckResponse extends UserDataInterface {}

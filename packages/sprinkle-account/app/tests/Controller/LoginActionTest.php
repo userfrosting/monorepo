@@ -72,8 +72,7 @@ class LoginActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse($user->toArray(), $response, 'user');
-        $this->assertJsonResponse(['test_permission' => 'always()'], $response, 'permissions');
+        $this->assertJsonResponse($user->apiData, $response, 'user');
         $this->assertJsonResponse('Welcome back, ' . $user->full_name . '!', $response, 'message');
         $this->assertJsonResponse('/home', $response, 'redirect');
         $this->assertResponseStatus(200, $response);
@@ -103,7 +102,7 @@ class LoginActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse($user->toArray(), $response, 'user');
+        $this->assertJsonResponse($user->apiData, $response, 'user');
         $this->assertResponseStatus(200, $response);
 
         // We have to logout the user to avoid problem
@@ -225,7 +224,7 @@ class LoginActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse($user->toArray(), $response, 'user');
+        $this->assertJsonResponse($user->apiData, $response, 'user');
         $this->assertResponseStatus(200, $response);
 
         // We have to logout the user to avoid problem

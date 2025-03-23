@@ -54,6 +54,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  * @property Collection<VerificationInterface>  $verifications
  * @property ActivityInterface|null             $last_activity
  * @property ActivityInterface|null             $lastActivity
+ * @property array<string, mixed>               $apiData
  *
  * @method        $this joinLastActivity()
  * @method static $this joinLastActivity()
@@ -91,6 +92,18 @@ interface UserInterface
      * @param string $value
      */
     public function setPasswordAttribute(string $value): void;
+
+    /**
+     * Attribute returning the user's data for frontend API responses.
+     *
+     * The frontend code will receive this data when the user is authenticated.
+     * Add the user's permissions and master status to it's normal attributes.
+     *
+     * Use `$user->apiData()` to access this attribute.
+     *
+     * @return array<string, mixed>
+     */
+    public function getApiDataAttribute(): array;
 
     /**
      * Compare password to the user hashed password. Returns true if both evaluate to the same.

@@ -1,11 +1,11 @@
-import { setActivePinia, createPinia } from 'pinia'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-import { useAuthStore } from '../../stores/auth'
+import { setActivePinia, createPinia } from 'pinia'
 import axios from 'axios'
-import type { LoginRequest, LoginResponse, UserInterface } from 'app/assets/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
+import { useAuthStore } from '../../stores/auth'
+import type { LoginRequest, LoginResponse, UserDataInterface } from 'app/assets/interfaces'
 
-const testUser: UserInterface = {
+const testUser: UserDataInterface = {
     id: 1,
     user_name: 'JohnDoe',
     first_name: 'John',
@@ -19,7 +19,11 @@ const testUser: UserInterface = {
     locale: 'en_US',
     created_at: '',
     updated_at: '',
-    deleted_at: null
+    deleted_at: null,
+    permissions: {
+        'test.permission': ['always()']
+    },
+    is_master: false
 }
 
 const form: LoginRequest = {
@@ -32,6 +36,9 @@ const loadTranslator = vi.fn()
 vi.mock('@userfrosting/sprinkle-core/stores', () => ({
     useTranslator: () => ({
         load: loadTranslator
+    }),
+    useConfigStore: () => ({
+        get: vi.fn().mockReturnValue(false)
     })
 }))
 
@@ -104,8 +111,7 @@ describe('authStore', () => {
     test('should check authentication successfully', async () => {
         // Arrange
         const authStore = useAuthStore()
-        const response = { data: { auth: true, user: testUser } }
-        vi.spyOn(axios, 'get').mockResolvedValue(response as any)
+        vi.spyOn(axios, 'get').mockResolvedValue({ data: testUser })
 
         // Assert initial state
         expect(authStore.user).toBeNull()
@@ -123,7 +129,24 @@ describe('authStore', () => {
         // Arrange
         const authStore = useAuthStore()
         const error = { response: { data: {} } }
-        vi.spyOn(axios, 'get').mockRejectedValue(error as any)
+        vi.spyOn(axios, 'get').mockRejectedValue({
+            response: { status: 401, data: error.response.data }
+        } as any)
+
+        // Assert initial state
+        authStore.setUser(testUser)
+        expect(authStore.user).toStrictEqual(testUser)
+
+        // Act & Assert
+        await authStore.check()
+        expect(axios.get).toHaveBeenCalledWith('/account/auth-check')
+        expect(authStore.user).toBeNull()
+    })
+
+    test('should throw an error when authentication return anything other than a 401 status', async () => {
+        // Arrange
+        const authStore = useAuthStore()
+        vi.spyOn(axios, 'get').mockRejectedValue({ response: { data: {} } } as any)
 
         // Assert initial state
         authStore.setUser(testUser)
@@ -136,7 +159,7 @@ describe('authStore', () => {
             closeBtn: true
         })
         expect(axios.get).toHaveBeenCalledWith('/account/auth-check')
-        expect(authStore.user).toBeNull()
+        expect(authStore.user).toStrictEqual(testUser) // User is not nulled
     })
 
     test('should logout successfully', async () => {
@@ -175,5 +198,15 @@ describe('authStore', () => {
         })
         expect(axios.get).toHaveBeenCalledWith('/account/logout')
         expect(authStore.user).toBeNull() // User will be unset even if logout fails
+    })
+
+    test('should check if the user has a permission', () => {
+        // Arrange
+        const authStore = useAuthStore()
+        authStore.setUser(testUser)
+
+        // Assert
+        expect(authStore.checkAccess('test.permission')).toBe(true)
+        expect(authStore.checkAccess('nonexistent.permission')).toBe(false)
     })
 })

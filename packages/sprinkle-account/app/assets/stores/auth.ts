@@ -1,40 +1,43 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import type {
-    UserInterface,
     LoginRequest,
     LoginResponse,
     AuthCheckResponse,
-    UserPermissionsMapInterface
+    UserDataInterface
 } from '../interfaces'
 import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
 import { useTranslator } from '@userfrosting/sprinkle-core/stores'
+import { useAuthorizationManager } from '../composables/useAuthorizationManager'
 
 export const useAuthStore = defineStore('auth', {
     persist: true,
     state: () => {
         return {
-            user: null as UserInterface | null,
-            permissions: null as UserPermissionsMapInterface | null
+            user: null as UserDataInterface | null
         }
     },
     getters: {
-        isAuthenticated: (state): boolean => state.user !== null
+        isAuthenticated: (state): boolean => state.user !== null,
+        checkAccess:
+            (state) =>
+            (slug: string): Boolean => {
+                const authorizer = useAuthorizationManager(state.user)
+                return authorizer.checkAccess(slug)
+            }
     },
     actions: {
-        setUser(user: UserInterface, permissions: UserPermissionsMapInterface): void {
+        setUser(user: UserDataInterface): void {
             this.user = user
-            this.permissions = permissions
         },
         unsetUser(): void {
             this.user = null
-            this.permissions = null
         },
         async login(form: LoginRequest) {
             return axios
                 .post<LoginResponse>('/account/login', form)
                 .then((response) => {
-                    this.setUser(response.data.user, response.data.permissions)
+                    this.setUser(response.data.user)
 
                     // Reload the translator dictionary to reflect the user's language
                     useTranslator().load()
@@ -58,27 +61,26 @@ export const useAuthStore = defineStore('auth', {
             return axios
                 .get<AuthCheckResponse>('/account/auth-check')
                 .then((response) => {
-                    if (response.data.user === null) {
-                        this.unsetUser()
-                    } else {
-                        this.setUser(response.data.user, response.data.permissions ?? {})
-                    }
+                    this.setUser(response.data)
 
                     return this.user
                 })
                 .catch((err) => {
-                    this.unsetUser()
+                    // Test status is 401 and unset user, otherwise, throw error
+                    if (err.response.status === 401) {
+                        this.unsetUser()
+                    } else {
+                        const error: AlertInterface = {
+                            ...{
+                                description: 'An error as occurred',
+                                style: Severity.Danger,
+                                closeBtn: true
+                            },
+                            ...err.response.data
+                        }
 
-                    const error: AlertInterface = {
-                        ...{
-                            description: 'An error as occurred',
-                            style: Severity.Danger,
-                            closeBtn: true
-                        },
-                        ...err.response.data
+                        throw error
                     }
-
-                    throw error
                 })
         },
         async logout() {

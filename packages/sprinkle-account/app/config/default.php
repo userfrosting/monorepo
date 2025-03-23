@@ -125,6 +125,9 @@ return [
     * processes
     */
     'site' => [
+        'debug'     => [
+            'auth' => false,
+        ],
         'login' => [
             'enable_email' => true, // Set to false to allow login by username only
         ],

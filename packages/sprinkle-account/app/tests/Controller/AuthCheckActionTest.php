@@ -40,16 +40,9 @@ class AuthCheckActionTest extends AccountTestCase
 
     public function testGuest(): void
     {
-        // Create request with method and url and fetch response
         $request = $this->createJsonRequest('GET', '/account/auth-check');
         $response = $this->handleRequest($request);
-
-        // Assert response status & body
-        $this->assertJsonResponse([
-            'user'        => null,
-            'permissions' => null,
-        ], $response);
-        $this->assertResponseStatus(200, $response);
+        $this->assertResponseStatus(401, $response);
     }
 
     public function testAuth(): void
@@ -82,10 +75,7 @@ class AuthCheckActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse([
-            'user'        => $user->attributesToArray(),
-            'permissions' => ['test_permission' => ['always()']],
-        ], $response);
+        $this->assertJsonResponse($user->apiData, $response);
         $this->assertResponseStatus(200, $response);
     }
 }

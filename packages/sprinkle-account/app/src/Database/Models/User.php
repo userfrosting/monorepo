@@ -168,6 +168,25 @@ class User extends Model implements UserInterface
     }
 
     /**
+     * Attribute returning the user's data for frontend API responses.
+     *
+     * The frontend code will receive this data when the user is authenticated.
+     * Add the user's permissions and master status to it's normal attributes.
+     *
+     * Use `$user->apiData()` to access this attribute.
+     *
+     * @return array<string, mixed>
+     */
+    public function getApiDataAttribute(): array
+    {
+        return array_merge(
+            $this->attributesToArray(),
+            ['permissions' => $this->getCachedPermissions()],
+            ['is_master'   => $this->isMaster()]
+        );
+    }
+
+    /**
      * Mutate password before saving into db. This is where password is hashed.
      *
      * @param string $value

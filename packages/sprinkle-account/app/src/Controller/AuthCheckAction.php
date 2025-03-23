@@ -42,11 +42,14 @@ class AuthCheckAction
     public function __invoke(Response $response): Response
     {
         $user = $this->authenticator->user();
-        $data = [
-            'user'        => $user?->attributesToArray(),
-            'permissions' => $user?->getCachedPermissions(),
-        ];
-        $payload = json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+
+        // Return 401 (Unauthorized) if user is not authenticated
+        if ($user === null) {
+            return $response->withStatus(401);
+        }
+
+        // Write the user data to the response body otherwise
+        $payload = json_encode($user->apiData, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
         $response->getBody()->write($payload);
 
         return $response->withHeader('Content-Type', 'application/json');

@@ -102,8 +102,7 @@ class LoginAction
 
         // Define payload
         $data = [
-            'user'        => $user->attributesToArray(),
-            'permissions' => $user->permissions->pluck('conditions', 'slug'),
+            'user'        => $user->apiData,
             'message'     => $this->translator->translate('WELCOME', $user->toArray()),
             'redirect'    => $event->getRedirect() ?? '',
         ];

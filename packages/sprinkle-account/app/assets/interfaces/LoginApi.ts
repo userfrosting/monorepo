@@ -1,4 +1,4 @@
-import type { UserInterface, UserPermissionsMapInterface } from './'
+import type { UserDataInterface } from './'
 
 /**
  * API Interfaces - What the API expects and what it returns
@@ -12,8 +12,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-    user: UserInterface
-    permissions: UserPermissionsMapInterface
+    user: UserDataInterface
     message: string
     redirect: string
 }
