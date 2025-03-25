@@ -27,7 +27,8 @@
         ".": "./app/assets/index.ts",
         "./interfaces": "./app/assets/interfaces/index.ts",
         "./stores": "./app/assets/stores/index.ts",
-        "./composables": "./app/assets/composables/index.ts"
+        "./composables": "./app/assets/composables/index.ts",
+        "./routes": "./app/assets/routes/index.ts"
     },
     "files": [
         "app/assets/"
