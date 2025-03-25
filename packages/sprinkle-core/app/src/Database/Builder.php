@@ -24,7 +24,7 @@ class Builder extends QueryBuilder
     /**
      * @var string[]|null List of excluded columns
      */
-    protected array|null $excludedColumns = null;
+    protected ?array $excludedColumns = null;
 
     /**
      * Perform a "begins with" pattern match on a specified column in a query.

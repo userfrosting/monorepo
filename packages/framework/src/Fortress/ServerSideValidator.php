@@ -86,7 +86,7 @@ class ServerSideValidator implements ServerSideValidatorInterface
      *
      * @return mixed[]|bool
      */
-    public function errors(string|null $field = null)
+    public function errors(?string $field = null)
     {
         if ($field !== null) {
             return isset($this->errors[$field]) ? $this->errors[$field] : false;
