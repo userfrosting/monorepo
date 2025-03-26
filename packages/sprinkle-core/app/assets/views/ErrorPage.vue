@@ -1,0 +1,3 @@
+<template>
+    <UFErrorPage />
+</template>
