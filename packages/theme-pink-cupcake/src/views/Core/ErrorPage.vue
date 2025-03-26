@@ -35,7 +35,7 @@ const title = computed(() => {
         case '404':
         case '405':
         case '410':
-            return 'ERROR.'+props.errorCode+'.TITLE'
+            return 'ERROR.' + props.errorCode + '.TITLE'
         default:
             return 'ERROR.TITLE'
     }
@@ -49,7 +49,7 @@ const description = computed(() => {
         case '404':
         case '405':
         case '410':
-            return 'ERROR.'+props.errorCode+'.DESCRIPTION'
+            return 'ERROR.' + props.errorCode + '.DESCRIPTION'
         default:
             return 'ERROR.DESCRIPTION'
     }
@@ -57,9 +57,5 @@ const description = computed(() => {
 </script>
 
 <template>
-    <UFInfoBox
-        to="/"
-        :faIcon="faIcon"
-        :value="$t(title)"
-        :label="$t(description)" />
+    <UFInfoBox to="/" :faIcon="faIcon" :value="$t(title)" :label="$t(description)" />
 </template>

@@ -3,9 +3,7 @@
  * See : https://vuejs.org/guide/components/registration
  */
 import type { App } from 'vue'
-import {
-    ErrorPage
-} from '../views/Core'
+import { ErrorPage } from '../views/Core'
 
 export default {
     install: (app: App) => {

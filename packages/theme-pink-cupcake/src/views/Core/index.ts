@@ -1,5 +1,3 @@
 import ErrorPage from './ErrorPage.vue'
 
-export {
-    ErrorPage
-}
+export { ErrorPage }
