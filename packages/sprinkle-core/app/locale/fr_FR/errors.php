@@ -18,8 +18,8 @@ return [
         '@TRANSLATION' => 'Erreur',
 
         '400' => [
-            'TITLE'       => 'Erreur 400: Mauvaise requête',
-            'DESCRIPTION' => "Ce n'est probablement pas de votre faute.",
+            'TITLE'       => 'Mauvaise requête',
+            'DESCRIPTION' => 'Le serveur ne peut pas ou ne veut pas traiter la requête en raison d\'une erreur apparente du client.',
         ],
         '401' => [
             'TITLE'       => 'Non autorisé',
