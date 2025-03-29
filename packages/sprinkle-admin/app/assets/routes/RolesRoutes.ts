@@ -12,15 +12,23 @@ export default [
             {
                 path: '',
                 name: 'admin.roles',
+                meta: {
+                    permission: {
+                        slug: 'uri_roles'
+                    }
+                },
                 component: () => import('../views/RolesView.vue')
             },
             {
                 path: 'r/:slug', // roles/r/{slug}
                 name: 'admin.role',
-                component: () => import('../views/RoleView.vue'),
                 meta: {
-                    description: 'ROLE.INFO_PAGE'
-                }
+                    description: 'ROLE.INFO_PAGE',
+                    permission: {
+                        slug: 'uri_role'
+                    }
+                },
+                component: () => import('../views/RoleView.vue')
             }
         ]
     }

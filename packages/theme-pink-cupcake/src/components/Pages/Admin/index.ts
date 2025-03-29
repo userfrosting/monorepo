@@ -1,6 +1,5 @@
 import DashboardActivities from './Dashboard/DashboardActivities.vue'
 import DashboardRecentUsers from './Dashboard/DashboardRecentUsers.vue'
-import DashboardStats from './Dashboard/DashboardStats.vue'
 import GroupCreateModal from './Group/GroupCreateModal.vue'
 import GroupDeleteModal from './Group/GroupDeleteModal.vue'
 import GroupEditModal from './Group/GroupEditModal.vue'
@@ -20,7 +19,6 @@ import UserRoles from './User/UserRoles.vue'
 export {
     DashboardActivities,
     DashboardRecentUsers,
-    DashboardStats,
     GroupCreateModal,
     GroupDeleteModal,
     GroupEditModal,

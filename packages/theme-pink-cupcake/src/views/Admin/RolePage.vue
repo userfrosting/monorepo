@@ -33,15 +33,15 @@ watch(
         </UFCardBox>
     </template>
     <template v-else>
-        <div uk-grid>
-            <div class="uk-width-1-3">
+        <div class="uk-child-width-expand" uk-grid>
+            <div>
                 <RoleInfo :role="role" @updated="fetchRole()" />
             </div>
-            <div class="uk-width-2-3">
+            <div class="uk-width-2-3" v-if="$checkAccess('view_role_field')">
                 <RoleUsers :slug="role.slug" />
             </div>
         </div>
-        <div class="uk-child-width-1-1" uk-grid>
+        <div class="uk-child-width-1-1" uk-grid v-if="$checkAccess('view_role_field')">
             <div>
                 <RolePermissions :role="role" />
             </div>

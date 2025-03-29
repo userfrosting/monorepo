@@ -66,50 +66,6 @@ class RoleApi
         if (!$this->authenticator->checkAccess('uri_role')) {
             throw new ForbiddenException();
         }
-
-        /*
-        // Determine fields that currentUser is authorized to view
-        $fieldNames = ['name', 'slug', 'description'];
-
-        // Fields to hide based on user's access.
-        $fields = [
-            'hidden' => [],
-        ];
-
-        // Determine which fields should be hidden
-        foreach ($fieldNames as $field) {
-            if (!$this->authenticator->checkAccess('view_role_field', [
-                'role'     => $role,
-                'property' => $field,
-            ])) {
-                $fields['hidden'][] = $field;
-            }
-        }
-
-        // Determine buttons to display
-        $editButtons = [
-            'hidden' => [],
-        ];
-
-        if (!$this->authenticator->checkAccess('update_role_field', [
-            'role'   => $role,
-            'fields' => ['name', 'slug', 'description'],
-        ])) {
-            $editButtons['hidden'][] = 'edit';
-        }
-
-        if (!$this->authenticator->checkAccess('delete_role', [
-            'role' => $role,
-        ])) {
-            $editButtons['hidden'][] = 'delete';
-        }
-
-        return [
-            'role'            => $role,
-            'fields'          => $fields,
-            'tools'           => $editButtons,
-            'delete_redirect' => $this->routeParser->urlFor('uri_roles'),
-        ];*/
     }
 
     /**

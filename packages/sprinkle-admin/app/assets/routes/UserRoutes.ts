@@ -12,16 +12,24 @@ export default [
             {
                 path: '',
                 name: 'admin.users',
+                meta: {
+                    permission: {
+                        slug: 'uri_users'
+                    }
+                },
                 component: () => import('../views/UsersView.vue')
             },
             {
                 path: 'u/:user_name', // users/u/{user_name}
                 name: 'admin.user',
-                component: () => import('../views/UserView.vue'),
                 meta: {
                     title: 'USER.PAGE',
-                    description: 'USER.INFO_PAGE'
-                }
+                    description: 'USER.INFO_PAGE',
+                    permission: {
+                        slug: 'uri_user'
+                    }
+                },
+                component: () => import('../views/UserView.vue')
             }
         ]
     }

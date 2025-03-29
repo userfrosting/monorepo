@@ -2,6 +2,9 @@ export default [
     {
         path: 'permissions',
         meta: {
+            permission: {
+                slug: 'uri_permissions'
+            },
             auth: {
                 redirect: { name: 'account.login' }
             },

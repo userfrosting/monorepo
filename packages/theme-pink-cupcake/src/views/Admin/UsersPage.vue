@@ -12,7 +12,10 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
     <UFCardBox>
         <UFSprunjeTable dataUrl="/api/users" searchColumn="name">
             <template #actions="{ sprunjer }">
-                <UserCreateModal @saved="sprunjer.fetch()" class="uk-button uk-button-primary" />
+                <UserCreateModal
+                    @saved="sprunjer.fetch()"
+                    class="uk-button uk-button-primary"
+                    v-if="$checkAccess('create_user')" />
             </template>
 
             <template #header>
@@ -63,7 +66,8 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                                     :to="{
                                         name: 'admin.user',
                                         params: { user_name: item.user_name }
-                                    }">
+                                    }"
+                                    v-if="$checkAccess('uri_user')">
                                     <font-awesome-icon icon="eye" fixed-width /> {{ $t('VIEW') }}
                                 </RouterLink>
                             </li>
@@ -71,24 +75,33 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                                 <UserEditModal
                                     :user="item"
                                     @saved="sprunjer.fetch()"
+                                    v-if="$checkAccess('update_user_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
-                                <UserPasswordModal :user="item" class="uk-drop-close" />
+                                <UserPasswordModal
+                                    :user="item"
+                                    v-if="$checkAccess('update_user_field')"
+                                    class="uk-drop-close" />
                             </li>
                             <li>
-                                <UserPasswordResetModal :user="item" class="uk-drop-close" />
+                                <UserPasswordResetModal
+                                    :user="item"
+                                    v-if="$checkAccess('update_user_field')"
+                                    class="uk-drop-close" />
                             </li>
                             <li>
                                 <UserActivateModal
                                     :user="item"
                                     @saved="sprunjer.fetch()"
+                                    v-if="$checkAccess('update_user_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <UserDeleteModal
                                     :user="item"
                                     @deleted="sprunjer.fetch()"
+                                    v-if="$checkAccess('delete_user')"
                                     class="uk-drop-close" />
                             </li>
                         </ul>

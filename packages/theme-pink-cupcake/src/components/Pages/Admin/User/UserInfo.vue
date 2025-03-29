@@ -28,7 +28,7 @@ const emits = defineEmits(['updated'])
         </div>
         <hr />
         <!-- TODO : Find a way to slot the description list -->
-        <dl class="uk-description-list">
+        <dl class="uk-description-list" v-if="$checkAccess('view_user_field')">
             <dt><font-awesome-icon icon="envelope" /> {{ $t('EMAIL') }}</dt>
             <dd class="uk-text-meta">{{ user.email }}</dd>
             <dt><font-awesome-icon icon="users" /> {{ $t('GROUP') }}</dt>
@@ -62,20 +62,25 @@ const emits = defineEmits(['updated'])
         <UserEditModal
             :user="user"
             @saved="emits('updated')"
+            v-if="$checkAccess('update_user_field')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-primary uk-button-small" />
         <UserPasswordModal
             :user="user"
+            v-if="$checkAccess('update_user_field')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-default uk-button-small" />
         <UserPasswordResetModal
             :user="user"
+            v-if="$checkAccess('update_user_field')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-default uk-button-small" />
         <UserActivateModal
             :user="user"
             @saved="emits('updated')"
+            v-if="$checkAccess('update_user_field')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-default uk-button-small" />
         <UserDeleteModal
             :user="user"
             @deleted="router.push({ name: 'admin.users' })"
+            v-if="$checkAccess('delete_user')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-danger uk-button-small" />
         <slot data-test="slot"></slot>
     </UFCardBox>

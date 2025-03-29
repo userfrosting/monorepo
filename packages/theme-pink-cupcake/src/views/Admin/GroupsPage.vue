@@ -8,7 +8,10 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
     <UFCardBox>
         <UFSprunjeTable dataUrl="/api/groups" searchColumn="name">
             <template #actions="{ sprunjer }">
-                <GroupCreateModal @saved="sprunjer.fetch()" class="uk-button uk-button-primary" />
+                <GroupCreateModal
+                    @saved="sprunjer.fetch()"
+                    class="uk-button uk-button-primary"
+                    v-if="$checkAccess('create_group')" />
             </template>
 
             <template #header>
@@ -49,7 +52,8 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
                                     :to="{
                                         name: 'admin.group',
                                         params: { slug: item.slug }
-                                    }">
+                                    }"
+                                    v-if="$checkAccess('uri_group')">
                                     <font-awesome-icon icon="eye" fixed-width /> View
                                 </RouterLink>
                             </li>
@@ -57,13 +61,15 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
                                 <GroupEditModal
                                     :group="item"
                                     @saved="sprunjer.fetch()"
+                                    v-if="$checkAccess('update_group_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <GroupDeleteModal
                                     :group="item"
                                     @deleted="sprunjer.fetch()"
-                                    class="uk-drop-close" />
+                                    class="uk-drop-close"
+                                    v-if="$checkAccess('delete_group')" />
                             </li>
                         </ul>
                     </div>

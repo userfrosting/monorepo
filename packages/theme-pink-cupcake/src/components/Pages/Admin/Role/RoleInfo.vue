@@ -23,7 +23,7 @@ const emits = defineEmits(['updated'])
         </p>
         <hr />
         <!-- TODO : Find a way to slot the description list -->
-        <dl class="uk-description-list">
+        <dl class="uk-description-list" v-if="$checkAccess('view_role_field')">
             <dt><font-awesome-icon icon="users" /> {{ $t('USER', role.users_count) }}</dt>
             <dd>
                 <span class="uk-badge">{{ role.users_count }}</span>
@@ -33,10 +33,12 @@ const emits = defineEmits(['updated'])
         <RoleEditModal
             :role="role"
             @saved="emits('updated')"
+            v-if="$checkAccess('update_role_field')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-primary uk-button-small" />
         <RoleDeleteModal
             :role="role"
             @deleted="router.push({ name: 'admin.roles' })"
+            v-if="$checkAccess('delete_role')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-danger uk-button-small" />
         <slot data-test="slot"></slot>
     </UFCardBox>

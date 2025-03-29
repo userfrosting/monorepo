@@ -6,6 +6,9 @@ export default [
             auth: {
                 redirect: { name: 'account.login' }
             },
+            permission: {
+                slug: 'uri_dashboard'
+            },
             title: 'DASHBOARD'
         },
         component: () => import('../views/DashboardView.vue')

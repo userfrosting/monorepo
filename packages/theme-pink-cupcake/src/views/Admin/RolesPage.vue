@@ -9,7 +9,10 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
     <UFCardBox>
         <UFSprunjeTable dataUrl="/api/roles" searchColumn="name">
             <template #actions="{ sprunjer }">
-                <RoleCreateModal @saved="sprunjer.fetch()" class="uk-button uk-button-primary" />
+                <RoleCreateModal
+                    @saved="sprunjer.fetch()"
+                    class="uk-button uk-button-primary"
+                    v-if="$checkAccess('create_role')" />
             </template>
 
             <template #header>
@@ -44,7 +47,8 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
                                     :to="{
                                         name: 'admin.role',
                                         params: { slug: item.slug }
-                                    }">
+                                    }"
+                                    v-if="$checkAccess('uri_role')">
                                     <font-awesome-icon icon="eye" fixed-width /> View
                                 </RouterLink>
                             </li>
@@ -52,15 +56,20 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
                                 <RoleEditModal
                                     :role="item"
                                     @saved="sprunjer.fetch()"
+                                    v-if="$checkAccess('update_role_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
-                                <RoleManagePermissionModal :role="item" class="uk-drop-close" />
+                                <RoleManagePermissionModal
+                                    :role="item"
+                                    v-if="$checkAccess('update_role_field')"
+                                    class="uk-drop-close" />
                             </li>
                             <li>
                                 <RoleDeleteModal
                                     :role="item"
                                     @deleted="sprunjer.fetch()"
+                                    v-if="$checkAccess('delete_role')"
                                     class="uk-drop-close" />
                             </li>
                         </ul>

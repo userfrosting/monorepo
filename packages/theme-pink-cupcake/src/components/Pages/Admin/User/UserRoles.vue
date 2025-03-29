@@ -18,6 +18,7 @@ const { user } = defineProps<{
                 <UserManageRolesModal
                     :user="user"
                     @saved="sprunjer.fetch()"
+                    v-if="$checkAccess('update_user_role')"
                     class="uk-button uk-button-default" />
             </template>
 

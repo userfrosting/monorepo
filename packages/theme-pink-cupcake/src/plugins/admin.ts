@@ -21,7 +21,6 @@ import {
 import {
     DashboardActivities,
     DashboardRecentUsers,
-    DashboardStats,
     GroupCreateModal,
     GroupDeleteModal,
     GroupEditModal,
@@ -56,7 +55,6 @@ export default {
             .component('UFAdminConfigCachePage', UFAdminConfigCachePage)
             .component('UFAdminDashboardActivities', DashboardActivities)
             .component('UFAdminDashboardRecentUsers', DashboardRecentUsers)
-            .component('UFAdminDashboardStats', DashboardStats)
             .component('UFAdminGroupCreateModal', GroupCreateModal)
             .component('UFAdminGroupDeleteModal', GroupDeleteModal)
             .component('UFAdminGroupEditModal', GroupEditModal)
@@ -92,7 +90,6 @@ declare module 'vue' {
         UFAdminConfigCachePage: typeof UFAdminConfigCachePage
         UFAdminDashboardActivities: typeof DashboardActivities
         UFAdminDashboardRecentUsers: typeof DashboardRecentUsers
-        UFAdminDashboardStats: typeof DashboardStats
         UFAdminGroupCreateModal: typeof GroupCreateModal
         UFAdminGroupDeleteModal: typeof GroupDeleteModal
         UFAdminGroupEditModal: typeof GroupEditModal

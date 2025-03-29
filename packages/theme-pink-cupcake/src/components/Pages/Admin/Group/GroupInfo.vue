@@ -23,7 +23,7 @@ const emits = defineEmits(['groupUpdated'])
         </p>
         <hr />
         <!-- TODO : Find a way to slot the description list -->
-        <dl class="uk-description-list">
+        <dl class="uk-description-list" v-if="$checkAccess('view_group_field')">
             <dt><font-awesome-icon icon="users" /> {{ $t('USER', group.users_count) }}</dt>
             <dd>
                 <span class="uk-badge">{{ group.users_count }}</span>
@@ -33,10 +33,12 @@ const emits = defineEmits(['groupUpdated'])
         <GroupEditModal
             :group="group"
             @saved="emits('groupUpdated')"
+            v-if="$checkAccess('update_group_field')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-primary uk-button-small" />
         <GroupDeleteModal
             :group="group"
             @deleted="router.push({ name: 'admin.groups' })"
+            v-if="$checkAccess('delete_group')"
             class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-danger uk-button-small" />
         <slot data-test="slot"></slot>
     </UFCardBox>

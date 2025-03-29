@@ -55,16 +55,31 @@ export default [
             {
                 path: 'profile',
                 name: 'account.settings.profile',
+                meta: {
+                    permission: {
+                        slug: 'update_account_settings'
+                    }
+                },
                 component: () => import('../views/UserSettingsProfile.vue')
             },
             {
                 path: 'password',
                 name: 'account.settings.password',
+                meta: {
+                    permission: {
+                        slug: 'update_account_settings'
+                    }
+                },
                 component: () => import('../views/UserSettingsPassword.vue')
             },
             {
                 path: 'email',
                 name: 'account.settings.email',
+                meta: {
+                    permission: {
+                        slug: 'update_account_settings'
+                    }
+                },
                 component: () => import('../views/UserSettingsEmail.vue')
             }
         ]

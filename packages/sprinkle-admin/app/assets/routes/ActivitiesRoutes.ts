@@ -6,6 +6,9 @@ export default [
             auth: {
                 redirect: { name: 'account.login' }
             },
+            permission: {
+                slug: 'uri_activities'
+            },
             title: 'ACTIVITY.PAGE',
             description: 'ACTIVITY.PAGE_DESCRIPTION'
         },

@@ -30,11 +30,11 @@ watch(
         <UFAlert :alert="error" />
     </template>
     <template v-else>
-        <div uk-grid>
-            <div class="uk-width-1-3">
+        <div class="uk-child-width-expand" uk-grid>
+            <div>
                 <GroupInfo :group="group" @groupUpdated="fetchGroup()" />
             </div>
-            <div class="uk-width-2-3">
+            <div class="uk-width-2-3" v-if="$checkAccess('view_group_field')">
                 <GroupUsers :slug="$route.params.slug.toString()" />
             </div>
         </div>

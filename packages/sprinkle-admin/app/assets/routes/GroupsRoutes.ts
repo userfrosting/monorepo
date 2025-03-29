@@ -12,15 +12,23 @@ export default [
             {
                 path: '',
                 name: 'admin.groups',
+                meta: {
+                    permission: {
+                        slug: 'uri_groups'
+                    }
+                },
                 component: () => import('../views/GroupsView.vue')
             },
             {
                 path: 'g/:slug',
                 name: 'admin.group',
-                component: () => import('../views/GroupView.vue'),
                 meta: {
-                    description: 'GROUP.INFO_PAGE'
-                }
+                    description: 'GROUP.INFO_PAGE',
+                    permission: {
+                        slug: 'uri_group'
+                    }
+                },
+                component: () => import('../views/GroupView.vue')
             }
         ]
     }
