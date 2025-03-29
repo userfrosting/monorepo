@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Controller\Role;
 
+use Illuminate\Cache\Repository as Cache;
 use Illuminate\Database\Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -52,6 +53,7 @@ class RoleUpdateFieldAction
         protected Translator $translator,
         protected Authenticator $authenticator,
         protected Config $config,
+        protected Cache $cache,
         protected Connection $db,
         protected UserActivityLogger $userActivityLogger,
         protected RequestDataTransformer $transformer,
@@ -140,6 +142,9 @@ class RoleUpdateFieldAction
         $this->db->transaction(function () use ($fieldName, $fieldValue, $role, $currentUser) {
             if ($fieldName === 'permissions') {
                 $role->permissions()->sync($fieldValue);
+
+                // All user's permissions are cached. Clear cache.
+                $this->cache->clear();
             } else {
                 $role->$fieldName = $fieldValue; // @phpstan-ignore-line Variable property is ok here.
                 $role->save();

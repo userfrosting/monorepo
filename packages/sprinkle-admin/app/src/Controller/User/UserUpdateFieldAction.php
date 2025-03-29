@@ -178,10 +178,11 @@ class UserUpdateFieldAction
         $this->db->transaction(function () use ($fieldName, $fieldValue, $user, $currentUser) {
             if ($fieldName === 'roles') {
                 $user->roles()->sync($fieldValue);
+                $user->forgetCache();
             } else {
                 $user->$fieldName = $fieldValue; // @phpstan-ignore-line Variable property is ok here.
                 $user->save();
-            }
+            }            
 
             // Create activity record
             $this->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for user {$user->user_name}.", [
