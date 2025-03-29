@@ -182,7 +182,7 @@ class UserUpdateFieldAction
             } else {
                 $user->$fieldName = $fieldValue; // @phpstan-ignore-line Variable property is ok here.
                 $user->save();
-            }            
+            }
 
             // Create activity record
             $this->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for user {$user->user_name}.", [
