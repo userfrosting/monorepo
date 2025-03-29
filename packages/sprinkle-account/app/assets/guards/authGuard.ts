@@ -13,6 +13,13 @@ export function useAuthGuard(router: Router) {
     }
 
     /**
+     * Return the auth RouteGuard
+     */
+    const getRoutePermission = () => {
+        return router.currentRoute.value.meta.permission ?? null
+    }
+
+    /**
      * Return the guest RouteGuard
      */
     const getRouteGuest = () => {
@@ -34,9 +41,9 @@ export function useAuthGuard(router: Router) {
      * Apply permission route guard
      */
     const applyPermissionGuard = () => {
-        const authGuard = getRouteAuth()
-        if (authGuard?.permission !== undefined && !auth.checkAccess(authGuard.permission)) {
-            const redirectTo = authGuard.redirect ?? getErrorRoute('Forbidden')
+        const permissionGuard = getRoutePermission()
+        if (permissionGuard?.slug !== undefined && !auth.checkAccess(permissionGuard.slug)) {
+            const redirectTo = permissionGuard.redirect ?? getErrorRoute('Forbidden')
             redirect(redirectTo)
         }
     }

@@ -9,18 +9,18 @@
  */
 import 'vue-router'
 
-export interface RouteAuthGuard {
+export interface RouteGuard {
     redirect?: string | { name: string }
-    permission?: string
 }
 
-export interface RouteGuestGuard {
-    redirect?: string | { name: string }
+export interface RoutePermissionGuard extends RouteGuard {
+    slug: string
 }
 
 declare module 'vue-router' {
     interface RouteMeta {
-        auth?: RouteAuthGuard
-        guest?: RouteGuestGuard
+        auth?: RouteGuard
+        guest?: RouteGuard
+        permission?: RoutePermissionGuard
     }
 }
