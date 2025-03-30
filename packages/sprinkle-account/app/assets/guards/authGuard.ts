@@ -42,7 +42,11 @@ export function useAuthGuard(router: Router) {
      */
     const applyPermissionGuard = () => {
         const permissionGuard = getRoutePermission()
-        if (permissionGuard?.slug !== undefined && !auth.checkAccess(permissionGuard.slug)) {
+        if (
+            auth.isAuthenticated &&
+            permissionGuard?.slug !== undefined &&
+            !auth.checkAccess(permissionGuard.slug)
+        ) {
             const redirectTo = permissionGuard.redirect ?? getErrorRoute('Forbidden')
             redirect(redirectTo)
         }
