@@ -44,9 +44,7 @@ export default [
         name: 'account.settings',
         redirect: { name: 'account.settings.profile' },
         meta: {
-            auth: {
-                redirect: { name: 'account.login' }
-            },
+            auth: {},
             title: 'ACCOUNT.SETTINGS',
             description: 'ACCOUNT.SETTINGS.DESCRIPTION'
         },

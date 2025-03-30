@@ -1,6 +1,6 @@
 import { watchEffect } from 'vue'
 import { useAuthStore } from '../stores/auth'
-import type { RouteLocationRaw, Router } from 'vue-router'
+import type { Router } from 'vue-router'
 
 export function useAuthGuard(router: Router) {
     const auth = useAuthStore()
@@ -32,7 +32,7 @@ export function useAuthGuard(router: Router) {
     const applyAuthGuard = () => {
         const authGuard = getRouteAuth()
         if (authGuard !== null && !auth.isAuthenticated) {
-            const redirectTo = authGuard.redirect ?? getErrorRoute('Unauthorized')
+            const redirectTo = authGuard.redirect ?? getLoginRoute()
             redirect(redirectTo)
         }
     }
@@ -58,7 +58,7 @@ export function useAuthGuard(router: Router) {
     const applyGuestGuard = () => {
         const guestGuard = getRouteGuest()
         if (guestGuard !== null && auth.isAuthenticated) {
-            const redirectTo = guestGuard.redirect ?? getErrorRoute('Unauthorized')
+            const redirectTo = getGuestRedirectRoute(guestGuard.redirect)
             redirect(redirectTo)
         }
     }
@@ -66,7 +66,7 @@ export function useAuthGuard(router: Router) {
     /**
      * Redirect to the specified route
      */
-    const redirect = (redirectTo: RouteLocationRaw) => {
+    const redirect = (redirectTo: any) => {
         router.replace(redirectTo)
     }
 
@@ -84,6 +84,57 @@ export function useAuthGuard(router: Router) {
             params: { pathMatch: router.currentRoute.value.path.substring(1).split('/') },
             query: router.currentRoute.value.query,
             hash: router.currentRoute.value.hash
+        }
+    }
+
+    /**
+     * Get the login route location object, adding the current path to the
+     * redirect query parameter. This is used to redirect the user to the
+     * login page if they are not authenticated.
+     */
+    const getLoginRoute = () => {
+        return {
+            name: 'account.login',
+            params: router.currentRoute.value.params,
+            query: {
+                ...router.currentRoute.value.query,
+                ...{ redirect: router.currentRoute.value.path }
+            },
+            hash: router.currentRoute.value.hash
+        }
+    }
+
+    /**
+     * If a redirect is set in the url query, redirect to it
+     *
+     * Get the redirect route location object, adding the current path to the
+     * redirect query parameter. This is used to redirect the user to the
+     * login page if they are not authenticated.
+     */
+    const getGuestRedirectRoute = (definedRouteName: string | { name: string } | undefined) => {
+        if (router.currentRoute.value.query.redirect !== undefined) {
+            // If a redirect is set in the url query, it has priority
+            // Remove the redirect query from the query
+            const path = router.currentRoute.value.query.redirect?.toString()
+            delete router.currentRoute.value.query.redirect
+            return {
+                path: path,
+                params: router.currentRoute.value.params,
+                query: router.currentRoute.value.query,
+                hash: router.currentRoute.value.hash
+            }
+        } else if (definedRouteName !== undefined) {
+            // If the guard has a redirect, use it
+            return {
+                name:
+                    typeof definedRouteName === 'object' ? definedRouteName.name : definedRouteName,
+                params: router.currentRoute.value.params,
+                query: router.currentRoute.value.query,
+                hash: router.currentRoute.value.hash
+            }
+        } else {
+            // Last resort, redirect to an error page
+            return getErrorRoute('Unauthorized')
         }
     }
 

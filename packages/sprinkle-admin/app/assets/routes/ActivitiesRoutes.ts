@@ -3,9 +3,7 @@ export default [
         path: 'activities',
         name: 'admin.activities',
         meta: {
-            auth: {
-                redirect: { name: 'account.login' }
-            },
+            auth: {},
             permission: {
                 slug: 'uri_activities'
             },

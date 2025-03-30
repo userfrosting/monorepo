@@ -3,9 +3,7 @@ export default [
         path: 'dashboard',
         name: 'admin.dashboard',
         meta: {
-            auth: {
-                redirect: { name: 'account.login' }
-            },
+            auth: {},
             permission: {
                 slug: 'uri_dashboard'
             },

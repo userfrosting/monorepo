@@ -2,9 +2,7 @@ export default [
     {
         path: 'roles',
         meta: {
-            auth: {
-                redirect: { name: 'account.login' }
-            },
+            auth: {},
             title: 'ROLE.PAGE',
             description: 'ROLE.PAGE_DESCRIPTION'
         },

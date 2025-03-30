@@ -2,9 +2,7 @@ export default [
     {
         path: 'groups',
         meta: {
-            auth: {
-                redirect: { name: 'account.login' }
-            },
+            auth: {},
             title: 'GROUP.PAGE',
             description: 'GROUP.PAGE_DESCRIPTION'
         },

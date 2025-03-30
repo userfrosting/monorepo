@@ -4,9 +4,7 @@ export default [
         name: 'admin.config',
         redirect: { name: 'admin.config.info' },
         meta: {
-            auth: {
-                redirect: { name: 'account.login' }
-            },
+            auth: {},
             title: 'SITE_CONFIG',
             description: 'SITE_CONFIG.PAGE_DESCRIPTION'
         },

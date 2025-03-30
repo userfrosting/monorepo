@@ -2,9 +2,7 @@ export default [
     {
         path: 'users',
         meta: {
-            auth: {
-                redirect: { name: 'account.login' }
-            },
+            auth: {},
             title: 'USER.PAGE',
             description: 'USER.PAGE_DESCRIPTION'
         },

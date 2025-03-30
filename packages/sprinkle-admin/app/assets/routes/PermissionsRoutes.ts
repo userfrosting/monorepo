@@ -5,9 +5,7 @@ export default [
             permission: {
                 slug: 'uri_permissions'
             },
-            auth: {
-                redirect: { name: 'account.login' }
-            },
+            auth: {},
             title: 'PERMISSION.PAGE',
             description: 'PERMISSION.PAGE_DESCRIPTION'
         },
