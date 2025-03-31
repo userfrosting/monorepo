@@ -18,7 +18,8 @@ const mockRouter = {
                 auth: undefined as RouteGuard | undefined,
                 guest: undefined as RouteGuard | undefined,
                 permission: undefined as RoutePermissionGuard | undefined
-            }
+            },
+            query: {} as Record<string, string>
         }
     },
     replace: vi.fn()
@@ -100,7 +101,7 @@ describe('authGuard useAuthGuard() method', () => {
         expect(mockRouter.replace).not.toHaveBeenCalled()
     })
 
-    test('should redirect to home if route is for guests and user is authenticated', () => {
+    test('should redirect to specified redirect if route is for guests and user is authenticated', () => {
         // Arrange
         mockRouter.currentRoute.value.meta.auth = undefined
         mockRouter.currentRoute.value.meta.permission = undefined
@@ -111,7 +112,70 @@ describe('authGuard useAuthGuard() method', () => {
         useAuthGuard(mockRouter as any)
 
         // Assert
-        expect(mockRouter.replace).toHaveBeenCalledWith('/')
+        expect(mockRouter.replace).toHaveBeenCalledWith(
+            expect.objectContaining({
+                path: '/'
+            })
+        )
+    })
+
+    test('should redirect to specified redirect if route is for guests and user is authenticated (with route name)', () => {
+        // Arrange
+        mockRouter.currentRoute.value.meta.auth = undefined
+        mockRouter.currentRoute.value.meta.permission = undefined
+        mockRouter.currentRoute.value.meta.guest = { redirect: { name: 'home' } }
+        mockAuthStore.isAuthenticated = true
+
+        // Act
+        useAuthGuard(mockRouter as any)
+
+        // Assert
+        expect(mockRouter.replace).toHaveBeenCalledWith(
+            expect.objectContaining({
+                name: 'home'
+            })
+        )
+    })
+
+    test('should redirect to query redirect if route is for guests and user is authenticated', () => {
+        // Arrange
+        mockRouter.currentRoute.value.meta.auth = undefined
+        mockRouter.currentRoute.value.meta.permission = undefined
+        mockRouter.currentRoute.value.meta.guest = {}
+        mockAuthStore.isAuthenticated = true
+
+        // Set the query parameter
+        mockRouter.currentRoute.value.query = {
+            redirect: '/foo/bar'
+        }
+
+        // Act
+        useAuthGuard(mockRouter as any)
+
+        // Assert
+        expect(mockRouter.replace).toHaveBeenCalledWith(
+            expect.objectContaining({
+                path: '/foo/bar'
+            })
+        )
+    })
+
+    test('should redirect to error page if route is for guests and user is authenticated', () => {
+        // Arrange
+        mockRouter.currentRoute.value.meta.auth = undefined
+        mockRouter.currentRoute.value.meta.permission = undefined
+        mockRouter.currentRoute.value.meta.guest = {}
+        mockAuthStore.isAuthenticated = true
+
+        // Act
+        useAuthGuard(mockRouter as any)
+
+        // Assert
+        expect(mockRouter.replace).toHaveBeenCalledWith(
+            expect.objectContaining({
+                name: 'Unauthorized'
+            })
+        )
     })
 
     test('should use default redirect for auth guard if no redirect specified', () => {
@@ -127,7 +191,7 @@ describe('authGuard useAuthGuard() method', () => {
         // Assert
         expect(mockRouter.replace).toHaveBeenCalledWith(
             expect.objectContaining({
-                name: 'Unauthorized'
+                name: 'account.login'
             })
         )
     })
@@ -137,7 +201,7 @@ describe('authGuard useAuthGuard() method', () => {
         mockRouter.currentRoute.value.meta.auth = undefined
         mockRouter.currentRoute.value.meta.permission = { slug: 'foo.bar' }
         mockRouter.currentRoute.value.meta.guest = undefined
-        mockAuthStore.isAuthenticated = false
+        mockAuthStore.isAuthenticated = true
 
         // Act
         useAuthGuard(mockRouter as any)

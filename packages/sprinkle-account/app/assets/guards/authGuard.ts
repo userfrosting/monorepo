@@ -112,7 +112,7 @@ export function useAuthGuard(router: Router) {
      * login page if they are not authenticated.
      */
     const getGuestRedirectRoute = (definedRouteName: string | { name: string } | undefined) => {
-        if (router.currentRoute.value.query.redirect !== undefined) {
+        if (router.currentRoute.value.query?.redirect !== undefined) {
             // If a redirect is set in the url query, it has priority
             // Remove the redirect query from the query
             const path = router.currentRoute.value.query.redirect?.toString()
@@ -125,12 +125,20 @@ export function useAuthGuard(router: Router) {
             }
         } else if (definedRouteName !== undefined) {
             // If the guard has a redirect, use it
-            return {
-                name:
-                    typeof definedRouteName === 'object' ? definedRouteName.name : definedRouteName,
-                params: router.currentRoute.value.params,
-                query: router.currentRoute.value.query,
-                hash: router.currentRoute.value.hash
+            if (typeof definedRouteName === 'object' && definedRouteName.name) {
+                return {
+                    name: definedRouteName.name,
+                    params: router.currentRoute.value.params,
+                    query: router.currentRoute.value.query,
+                    hash: router.currentRoute.value.hash
+                }
+            } else {
+                return {
+                    path: definedRouteName,
+                    params: router.currentRoute.value.params,
+                    query: router.currentRoute.value.query,
+                    hash: router.currentRoute.value.hash
+                }
             }
         } else {
             // Last resort, redirect to an error page
