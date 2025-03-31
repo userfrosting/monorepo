@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.0.0-alpha.4 - 2025-03-31
 - Add frontend permission check.
 - Permission's `conditions` field is **DEPRECATED**. This field cannot be verified on the frontend and is prone to confusion. A better permission system is planned for UF6.1 which will make this field obsolete anyway.
 - All built in permissions are updated to `always()`, plus :

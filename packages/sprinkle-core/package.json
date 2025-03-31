@@ -1,6 +1,6 @@
 {
     "name": "@userfrosting/sprinkle-core",
-    "version": "6.0.0-alpha.3",
+    "version": "6.0.0-alpha.4",
     "type": "module",
     "description": "Core Sprinkle for UserFrosting",
     "funding": "https://opencollective.com/userfrosting",
