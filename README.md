@@ -60,3 +60,10 @@ vendor/bin/monorepo-builder release patch
 ```
 
 You can use `minor` and `major` too.
+
+
+To publish the packages to NPM repo : 
+
+```
+npm publish --access public --workspaces
+```
