@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - `view_user_field_group` : Removed. The condition was too complex.
 - New permissions with slugs `view_user_activities` & `view_user_roles`
 - Move System Info to new Config Page and add Cache clearing UI
+- Login redirect to the previous page
 - Fix type error present in alpha.3
 
 ## 6.0.0-alpha.3 - 2025-03-01
