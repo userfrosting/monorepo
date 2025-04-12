@@ -35,6 +35,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\AuthCompromisedException;
 use UserFrosting\Sprinkle\Account\Exceptions\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Exceptions\InvalidCredentialsException;
 use UserFrosting\Sprinkle\Account\Helpers\DynamicUserModel;
+use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 
 /**
  * Handles authentication tasks.
@@ -73,6 +74,7 @@ class Authenticator
         protected Session $session,
         protected StorageInterface $rememberMeStorage,
         protected UserInterface $userModel,
+        protected CsrfGuard $csrf,
     ) {
         $this->setupCookie();
     }
@@ -155,7 +157,7 @@ class Authenticator
         bool $rememberMe = false
     ): void {
         // Since regenerateId deletes the old session, we'll do the same in cache
-        if (($oldId = session_id()) !== false) {
+        if (($oldId = $this->session->getId()) !== false) {
             $this->flushSessionCache($oldId);
         }
 
@@ -171,8 +173,12 @@ class Authenticator
 
         // Assume identity
         $key = strval($this->config->get('session.keys.current_user_id'));
-        $this->session[$key] = $user->id;
+        $this->session->set($key, $user->id);
         $this->user = $user;
+
+        // Generate new CSRF token for the new session
+        $this->csrf->removeTokenFromStorage($this->csrf->getTokenName() ?? '');
+        $this->csrf->generateToken();
 
         // Set auth mode
         $this->viaRemember = false;
@@ -217,13 +223,20 @@ class Authenticator
         $this->user = null;
 
         // Since regenerateId deletes the old session, we'll do the same in cache
-        if (($oldId = session_id()) !== false) {
+        if (($oldId = $this->session->getId()) !== false) {
             $this->flushSessionCache($oldId);
         }
 
-        // Completely destroy the session and restart the session.
+        // Completely destroy the session and restart the session, making sure
+        // to regenerate the session id to use for the remaining execution.
         $this->session->destroy();
         $this->session->start();
+        $this->session->regenerateId(true);
+
+        // Generate new CSRF token for the new session
+        $storage = null;
+        $this->csrf->setStorage($storage);
+        $this->csrf->generateToken();
 
         // Dispatch logged out event.
         $this->eventDispatcher->dispatch(new UserLoggedOutEvent($currentUser));

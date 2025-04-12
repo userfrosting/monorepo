@@ -1,6 +1,11 @@
 {# Base template for Single Page Application (SPA) #}
 {% extends "pages/abstract/base.html.twig" %}
 
+{% block head_extra %}
+<meta name="{{csrf.keys.name}}" content="{{csrf.name}}">
+<meta name="{{csrf.keys.value}}" content="{{csrf.value}}">
+{% endblock %}
+
 {% block content %}
 <noscript>
     <strong>We're sorry but this app doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>

@@ -19,7 +19,8 @@ use InvalidArgumentException;
 use SessionHandlerInterface;
 
 /**
- * A wrapper for $_SESSION that can be used with a variety of different session handlers, based on illuminate/session.
+ * A wrapper for $_SESSION that can be used with a variety of different session
+ * handlers, based on illuminate/session.
  *
  * @implements ArrayAccess<string, mixed>
  */
@@ -91,7 +92,8 @@ class Session implements ArrayAccess
     }
 
     /**
-     * Destroy the current session, and unset all values in memory.  Destroy the session cookie as well to remove all traces client-side.
+     * Destroy the current session, and unset all values in memory.  Destroy the
+     * session cookie as well to remove all traces client-side.
      *
      * @param bool $destroyCookie Destroy the cookie on the client side as well.
      */
@@ -123,7 +125,8 @@ class Session implements ArrayAccess
     }
 
     /**
-     * Regenerate the session id.  For example, when logging someone in, you should regenerate the session to prevent session fixation attacks.
+     * Regenerate the session id.  For example, when logging someone in, you
+     * should regenerate the session to prevent session fixation attacks.
      *
      * @param bool $deleteOldSession Set to true when you are logging someone in.
      */

@@ -27,6 +27,6 @@ class ConfigControllerTest extends TestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure(['site', 'locales'], $response);
+        $this->assertJsonStructure(['site', 'locales', 'csrf'], $response);
     }
 }

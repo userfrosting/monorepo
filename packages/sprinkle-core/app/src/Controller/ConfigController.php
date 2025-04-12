@@ -60,6 +60,10 @@ class ConfigController
                 'available' => $this->locale->getAvailableOptions(),
                 'current'   => $this->translator->getLocale()->getIdentifier(),
             ],
+            'csrf'    => [
+                'enabled' => $this->config->getBool('csrf.enabled'),
+                'name'    => $this->config->getString('csrf.name'),
+            ],
         ];
 
         return $data;

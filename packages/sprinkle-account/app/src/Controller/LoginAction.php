@@ -26,6 +26,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Event\UserRedirectedAfterLoginEvent;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountException;
 use UserFrosting\Sprinkle\Account\Exceptions\InvalidCredentialsException;
+use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
@@ -64,7 +65,8 @@ class LoginAction
         protected EventDispatcherInterface $eventDispatcher,
         protected Throttler $throttler,
         protected RequestDataTransformer $transformer,
-        protected ServerSideValidator $validator
+        protected ServerSideValidator $validator,
+        protected CsrfGuard $csrf,
     ) {
     }
 
@@ -80,7 +82,9 @@ class LoginAction
         $user = $this->handle($request);
         $response = $this->writeResponse($response, $user);
 
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json')
+                        ->withHeader($this->csrf->getTokenNameKey(), $this->csrf->getTokenName() ?? '')
+                        ->withHeader($this->csrf->getTokenValueKey(), $this->csrf->getTokenValue() ?? '');
     }
 
     /**
@@ -140,7 +144,7 @@ class LoginAction
         $userIdentifier = $data['user_name'];
         $isEmail = filter_var($userIdentifier, FILTER_VALIDATE_EMAIL);
 
-        // Throttle requests.
+        // Check the throttle threshold has been exceeded.
         $this->throttle($userIdentifier);
 
         // If credential is an email address, but email login is not enabled, raise an error.

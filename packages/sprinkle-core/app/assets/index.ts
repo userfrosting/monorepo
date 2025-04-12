@@ -1,12 +1,13 @@
 import type { App } from 'vue'
 import { useConfigStore, useTranslator } from './stores'
+import { useCsrf } from './composables/useCsrf'
 
 /**
  * Core Sprinkle initialization recipe.
  *
  * This recipe is responsible for loading the configuration from the api,
- * loading the translations and register the translator as $t and $tdate global
- * properties.
+ * loading the translations, register the translator as $t and $tdate global
+ * properties and setting up the axios CSRF headers.
  */
 export default {
     install: (app: App) => {
@@ -22,5 +23,10 @@ export default {
         translator.load()
         app.config.globalProperties.$t = translator.translate
         app.config.globalProperties.$tdate = translator.translateDate
+
+        /**
+         * Setup CSRF Protection.
+         */
+        useCsrf().setAxiosHeader()
     }
 }

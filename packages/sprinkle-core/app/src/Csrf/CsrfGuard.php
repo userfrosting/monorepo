@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Core\Csrf;
 
-use ArrayObject;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -34,26 +33,18 @@ class CsrfGuard extends Guard
      * Overwrites the default constructor to inject dependencies.
      *
      * @param Config             $config
-     * @param Session            $session
      * @param App<\DI\Container> $app
      */
     public function __construct(
         protected Config $config,
-        Session $session,
+        protected Session $session,
         App $app,
     ) {
-        $csrfKey = $config->getString('session.keys.csrf', 'site.csrf');
+        // Use default session storage, but make sure it's active first.ù
+        $session->start();
+        $sessionStorage = null;
 
-        // Workaround so that we can pass storage into CSRF guard.
-        // If we tried to directly pass the indexed portion of `session` (for example, $ci->session['site.csrf']),
-        // we would get an 'Indirect modification of overloaded element of UserFrosting\Session\Session' error.
-        // If we tried to assign an array and use that, PHP would only modify the local variable, and not the session.
-        // Since ArrayObject is an object, PHP will modify the object itself, allowing it to persist in the session.
-        if (!$session->has($csrfKey)) {
-            $session->set($csrfKey, new ArrayObject());
-        }
-        $csrfStorage = $session->get($csrfKey);
-
+        // Define onFailure callback to throw a CsrfMissingException
         $onFailure = function ($request, $response) {
             throw new CsrfMissingException('The CSRF code was invalid or not provided.');
         };
@@ -61,29 +52,12 @@ class CsrfGuard extends Guard
         parent::__construct(
             $app->getResponseFactory(),
             $config->getString('csrf.name', 'csrf'),
-            $csrfStorage,
+            $sessionStorage,
             $onFailure,
             $config->getInt('csrf.storage_limit', 200),
             $config->getInt('csrf.strength', 16),
             $config->getBool('csrf.persistent_token', true)
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @phpstan-ignore-next-line
-     */
-    public function setStorage(&$storage = null): self
-    {
-        if ($storage instanceof ArrayObject) {
-            $this->storage = &$storage;
-
-            return $this;
-        }
-
-        // @phpstan-ignore-next-line
-        return parent::setStorage($storage);
     }
 
     /**

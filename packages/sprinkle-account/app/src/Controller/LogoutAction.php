@@ -17,6 +17,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Event\UserRedirectedAfterLogoutEvent;
+use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 
 /**
  * Processes an account login request.
@@ -45,6 +46,7 @@ class LogoutAction
     public function __construct(
         protected Authenticator $authenticator,
         protected EventDispatcherInterface $eventDispatcher,
+        protected CsrfGuard $csrf,
     ) {
     }
 
@@ -70,7 +72,9 @@ class LogoutAction
         $payload = json_encode([], JSON_THROW_ON_ERROR);
         $response->getBody()->write($payload);
 
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json')
+                        ->withHeader($this->csrf->getTokenNameKey(), $this->csrf->getTokenName() ?? '')
+                        ->withHeader($this->csrf->getTokenValueKey(), $this->csrf->getTokenValue() ?? '');
     }
 
     /**

@@ -37,7 +37,7 @@ class SessionService implements ServicesProviderInterface
             /**
              * Inject config into Session.
              */
-            Session::class                 => function (SessionHandlerInterface $handler, Config $config) {
+            Session::class => function (SessionHandlerInterface $handler, Config $config) {
                 return new Session($handler, $config->get('session'));
             },
 
@@ -58,7 +58,7 @@ class SessionService implements ServicesProviderInterface
             /**
              * Inject dependencies into FileSessionHandler.
              */
-            FileSessionHandler::class      => function (Filesystem $fs, Config $config, ResourceLocatorInterface $locator) {
+            FileSessionHandler::class => function (Filesystem $fs, Config $config, ResourceLocatorInterface $locator) {
                 $path = $locator->findResource('sessions://');
 
                 if ($path === null) {
@@ -72,7 +72,7 @@ class SessionService implements ServicesProviderInterface
              * Inject dependencies into DatabaseSessionHandler.
              * Table must exist, otherwise an exception will be thrown.
              */
-            DatabaseSessionHandler::class  => function (Connection $connection, Config $config) {
+            DatabaseSessionHandler::class => function (Connection $connection, Config $config) {
                 return new DatabaseSessionHandler($connection, $config->get('session.database.table'), $config->get('session.minutes'));
             },
         ];

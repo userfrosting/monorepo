@@ -351,10 +351,6 @@ return [
         'name'          => 'uf4',
         'minutes'       => 120,
         'cache_limiter' => false,
-        // Decouples the session keys used to store certain session info
-        'keys' => [
-            'csrf'    => 'site.csrf', // the key (prefix) used to store an ArrayObject of CSRF tokens.
-        ],
     ],
 
     /*
@@ -389,10 +385,6 @@ return [
             'default' => 'en_US',
         ],
         'title' => 'UserFrosting', // Site display name
-        // Global ufTable settings
-        'uf_table' => [
-            'use_loading_transition' => true,
-        ],
         // URLs
         'uri' => [
             'author'    => 'https://www.userfrosting.com',

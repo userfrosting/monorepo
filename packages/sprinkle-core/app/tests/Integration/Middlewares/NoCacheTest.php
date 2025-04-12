@@ -16,12 +16,11 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\App;
 use UserFrosting\Routes\RouteDefinitionInterface;
 use UserFrosting\Sprinkle\Core\Core;
-use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 use UserFrosting\Sprinkle\Core\Middlewares\NoCache;
 use UserFrosting\Sprinkle\Core\Tests\CoreTestCase as TestCase;
 
 /**
- * Tests CsrfGuardMiddleware & CsrfGuard class.
+ * Tests NoCache Middleware.
  */
 class NoCacheTest extends TestCase
 {

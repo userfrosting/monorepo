@@ -7,6 +7,7 @@ import type {
     UserDataInterface
 } from '../interfaces'
 import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
+import { useCsrf } from '@userfrosting/sprinkle-core/composables'
 import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import { useAuthorizationManager } from '../composables/useAuthorizationManager'
 
@@ -41,6 +42,9 @@ export const useAuthStore = defineStore('auth', {
 
                     // Reload the translator dictionary to reflect the user's language
                     useTranslator().load()
+
+                    // Update the CSRF token
+                    useCsrf().updateFromHeaders(response.headers)
 
                     return response.data
                 })
@@ -87,9 +91,12 @@ export const useAuthStore = defineStore('auth', {
             this.unsetUser()
             return axios
                 .get('/account/logout')
-                .then(() => {
+                .then((response) => {
                     // Reload the translator dictionary to reflect the default language
                     useTranslator().load()
+
+                    // Update the CSRF token
+                    useCsrf().updateFromHeaders(response.headers)
                 })
                 .catch((err) => {
                     const error: AlertInterface = {
