@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { watch } from 'vue'
-import { usePageMeta } from '@userfrosting/sprinkle-core/composables'
+import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { usePermissionApi } from '@userfrosting/sprinkle-admin/composables'
 import PermissionInfo from '../../components/Pages/Admin/Permission/PermissionInfo.vue'
 import PermissionUsers from '../../components/Pages/Admin/Permission/PermissionUsers.vue'

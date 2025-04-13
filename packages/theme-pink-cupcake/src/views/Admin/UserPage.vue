@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { watch } from 'vue'
-import { usePageMeta } from '@userfrosting/sprinkle-core/composables'
+import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { useUserApi } from '@userfrosting/sprinkle-admin/composables'
 import UserInfo from '../../components/Pages/Admin/User/UserInfo.vue'
 import UserActivities from '../../components/Pages/Admin/User/UserActivities.vue'

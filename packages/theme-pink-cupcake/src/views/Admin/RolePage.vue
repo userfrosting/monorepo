@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { watch } from 'vue'
-import { usePageMeta } from '@userfrosting/sprinkle-core/composables'
+import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { useRoleApi } from '@userfrosting/sprinkle-admin/composables'
 import RoleInfo from '../../components/Pages/Admin/Role/RoleInfo.vue'
 import RoleUsers from '../../components/Pages/Admin/Role/RoleUsers.vue'

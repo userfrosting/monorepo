@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue'
-import { usePageMeta } from '@userfrosting/sprinkle-core/composables'
+import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 const page = usePageMeta()
 
 onMounted(() => {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { watch } from 'vue'
-import { usePageMeta } from '@userfrosting/sprinkle-core/composables'
+import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { useGroupApi } from '@userfrosting/sprinkle-admin/composables'
 import GroupInfo from '../../components/Pages/Admin/Group/GroupInfo.vue'
 import GroupUsers from '../../components/Pages/Admin/Group/GroupUsers.vue'
