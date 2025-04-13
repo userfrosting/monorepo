@@ -42,6 +42,14 @@ vi.mock('@userfrosting/sprinkle-core/stores', () => ({
     })
 }))
 
+// Mock useCsrf updateFromHeaders function
+const updateFromHeaders = vi.fn()
+vi.mock('@userfrosting/sprinkle-core/composables', () => ({
+    useCsrf: () => ({
+        updateFromHeaders
+    })
+}))
+
 describe('authStore', () => {
     beforeEach(() => {
         setActivePinia(createPinia())

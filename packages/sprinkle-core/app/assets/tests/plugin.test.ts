@@ -6,7 +6,8 @@ import * as Config from '../stores/config'
 import * as Translator from '../stores/useTranslator'
 
 const mockConfigStore = {
-    load: vi.fn()
+    load: vi.fn(),
+    get: vi.fn().mockReturnValue('csrf')
 }
 
 const mockTranslatorStore = {
