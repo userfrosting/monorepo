@@ -10,7 +10,8 @@ const loading = ref(false)
 const error = ref<AlertInterface | null>()
 let form: LoginRequest = {
     user_name: '',
-    password: ''
+    password: '',
+    rememberme: false
 }
 
 // Form action
@@ -27,12 +28,6 @@ async function sendLogin() {
                 pos: 'top-right',
                 timeout: 4000
             })
-
-            // If a redirect is set, redirect to it
-            // TODO : Dilemma, should we redirect using VueRouter or not?
-            // if (response.redirect) {
-            //     window.location.href = response.redirect
-            // }
         })
         .catch((err: AlertInterface) => {
             error.value = err
@@ -70,6 +65,17 @@ async function sendLogin() {
                         data-test="password"
                         v-model="form.password" />
                 </div>
+            </div>
+            <div class="uk-margin">
+                <label class="uk-inline uk-width-1-1">
+                    <input
+                        class="uk-checkbox"
+                        type="checkbox"
+                        aria-label="Remember Me"
+                        data-test="rememberme"
+                        v-model="form.rememberme" />
+                    {{ $t('REMEMBER_ME') }}
+                </label>
             </div>
             <div class="uk-text-center">
                 <button class="uk-button uk-button-primary" :disabled="loading" data-test="submit">

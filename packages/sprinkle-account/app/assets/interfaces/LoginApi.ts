@@ -9,6 +9,7 @@ import type { UserDataInterface } from './'
 export interface LoginRequest {
     user_name: string
     password: string
+    rememberme?: boolean
 }
 
 export interface LoginResponse {
