@@ -27,6 +27,6 @@ export default {
         /**
          * Setup CSRF Protection.
          */
-        useCsrf().setAxiosHeader()
+        useCsrf()
     }
 }

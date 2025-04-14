@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useConfigStore } from '../stores'
 import axios from 'axios'
 
@@ -24,12 +24,6 @@ export const useCsrf = () => {
      * Set the axios headers for CSRF protection
      */
     function setAxiosHeader() {
-        // Return if CSRF is not enabled
-        if (isEnabled() === false) {
-            return
-        }
-
-        // Set the axios headers
         axios.defaults.headers.post[key_name.value] = name.value
         axios.defaults.headers.post[key_value.value] = token.value
         axios.defaults.headers.put[key_name.value] = name.value
@@ -78,17 +72,18 @@ export const useCsrf = () => {
      * with dashes automatically.
      */
     function updateFromHeaders(headers: any) {
-        // Get new values from headers
         const config = useConfigStore()
-        name.value = headers[config.get('csrf.name', 'csrf') + '-name'] ?? ''
-        token.value = headers[config.get('csrf.name', 'csrf') + '-value'] ?? ''
+        const nameKey = config.get('csrf.name', 'csrf') + '-name'
+        const valueKey = config.get('csrf.name', 'csrf') + '-value'
 
-        // Update the meta tags
-        writeMetaTag(key_name.value, name.value)
-        writeMetaTag(key_value.value, token.value)
-
-        // Update the axios headers
-        setAxiosHeader()
+        // Update both value only if the headers are present
+        // This is to avoid overwriting the CSRF token with empty values
+        if (nameKey in headers) {
+            name.value = headers[nameKey]
+        }
+        if (valueKey in headers) {
+            token.value = headers[valueKey]
+        }
     }
 
     /**
@@ -100,7 +95,26 @@ export const useCsrf = () => {
     }
 
     /**
+     * Watchers - Watch for changes in the CSRF token and update the axios
+     * headers + meta tags
+     */
+    watchEffect(() => {
+        if (isEnabled() && name.value !== '' && token.value !== '') {
+            writeMetaTag(key_name.value, name.value)
+            writeMetaTag(key_value.value, token.value)
+            setAxiosHeader()
+        }
+    })
+
+    /**
      * Export functions and managed states
      */
-    return { key_name, key_value, name, token, isEnabled, updateFromHeaders, setAxiosHeader }
+    return {
+        key_name,
+        key_value,
+        name,
+        token,
+        isEnabled,
+        updateFromHeaders
+    }
 }
