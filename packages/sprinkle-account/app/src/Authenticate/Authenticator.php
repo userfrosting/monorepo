@@ -347,7 +347,7 @@ class Authenticator
         if ($loginResult->isSuccess()) {
             // Update in session
             $key = strval($this->config->get('session.keys.current_user_id'));
-            $this->session[$key] = intval($loginResult->getCredential());
+            $this->session->set($key, intval($loginResult->getCredential()));
             // There is a chance that an attacker has stolen the login token,
             // so we store the fact that the user was logged in via RememberMe (instead of login form)
             $this->viaRemember = true;
