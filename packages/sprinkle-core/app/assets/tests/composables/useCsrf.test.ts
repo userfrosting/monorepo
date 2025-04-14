@@ -58,7 +58,6 @@ describe('Csrf Composable', () => {
         // Set CSRF token values - Will trigger the WatchEffect
         csrf.name.value = '654321'
         csrf.token.value = 'abcdef'
-        console.log('CHANGED')
 
         // Wait for the next tick to ensure watchEffect is triggered
         await nextTick()
