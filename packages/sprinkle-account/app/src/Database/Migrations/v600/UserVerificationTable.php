@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v600;
 
 use Illuminate\Database\Schema\Blueprint;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
@@ -22,6 +23,13 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
  */
 class UserVerificationTable extends Migration
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static $dependencies = [
+        UsersTable::class,
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -37,7 +45,7 @@ class UserVerificationTable extends Migration
                 $table->timestamps();
                 $table->foreign('user_id')->references('id')->on('users');
                 $table->index('user_id');
-                $table->index('token');
+                $table->index('code');
             });
         }
     }
