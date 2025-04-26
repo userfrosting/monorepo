@@ -176,6 +176,7 @@ class LoginAction
             if ($e instanceof AccountDisabledException || $e instanceof AccountNotVerifiedException) {
                 throw $e;
             }
+
             throw new InvalidCredentialsException();
         }
 

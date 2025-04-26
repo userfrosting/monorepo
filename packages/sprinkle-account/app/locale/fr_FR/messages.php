@@ -99,12 +99,12 @@ return [
 
         'VERIFICATION' => [
             '@TRANSLATION'      => 'Vérification du compte',
-            'CODE' => [
-            '@TRANSLATION' => 'Code de vérification',
-            'ENTER'        => 'Entrez le code de vérification',
-            'EXPLAIN'      => 'Entrez le code de vérification que vous avez reçu par email.',
-            'VERIFY'       => 'Vérifier le code',
-            'SENT'         => 'Si un compte non activé a été trouvé, un email avec un code de vérification a été envoyé à <strong>{{email}}</strong>. Veuillez vérifier votre boîte de réception et vos dossiers de spam pour cet email.',
+            'CODE'              => [
+                '@TRANSLATION' => 'Code de vérification',
+                'ENTER'        => 'Entrez le code de vérification',
+                'EXPLAIN'      => 'Entrez le code de vérification que vous avez reçu par email.',
+                'VERIFY'       => 'Vérifier le code',
+                'SENT'         => 'Si un compte non activé a été trouvé, un email avec un code de vérification a été envoyé à <strong>{{email}}</strong>. Veuillez vérifier votre boîte de réception et vos dossiers de spam pour cet email.',
             ],
             'COMPLETE'            => 'Votre compte a été validé. Vous pouvez maintenant vous connecter.',
             'EXPLAIN'             => 'Veuillez saisir l\'adresse email que vous avez utilisée pour vous inscrire et un code de vérification vous sera renvoyé.',

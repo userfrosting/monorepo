@@ -99,7 +99,7 @@ return [
 
         'VERIFICATION' => [
             '@TRANSLATION'      => 'Account Verification',
-            'CODE' => [
+            'CODE'              => [
                 '@TRANSLATION' => 'Verification code',
                 'ENTER'        => 'Enter verification code',
                 'EXPLAIN'      => 'Enter the verification code you received by email.',

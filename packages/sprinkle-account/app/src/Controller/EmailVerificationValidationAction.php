@@ -105,7 +105,7 @@ class EmailVerificationValidationAction
 
         $this->handle($request);
         $payload = json_encode([
-            'message' => $this->translator->translate('ACCOUNT.VERIFICATION.COMPLETE')
+            'message' => $this->translator->translate('ACCOUNT.VERIFICATION.COMPLETE'),
         ], JSON_THROW_ON_ERROR);
         $response->getBody()->write($payload);
 
