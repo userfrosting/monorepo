@@ -1,3 +1,3 @@
 <template>
-    <UFPageResendVerification />
+    <UFEmailVerificationRequest />
 </template>

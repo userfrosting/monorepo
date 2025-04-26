@@ -21,47 +21,59 @@ use UserFrosting\Fortress\RequestSchema\RequestSchemaInterface;
 use UserFrosting\Fortress\Transformer\RequestDataTransformer;
 use UserFrosting\Fortress\Validator\ServerSideValidator;
 use UserFrosting\I18n\Translator;
+use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\EmailVerificationProvider;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
-use UserFrosting\Sprinkle\Account\Mail\VerificationEmail;
+use UserFrosting\Sprinkle\Account\Exceptions\VerificationDisabledException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
-use UserFrosting\Sprinkle\Core\Util\RouteParserInterface;
 
 /**
- * Processes a request to resend the verification email for a new user account.
+ * Handles a request from a guest user to send a verification code to the
+ * specified email address. This route is publicly accessible.
  *
- * Processes the request from the resend verification email form, checking that:
- * 1. The rate limit on this type of request is observed;
- * 2. The provided email is associated with an existing user account;
- * 3. The user account is not already verified;
- * 4. The submitted data is valid.
- * This route is "public access".
+ * This action enforces the following checks:
+ * 1. Ensures the rate limit for this type of request is respected;
+ * 2. Verifies that the provided email is linked to an existing user account;
+ * 3. Confirms the user account is not already verified;
+ * 4. Validates the submitted data against the defined schema.
  *
- * Middleware: GuestGuard
- * Route: /account/resend-verification
- * Route Name: account.resendVerification
+ * Middleware: GuestGuard + NoCache
+ * Route: /account/verify/request
+ * Route Name: account.verify.request
  * Request type: POST
  */
-class ResendVerificationAction
+class EmailVerificationRequestAction
 {
-    // Request schema to use to validate data.
+    /**
+     * @var string Request schema to use to validate data.
+     */
     protected string $schema = 'schema://requests/resend-verification.yaml';
 
-    // Throttler key slug
-    protected string $throttlerSlug = 'verification_request';
+    /**
+     * @var string Throttler key slug
+     */
+    protected string $throttlerSlug = 'account.verify.request';
 
     /**
      * Inject dependencies.
+     *
+     * @param Translator                $translator
+     * @param Config                    $config
+     * @param Connection                $db
+     * @param Throttler                 $throttler
+     * @param UserInterface             $userModel
+     * @param EmailVerificationProvider $emailVerification
+     * @param RequestDataTransformer    $transformer
+     * @param ServerSideValidator       $validator
      */
     public function __construct(
         protected Translator $translator,
         protected Config $config,
         protected Connection $db,
-        protected RouteParserInterface $routeParser,
         protected Throttler $throttler,
         protected UserInterface $userModel,
-        protected VerificationEmail $verificationEmail,
+        protected EmailVerificationProvider $emailVerification,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator
     ) {
@@ -76,6 +88,11 @@ class ResendVerificationAction
      */
     public function __invoke(Request $request, Response $response): Response
     {
+        // Make sure verification is enabled
+        if (!$this->config->getBool('site.registration.require_email_verification', false)) {
+            throw new VerificationDisabledException();
+        }
+
         $message = $this->handle($request);
         $payload = json_encode([
             'message' => $message,
@@ -90,27 +107,22 @@ class ResendVerificationAction
      *
      * @param Request $request
      *
-     * @return string The message to be returned to the client.
+     * @return string The message to return to the frontend
      */
     protected function handle(Request $request): string
     {
         // Get POST parameters
         $params = (array) $request->getParsedBody();
 
-        // Load the request schema
+        // Load the request schema, apply parameter defaults, whitelist fields,
+        // and validate the request data. Throttle requests to prevent abuse.
         $schema = $this->getSchema();
-
-        // Whitelist and set parameter defaults
         $data = $this->transformer->transform($schema, $params);
-
-        // Validate request data
         $this->validateData($schema, $data);
-
-        // Throttle requests
         $this->throttle($data['email']);
 
-        // All checks passed!  log events/activities, create user, and send verification email (if required)
-        // Begin transaction - DB will be rolled back if an exception occurs
+        // Basic checks passed. Begin transaction - DB will be rolled back if
+        // an exception occurs.
         $this->db->transaction(function () use ($data) {
             // Log throttle-able event
             $this->throttler->logEvent($this->throttlerSlug, [
@@ -121,15 +133,16 @@ class ResendVerificationAction
             /** @var UserInterface|null */
             $user = $this->userModel->firstWhere('email', $data['email']);
 
-            // Check that the user exists and is not already verified.
-            // If there is no user with that email address, or the user exists and is already verified,
-            // we pretend like we succeeded to prevent account enumeration
+            // Verify that the user exists and is not already verified.
+            // If no user is found with the provided email, or if the user
+            // exists but is already verified, we act as if the operation
+            // succeeded. This prevents potential account enumeration attacks.
             if ($user !== null && $user->flag_verified === false) {
-                $this->verificationEmail->send($user, 'mail/resend-verification.html.twig');
+                $this->emailVerification->generate($user, 600);
             }
         });
 
-        return $this->translator->translate('ACCOUNT.VERIFICATION.NEW_LINK_SENT', ['email' => $data['email']]);
+        return $this->translator->translate('ACCOUNT.VERIFICATION.CODE.SENT', $data);
     }
 
     /**
@@ -147,6 +160,8 @@ class ResendVerificationAction
      *
      * @param RequestSchemaInterface $schema
      * @param mixed[]                $data
+     *
+     * @throws ValidationException If the data is invalid
      */
     protected function validateData(RequestSchemaInterface $schema, array $data): void
     {
@@ -160,9 +175,11 @@ class ResendVerificationAction
     }
 
     /**
-     * Throttle requests.
+     * Enforce rate limiting for requests to prevent abuse.
      *
      * @param string $email
+     *
+     * @throws ThrottlerDelayException If the throttle limit is reached
      */
     protected function throttle(string $email): void
     {

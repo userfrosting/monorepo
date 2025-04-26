@@ -1,0 +1,16 @@
+{% block subject %}
+    Here is your verification code for {{site.title}}
+{% endblock %}
+
+{% block body %}
+<p>Dear {{user.first_name}},
+</p>
+<p>
+Enter the 6-digit code below to verify your identity and access your account with <a href="{{site.uri.public}}">{{site.title}}</a>.
+</p>
+<h3>{{code}}</h3>
+<p>
+Thank you for helping us keep your account secure.
+The {{site.title}} Team
+</p>
+{% endblock %}

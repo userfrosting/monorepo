@@ -28,12 +28,10 @@ class VerificationRepository extends TokenRepository
      * Inject Dependencies.
      *
      * @param VerificationInterface       $modelIdentifier
-     * @param UserInterface               $userModel
      * @param UserActivityLoggerInterface $logger
      */
     public function __construct(
         protected VerificationInterface $modelIdentifier,
-        protected UserInterface $userModel,
         protected UserActivityLoggerInterface $logger,
     ) {
     }

@@ -21,17 +21,17 @@ use UserFrosting\Sprinkle\Account\Controller\AuthCheckAction;
 use UserFrosting\Sprinkle\Account\Controller\CaptchaAction;
 use UserFrosting\Sprinkle\Account\Controller\CheckUsernameAction;
 use UserFrosting\Sprinkle\Account\Controller\DenyResetPasswordAction;
+use UserFrosting\Sprinkle\Account\Controller\EmailVerificationRequestAction;
+use UserFrosting\Sprinkle\Account\Controller\EmailVerificationValidationAction;
 use UserFrosting\Sprinkle\Account\Controller\ForgetPasswordAction;
 use UserFrosting\Sprinkle\Account\Controller\LoginAction;
 use UserFrosting\Sprinkle\Account\Controller\LogoutAction;
 use UserFrosting\Sprinkle\Account\Controller\ProfileEditAction;
 use UserFrosting\Sprinkle\Account\Controller\ProfileEmailEditAction;
 use UserFrosting\Sprinkle\Account\Controller\RegisterAction;
-use UserFrosting\Sprinkle\Account\Controller\ResendVerificationAction;
 use UserFrosting\Sprinkle\Account\Controller\SetPasswordAction;
 use UserFrosting\Sprinkle\Account\Controller\SettingsEditAction;
 use UserFrosting\Sprinkle\Account\Controller\SuggestUsernameAction;
-use UserFrosting\Sprinkle\Account\Controller\VerifyAction;
 use UserFrosting\Sprinkle\Core\Middlewares\NoCache;
 
 class AuthRoutes implements RouteDefinitionInterface
@@ -42,11 +42,11 @@ class AuthRoutes implements RouteDefinitionInterface
         $app->group('/account', function (RouteCollectorProxy $group) {
             $group->post('/login', LoginAction::class)->setName('account.login');
             $group->post('/register', RegisterAction::class)->setName('account.register');
-            $group->get('/verify', VerifyAction::class)->setName('account.verify');
-            $group->post('/resend-verification', ResendVerificationAction::class)->setName('account.resendVerification');
             $group->post('/forgot-password', ForgetPasswordAction::class)->setName('account.forgotPassword');
             $group->get('/set-password/deny', DenyResetPasswordAction::class)->setName('account.setPassword.deny');
             $group->post('/set-password', SetPasswordAction::class)->setName('account.setPassword');
+            $group->post('/verify/email', EmailVerificationValidationAction::class)->setName('account.verify.email');
+            $group->post('/verify/request', EmailVerificationRequestAction::class)->setName('account.verify.request');
         })->add(GuestGuard::class)->add(NoCache::class);
 
         // Auth Guard

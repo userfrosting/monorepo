@@ -13,6 +13,12 @@ import FormLogin from '../Pages/Account/FormLogin.vue'
                 data-test="gotoRegistration">
                 {{ $t('REGISTER') }}
             </button>
+            <button
+                class="uk-button uk-button-default"
+                @click="$emit('gotoLogin')"
+                data-test="gotoLogin">
+                {{ $t('MORE_OPTIONS') }}
+            </button>
         </div>
         <slot></slot>
     </NavBarDropdown>

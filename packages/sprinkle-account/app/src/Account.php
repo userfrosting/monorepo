@@ -30,6 +30,7 @@ use UserFrosting\Sprinkle\Account\Database\Migrations\v420\AddingForeignKeys;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v430\UpdateGroupsTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v430\UpdateUsersTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v500\UpdateUsersTable as V500UpdateUsersTable;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v600\UserVerificationTable;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultPermissions;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultRoles;
@@ -49,6 +50,7 @@ use UserFrosting\Sprinkle\Account\ServicesProvider\AuthorizationService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\AuthService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\I18nService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\LoggersService;
+use UserFrosting\Sprinkle\Account\ServicesProvider\MFAServices;
 use UserFrosting\Sprinkle\Account\ServicesProvider\ModelsService;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\BakeryRecipe;
@@ -128,6 +130,7 @@ class Account implements
             ModelsService::class,
             I18nService::class,
             LoggersService::class,
+            MFAServices::class,
         ];
     }
 
@@ -155,6 +158,8 @@ class Account implements
             UpdateUsersTable::class,
             // v500
             V500UpdateUsersTable::class,
+            // v600
+            UserVerificationTable::class,
         ];
     }
 

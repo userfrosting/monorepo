@@ -47,7 +47,7 @@ return [
             ],
             'UNVERIFIED' => [
                 'TITLE'       => 'Compte non vérifié',
-                'DESCRIPTION' => 'Votre compte n\'a pas encore été vérifié. Vérifiez vos emails / dossier spam pour les instructions d\'activation du compte.',
+                'DESCRIPTION' => 'Votre compte n\'a pas encore été vérifié. Utilisez le formulaire <i>{{&ACCOUNT.VERIFICATION}}</i> pour activer votre compte.',
             ],
             'EXPIRED' => [
                 'TITLE'       => 'Session expirée',
@@ -68,6 +68,14 @@ return [
             'PASSWORD_RESET' => [
                 'TITLE'       => 'Jeton de réinitialisation de mot de passe invalide',
                 'DESCRIPTION' => 'Cette demande de réinitialisation de mot de passe est introuvable ou a expiré.',
+            ],
+            'VERIFICATION_DISABLED' => [
+                'TITLE'       => 'Vérification désactivée',
+                'DESCRIPTION' => 'La vérification du compte est désactivée. Veuillez nous contacter pour plus d\'informations.',
+            ],
+            'VERIFICATION_FAILED' => [
+                'TITLE'       => 'Exception de vérification',
+                'DESCRIPTION' => 'Ce code de vérification n\'est pas valide, ou le compte est déjà vérifié.',
             ],
         ],
         'ERROR'               => [
@@ -90,13 +98,17 @@ return [
         ],
 
         'VERIFICATION' => [
-            'NEW_LINK_SENT'   => 'Nous avons envoyé un nouveau lien de vérification à {{email}}. Veuillez vérifier vos dossiers de boîte de réception et de spam pour ce courriel.',
-            'RESEND'          => 'Renvoyer le courriel de validation',
-            'COMPLETE'        => 'Votre compte a été validé. Vous pouvez maintenant vous connecter.',
-            'EMAIL'           => 'Veuillez saisir l\'adresse email que vous avez utilisée pour vous inscrire et votre courriel de vérification sera renvoyé.',
-            // 'PAGE'            => 'Renvoyer l\'email de validation de votre nouveau compte.',
-            'SEND'            => 'Envoyer le lien de validation de mon compte',
-            'TOKEN_NOT_FOUND' => 'Le jeton de vérification n\'existe pas / Le compte est déjà vérifié',
+            '@TRANSLATION'      => 'Vérification du compte',
+            'CODE' => [
+            '@TRANSLATION' => 'Code de vérification',
+            'ENTER'        => 'Entrez le code de vérification',
+            'EXPLAIN'      => 'Entrez le code de vérification que vous avez reçu par email.',
+            'VERIFY'       => 'Vérifier le code',
+            'SENT'         => 'Si un compte non activé a été trouvé, un email avec un code de vérification a été envoyé à <strong>{{email}}</strong>. Veuillez vérifier votre boîte de réception et vos dossiers de spam pour cet email.',
+            ],
+            'COMPLETE'            => 'Votre compte a été validé. Vous pouvez maintenant vous connecter.',
+            'EXPLAIN'             => 'Veuillez saisir l\'adresse email que vous avez utilisée pour vous inscrire et un code de vérification vous sera renvoyé.',
+            'SEND'                => 'Envoyer le code par email',
         ],
     ],
 

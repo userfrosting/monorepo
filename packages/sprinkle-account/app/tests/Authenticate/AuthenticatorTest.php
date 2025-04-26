@@ -122,9 +122,13 @@ class AuthenticatorTest extends AccountTestCase
             'flag_verified' => false,
         ])->create();
 
-        /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        // Make sure email verification is required
+        $config = $this->ci->get(Config::class);
+        $config->set('site.registration.require_email_verification', true);
+        $this->assertTrue($config->get('site.registration.require_email_verification'));
 
+        // Get authenticator, set expectation and run test
+        $authenticator = $this->ci->get(Authenticator::class);
         $this->expectException(AccountNotVerifiedException::class);
         $authenticator->authenticate('id', $user->id, 'password');
     }

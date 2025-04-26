@@ -3,6 +3,7 @@
         "axios",
         "pinia",
         "Sprunjer",
-        "tdate"
+        "tdate",
+        "TOTP"
     ]
 }

@@ -9,4 +9,10 @@ export type { PasswordEditRequest } from './PasswordEditApi'
 export type { EmailEditRequest } from './EmailEditApi'
 export type { RegisterRequest, RegisterResponse } from './RegisterApi'
 export type { LoginRequest, LoginResponse } from './LoginApi'
+export type {
+    ResendVerificationRequest,
+    ResendVerificationResponse,
+    ValidateCodeRequest,
+    ValidateCodeResponse
+} from './UserVerificationApi'
 export type { UserDataInterface } from './UserDataInterface'

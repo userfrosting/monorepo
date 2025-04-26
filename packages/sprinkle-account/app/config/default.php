@@ -165,26 +165,23 @@ return [
         'password_reset_request' => null,
         'registration_attempt'   => null,
         'sign_in_attempt'        => null,
-        'verification_request'   => null,
+        'account.verify.request' => null,
+        'account.verify.email'   => null,
         'suggest_username'       => null,
     ],
 
-    /*
-    * ----------------------------------------------------------------------
-    * Configuration for the 'email verification' feature
-    * ----------------------------------------------------------------------
-    */
-    'verification' => [
-        'algorithm' => 'sha512',
-        'timeout'   => 10800,
+    /**
+     * ----------------------------------------------------------------------
+     * Configuration for the 'One Time Password' (OTP) feature
+     * ----------------------------------------------------------------------
+     * OTPs are used to verify the email address of a user and for two-factor
+     * authentication (2FA). These values configure the different OTP
+     * providers. Refer to the MFAProvider interface for more details.
+     *
+     * The 'timeout' value specifies the time, in seconds, before the OTP
+     * (sent via email or other methods) expires.
+     */
+    'otp' => [
+        'timeout' => 600, // 10 minutes
     ],
-
-    /*
-    * ----------------------------------------------------------------------
-    * Enable or disable per user theme defined in `$currentUser->theme`
-    * ----------------------------------------------------------------------
-    * @deprecated 4.6.0 Per user theme will be removed in future version
-    * This config disable the feature before it is removed
-    */
-    'per_user_theme' => false,
 ];

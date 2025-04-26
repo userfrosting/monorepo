@@ -71,7 +71,19 @@ return [
                 9 => 600,
             ],
         ],
-        'verification_request' => [
+        'account.verify.request' => [
+            'method'   => 'ip',
+            'interval' => 3600,
+            'delays'   => [
+                2 => 5,
+                3 => 10,
+                4 => 20,
+                5 => 40,
+                6 => 80,
+                7 => 600,
+            ],
+        ],
+        'account.verify.email' => [
             'method'   => 'ip',
             'interval' => 3600,
             'delays'   => [

@@ -30,8 +30,8 @@ export default [
         component: () => import('../views/ForgotPasswordView.vue')
     },
     {
-        path: '/account/resend-verification',
-        name: 'account.resend-verification',
+        path: '/account/verification',
+        name: 'account.verification',
         meta: {
             guest: {
                 redirect: { name: 'home' }

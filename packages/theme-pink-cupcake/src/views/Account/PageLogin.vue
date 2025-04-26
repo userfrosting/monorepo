@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import FormLogin from '../../components/Pages/Account/FormLogin.vue'
 </script>
 
@@ -12,9 +13,9 @@ import FormLogin from '../../components/Pages/Account/FormLogin.vue'
                     {{ $t('PASSWORD.FORGET') }}
                 </a>
             </li>
-            <li>
-                <a @click="$emit('gotoResendVerification')" data-test="gotoResendVerification">
-                    {{ $t('ACCOUNT.VERIFICATION.RESEND') }}
+            <li v-if="useConfigStore().get('site.registration.require_email_verification')">
+                <a @click="$emit('gotoVerification')" data-test="gotoVerification">
+                    {{ $t('ACCOUNT.VERIFICATION') }}
                 </a>
             </li>
         </ul>

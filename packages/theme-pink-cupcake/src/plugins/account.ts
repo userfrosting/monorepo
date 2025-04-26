@@ -7,7 +7,7 @@ import {
     PageLogin,
     PageRegister,
     PageForgotPassword,
-    PageResendVerification,
+    EmailVerificationRequest,
     PageUserSettings,
     PageUserSettingsProfile,
     PageUserSettingsPassword,
@@ -17,7 +17,7 @@ import {
     FormLogin,
     FormRegister,
     FormForgotPassword,
-    FormResendVerification
+    FormEmailVerificationRequest
 } from '../components/Pages/Account'
 
 export default {
@@ -25,11 +25,11 @@ export default {
         app.component('UFFormLogin', FormLogin)
             .component('UFFormRegister', FormRegister)
             .component('UFFormForgotPassword', FormForgotPassword)
-            .component('UFFormResendVerification', FormResendVerification)
+            .component('UFFormEmailVerificationRequest', FormEmailVerificationRequest)
             .component('UFPageLogin', PageLogin)
             .component('UFPageRegister', PageRegister)
             .component('UFPageForgotPassword', PageForgotPassword)
-            .component('UFPageResendVerification', PageResendVerification)
+            .component('UFEmailVerificationRequest', EmailVerificationRequest)
             .component('UFPageUserSettings', PageUserSettings)
             .component('UFPageUserSettingsProfile', PageUserSettingsProfile)
             .component('UFPageUserSettingsPassword', PageUserSettingsPassword)
@@ -42,11 +42,11 @@ declare module 'vue' {
         UFFormLogin: typeof FormLogin
         UFFormRegister: typeof FormRegister
         UFFormForgotPassword: typeof FormForgotPassword
-        UFFormResendVerification: typeof FormResendVerification
+        UFFormEmailVerificationRequest: typeof FormEmailVerificationRequest
         UFPageLogin: typeof PageLogin
         UFPageRegister: typeof PageRegister
         UFPageForgotPassword: typeof PageForgotPassword
-        UFPageResendVerification: typeof PageResendVerification
+        UFEmailVerificationRequest: typeof EmailVerificationRequest
         UFPageUserSettings: typeof PageUserSettings
         UFPageUserSettingsProfile: typeof PageUserSettingsProfile
         UFPageUserSettingsPassword: typeof PageUserSettingsPassword

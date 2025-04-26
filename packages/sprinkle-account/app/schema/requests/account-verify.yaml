@@ -1,6 +1,11 @@
 ---
-token:
+email:
   validators:
     required:
-      label: validation token
-      message: VALIDATION.REQUIRED
+      label: "&EMAIL"
+      message: VALIDATE.REQUIRED
+code:
+  validators:
+    required:
+      label: "&ACCOUNT.VERIFICATION.CODE"
+      message: VALIDATE.REQUIRED

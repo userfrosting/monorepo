@@ -47,7 +47,7 @@ return [
             ],
             'UNVERIFIED' => [
                 'TITLE'       => 'Account Unverified',
-                'DESCRIPTION' => 'Your account has not yet been verified. Check your emails / spam folder for account activation instructions.',
+                'DESCRIPTION' => 'Your account has not yet been verified. Use the <i>{{&ACCOUNT.VERIFICATION}}</i> form to activate your account.',
             ],
             'EXPIRED' => [
                 'TITLE'       => 'Session expired',
@@ -68,6 +68,14 @@ return [
             'PASSWORD_RESET' => [
                 'TITLE'       => 'Invalid Password Reset Token',
                 'DESCRIPTION' => 'This password reset request could not be found, or has expired.',
+            ],
+            'VERIFICATION_DISABLED' => [
+                'TITLE'       => 'Verification Disabled',
+                'DESCRIPTION' => 'Account verification is disabled. Please contact us for more information.',
+            ],
+            'VERIFICATION_FAILED' => [
+                'TITLE'       => 'Verification Exception',
+                'DESCRIPTION' => 'This verification code is not valid, or the account is already verified.',
             ],
         ],
         'ERROR'         => [
@@ -90,13 +98,17 @@ return [
         ],
 
         'VERIFICATION' => [
-            'NEW_LINK_SENT'     => 'We have emailed a new verification link to {{email}}.  Please check your inbox and spam folders for this email.',
-            'RESEND'            => 'Resend verification email',
-            'COMPLETE'          => 'You have successfully verified your account. You can now login.',
-            'EMAIL'             => 'Please enter the email address you used to sign up, and your verification email will be resent.',
-            // 'PAGE'              => 'Resend the verification email for your new account.',
-            'SEND'              => 'Email the verification link for my account',
-            'TOKEN_NOT_FOUND'   => 'Verification token does not exist / Account is already verified',
+            '@TRANSLATION'      => 'Account Verification',
+            'CODE' => [
+                '@TRANSLATION' => 'Verification code',
+                'ENTER'        => 'Enter verification code',
+                'EXPLAIN'      => 'Enter the verification code you received by email.',
+                'VERIFY'       => 'Verify code',
+                'SENT'         => 'If an unactivated account was found, an email with a verification code was sent to <strong>{{email}}</strong>. Please check your inbox and spam folders for this email.',
+            ],
+            'COMPLETE'            => 'You have successfully verified your account. You can now login.',
+            'EXPLAIN'             => 'Please enter the email address you used to sign up, and a verification code will be sent to your email.',
+            'SEND'                => 'Send code to email',
         ],
     ],
 

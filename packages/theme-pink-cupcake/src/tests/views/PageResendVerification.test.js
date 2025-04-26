@@ -1,6 +1,6 @@
 import { expect, test, describe } from 'vitest'
 import { mount, config } from '@vue/test-utils'
-import PageResendVerification from '../../views/Account/PageResendVerification.vue'
+import EmailVerificationRequest from '../../views/Account/EmailVerificationRequest.vue'
 import CardBoxBig from '../../components/Content/CardBoxBig.vue'
 import CardBox from '../../components/Content/CardBox.vue'
 import UFAlert from '../../components/UFAlert.vue'
@@ -17,9 +17,9 @@ config.global.components['UFCardBoxBig'] = CardBoxBig
 config.global.components['UFCardBox'] = CardBox
 config.global.components['UFAlert'] = UFAlert
 
-describe('PageResendVerification.vue', () => {
+describe('EmailVerificationRequest.vue', () => {
     test('Render correctly', () => {
-        const wrapper = mount(PageResendVerification)
+        const wrapper = mount(EmailVerificationRequest)
         expect(wrapper.exists()).toBe(true)
     })
 })

@@ -7,7 +7,7 @@ import type { RegisterRequest } from '@userfrosting/sprinkle-account/interfaces'
 import { useConfigStore, useTranslator } from '@userfrosting/sprinkle-core/stores'
 
 /**
- * API - Use the group edit API.
+ * API - Use the register API.
  */
 const {
     submitRegistration,
@@ -19,7 +19,7 @@ const {
 } = useRegisterApi()
 
 /**
- * Variables - Copy the group data to a reactive variable.
+ * Variables - Copy the default form data to a reactive variable.
  */
 const formData = ref<RegisterRequest>(defaultRegistrationForm())
 const router = useRouter()

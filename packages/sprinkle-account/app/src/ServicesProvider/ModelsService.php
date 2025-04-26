@@ -22,12 +22,14 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PermissionInterface
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PersistenceInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserVerificationInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\VerificationInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\PasswordReset;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Persistence;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\UserVerification;
 use UserFrosting\Sprinkle\Account\Database\Models\Verification;
 
 /**
@@ -41,14 +43,15 @@ class ModelsService implements ServicesProviderInterface
     public function register(): array
     {
         return [
-            ActivityInterface::class      => \DI\autowire(Activity::class),
-            GroupInterface::class         => \DI\autowire(Group::class),
-            PasswordResetInterface::class => \DI\autowire(PasswordReset::class),
-            PermissionInterface::class    => \DI\autowire(Permission::class),
-            PersistenceInterface::class   => \DI\autowire(Persistence::class),
-            RoleInterface::class          => \DI\autowire(Role::class),
-            UserInterface::class          => \DI\autowire(User::class),
-            VerificationInterface::class  => \DI\autowire(Verification::class),
+            ActivityInterface::class           => \DI\autowire(Activity::class),
+            GroupInterface::class              => \DI\autowire(Group::class),
+            PasswordResetInterface::class      => \DI\autowire(PasswordReset::class),
+            PermissionInterface::class         => \DI\autowire(Permission::class),
+            PersistenceInterface::class        => \DI\autowire(Persistence::class),
+            RoleInterface::class               => \DI\autowire(Role::class),
+            UserInterface::class               => \DI\autowire(User::class),
+            UserVerificationInterface::class   => \DI\autowire(UserVerification::class),
+            VerificationInterface::class       => \DI\autowire(Verification::class),
         ];
     }
 }
