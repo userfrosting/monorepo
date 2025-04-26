@@ -141,9 +141,15 @@ describe('FormEmailVerificationRequest.vue', () => {
         expect(
             vi.mocked(useEmailVerificationApi).mock.results[0].value.submitVerificationCode
         ).toHaveBeenCalledWith(email, code)
+
+        // Expect the notification to be shown
         expect(UIkit.notification).toHaveBeenCalledTimes(1)
         expect(UIkit.notification).toHaveBeenCalledWith(uikitNotificationValidated)
-        // TODO : expect(router.push).toHaveBeenCalledWith({ name: 'account.login' })
+
+        // Expect the redirection to be triggered
+        expect(vi.mocked(useRouter).mock.results[0].value.push).toHaveBeenCalledWith({
+            name: 'account.login'
+        })
     })
 
     test('resets the form when "Try Again" is clicked', async () => {
@@ -183,16 +189,91 @@ describe('FormEmailVerificationRequest.vue', () => {
         expect(wrapper.vm.displayVerification).toBe(false)
     })
 
-    // TODO
-    // test('redirects if email verification is not required', () => {
-    //     const configStore = useConfigStore()
-    //     configStore.get.mockReturnValue(false)
-    //     const router = useRouter()
+    test('redirects if email verification is not required', () => {
+        // Set mocks
+        // @ts-ignore
+        vi.mocked(useConfigStore).mockReturnValue({
+            get: vi.fn(() => false)
+        })
 
-    //     mount(FormEmailVerificationRequest)
-    //     expect(router.push).toHaveBeenCalledWith({ name: 'account.login' })
-    // })
+        mount(FormEmailVerificationRequest)
 
-    // TODO : Test error handling
-    // TODO : Test loading state
+        // Expect the redirection to be triggered
+        expect(vi.mocked(useRouter).mock.results[0].value.push).toHaveBeenCalledWith({
+            name: 'account.login'
+        })
+    })
+
+    test('handles API error', async () => {
+        // Set mocks
+        vi.mocked(useEmailVerificationApi).mockReturnValue({
+            resendVerification: vi.fn(),
+            submitVerificationCode: vi.fn(),
+            apiLoading: ref(false),
+            apiError: ref({ title: 'Error', description: 'API error', style: 'Danger' })
+        })
+
+        // Mount the component
+        const wrapper = mount(FormEmailVerificationRequest)
+
+        // Assert error state
+        expect(wrapper.find('[data-test="requestError"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="requestError"]').text()).toBe('Error API error')
+
+        // Force displayVerification to true, simulating the request already been sent
+        // @ts-ignore
+        wrapper.vm.displayVerification = true
+        await wrapper.vm.$nextTick()
+
+        // Assert error state
+        expect(wrapper.find('[data-test="verificationError"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="verificationError"]').text()).toBe('Error API error')
+    })
+
+    test('loading states', async () => {
+        // Set mocks
+        vi.mocked(useEmailVerificationApi).mockReturnValue({
+            resendVerification: vi.fn(),
+            submitVerificationCode: vi.fn(),
+            apiLoading: ref(false),
+            apiError: ref(null)
+        })
+
+        // Mount the component
+        const wrapper = mount(FormEmailVerificationRequest)
+
+        // Assert initial loading state
+        expect(wrapper.find('[data-test="submitRequest"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="submitRequest"]').attributes().disabled).not.toBeDefined()
+
+        // Set Api loading to true
+        // @ts-ignore
+        wrapper.vm.apiLoading = true
+        await wrapper.vm.$nextTick()
+
+        // Assert loading state
+        expect(wrapper.find('[data-test="submitRequest"]').attributes().disabled).toBeDefined()
+
+        // Switch to the verification form
+        // @ts-ignore
+        wrapper.vm.displayVerification = true
+        await wrapper.vm.$nextTick()
+
+        // Assert loading state
+        expect(wrapper.find('[data-test="submitVerification"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="submitVerification"]').attributes().disabled).toBeDefined()
+        expect(wrapper.find('[data-test="tryAgain"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="tryAgain"]').attributes().disabled).toBeDefined()
+
+        // Set Api loading to false
+        // @ts-ignore
+        wrapper.vm.apiLoading = false
+        await wrapper.vm.$nextTick()
+
+        // Assert return to not loading state
+        expect(
+            wrapper.find('[data-test="submitVerification"]').attributes().disabled
+        ).not.toBeDefined()
+        expect(wrapper.find('[data-test="tryAgain"]').attributes().disabled).not.toBeDefined()
+    })
 })

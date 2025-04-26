@@ -74,7 +74,7 @@ if (useConfigStore().get('site.registration.require_email_verification') === fal
         <h3 class="uk-card-title">{{ $t('ACCOUNT.VERIFICATION') }}</h3>
         <p class="uk-text-meta">{{ $t('ACCOUNT.VERIFICATION.EXPLAIN') }}</p>
         <fieldset class="uk-fieldset">
-            <UFAlert data-test="error" v-if="apiError" :alert="apiError" />
+            <UFAlert data-test="requestError" v-if="apiError" :alert="apiError" />
             <div class="uk-margin">
                 <div class="uk-inline uk-width-1-1">
                     <span class="uk-form-icon" uk-icon="icon: mail"></span>
@@ -108,7 +108,7 @@ if (useConfigStore().get('site.registration.require_email_verification') === fal
         data-test="verificationForm">
         <h3 class="uk-card-title">{{ $t('ACCOUNT.VERIFICATION.CODE.ENTER') }}</h3>
         <p class="uk-text-meta">{{ $t('ACCOUNT.VERIFICATION.CODE.EXPLAIN') }}</p>
-        <UFAlert data-test="error" v-if="apiError" :alert="apiError" />
+        <UFAlert data-test="verificationError" v-if="apiError" :alert="apiError" />
         <fieldset class="uk-fieldset">
             <FaCode data-test="faCode" v-model="code" />
             <div class="uk-text-center">
