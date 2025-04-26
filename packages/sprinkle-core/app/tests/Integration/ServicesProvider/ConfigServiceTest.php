@@ -26,8 +26,8 @@ class ConfigServiceTest extends TestCase
     public function testService(): void
     {
         $this->assertIsString($this->ci->get('UF_MODE'));
-        $this->assertInstanceOf(Config::class, $this->ci->get(Config::class));
-        $this->assertInstanceOf(ArrayFileLoader::class, $this->ci->get(ArrayFileLoader::class));
-        $this->assertInstanceOf(ConfigPathBuilder::class, $this->ci->get(ConfigPathBuilder::class));
+        $this->assertInstanceOf(Config::class, $this->ci->get(Config::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(ArrayFileLoader::class, $this->ci->get(ArrayFileLoader::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(ConfigPathBuilder::class, $this->ci->get(ConfigPathBuilder::class)); // @phpstan-ignore-line
     }
 }

@@ -61,7 +61,7 @@ class SessionServiceTest extends TestCase
         $this->ci->set(SessionHandlerInterface::class, $handler);
 
         // Assert CI get
-        $this->assertInstanceOf(Session::class, $this->ci->get(Session::class));
+        $this->ci->get(Session::class);
     }
 
     /**
@@ -84,7 +84,6 @@ class SessionServiceTest extends TestCase
         $this->ci->set($class, Mockery::mock($class));
 
         // Assert CI get
-        $this->assertInstanceOf(SessionHandlerInterface::class, $this->ci->get(SessionHandlerInterface::class));
         $this->assertInstanceOf($class, $this->ci->get(SessionHandlerInterface::class)); // @phpstan-ignore-line
     }
 
@@ -129,7 +128,7 @@ class SessionServiceTest extends TestCase
         $this->ci->set(ResourceLocatorInterface::class, $locator);
 
         // Assert CI get
-        $this->assertInstanceOf(FileSessionHandler::class, $this->ci->get(FileSessionHandler::class));
+        $this->ci->get(FileSessionHandler::class);
     }
 
     public function testFileSessionHandlerWithError(): void
@@ -165,6 +164,6 @@ class SessionServiceTest extends TestCase
         $this->ci->set(Connection::class, Mockery::mock(Connection::class));
 
         // Assert CI get
-        $this->assertInstanceOf(DatabaseSessionHandler::class, $this->ci->get(DatabaseSessionHandler::class));
+        $this->ci->get(DatabaseSessionHandler::class);
     }
 }

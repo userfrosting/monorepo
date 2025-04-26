@@ -78,10 +78,10 @@ class DatabaseMigrationRepositoryTest extends TestCase
         $this->assertSame([], $repository->list());
 
         // Insert 2 from the same batch, plus two other batch
-        $repository->log('foo', 2);
-        $repository->log('bar', 2);
-        $repository->log('foobar', 3);
-        $repository->log('barfoo');
+        $repository->log('foo', 2); // @phpstan-ignore-line
+        $repository->log('bar', 2); // @phpstan-ignore-line
+        $repository->log('foobar', 3); // @phpstan-ignore-line
+        $repository->log('barfoo'); // @phpstan-ignore-line
 
         // Get Lists
         $this->assertSame([
@@ -90,24 +90,25 @@ class DatabaseMigrationRepositoryTest extends TestCase
             'foobar',
             'barfoo',
         ], $repository->list());
-        $this->assertSame(['foobar', 'barfoo'], $repository->list(2));
-        $this->assertSame(['barfoo', 'foobar'], $repository->list(2, false));
+        $this->assertSame(['foobar', 'barfoo'], $repository->list(2)); // @phpstan-ignore-line
+        $this->assertSame(['barfoo', 'foobar'], $repository->list(2, false)); // @phpstan-ignore-line
 
         // New batch number
         $this->assertSame(4, $repository->getLastBatchNumber());
         $this->assertSame(5, $repository->getNextBatchNumber());
 
         // Test Last
-        $this->assertSame(['barfoo'], $repository->last());
+        $this->assertSame(['barfoo'], $repository->last()); // @phpstan-ignore-line
 
         // Get single Migration
-        $this->assertTrue($repository->has('foobar'));
-        $migration = $repository->get('foobar');
-        $this->assertSame('foobar', $migration['migration']);
+        $this->assertTrue($repository->has('foobar')); // @phpstan-ignore-line
+        $migration = $repository->get('foobar'); // @phpstan-ignore-line
+        $this->assertSame('foobar', $migration['migration']); // @phpstan-ignore-line
         $this->assertSame(3, (int) $migration['batch']);
 
         // Delete Migration
-        $repository->remove('foobar');
+        $repository->remove('foobar'); // @phpstan-ignore-line
+        // @phpstan-ignore-next-line
         $this->assertSame([
             'foo',
             'bar',
@@ -124,7 +125,7 @@ class DatabaseMigrationRepositoryTest extends TestCase
         $repository = $this->ci->get(DatabaseMigrationRepository::class);
 
         $this->expectException(MigrationNotFoundException::class);
-        $repository->get('foo');
+        $repository->get('foo');  // @phpstan-ignore-line
 
         // Delete repository for next test
         $repository->delete();

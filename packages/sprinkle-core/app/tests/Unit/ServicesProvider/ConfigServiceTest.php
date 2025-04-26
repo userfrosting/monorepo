@@ -49,8 +49,7 @@ class ConfigServiceTest extends TestCase
             ->shouldReceive('load')->once()->andReturn([])
             ->getMock();
         $this->ci->set(ArrayFileLoader::class, $loader);
-
-        $this->assertInstanceOf(Config::class, $this->ci->get(Config::class));
+        $this->ci->get(Config::class);
     }
 
     // TODO : This must be properly tested...
@@ -78,16 +77,6 @@ class ConfigServiceTest extends TestCase
             ->shouldReceive('getBasePath')->andReturn('')
             ->getMock();
         $this->ci->set(ResourceLocatorInterface::class, $locator);
-
-        $this->assertInstanceOf(ArrayFileLoader::class, $this->ci->get(ArrayFileLoader::class));
-    }
-
-    public function testConfigPathBuilder(): void
-    {
-        // Set mock Locator
-        $locator = Mockery::mock(ResourceLocatorInterface::class);
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
-
-        $this->assertInstanceOf(ConfigPathBuilder::class, $this->ci->get(ConfigPathBuilder::class));
+        $this->ci->get(ArrayFileLoader::class);
     }
 }

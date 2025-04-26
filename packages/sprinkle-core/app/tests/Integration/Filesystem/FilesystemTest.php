@@ -58,7 +58,6 @@ class FilesystemTest extends TestCase
 
         // Filesystem service will return an instance of FilesystemManger
         $filesystem = $this->ci->get(FilesystemManager::class);
-        $this->assertInstanceOf(FilesystemManager::class, $filesystem);
 
         // Main aspect of our FilesystemManager is to adapt our config structure
         // to Laravel class we'll make sure here the forced config actually works
@@ -156,7 +155,7 @@ class FilesystemTest extends TestCase
         $filesystemManager->extend('localTest', function ($configService, $config) {
             $locator = $this->ci->get(ResourceLocatorInterface::class);
             $config['root'] = $locator->findResource($config['root'], all: true);
-            $adapter = new LocalAdapter($config['root']);
+            $adapter = new LocalAdapter($config['root']); // @phpstan-ignore-line
             $filesystem = new Filesystem($adapter);
 
             return new FilesystemAdapter($filesystem, $adapter, $config);

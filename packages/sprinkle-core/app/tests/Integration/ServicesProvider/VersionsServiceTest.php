@@ -34,9 +34,9 @@ class VersionsServiceTest extends TestCase
         $this->assertIsString($this->ci->get('NODE_VERSION'));
         $this->assertIsString($this->ci->get('NPM_VERSION'));
 
-        $this->assertInstanceOf(PhpVersionValidator::class, $this->ci->get(PhpVersionValidator::class));
-        $this->assertInstanceOf(PhpDeprecationValidator::class, $this->ci->get(PhpDeprecationValidator::class));
-        $this->assertInstanceOf(NodeVersionValidator::class, $this->ci->get(NodeVersionValidator::class));
-        $this->assertInstanceOf(NpmVersionValidator::class, $this->ci->get(NpmVersionValidator::class));
+        $this->assertInstanceOf(PhpVersionValidator::class, $this->ci->get(PhpVersionValidator::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(PhpDeprecationValidator::class, $this->ci->get(PhpDeprecationValidator::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(NodeVersionValidator::class, $this->ci->get(NodeVersionValidator::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(NpmVersionValidator::class, $this->ci->get(NpmVersionValidator::class)); // @phpstan-ignore-line
     }
 }

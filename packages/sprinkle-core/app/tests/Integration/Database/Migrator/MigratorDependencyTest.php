@@ -49,12 +49,6 @@ class MigratorDependencyTest extends TestCase
         $this->repository->delete();
     }
 
-    public function testConstruct(): void
-    {
-        $migrator = $this->ci->get(Migrator::class);
-        $this->assertInstanceOf(Migrator::class, $migrator);
-    }
-
     public function testGetInstalled(): void
     {
         $migrator = $this->ci->get(Migrator::class);

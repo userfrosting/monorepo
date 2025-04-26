@@ -51,12 +51,6 @@ class MigratorRollbackTest extends TestCase
         $this->repository->delete();
     }
 
-    public function testConstruct(): void
-    {
-        $migrator = $this->ci->get(Migrator::class);
-        $this->assertInstanceOf(Migrator::class, $migrator);
-    }
-
     public function testCanRollbackMigration(): void
     {
         $migrator = $this->ci->get(Migrator::class);

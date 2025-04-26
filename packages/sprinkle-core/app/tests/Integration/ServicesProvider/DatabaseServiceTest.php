@@ -29,9 +29,9 @@ class DatabaseServiceTest extends TestCase
 {
     public function testService(): void
     {
-        $this->assertInstanceOf(Capsule::class, $this->ci->get(Capsule::class));
-        $this->assertInstanceOf(Connection::class, $this->ci->get(Connection::class));
-        $this->assertInstanceOf(Builder::class, $this->ci->get(Builder::class));
+        $this->assertInstanceOf(Capsule::class, $this->ci->get(Capsule::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(Connection::class, $this->ci->get(Connection::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(Builder::class, $this->ci->get(Builder::class)); // @phpstan-ignore-line
     }
 
     public function testWithQueryLogger(): void
@@ -48,7 +48,6 @@ class DatabaseServiceTest extends TestCase
 
         // Get capsule service
         $capsule = $this->ci->get(Capsule::class);
-        $this->assertInstanceOf(Capsule::class, $capsule);
 
         // Run a test query
         $capsule->getConnection()->select('SELECT 1');

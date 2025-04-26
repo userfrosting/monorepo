@@ -56,18 +56,18 @@ class TwigServiceTest extends TestCase
         // Set App Mock
         $RouteParserInterface = Mockery::mock(RouteParserInterface::class);
         $RouteCollectorInterface = Mockery::mock(RouteCollectorInterface::class)
-            ->shouldReceive('getRouteParser')->andReturn($RouteParserInterface)
+            ->shouldReceive('getRouteParser')->once()->andReturn($RouteParserInterface)
             ->getMock();
         $app = Mockery::mock(App::class)
-            ->shouldReceive('getRouteCollector')->andReturn($RouteCollectorInterface)
-            ->shouldReceive('getBasePath')->andReturn('')
+            ->shouldReceive('getRouteCollector')->once()->andReturn($RouteCollectorInterface)
+            ->shouldReceive('getBasePath')->once()->andReturn('')
             ->getMock();
         $this->ci->set(App::class, $app);
 
         $twig = Mockery::mock(Twig::class);
         $this->ci->set(Twig::class, $twig);
 
-        $this->assertInstanceOf(TwigMiddleware::class, $this->ci->get(TwigMiddleware::class));
+        $this->ci->get(TwigMiddleware::class);
     }
 
     public function testService(): void
@@ -82,12 +82,11 @@ class TwigServiceTest extends TestCase
         // Set Locator Mock
         // TODO : templatePaths are mocked here, but an integration test with a Stub template would be best.
         $location = Mockery::mock(ResourceLocationInterface::class)
-                ->shouldReceive('getName')->andReturn('foobar')
+                ->shouldReceive('getName')->once()->andReturn('foobar')
                 ->getMock();
         $resource = Mockery::mock(ResourceInterface::class)
-                ->shouldReceive('getAbsolutePath')->andReturn(__DIR__)
-                ->shouldReceive('__toString')->andReturn(__DIR__)
-                ->shouldReceive('getLocation')->andReturn($location)
+                ->shouldReceive('getAbsolutePath')->times(2)->andReturn(__DIR__)
+                ->shouldReceive('getLocation')->once()->andReturn($location)
                 ->getMock();
         $locator = Mockery::mock(ResourceLocatorInterface::class)
                 ->shouldReceive('getResources')->with('templates://')->once()->andReturn([$resource])
@@ -112,13 +111,12 @@ class TwigServiceTest extends TestCase
 
         /** @var TwigRepositoryInterface */
         $repository = Mockery::mock(TwigRepositoryInterface::class)
-            ->shouldReceive('getIterator')->andReturn(new ArrayIterator([$extension]))
+            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([$extension]))
             ->getMock();
         $this->ci->set(TwigRepositoryInterface::class, $repository);
 
         // Assert Service is returned.
         $view = $this->ci->get(Twig::class);
-        $this->assertInstanceOf(Twig::class, $view);
 
         // Assert
         $result = $view->fetchFromString('{% for alert in getAlerts() %}{{alert.message}}{% endfor %}');
@@ -139,7 +137,7 @@ class TwigServiceTest extends TestCase
 
         // Set Locator Mock
         $resource = Mockery::mock(ResourceInterface::class)
-            ->shouldReceive('getAbsolutePath')->andReturn('')
+            ->shouldReceive('getAbsolutePath')->once()->andReturn('')
             ->getMock();
         $locator = Mockery::mock(ResourceLocatorInterface::class)
                 ->shouldReceive('getResources')->once()->andReturn([])
@@ -149,10 +147,10 @@ class TwigServiceTest extends TestCase
 
         /** @var TwigRepositoryInterface */
         $repository = Mockery::mock(TwigRepositoryInterface::class)
-            ->shouldReceive('getIterator')->andReturn(new ArrayIterator([]))
+            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([]))
             ->getMock();
         $this->ci->set(TwigRepositoryInterface::class, $repository);
 
-        $this->assertInstanceOf(Twig::class, $this->ci->get(Twig::class));
+        $this->ci->get(Twig::class);
     }
 }

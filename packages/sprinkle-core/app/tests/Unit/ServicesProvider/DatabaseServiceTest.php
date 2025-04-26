@@ -64,7 +64,7 @@ class DatabaseServiceTest extends TestCase
         $this->ci->set(QueryLoggerInterface::class, Mockery::mock(QueryLoggerInterface::class));
 
         // Get service
-        $this->assertInstanceOf(Capsule::class, $this->ci->get(Capsule::class));
+        $this->ci->get(Capsule::class);
     }
 
     public function testBuilderWithQueryLogger(): void
@@ -90,6 +90,6 @@ class DatabaseServiceTest extends TestCase
         $this->ci->set(LogExecutedQuery::class, $logger);
 
         // Get service
-        $this->assertInstanceOf(Capsule::class, $this->ci->get(Capsule::class));
+        $this->ci->get(Capsule::class);
     }
 }

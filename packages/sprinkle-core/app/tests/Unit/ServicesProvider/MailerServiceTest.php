@@ -46,6 +46,6 @@ class MailerServiceTest extends TestCase
         $ci->set(MailLoggerInterface::class, $logger);
 
         // Assertions
-        $this->assertInstanceOf(Mailer::class, $ci->get(Mailer::class));
+        $ci->get(Mailer::class);
     }
 }

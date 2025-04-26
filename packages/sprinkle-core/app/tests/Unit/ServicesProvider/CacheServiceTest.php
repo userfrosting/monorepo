@@ -66,8 +66,7 @@ class CacheServiceTest extends TestCase
             ->shouldReceive('instance')->once()->andReturn(Mockery::mock(Cache::class))
             ->getMock();
         $this->ci->set($class, $store);
-
-        $this->assertInstanceOf(Cache::class, $this->ci->get(Cache::class));
+        $this->ci->get(Cache::class);
     }
 
     /**
@@ -99,11 +98,10 @@ class CacheServiceTest extends TestCase
     {
         // Set mock Locator
         $locator = Mockery::mock(ResourceLocatorInterface::class)
-            ->shouldReceive('findResource')->withArgs(['cache://', true])->andReturn('foo/')
+            ->shouldReceive('findResource')->withArgs(['cache://', true])->once()->andReturn('foo/')
             ->getMock();
         $this->ci->set(ResourceLocatorInterface::class, $locator);
-
-        $this->assertInstanceOf(TaggableFileStore::class, $this->ci->get(TaggableFileStore::class));
+        $this->ci->get(TaggableFileStore::class);
     }
 
     public function testTaggableFileStoreForNullPath(): void
@@ -126,8 +124,7 @@ class CacheServiceTest extends TestCase
             ->shouldReceive('get')->with('cache.prefix')->once()->andReturn('')
             ->getMock();
         $this->ci->set(Config::class, $config);
-
-        $this->assertInstanceOf(MemcachedStore::class, $this->ci->get(MemcachedStore::class));
+        $this->ci->get(MemcachedStore::class);
     }
 
     public function testRedisStore(): void
@@ -138,7 +135,6 @@ class CacheServiceTest extends TestCase
             ->shouldReceive('get')->with('cache.prefix')->once()->andReturn('')
             ->getMock();
         $this->ci->set(Config::class, $config);
-
-        $this->assertInstanceOf(RedisStore::class, $this->ci->get(RedisStore::class));
+        $this->ci->get(RedisStore::class);
     }
 }

@@ -30,7 +30,7 @@ class UserFrostingTest extends TestCase
         $this->assertInstanceOf(App::class, $this->userfrosting->getApp()); // @phpstan-ignore-line
         $this->assertInstanceOf(ContainerInterface::class, $this->userfrosting->getContainer()); // @phpstan-ignore-line
         $this->assertSame(TestSprinkle::class, $this->userfrosting->getMainSprinkle());
-        $this->assertInstanceOf(SprinkleManager::class, $this->userfrosting->getContainer()->get(SprinkleManager::class));
+        $this->assertInstanceOf(SprinkleManager::class, $this->userfrosting->getContainer()->get(SprinkleManager::class)); // @phpstan-ignore-line
     }
 
     /**
@@ -38,7 +38,7 @@ class UserFrostingTest extends TestCase
      */
     public function testService(): void
     {
-        $this->assertInstanceOf(ServerRequestInterface::class, $this->ci->get(ServerRequestInterface::class));
+        $this->assertInstanceOf(ServerRequestInterface::class, $this->ci->get(ServerRequestInterface::class)); // @phpstan-ignore-line
     }
 
     /**

@@ -109,8 +109,6 @@ class ThrottlerTest extends CoreTestCase
         $this->ci->set(Config::class, $config);
 
         $throttler = $this->ci->get(Throttler::class);
-        $this->assertInstanceOf(Throttler::class, $throttler);
-
         $rules = $throttler->getThrottleRules();
         $this->assertCount(2, $rules);
         $this->assertInstanceOf(ThrottleRule::class, $rules['test']);

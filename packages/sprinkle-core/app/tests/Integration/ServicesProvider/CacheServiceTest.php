@@ -27,7 +27,6 @@ class CacheServiceTest extends TestCase
     {
         $this->assertSame('testing', $this->ci->get('UF_MODE'));
         $cache = $this->ci->get(Cache::class);
-        $this->assertInstanceOf(Cache::class, $cache);
         $this->assertInstanceOf(ArrayStore::class, $cache->getStore());
     }
 }

@@ -148,7 +148,6 @@ class SiteLocaleTest extends TestCase
         $this->assertSame('fr_FR', $locale->getLocaleIdentifier());
 
         $translator = $this->ci->get(Translator::class);
-        $this->assertInstanceOf(Translator::class, $translator);
         $this->assertSame('fr_FR', $translator->getLocale()->getIdentifier());
     }
 

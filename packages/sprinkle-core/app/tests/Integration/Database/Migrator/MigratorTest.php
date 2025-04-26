@@ -84,7 +84,7 @@ class MigratorTest extends TestCase
         // Assert results
         // N.B.: Don't assert exact string here, because it could change depending
         //       of DB, we only assert structure for now.
-        $this->assertIsArray($result);
+        $this->assertIsArray($result); // @phpstan-ignore-line
         $this->assertCount(1, $result);
         $this->assertIsString($result[StubMigrationA::class][0]['query']);
 
@@ -132,9 +132,9 @@ class MigratorTest extends TestCase
         // Assert results
         // N.B.: Don't assert exact string here, because it could change depending
         //       of DB, we only assert structure for now.
-        $this->assertIsArray($result);
+        $this->assertIsArray($result); // @phpstan-ignore-line
         $this->assertCount(1, $result);
-        $this->assertIsString($result[StubMigrationA::class][0]['query']);
+        $this->assertIsString($result[StubMigrationA::class][0]['query']); // @phpstan-ignore-line
 
         // Table stills exist.
         $this->assertTrue($schema->hasTable('test'));
@@ -183,9 +183,9 @@ class MigratorTest extends TestCase
 
         // Test pretend to reset
         $result = $migrator->pretendToReset();
-        $this->assertIsArray($result);
+        $this->assertIsArray($result); // @phpstan-ignore-line
         $this->assertCount(1, $result);
-        $this->assertIsString($result[StubMigrationA::class][0]['query']);
+        $this->assertIsString($result[StubMigrationA::class][0]['query']); // @phpstan-ignore-line
 
         // Test reset
         $result = $migrator->reset();
