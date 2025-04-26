@@ -31,7 +31,7 @@ final class TwigMailMessage extends AbstractMailMessage implements MailMessage
      * @param Twig   $view     The Twig view object used to render mail templates.
      * @param string $template optional Set the Twig template to use for this message.
      */
-    public function __construct(protected Twig $view, protected string $template)
+    public function __construct(protected Twig $view, protected string $template = '')
     {
         $twig = $this->view->getEnvironment();
         $this->params = $twig->getGlobals();

@@ -19,7 +19,7 @@ use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Core\Util\Util;
 
 /**
- * Test Twig functionality from CoreExtension.
+ * Core Twig Extensions.
  */
 class CoreExtension extends AbstractExtension implements GlobalsInterface
 {

@@ -96,6 +96,7 @@ use UserFrosting\Sprinkle\Core\Twig\Extensions\CoreExtension;
 use UserFrosting\Sprinkle\Core\Twig\Extensions\CsrfExtension;
 use UserFrosting\Sprinkle\Core\Twig\Extensions\I18nExtension;
 use UserFrosting\Sprinkle\Core\Twig\Extensions\RoutesExtension;
+use UserFrosting\Sprinkle\Core\Twig\Extensions\UserAgentExtension;
 use UserFrosting\Sprinkle\MiddlewareRecipe;
 use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\ViteTwig\ViteTwigExtension;
@@ -260,6 +261,7 @@ class Core implements
             AlertsExtension::class,
             RoutesExtension::class,
             EntrypointsTwigExtension::class,
+            UserAgentExtension::class,
             VersionedAssetsTwigExtension::class,
             ViteTwigExtension::class,
         ];

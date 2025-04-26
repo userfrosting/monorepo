@@ -3,14 +3,28 @@
 {% endblock %}
 
 {% block body %}
-<p>Dear {{user.first_name}},
-</p>
+<p>Dear {{user.first_name}},</p>
+
+<p>Enter the 6-digit code below to verify your identity and access your account with <a href="{{site.uri.public}}">{{site.title}}</a>.</p>
+
+<h2>{{code}}</h2>
+
 <p>
-Enter the 6-digit code below to verify your identity and access your account with <a href="{{site.uri.public}}">{{site.title}}</a>.
+Thank you for helping us keep your account secure.<br />The {{site.title}} Team
 </p>
-<h3>{{code}}</h3>
-<p>
-Thank you for helping us keep your account secure.
-The {{site.title}} Team
+
+<p style="font-size: 0.8em; color: #999;">
+This email was sent to you because you requested a verification code for your account. If you did not request this code, please ignore this email.<br />
+If you have any questions, please contact us at <a href="mailto:{{site.email}}">{{site.email}}</a>.
+</p>
+
+<p style="font-size: 0.8em; color: #999;">
+Request Details:
+<ul style="font-size: 0.8em; color: #999;">
+    <li><strong>Date</strong>: {{date|date('l, F j, Y H:i:s')}}</li>
+    <li><strong>Operating System</strong>: {{user_agent.platform}}</li>
+    <li><strong>Platform</strong>: {{user_agent.browser}} {{user_agent.version}}</li>
+    <li><strong>IP Address</strong>: {{user_agent.ip}}</li>
+</ul>
 </p>
 {% endblock %}
