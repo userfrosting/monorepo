@@ -22,9 +22,8 @@ use Twig\Extension\GlobalsInterface;
  *
  * The `user_agent` global variable contains the user agent string from the
  * server's global variables, while the `user_ip` global variable contains the
- * user's IP address.
- *
- * The user agent string is parsed using the `UserAgentParser` service.
+ * user's IP address. The user agent string is parsed using donatj/PhpUserAgent.
+ * 
  * @see https://github.com/donatj/PhpUserAgent
  */
 class UserAgentExtension extends AbstractExtension implements GlobalsInterface
