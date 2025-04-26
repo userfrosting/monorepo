@@ -66,7 +66,7 @@ class UserAgentExtension extends AbstractExtension implements GlobalsInterface
      */
     protected function getUserAgent(): array
     {
-        $parser = $this->parser->parse();
+        $parser = $this->parser->parse($_SERVER['HTTP_USER_AGENT'] ?? '');
 
         return [
             'ip'       => $this->getUserIp(),
