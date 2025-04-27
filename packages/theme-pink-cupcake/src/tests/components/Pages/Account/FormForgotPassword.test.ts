@@ -1,9 +1,9 @@
-import { mount, config } from '@vue/test-utils'
 import { describe, test, expect, vi, afterEach } from 'vitest'
-import FormForgotPassword from '../../../components/Pages/Account/FormForgotPassword.vue'
-import UFAlert from '../../../components/UFAlert.vue'
+import { mount, config } from '@vue/test-utils'
 import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import { forgotPassword } from '@userfrosting/sprinkle-account/composables'
+import FormForgotPassword from '../../../../components/Pages/Account/FormForgotPassword.vue'
+import UFAlert from '../../../../components/UFAlert.vue'
 
 // Register the UFAlert component stub globally
 config.global.stubs['UFAlert'] = UFAlert

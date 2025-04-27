@@ -1,11 +1,11 @@
-import { mount, config } from '@vue/test-utils'
 import { describe, test, afterEach, expect, vi } from 'vitest'
-import FormLogin from '../../../components/Pages/Account/FormLogin.vue'
-import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
-import UFAlert from '../../../components/UFAlert.vue'
+import { mount, config } from '@vue/test-utils'
 import UIkit from 'uikit'
+import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
 import type { LoginRequest } from '@userfrosting/sprinkle-account/interfaces'
 import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
+import FormLogin from '../../../../components/Pages/Account/FormLogin.vue'
+import UFAlert from '../../../../components/UFAlert.vue'
 
 // Register the UFAlert component stub globally
 config.global.stubs['UFAlert'] = UFAlert

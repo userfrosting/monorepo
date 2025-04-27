@@ -25,12 +25,12 @@ use UserFrosting\Fortress\Validator\ServerSideValidator;
 use UserFrosting\I18n\Translator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Account\Account\Registration;
+use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\EmailVerificationProvider;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Event\UserCreatedEvent;
 use UserFrosting\Sprinkle\Account\Exceptions\RegistrationException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
-use UserFrosting\Sprinkle\Account\Mail\VerificationEmail;
 use UserFrosting\Sprinkle\Account\Validators\UserValidation;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
@@ -80,7 +80,7 @@ class RegisterAction
         protected UserActivityLoggerInterface $logger,
         protected UserInterface $userModel,
         protected UserValidation $userValidation,
-        protected VerificationEmail $verificationEmail,
+        protected EmailVerificationProvider $emailVerification,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator
     ) {
@@ -180,7 +180,7 @@ class RegisterAction
             // Send activation email
             if ($this->requireEmailVerification() === true) {
                 try {
-                    $this->verificationEmail->send($user, 'mail/verify-account.html.twig');
+                    $this->emailVerification->generate($user, 600);
                 } catch (PHPMailerException $e) {
                     // Use abstract message for security reasons - We don't want to show email is not working
                     $exception = new RegistrationException($e->getMessage());

@@ -5,8 +5,8 @@ import UIkit from 'uikit'
 import type { UserInterface, RegisterRequest } from '@userfrosting/sprinkle-account/interfaces'
 import { useRegisterApi } from '@userfrosting/sprinkle-account/composables'
 import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
-import FormRegister from '../../../components/Pages/Account/FormRegister.vue'
-import UFAlert from '../../../components/UFAlert.vue'
+import FormRegister from '../../../../components/Pages/Account/FormRegister.vue'
+import UFAlert from '../../../../components/UFAlert.vue'
 
 // Register the UFAlert component stub globally
 config.global.stubs['UFAlert'] = UFAlert
@@ -89,7 +89,13 @@ vi.mock('vue-router', () => ({
 }))
 
 vi.mock('@userfrosting/sprinkle-account/composables', () => ({
-    useRegisterApi: vi.fn()
+    useRegisterApi: vi.fn(),
+    useEmailVerificationApi: vi.fn(() => ({
+        apiLoading: ref(false),
+        apiError: ref(null),
+        submitVerificationCode: vi.fn(),
+        resendVerification: vi.fn()
+    }))
 }))
 
 describe('FormRegister.vue', () => {

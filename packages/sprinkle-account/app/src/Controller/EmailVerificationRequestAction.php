@@ -139,6 +139,7 @@ class EmailVerificationRequestAction
             // succeeded. This prevents potential account enumeration attacks.
             if ($user !== null && $user->flag_verified === false) {
                 $this->emailVerification->generate($user, 600);
+                // TODO : Catch PHPMailerException
             }
         });
 

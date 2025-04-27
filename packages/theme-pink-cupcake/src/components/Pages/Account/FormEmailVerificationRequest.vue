@@ -45,9 +45,6 @@ async function sendVerification() {
             timeout: 4000
         })
 
-        // Reset the form
-        reset()
-
         // Redirect to the login page
         router.push({ name: 'account.login' })
     })

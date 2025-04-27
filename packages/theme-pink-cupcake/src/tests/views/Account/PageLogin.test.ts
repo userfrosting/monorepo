@@ -4,10 +4,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
-import PageLogin from '../../views/Account/PageLogin.vue'
-import CardBoxBig from '../../components/Content/CardBoxBig.vue'
-import CardBox from '../../components/Content/CardBox.vue'
-import UFAlert from '../../components/UFAlert.vue'
+import PageLogin from '../../../views/Account/PageLogin.vue'
+import CardBoxBig from '../../../components/Content/CardBoxBig.vue'
+import CardBox from '../../../components/Content/CardBox.vue'
+import UFAlert from '../../../components/UFAlert.vue'
 
 // Register font-awesome-icon component
 library.add(fas)

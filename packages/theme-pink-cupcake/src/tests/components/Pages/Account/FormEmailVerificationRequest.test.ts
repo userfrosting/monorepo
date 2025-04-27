@@ -134,7 +134,6 @@ describe('FormEmailVerificationRequest.vue', () => {
 
         // Expect the API call to be made and the result to be handled
         // @ts-ignore
-        expect(wrapper.vm.displayVerification).toBe(false)
         expect(
             vi.mocked(useEmailVerificationApi).mock.results[0].value.submitVerificationCode
         ).toHaveBeenCalled()
