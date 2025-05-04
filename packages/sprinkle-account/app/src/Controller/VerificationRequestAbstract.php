@@ -21,51 +21,43 @@ use UserFrosting\Fortress\RequestSchema\RequestSchemaInterface;
 use UserFrosting\Fortress\Transformer\RequestDataTransformer;
 use UserFrosting\Fortress\Validator\ServerSideValidator;
 use UserFrosting\I18n\Translator;
+use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\EmailVerificationProvider;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
-use UserFrosting\Sprinkle\Account\Mail\PasswordResetEmail;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
-use UserFrosting\Sprinkle\Core\Util\RouteParserInterface;
 
 /**
- * Processes a request to email a forgotten password reset link to the user.
+ * Abstract class for handling verification requests. Can be used to send
+ * verification codes.
  *
- * Processes the request from the form on the "forgot password" page, checking that:
- * 1. The rate limit for this type of request is being observed.
- * 2. The provided email address belongs to a registered account;
- * 3. The submitted data is valid.
- * Note that we have removed the requirement that a password reset request not already be in progress.
- * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
- * This route is "public access".
- *
- * @todo require additional user information
- * @todo prevent password reset requests for root account?
- *
- * Middleware: GuestGuard
- * Route: /account/forgot-password
- * Route Name: account.forgotPassword
- * Request type: POST
+ * This action enforces the following checks:
+ * 1. Ensures the rate limit for this type of request is respected;
+ * 2. Verifies that the provided email is linked to an existing user account;
+ * 3. Confirms the user account is not already verified;
+ * 4. Validates the submitted data against the defined schema.
  */
-class ForgetPasswordAction
+abstract class VerificationRequestAbstract
 {
-    // Request schema to use to validate data.
-    protected string $schema = 'schema://requests/forgot-password.yaml';
-
-    // Throttler key slug
-    protected string $throttlerSlug = 'password_reset_request';
-
     /**
      * Inject dependencies.
+     *
+     * @param Translator                $translator
+     * @param Config                    $config
+     * @param Connection                $db
+     * @param Throttler                 $throttler
+     * @param UserInterface             $userModel
+     * @param EmailVerificationProvider $emailVerification
+     * @param RequestDataTransformer    $transformer
+     * @param ServerSideValidator       $validator
      */
     public function __construct(
         protected Translator $translator,
         protected Config $config,
         protected Connection $db,
-        protected RouteParserInterface $routeParser,
         protected Throttler $throttler,
         protected UserInterface $userModel,
-        protected PasswordResetEmail $passwordResetEmail,
+        protected EmailVerificationProvider $emailVerification,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator
     ) {
@@ -94,30 +86,25 @@ class ForgetPasswordAction
      *
      * @param Request $request
      *
-     * @return string The message to be returned to the client.
+     * @return string The message to return to the frontend
      */
     protected function handle(Request $request): string
     {
         // Get POST parameters
         $params = (array) $request->getParsedBody();
 
-        // Load the request schema
+        // Load the request schema, apply parameter defaults, whitelist fields,
+        // and validate the request data. Throttle requests to prevent abuse.
         $schema = $this->getSchema();
-
-        // Whitelist and set parameter defaults
         $data = $this->transformer->transform($schema, $params);
-
-        // Validate request data
         $this->validateData($schema, $data);
-
-        // Throttle requests
         $this->throttle($data['email']);
 
-        // All checks passed!  log events/activities, update user, and send email
-        // Begin transaction - DB will be rolled back if an exception occurs
+        // Basic checks passed. Begin transaction - DB will be rolled back if
+        // an exception occurs.
         $this->db->transaction(function () use ($data) {
             // Log throttle-able event
-            $this->throttler->logEvent($this->throttlerSlug, [
+            $this->throttler->logEvent($this->getThrottlerSlug(), [
                 'email' => $data['email'],
             ]);
 
@@ -125,17 +112,32 @@ class ForgetPasswordAction
             /** @var UserInterface|null */
             $user = $this->userModel->firstWhere('email', $data['email']);
 
-            // Check that the email exists.
-            // If there is no user with that email address, we should still
-            // pretend like we succeeded, to prevent account enumeration
-            if ($user !== null) {
-                $this->passwordResetEmail->send($user);
+            // Verify that the user exists and is not already verified.
+            // If no user is found with the provided email, or if the user
+            // exists but is already verified, we act as if the operation
+            // succeeded. This prevents potential account enumeration attacks.
+            if ($user !== null && $this->validateUser($user) === true) {
+                $this->emailVerification->generate($user, 600);
+                // TODO : Set the timeout in the config
+                // TODO : Catch PHPMailerException
             }
         });
 
-        // TODO: create delay to prevent timing-based attacks
+        return $this->translator->translate($this->getMessage(), $data);
+    }
 
-        return $this->translator->translate('PASSWORD.FORGET.REQUEST_SENT', ['email' => $data['email']]);
+    /**
+     * This method should return true if the user is valid for the
+     * verification request. Return false if the user is not valid.
+     * Extend this method in the child class to add custom validation.
+     *
+     * @param UserInterface $user
+     *
+     * @return bool
+     */
+    protected function validateUser(UserInterface $user): bool
+    {
+        return true;
     }
 
     /**
@@ -143,9 +145,9 @@ class ForgetPasswordAction
      *
      * @return RequestSchemaInterface
      */
-    protected function getSchema(): RequestSchemaInterface
+    private function getSchema(): RequestSchemaInterface
     {
-        return new RequestSchema($this->schema);
+        return new RequestSchema($this->getSchemaName());
     }
 
     /**
@@ -153,8 +155,10 @@ class ForgetPasswordAction
      *
      * @param RequestSchemaInterface $schema
      * @param mixed[]                $data
+     *
+     * @throws ValidationException If the data is invalid
      */
-    protected function validateData(RequestSchemaInterface $schema, array $data): void
+    private function validateData(RequestSchemaInterface $schema, array $data): void
     {
         $errors = $this->validator->validate($schema, $data);
         if (count($errors) !== 0) {
@@ -166,13 +170,15 @@ class ForgetPasswordAction
     }
 
     /**
-     * Throttle requests.
+     * Enforce rate limiting for requests to prevent abuse.
      *
      * @param string $email
+     *
+     * @throws ThrottlerDelayException If the throttle limit is reached
      */
-    protected function throttle(string $email): void
+    private function throttle(string $email): void
     {
-        $delay = $this->throttler->getDelay($this->throttlerSlug, [
+        $delay = $this->throttler->getDelay($this->getThrottlerSlug(), [
             'email' => $email,
         ]);
         if ($delay > 0) {
@@ -182,4 +188,25 @@ class ForgetPasswordAction
             throw $e;
         }
     }
+
+    /**
+     * Get the request schema to use to validate data.
+     *
+     * @return string
+     */
+    abstract protected function getSchemaName(): string;
+
+    /**
+     * Get the throttler key slug.
+     *
+     * @return string
+     */
+    abstract protected function getThrottlerSlug(): string;
+
+    /**
+     * Get the message to return to the frontend.
+     *
+     * @return string
+     */
+    abstract protected function getMessage(): string;
 }

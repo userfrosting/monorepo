@@ -7,13 +7,19 @@ import UFModalPrompt from './Modals/UFModalPrompt.vue'
 import AppLink from './Content/AppLink.vue'
 import InfoBox from './Content/InfoBox.vue'
 import CardBox from './Content/CardBox.vue'
-import CardBoxBig from './Content/CardBoxBig.vue'
+import CardBoxLarge from './Content/CardBoxLarge.vue'
+import CardBoxHalf from './Content/CardBoxHalf.vue'
 import MainContent from './Content/MainContent.vue'
 import HeaderPage from './Content/HeaderPage.vue'
 import FooterContent from './Content/FooterContent.vue'
+import FormEmailVerificationRequest from './Pages/Account/FormEmailVerificationRequest.vue'
+import FormForgotPasswordSet from './Pages/Account/FormForgotPasswordSet.vue'
+import FormEmailVerificationValidation from './Pages/Account/FormEmailVerificationValidation.vue'
 import FormLogin from './Pages/Account/FormLogin.vue'
 import FormRegister from './Pages/Account/FormRegister.vue'
-import FormForgotPassword from './Pages/Account/FormForgotPassword.vue'
+import FormUserEmail from './Pages/Account/FormUserEmail.vue'
+import FormUserPassword from './Pages/Account/FormUserPassword.vue'
+import FormUserProfile from './Pages/Account/FormUserProfile.vue'
 import NavBar from './NavBar/NavBar.vue'
 import NavBarDropdown from './NavBar/NavBarDropdown.vue'
 import NavBarDropdownSeparator from './NavBar/NavBarDropdownSeparator.vue'
@@ -40,13 +46,19 @@ export {
     AppLink,
     InfoBox,
     CardBox,
-    CardBoxBig,
+    CardBoxLarge,
+    CardBoxHalf,
     MainContent,
     HeaderPage,
     FooterContent,
+    FormEmailVerificationRequest,
+    FormForgotPasswordSet,
+    FormEmailVerificationValidation,
     FormLogin,
     FormRegister,
-    FormForgotPassword,
+    FormUserEmail,
+    FormUserPassword,
+    FormUserProfile,
     NavBar,
     NavBarDropdown,
     NavBarDropdownSeparator,

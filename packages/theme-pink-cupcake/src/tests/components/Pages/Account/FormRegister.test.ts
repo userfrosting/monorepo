@@ -94,7 +94,7 @@ vi.mock('@userfrosting/sprinkle-account/composables', () => ({
         apiLoading: ref(false),
         apiError: ref(null),
         submitVerificationCode: vi.fn(),
-        resendVerification: vi.fn()
+        requestVerificationCode: vi.fn()
     }))
 }))
 

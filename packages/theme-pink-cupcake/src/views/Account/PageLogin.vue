@@ -1,33 +1,32 @@
 <script setup lang="ts">
-import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
+import { useConfigStore, usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import FormLogin from '../../components/Pages/Account/FormLogin.vue'
+usePageMeta().hideTitle = true
 </script>
 
 <template>
-    <UFCardBoxBig>
-        <h3 class="uk-card-title">{{ $t('LOGIN') }}</h3>
+    <UFCardBoxHalf>
+        <h3 class="uk-card-title">{{ $t('LOGIN.PAGE') }}</h3>
         <FormLogin />
         <ul class="uk-list">
             <li>
-                <a @click="$emit('gotoForgotPassword')" data-test="gotoForgotPassword">
-                    {{ $t('PASSWORD.FORGET') }}
-                </a>
+                <router-link :to="{ name: 'account.forgot-password' }">
+                    {{ $t('PASSWORD.FORGOT.QUESTION') }}
+                </router-link>
             </li>
             <li v-if="useConfigStore().get('site.registration.require_email_verification')">
-                <a @click="$emit('gotoVerification')" data-test="gotoVerification">
+                <router-link :to="{ name: 'account.verification' }" data-test="gotoVerification">
                     {{ $t('ACCOUNT.VERIFICATION') }}
-                </a>
+                </router-link>
             </li>
         </ul>
-        <hr />
+    </UFCardBoxHalf>
+    <UFCardBoxHalf v-if="useConfigStore().get('site.registration.enabled')">
         <div class="uk-text-center">
             <p>{{ $t('REGISTRATION.QUESTION') }}</p>
-            <button
-                class="uk-button uk-button-default"
-                @click="$emit('gotoRegistration')"
-                data-test="gotoRegistration">
+            <router-link class="uk-button uk-button-default" :to="{ name: 'account.register' }">
                 <font-awesome-icon :icon="['fas', 'user-plus']" /> {{ $t('REGISTER') }}
-            </button>
+            </router-link>
         </div>
-    </UFCardBoxBig>
+    </UFCardBoxHalf>
 </template>

@@ -1,6 +1,6 @@
-import ForgotPasswordView from './ForgotPasswordView.vue'
+import ForgotPassword from './ForgotPassword.vue'
 import LoginView from './LoginView.vue'
 import RegisterView from './RegisterView.vue'
 import ResendVerificationView from './ResendVerificationView.vue'
 
-export { ForgotPasswordView, LoginView, RegisterView, ResendVerificationView }
+export { ForgotPassword, LoginView, RegisterView, ResendVerificationView }

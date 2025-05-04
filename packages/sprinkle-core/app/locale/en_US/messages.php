@@ -74,6 +74,7 @@ return [
         'SEARCH'       => 'Search {{term}}...',
     ],
     'STATUS'         => 'Status',
+    'STEP_X'         => 'Step {{step}}',
     'SUGGEST'        => 'Suggest',
 
     'THEME_BY'      => 'Theme built with',
@@ -112,6 +113,7 @@ return [
     'SEARCH'                   => 'Search',
     'SORT'                     => 'Sort',
     'SUBMIT'                   => 'Submit',
+    'SUCCESS'                  => 'Success',
     'PRINT'                    => 'Print',
     'REMOVE'                   => 'Remove',
     'TRY_AGAIN'                => 'Try again',

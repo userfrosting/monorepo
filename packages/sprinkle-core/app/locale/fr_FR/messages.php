@@ -74,6 +74,7 @@ return [
         'SEARCH'       => 'Rechercher {{term}}...',
     ],
     'STATUS'                   => 'État',
+    'STEP_X'                   => 'Étape {{step}}',
     'SUGGEST'                  => 'Suggérer',
 
     'THEME_BY'      => 'Thème créé avec',
@@ -111,6 +112,7 @@ return [
     'SAVE'                     => 'Sauvegarder',
     'SEARCH'                   => 'Rechercher',
     'SORT'                     => 'Trier',
+    'SUCCESS'                  => 'Succès',
     'SUBMIT'                   => 'Envoyer',
     'PRINT'                    => 'Imprimer',
     'REMOVE'                   => 'Supprimer',

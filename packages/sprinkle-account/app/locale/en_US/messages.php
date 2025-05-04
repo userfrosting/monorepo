@@ -103,12 +103,13 @@ return [
                 '@TRANSLATION' => 'Verification code',
                 'ENTER'        => 'Enter verification code',
                 'EXPLAIN'      => 'Enter the verification code you received by email.',
-                'VERIFY'       => 'Verify code',
+                'IDENTIFY'     => 'Identify yourself',
+                'SEND'         => 'Send code to email',
                 'SENT'         => 'If an unactivated account was found, an email with a verification code was sent to <strong>{{email}}</strong>. Please check your inbox and spam folders for this email.',
+                'VERIFY'       => 'Verify code',
             ],
             'COMPLETE'            => 'You have successfully verified your account. You can now login.',
             'EXPLAIN'             => 'Please enter the email address you used to sign up, and a verification code will be sent to your email.',
-            'SEND'                => 'Send code to email',
         ],
     ],
 
@@ -129,7 +130,10 @@ return [
         'ACCOUNT' => 'The language and locale to use for your account',
         'INVALID' => '{{locale}} is not a valid locale.',
     ],
-    'LOGIN'  => 'Login',
+    'LOGIN'  => [
+        '@TRANSLATION' => 'Log in',
+        'PAGE'         => 'Log in to your account',
+    ],
     'LOGOUT' => 'Logout',
 
     'NAME_AND_EMAIL' => 'Name and email',
@@ -151,27 +155,29 @@ return [
         'CURRENT'               => 'Current Password',
         'CURRENT_EXPLAIN'       => 'You must confirm your current password to make changes',
 
-        'FORGOTTEN' => 'Forgotten Password',
-        'FORGET'    => [
-            '@TRANSLATION'      => 'Forgot your password?',
-            'EMAIL'             => 'Please enter the email address you used to sign up. A link with instructions to reset your password will be emailed to you.',
-            'EMAIL_SEND'        => 'Email Password Reset Link',
-            // 'INVALID'           => 'This password reset request could not be found or has expired. Please try <a href="{{url}}">submitting your request</a> again.',
-            // 'PAGE'              => 'Get a link to reset your password.',
-            'REQUEST_CANNED'    => 'Lost password request cancelled.',
-            'REQUEST_SENT'      => 'If the email <strong>{{email}}</strong> matches an account in our system, a password reset link will be sent to <strong>{{email}}</strong>.',
+        'FORGOT'    => [
+            '@TRANSLATION'      => 'Forgotten password',
+            'EMAIL'             => 'Please enter the email address you used to sign up. A verification code will be sent to your email.',
+            'INVALID'           => 'This password reset request could not be found or has expired. Please try submitting your request again.',
+            'PAGE'              => 'Use this form to reset your password in case you don\'t have access to your account.',
+            'QUESTION'          => 'Forgot your password ?',
+            'REQUEST_SENT'      => 'If the email <strong>{{email}}</strong> matches an account in our system, a verification code will be sent to <strong>{{email}}</strong>.',
+            'SUCCESS'           => 'Your new password is set. You can now log in with your new password.',
         ],
 
         'INVALID'           => "Current password doesn't match the one we have on record",
 
-        'NEW'               => 'New Password',
+        'NEW'               => [
+            '@TRANSLATION' => 'New Password',
+            'EXPLAIN'      => 'Choose a new password',
+            'SET'          => 'Set New Password',
+        ],
 
         'RESET' => [
             '@TRANSLATION'      => 'Reset Password',
-            // 'CHOOSE'            => 'Please choose a new password to continue.',
-            // 'CONFIRM'           => ' Are you sure you want to send <strong>{{full_name}} ({{ user_name }})</strong> a link that will allow them to reset their password ?',
-            // 'PAGE'              => 'Choose a new password for your account.',
-            // 'SEND'              => 'Set New Password and Sign In',
+            'CHOOSE'            => 'Choose a new password for your account.',
+            // 'CONFIRM'           => 'Are you sure you want to send <strong>{{full_name}} ({{ user_name }})</strong> a link that will allow them to reset their password ?',
+            'SEND'              => 'Set New Password',
         ],
 
         'UPDATED'           => 'Account password updated',
@@ -182,7 +188,10 @@ return [
     ],
 
     'RATE_LIMIT_EXCEEDED'       => 'The rate limit for this action has been exceeded.  You must wait another {{delay}} seconds before you will be allowed to make another attempt.',
-    'REGISTER'                  => 'Register',
+    'REGISTER'                  => [
+        '@TRANSLATION'  => 'Register',
+        'PAGE'          => 'Create a new account',
+    ],
     'REGISTER_ME'               => 'Sign me up',
     'REGISTRATION'              => [
         'COMPLETE'                 => 'You have successfully registered. You can now sign in.',
@@ -193,7 +202,7 @@ return [
         'MAIL_ERROR'               => 'An error occurred while sending the verification email. Please contact your administrator.',
         'UNKNOWN'                  => 'A problem was encountered during the account registration process.',
     ],
-    'REMEMBER_ME'               => 'Keep me signed in',
+    'REMEMBER_ME'               => 'Remember me',
 
     'TOS'           => 'Terms and Conditions',
     'TOS_AGREEMENT' => 'By registering an account with {{site_title}}, you accept the <a {{link_attributes | raw}}>terms and conditions</a>.',

@@ -43,8 +43,11 @@ async function sendLogin() {
         <fieldset class="uk-fieldset">
             <UFAlert data-test="error" v-if="error" :alert="error" />
             <div class="uk-margin">
+                <label class="uk-form-label" for="first_name">{{ $t('USERNAME') }}</label>
                 <div class="uk-inline uk-width-1-1">
-                    <span class="uk-form-icon" uk-icon="icon: user"></span>
+                    <span class="uk-form-icon">
+                        <font-awesome-icon :icon="['fas', 'user']" />
+                    </span>
                     <input
                         class="uk-input"
                         type="text"
@@ -55,8 +58,11 @@ async function sendLogin() {
                 </div>
             </div>
             <div class="uk-margin">
+                <label class="uk-form-label" for="first_name">{{ $t('PASSWORD') }}</label>
                 <div class="uk-inline uk-width-1-1">
-                    <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                    <span class="uk-form-icon">
+                        <font-awesome-icon :icon="['fas', 'lock']" />
+                    </span>
                     <input
                         class="uk-input"
                         type="password"
@@ -78,7 +84,10 @@ async function sendLogin() {
                 </label>
             </div>
             <div class="uk-text-center">
-                <button class="uk-button uk-button-primary" :disabled="loading" data-test="submit">
+                <button
+                    class="uk-button uk-button-primary uk-width-1-3"
+                    :disabled="loading"
+                    data-test="submit">
                     {{ $t('LOGIN') }}
                 </button>
             </div>

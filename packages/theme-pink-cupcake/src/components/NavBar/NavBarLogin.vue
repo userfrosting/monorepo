@@ -1,24 +1,26 @@
 <script setup lang="ts">
+import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import NavBarDropdown from './NavBarDropdown.vue'
 import FormLogin from '../Pages/Account/FormLogin.vue'
 </script>
 
 <template>
-    <NavBarDropdown :label="$t('LOGIN')" class="uf-nav-login uk-text-center">
+    <NavBarDropdown :label="$t('LOGIN')" class="uf-nav-login">
         <FormLogin />
         <div class="uk-text-center">
-            <button
+            <router-link
                 class="uk-button uk-button-default"
-                @click="$emit('gotoRegistration')"
-                data-test="gotoRegistration">
+                :to="{ name: 'account.register' }"
+                data-test="gotoRegister"
+                v-if="useConfigStore().get('site.registration.enabled')">
                 {{ $t('REGISTER') }}
-            </button>
-            <button
+            </router-link>
+            <router-link
                 class="uk-button uk-button-default"
-                @click="$emit('gotoLogin')"
+                :to="{ name: 'account.login' }"
                 data-test="gotoLogin">
                 {{ $t('MORE_OPTIONS') }}
-            </button>
+            </router-link>
         </div>
         <slot></slot>
     </NavBarDropdown>

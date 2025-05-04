@@ -3,40 +3,36 @@ import axios from 'axios'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import type {
-    ResendVerificationRequest,
-    ResendVerificationResponse,
-    ValidateCodeRequest,
-    ValidateCodeResponse
+    ForgotPasswordCodeRequest,
+    ForgotPasswordCodeResponse,
+    ForgotPasswordSetPasswordRequest,
+    ForgotPasswordSetPasswordResponse
 } from '../interfaces'
-
-// TODO : Add validation
-// 'schema://requests/account-email.yaml'
 
 /**
  * API Composable
  */
-export function useEmailVerificationApi() {
+export function useForgotPasswordApi() {
     const apiLoading = ref<Boolean>(false)
     const apiError = ref<AlertInterface | null>(null)
 
     /**
-     * First step of the verification process. Ask the server to send a
-     * verification code by email to the user.
+     * First step of the process. Ask the server to send a one time code to the
+     * user by email.
      *
-     * @param email The user email to send the verification code to.
+     * @param email The user email to send the one time code to.
      *
      * @return {Promise} - The request success message given by the API. Throws an error
      * (AlertInterface) if the request failed.
      */
-    async function requestVerificationCode(email: string): Promise<string> {
+    async function requestCode(email: string): Promise<string> {
         apiLoading.value = true
         apiError.value = null
-        const data: ResendVerificationRequest = {
+        const data: ForgotPasswordCodeRequest = {
             email: email
         }
-
         return axios
-            .post<ResendVerificationResponse>('/account/verify/request', data)
+            .post<ForgotPasswordCodeResponse>('/account/forgot-password/request', data)
             .then((response): string => {
                 return response.data.message
             })
@@ -58,7 +54,7 @@ export function useEmailVerificationApi() {
     }
 
     /**
-     * Second step of the verification process. Ask the server to
+     * Second step of the password reset process. Ask the server to
      * verify the code entered by the user.
      *
      * @param email string - The email to validate.
@@ -67,20 +63,15 @@ export function useEmailVerificationApi() {
      * @return {Promise} - A success message returned by the API. Throws an error
      * (AlertInterface) if the request failed.
      */
-    async function submitVerificationCode(
-        email: string,
-        code: string
-    ): Promise<ValidateCodeResponse> {
+    async function setPassword(
+        data: ForgotPasswordSetPasswordRequest
+    ): Promise<ForgotPasswordSetPasswordResponse> {
         apiLoading.value = true
         apiError.value = null
-        const data: ValidateCodeRequest = {
-            email: email,
-            code: code
-        }
 
         return axios
-            .post<ValidateCodeResponse>('/account/verify/email', data)
-            .then((response): ValidateCodeResponse => {
+            .post<ForgotPasswordSetPasswordResponse>('/account/forgot-password/set-password', data)
+            .then((response): ForgotPasswordSetPasswordResponse => {
                 return {
                     message: response.data.message
                 }
@@ -102,5 +93,5 @@ export function useEmailVerificationApi() {
             })
     }
 
-    return { requestVerificationCode, submitVerificationCode, apiLoading, apiError }
+    return { requestCode, setPassword, apiLoading, apiError }
 }

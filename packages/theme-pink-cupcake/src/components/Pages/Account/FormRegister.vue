@@ -92,7 +92,6 @@ const tos = computed(() => {
 <template>
     <div v-if="!displayVerification">
         <form v-on:submit.prevent="submitForm()">
-            <h3 class="uk-card-title">{{ $t('REGISTER') }}</h3>
             <fieldset class="uk-fieldset uk-form-stacked">
                 <UFAlert data-test="error" v-if="apiError" :alert="apiError" />
 
@@ -223,16 +222,6 @@ const tos = computed(() => {
                 </div>
             </fieldset>
         </form>
-        <hr />
-        <div class="uk-text-center">
-            <p>{{ $t('ACCOUNT.HAVE_ONE') }}</p>
-            <button
-                class="uk-button uk-button-default"
-                @click="router.push({ name: 'account.login' })"
-                data-test="gotoLogin">
-                <font-awesome-icon :icon="['fas', 'right-to-bracket']" /> {{ $t('LOGIN') }}
-            </button>
-        </div>
     </div>
 
     <!-- Verification Form-->

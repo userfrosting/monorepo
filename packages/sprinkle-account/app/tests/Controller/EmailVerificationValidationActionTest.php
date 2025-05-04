@@ -40,7 +40,7 @@ class EmailVerificationValidationActionTest extends AccountTestCase
         /** @var User */
         $user = User::factory(['flag_verified' => false])->create();
 
-        // Setup mock
+        // Setup mock verification provider
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldReceive('validate')->once()->with(Mockery::any(), 'potatoCode')->andReturn(true)
             ->getMock();

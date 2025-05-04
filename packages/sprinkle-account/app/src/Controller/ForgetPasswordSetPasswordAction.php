@@ -12,16 +12,20 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Controller;
 
+use Illuminate\Database\Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Alert\AlertStream;
 use UserFrosting\Config\Config;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\RequestSchema\RequestSchemaInterface;
 use UserFrosting\Fortress\Transformer\RequestDataTransformer;
 use UserFrosting\Fortress\Validator\ServerSideValidator;
+use UserFrosting\I18n\Translator;
+use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\EmailVerificationProvider;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\PasswordResetInvalidException;
-use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
+use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\RouteParserInterface;
 
@@ -40,21 +44,36 @@ use UserFrosting\Sprinkle\Core\Util\RouteParserInterface;
  * Route Name: account.setPassword
  * Request type: POST
  */
-class SetPasswordAction
+class ForgetPasswordSetPasswordAction
 {
-    // Request schema to use to validate data.
+    /**
+     * @var string Request schema to use to validate data.
+     */
     protected string $schema = 'schema://requests/set-password.yaml';
 
     /**
      * Inject dependencies.
+     *
+     * @param Translator                  $translator
+     * @param Config                      $config
+     * @param RouteParserInterface        $routeParser
+     * @param EmailVerificationProvider   $emailVerification
+     * @param RequestDataTransformer      $transformer
+     * @param ServerSideValidator         $validator
+     * @param Connection                  $db
+     * @param UserInterface               $userModel
+     * @param UserActivityLoggerInterface $logger
      */
     public function __construct(
-        protected AlertStream $alert,
+        protected Translator $translator,
         protected Config $config,
         protected RouteParserInterface $routeParser,
-        protected PasswordResetRepository $repoPasswordReset,
+        protected EmailVerificationProvider $emailVerification,
         protected RequestDataTransformer $transformer,
-        protected ServerSideValidator $validator
+        protected ServerSideValidator $validator,
+        protected Connection $db,
+        protected UserInterface $userModel,
+        protected UserActivityLoggerInterface $logger,
     ) {
     }
 
@@ -68,8 +87,12 @@ class SetPasswordAction
     public function __invoke(Request $request, Response $response): Response
     {
         $this->handle($request);
+        $payload = json_encode([
+            'message' => $this->translator->translate('PASSWORD.UPDATED'),
+        ], JSON_THROW_ON_ERROR);
+        $response->getBody()->write($payload);
 
-        return $response;
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     /**
@@ -82,26 +105,40 @@ class SetPasswordAction
         // Get POST parameters
         $params = (array) $request->getParsedBody();
 
-        // Load the request schema
+        // Load the request schema, apply parameter defaults, whitelist fields,
+        // and validate the request data. Throttle requests to prevent abuse.
         $schema = $this->getSchema();
-
-        // Whitelist and set parameter defaults
         $data = $this->transformer->transform($schema, $params);
-
-        // Validate request data
         $this->validateData($schema, $data);
 
-        // Ok, try to complete the request with the specified token and new password
-        $passwordReset = $this->repoPasswordReset->complete($data['token'], [
-            'password' => $data['password'],
-        ]);
+        // Basic checks passed. Begin transaction - DB will be rolled back if
+        // an exception occurs.
+        $this->db->transaction(function () use ($data) {
+            // Load the user, by email address
+            /** @var UserInterface|null */
+            $user = $this->userModel->firstWhere('email', $data['email']);
 
-        if ($passwordReset === false) {
-            throw new PasswordResetInvalidException();
-        }
+            // Verify that the user exists and is not already verified.
+            // If no user is found with the provided email, or if the user
+            // exists but is already verified, we act as if the token
+            // was invalid. This way, we don't leak information about whether
+            // the email address exists in the system or not, or whether
+            // the user is already verified. This is a security measure to
+            // prevent account enumeration attacks.
+            if ($user === null || !$this->emailVerification->validate($user, $data['code'])) {
+                throw new PasswordResetInvalidException();
+            }
 
-        // TODO : Remove dependency on AlertStream
-        $this->alert->addMessage('success', 'PASSWORD.UPDATED');
+            // Verification was successful, update the user account.
+            $user->setPasswordAttribute($data['password']);
+            $user->save();
+
+            // Create activity record
+            $this->logger->info("User {$user->user_name} reset it's password.", [
+                'type'    => UserActivityTypes::PASSWORD_RESET,
+                'user_id' => $user->id,
+            ]);
+        });
     }
 
     /**

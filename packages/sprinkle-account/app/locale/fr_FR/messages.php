@@ -103,12 +103,13 @@ return [
                 '@TRANSLATION' => 'Code de vérification',
                 'ENTER'        => 'Entrez le code de vérification',
                 'EXPLAIN'      => 'Entrez le code de vérification que vous avez reçu par email.',
-                'VERIFY'       => 'Vérifier le code',
+                'IDENTIFY'     => 'Vérifier votre identité',
+                'SEND'         => 'Envoyer le code par email',
                 'SENT'         => 'Si un compte non activé a été trouvé, un email avec un code de vérification a été envoyé à <strong>{{email}}</strong>. Veuillez vérifier votre boîte de réception et vos dossiers de spam pour cet email.',
+                'VERIFY'       => 'Vérifier le code',
             ],
             'COMPLETE'            => 'Votre compte a été validé. Vous pouvez maintenant vous connecter.',
             'EXPLAIN'             => 'Veuillez saisir l\'adresse email que vous avez utilisée pour vous inscrire et un code de vérification vous sera renvoyé.',
-            'SEND'                => 'Envoyer le code par email',
         ],
     ],
 
@@ -129,7 +130,10 @@ return [
         'ACCOUNT' => 'La langue utilisé pour votre compte d\'utilisateur',
         'INVALID' => '<strong>{{locale}}</strong> n\'est pas une langue valide.',
     ],
-    'LOGIN'          => 'Connexion',
+    'LOGIN'  => [
+        '@TRANSLATION' => 'Connexion',
+        'PAGE'         => 'Connectez-vous à votre compte',
+    ],
     'LOGOUT'         => 'Déconnexion',
 
     'NAME_AND_EMAIL' => 'Nom et email',
@@ -151,27 +155,30 @@ return [
         'CURRENT'         => 'Mot de passe actuel',
         'CURRENT_EXPLAIN' => 'Vous devez confirmer votre mot de passe actuel pour apporter des modifications',
 
-        'FORGOTTEN'       => 'Mot de passe oublié',
-        'FORGET'          => [
-            '@TRANSLATION'     => 'Mot de passe oublié?',
-            'EMAIL'            => 'Veuillez saisir l\'adresse e-mail que vous avez utilisée pour vous inscrire. Un lien avec les instructions pour réinitialiser votre mot de passe vous sera envoyé par email.',
-            'EMAIL_SEND'       => 'Envoyer le lien de réinitialisation',
-            // 'INVALID'          => 'Cette requête de réinitialisation de mot de passe n\'a pas pu être trouvée ou a expiré. Veuillez réessayer <a href="{{url}}"> de soumettre votre demande <a>.',
-            // 'PAGE'             => 'Obtenir un lien pour réinitialiser votre mot de passe.',
-            'REQUEST_CANNED'   => 'Demande de mot de passe perdu annulée.',
-            'REQUEST_SENT'     => 'Si l\'adresse e-mail <strong>{{email}}</strong> correspond à un compte dans notre système, un lien de réinitialisation de mot de passe sera envoyé à <strong>{{email}}</strong>.',
+        'FORGOT'          => [
+            '@TRANSLATION'      => 'Mot de passe oublié?',
+            'EMAIL'             => 'Veuillez saisir l\'adresse e-mail que vous avez utilisée pour vous inscrire. Un lien avec les instructions pour réinitialiser votre mot de passe vous sera envoyé par email.',
+            'INVALID'           => 'Cette demande de réinitialisation de mot de passe n\'a pas pu être trouvée ou a expiré. Veuillez réessayer de soumettre votre demande.',
+            'PAGE'              => 'Utilisez ce formulaire pour réinitialiser votre mot de passe si vous n\'avez pas accès à votre compte.',
+            'QUESTION'          => 'Mot de passe oublié ?',
+            'REQUEST_SENT'      => 'Si l\'adresse e-mail <strong>{{email}}</strong> correspond à un compte dans notre système, un code de vérification sera envoyé à <strong>{{email}}</strong>.',
+            'SUCCESS'           => 'Votre nouveau mot de passe est défini. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.',
         ],
 
         'INVALID'           => 'Le mot de passe actuel ne correspond pas à celui que nous avons au dossier',
 
-        'NEW'               => 'Nouveau mot de passe',
+        'NEW'               => [
+            '@TRANSLATION' => 'Nouveau mot de passe',
+            'EXPLAIN'      => 'Choisissez un nouveau mot de passe',
+            'SET'          => 'Définir un nouveau mot de passe',
+        ],
 
         'RESET'             => [
             '@TRANSLATION' => 'Réinitialiser le mot de passe',
-            // 'CHOOSE'       => 'Veuillez choisir un nouveau mot de passe pour continuer.',
+            'CHOOSE'       => 'Veuillez choisir un nouveau mot de passe pour continuer.',
             // 'CONFIRM'      => 'Êtes-vous sûr de vouloir envoyer à <strong>{{full_name}} ({{user_name}})</strong> un lien qui leur permettra de réinitialiser leur mot de passe ?',
             // 'PAGE'         => 'Choisissez un nouveau mot de passe pour votre compte.',
-            // 'SEND'         => 'Définir un nouveau mot de passe',
+            'SEND'         => 'Définir un nouveau mot de passe',
         ],
 
         'UPDATED' => 'Mot de passe du compte mis à jour',
@@ -181,8 +188,11 @@ return [
         'UPDATED'  => 'Paramètres du profil mis à jour',
     ],
 
-    'RATE_LIMIT_EXCEEDED' => 'La limite de tentatives pour cette action a été dépassée. Vous devez attendre {{delay}} secondes avant de pouvoir effectuer une autre tentative.',
-    'REGISTER'            => 'S\'inscrire',
+    'RATE_LIMIT_EXCEEDED'       => 'La limite de tentatives pour cette action a été dépassée. Vous devez attendre {{delay}} secondes avant de pouvoir effectuer une autre tentative.',
+    'REGISTER'                  => [
+        '@TRANSLATION'  => 'S\'inscrire',
+        'PAGE'          => 'Créer un nouveau compte',
+    ],
     'REGISTER_ME'         => 'Créer mon compte',
     'REGISTRATION'        => [
         'COMPLETE'              => 'Vous êtes inscrit avec succès. Vous pouvez maintenant vous connecter.',

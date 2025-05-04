@@ -3,6 +3,10 @@
  * See : https://vuejs.org/guide/components/registration
  */
 import type { App } from 'vue'
+
+/**
+ * Register every Account view components globally
+ */
 import {
     PageLogin,
     PageRegister,
@@ -13,19 +17,31 @@ import {
     PageUserSettingsPassword,
     PageUserSettingsEmail
 } from '../views/Account'
+
+/**
+ * Register every Account Page components globally
+ */
 import {
+    FormEmailVerificationRequest,
+    FormForgotPasswordSet,
+    FormEmailVerificationValidation,
     FormLogin,
     FormRegister,
-    FormForgotPassword,
-    FormEmailVerificationRequest
+    FormUserEmail,
+    FormUserPassword,
+    FormUserProfile
 } from '../components/Pages/Account'
 
 export default {
     install: (app: App) => {
-        app.component('UFFormLogin', FormLogin)
+        app.component('UFFormEmailVerificationRequest', FormEmailVerificationRequest)
+            .component('UFFormForgotPasswordSet', FormForgotPasswordSet)
+            .component('UFFormEmailVerificationValidation', FormEmailVerificationValidation)
+            .component('UFFormLogin', FormLogin)
             .component('UFFormRegister', FormRegister)
-            .component('UFFormForgotPassword', FormForgotPassword)
-            .component('UFFormEmailVerificationRequest', FormEmailVerificationRequest)
+            .component('UFFormUserEmail', FormUserEmail)
+            .component('UFFormUserPassword', FormUserPassword)
+            .component('UFFormUserProfile', FormUserProfile)
             .component('UFPageLogin', PageLogin)
             .component('UFPageRegister', PageRegister)
             .component('UFPageForgotPassword', PageForgotPassword)
@@ -39,10 +55,14 @@ export default {
 
 declare module 'vue' {
     export interface GlobalComponents {
+        UFFormEmailVerificationRequest: typeof FormEmailVerificationRequest
+        UFFormForgotPasswordSet: typeof FormForgotPasswordSet
+        UFFormEmailVerificationValidation: typeof FormEmailVerificationValidation
         UFFormLogin: typeof FormLogin
         UFFormRegister: typeof FormRegister
-        UFFormForgotPassword: typeof FormForgotPassword
-        UFFormEmailVerificationRequest: typeof FormEmailVerificationRequest
+        UFFormUserEmail: typeof FormUserEmail
+        UFFormUserPassword: typeof FormUserPassword
+        UFFormUserProfile: typeof FormUserProfile
         UFPageLogin: typeof PageLogin
         UFPageRegister: typeof PageRegister
         UFPageForgotPassword: typeof PageForgotPassword

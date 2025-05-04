@@ -35,18 +35,6 @@ return [
                 40 => 1000,
             ],
         ],
-        'password_reset_request' => [
-            'method'   => 'ip',
-            'interval' => 3600,
-            'delays'   => [
-                2 => 5,
-                3 => 10,
-                4 => 20,
-                5 => 40,
-                6 => 80,
-                7 => 600,
-            ],
-        ],
         'registration_attempt' => [
             'method'   => 'ip',
             'interval' => 3600,
@@ -69,6 +57,18 @@ return [
                 7 => 40,
                 8 => 80,
                 9 => 600,
+            ],
+        ],
+        'account.password.reset.request' => [
+            'method'   => 'ip',
+            'interval' => 3600,
+            'delays'   => [
+                2 => 5,
+                3 => 10,
+                4 => 20,
+                5 => 40,
+                6 => 80,
+                7 => 600,
             ],
         ],
         'account.verify.request' => [

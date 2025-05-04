@@ -161,13 +161,13 @@ return [
     * for the inspiration for our throttling system
     */
     'throttles' => [
-        'check_username_request' => null,
-        'password_reset_request' => null,
-        'registration_attempt'   => null,
-        'sign_in_attempt'        => null,
-        'account.verify.request' => null,
-        'account.verify.email'   => null,
-        'suggest_username'       => null,
+        'check_username_request'         => null,
+        'registration_attempt'           => null,
+        'sign_in_attempt'                => null,
+        'account.password.reset.request' => null,
+        'account.verify.request'         => null,
+        'account.verify.email'           => null,
+        'suggest_username'               => null,
     ],
 
     /**

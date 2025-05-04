@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Tests\Controller;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use UserFrosting\Alert\AlertStream;
+use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\EmailVerificationProvider;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
-use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
-class SetPasswordActionTest extends AccountTestCase
+class ForgetPasswordSetPasswordActionTest extends AccountTestCase
 {
     use RefreshDatabase;
     use MockeryPHPUnitIntegration;
@@ -38,49 +38,61 @@ class SetPasswordActionTest extends AccountTestCase
         /** @var User */
         $user = User::factory()->create();
 
-        // Create fake PasswordResetRepository
-        /** @var PasswordResetRepository */
-        $repoPasswordReset = $this->ci->get(PasswordResetRepository::class);
-        $resetModel = $repoPasswordReset->create($user, 9999);
+        // Setup mock verification provider
+        $emailVerification = Mockery::mock(EmailVerificationProvider::class)
+            ->shouldReceive('validate')->once()->with(Mockery::any(), 'potatoCode')->andReturn(true)
+            ->getMock();
+        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/set-password', [
+        $request = $this->createJsonRequest('POST', '/account/forgot-password/set-password', [
+            'email'     => $user->email,
             'password'  => 'testSetPassword',
             'passwordc' => 'testSetPassword',
-            'token'     => $resetModel->getToken(),
+            'code'      => 'potatoCode',
         ]);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertResponse('', $response);
         $this->assertResponseStatus(200, $response);
-
-        // Test message
-        /** @var AlertStream */
-        $ms = $this->ci->get(AlertStream::class);
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('success', array_reverse($messages)[0]['type']);
+        $this->assertJsonResponse([
+            'message' => 'Account password updated'
+        ], $response);
     }
 
-    public function testSetPasswordWithNoToken(): void
+    public function testSetPasswordWithFailedVerification(): void
     {
+        /** @var User */
+        $user = User::factory()->create();
+
+        // Setup mock
+        $emailVerification = Mockery::mock(EmailVerificationProvider::class)
+            ->shouldReceive('validate')->once()->with(Mockery::any(), 'potatoCode')->andReturn(false)
+            ->getMock();
+        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/set-password', [
+        $request = $this->createJsonRequest('POST', '/account/forgot-password/set-password', [
+            'email'     => $user->email,
             'password'  => 'testSetPassword',
             'passwordc' => 'testSetPassword',
-            'token'     => 'potato',
+            'code'      => 'potatoCode',
         ]);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse('Invalid Password Reset Token', $response, 'title');
         $this->assertResponseStatus(400, $response);
+        $this->assertJsonResponse([
+            'title'       => 'Invalid Password Reset Token',
+            'description' => 'This password reset request could not be found, or has expired.',
+            'status'      => '400',
+        ], $response);
     }
 
     public function testSetPasswordWithFailedValidation(): void
     {
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/set-password');
+        $request = $this->createJsonRequest('POST', '/account/forgot-password/set-password');
         $response = $this->handleRequest($request);
 
         // Assert response status & body

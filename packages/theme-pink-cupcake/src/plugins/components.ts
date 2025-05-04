@@ -13,7 +13,8 @@ import {
     AppLink,
     InfoBox,
     CardBox,
-    CardBoxBig,
+    CardBoxLarge,
+    CardBoxHalf,
     MainContent,
     HeaderPage,
     FooterContent,
@@ -45,7 +46,8 @@ export default {
             .component('UFAppLink', AppLink)
             .component('UFInfoBox', InfoBox)
             .component('UFCardBox', CardBox)
-            .component('UFCardBoxBig', CardBoxBig)
+            .component('UFCardBoxLarge', CardBoxLarge)
+            .component('UFCardBoxHalf', CardBoxHalf)
             .component('UFMainContent', MainContent)
             .component('UFHeaderPage', HeaderPage)
             .component('UFFooterContent', FooterContent)
@@ -78,7 +80,7 @@ declare module 'vue' {
         UFAppLink: typeof AppLink
         UFInfoBox: typeof InfoBox
         UFCardBox: typeof CardBox
-        UFCardBoxBig: typeof CardBoxBig
+        UFCardBoxLarge: typeof CardBoxLarge
         UFMainContent: typeof MainContent
         UFHeaderPage: typeof HeaderPage
         UFFooterContent: typeof FooterContent

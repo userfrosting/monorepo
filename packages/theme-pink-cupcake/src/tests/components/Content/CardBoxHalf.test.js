@@ -1,11 +1,14 @@
 import { describe, expect, test } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, config } from '@vue/test-utils'
 import CardBox from '../../../components/Content/CardBox.vue'
+import CardBoxHalf from '../../../components/Content/CardBoxHalf.vue'
 
-describe('CardBox.vue', () => {
+config.global.stubs['UFCardBox'] = CardBox
+
+describe('CardBoxHalf.vue', () => {
     test('Basic test', () => {
         // Arrange
-        const wrapper = mount(CardBox, {
+        const wrapper = mount(CardBoxHalf, {
             props: {
                 title: 'Hello world'
             },
@@ -21,7 +24,7 @@ describe('CardBox.vue', () => {
 
     test('Test with no prop and slot', () => {
         // Arrange
-        const wrapper = mount(CardBox)
+        const wrapper = mount(CardBoxHalf)
 
         // Assert
         expect(wrapper.find('[data-test="title"]').exists()).toBe(false)

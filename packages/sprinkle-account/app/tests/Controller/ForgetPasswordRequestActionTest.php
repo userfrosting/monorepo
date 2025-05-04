@@ -20,7 +20,7 @@ use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 
-class ForgetPasswordActionTest extends AccountTestCase
+class ForgetPasswordRequestActionTest extends AccountTestCase
 {
     use RefreshDatabase;
     use MockeryPHPUnitIntegration;
@@ -34,7 +34,7 @@ class ForgetPasswordActionTest extends AccountTestCase
         $this->refreshDatabase();
     }
 
-    public function testForgotPassword(): void
+    public function testVerificationRequest(): void
     {
         /** @var Mailer */
         $mailer = Mockery::mock(Mailer::class)
@@ -44,10 +44,10 @@ class ForgetPasswordActionTest extends AccountTestCase
         $this->ci->set(Mailer::class, $mailer);
 
         /** @var User */
-        $user = User::factory()->create();
+        $user = User::factory(['flag_verified' => false])->create();
 
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/forgot-password', [
+        $request = $this->createJsonRequest('POST', '/account/forgot-password/request', [
             'email' => $user->email,
         ]);
         $response = $this->handleRequest($request);
@@ -57,24 +57,7 @@ class ForgetPasswordActionTest extends AccountTestCase
         $this->assertResponseStatus(200, $response);
     }
 
-    public function testForgotPasswordWithFailedValidation(): void
-    {
-        /** @var Mailer */
-        $mailer = Mockery::mock(Mailer::class)
-            ->makePartial()
-            ->shouldNotReceive('send')
-            ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
-
-        // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/forgot-password');
-        $response = $this->handleRequest($request);
-
-        // Assert response status & body
-        $this->assertResponseStatus(400, $response);
-    }
-
-    public function testForgotPasswordWithThrottler(): void
+    public function testVerificationRequestWithFailedThrottle(): void
     {
         /** @var Mailer */
         $mailer = Mockery::mock(Mailer::class)
@@ -84,21 +67,31 @@ class ForgetPasswordActionTest extends AccountTestCase
         $this->ci->set(Mailer::class, $mailer);
 
         /** @var User */
-        $user = User::factory()->create();
+        $user = User::factory(['flag_verified' => true])->create();
 
         // Create fake throttler
         $throttler = Mockery::mock(Throttler::class)
-            ->shouldReceive('getDelay')->once()->with('password_reset_request', ['email' => $user->email])->andReturn(90)
+            ->shouldReceive('getDelay')->once()->with('account.password.reset.request', ['email' => $user->email])->andReturn(90)
             ->getMock();
         $this->ci->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/forgot-password', [
+        $request = $this->createJsonRequest('POST', '/account/forgot-password/request', [
             'email' => $user->email,
         ]);
         $response = $this->handleRequest($request);
 
         // Assert response status
         $this->assertResponseStatus(429, $response);
+    }
+
+    public function testVerificationRequestWithFailedValidation(): void
+    {
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('POST', '/account/forgot-password/request');
+        $response = $this->handleRequest($request);
+
+        // Assert response status & body
+        $this->assertResponseStatus(400, $response);
     }
 }

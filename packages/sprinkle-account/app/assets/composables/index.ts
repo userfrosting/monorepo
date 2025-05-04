@@ -1,7 +1,7 @@
-export { forgotPassword } from './forgotPassword'
 export { useRegisterApi } from './useRegisterApi'
 export { useUserProfileEditApi } from './useUserProfileEditApi'
 export { useUserPasswordEditApi } from './useUserPasswordEditApi'
 export { useUserEmailEditApi } from './useUserEmailEditApi'
 export { useEmailVerificationApi } from './useEmailVerificationApi'
+export { useForgotPasswordApi } from './useForgotPasswordApi'
 export { useAuthorizationManager } from './useAuthorizationManager'

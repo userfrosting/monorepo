@@ -5,7 +5,9 @@ export default [
         meta: {
             guest: {
                 redirect: { name: 'home' }
-            }
+            },
+            title: 'LOGIN',
+            description: 'LOGIN.PAGE'
         },
         component: () => import('../views/LoginView.vue')
     },
@@ -15,7 +17,9 @@ export default [
         meta: {
             guest: {
                 redirect: { name: 'home' }
-            }
+            },
+            title: 'REGISTER',
+            description: 'REGISTER.PAGE'
         },
         component: () => import('../views/RegisterView.vue')
     },
@@ -25,9 +29,11 @@ export default [
         meta: {
             guest: {
                 redirect: { name: 'home' }
-            }
+            },
+            title: 'PASSWORD.FORGOT', // Get a new password / Obtenir un nouveau mot de passe
+            description: 'PASSWORD.FORGOT.PAGE'
         },
-        component: () => import('../views/ForgotPasswordView.vue')
+        component: () => import('../views/ForgotPassword.vue')
     },
     {
         path: '/account/verification',
@@ -35,7 +41,9 @@ export default [
         meta: {
             guest: {
                 redirect: { name: 'home' }
-            }
+            },
+            title: 'ACCOUNT.VERIFICATION',
+            description: 'ACCOUNT.VERIFICATION.EXPLAIN'
         },
         component: () => import('../views/ResendVerificationView.vue')
     },

@@ -181,6 +181,7 @@ class UserEditActionTest extends AdminTestCase
         ], $response);
 
         // Test message
+        // TODO : AlertStream should not be used anymore, but there really is a message returned here.
         /** @var AlertStream */
         $ms = $this->ci->get(AlertStream::class);
         $messages = $ms->getAndClearMessages();

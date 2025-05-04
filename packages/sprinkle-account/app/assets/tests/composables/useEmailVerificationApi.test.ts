@@ -10,7 +10,7 @@ describe('useEmailVerificationApi', () => {
     })
 
     test('should successfully resend verification email', async () => {
-        const { resendVerification, apiLoading, apiError } = useEmailVerificationApi()
+        const { requestVerificationCode, apiLoading, apiError } = useEmailVerificationApi()
         const email = 'test@example.com'
         const successMessage = 'Verification email sent successfully'
 
@@ -18,7 +18,7 @@ describe('useEmailVerificationApi', () => {
         vi.spyOn(axios, 'post').mockResolvedValueOnce({ data: { message: successMessage } })
 
         // Act
-        const result = await resendVerification(email)
+        const result = await requestVerificationCode(email)
 
         // Assert
         expect(result).toBe(successMessage)
@@ -28,7 +28,7 @@ describe('useEmailVerificationApi', () => {
     })
 
     test('should handle error when resending verification email fails', async () => {
-        const { resendVerification, apiLoading, apiError } = useEmailVerificationApi()
+        const { requestVerificationCode, apiLoading, apiError } = useEmailVerificationApi()
         const email = 'test@example.com'
         const errorResponse = {
             response: {
@@ -52,7 +52,7 @@ describe('useEmailVerificationApi', () => {
         vi.spyOn(axios, 'post').mockRejectedValueOnce(errorResponse)
 
         // Act & Assert
-        await expect(resendVerification(email)).rejects.toEqual(expectedError)
+        await expect(requestVerificationCode(email)).rejects.toEqual(expectedError)
         expect(apiLoading.value).toBe(false)
         expect(apiError.value).toEqual(expectedError)
     })

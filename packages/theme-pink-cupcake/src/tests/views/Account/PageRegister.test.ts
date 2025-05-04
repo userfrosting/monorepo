@@ -1,7 +1,7 @@
-import { afterEach, beforeEach, expect, test, describe, vi } from 'vitest'
+import { expect, test, describe, vi, afterEach, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import PageRegister from '../../../views/Account/PageRegister.vue'
 import { useConfigStore, usePageMeta } from '@userfrosting/sprinkle-core/stores'
-import PageLogin from '../../../views/Account/PageLogin.vue'
 
 // Mock the config and pageMeta store
 vi.mock('@userfrosting/sprinkle-core/stores')
@@ -12,27 +12,35 @@ const mockUsePageMeta = {
     hideTitle: false
 }
 
-describe('PageLogin.vue', () => {
+// Mock router
+const mockedPush = vi.fn()
+vi.mock('vue-router', () => ({
+    useRouter: vi.fn(() => ({
+        push: mockedPush
+    }))
+}))
+
+describe('PageRegister.vue', () => {
     afterEach(() => {
         vi.clearAllMocks()
         vi.resetAllMocks()
     })
 
     beforeEach(() => {
-        mockUseConfigStore.get.mockReturnValue(true)
-        vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
         vi.mocked(usePageMeta).mockReturnValue(mockUsePageMeta as any)
     })
 
     test('Render correctly', () => {
-        const wrapper = mount(PageLogin, {
+        mockUseConfigStore.get.mockReturnValue(true) // True means registration is enabled
+        vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
+        const wrapper = mount(PageRegister, {
             global: {
                 stubs: [
                     'router-link',
                     'UFCardBoxLarge',
-                    'UFCardBoxHalf',
                     'UFCardBox',
                     'UFAlert',
+                    'FormRegister',
                     'FontAwesomeIcon'
                 ]
             }
@@ -40,23 +48,27 @@ describe('PageLogin.vue', () => {
         expect(wrapper.exists()).toBe(true)
     })
 
-    test('gotoVerification is not available if verification is disabled', async () => {
-        // Custom mock the config store
-        mockUseConfigStore.get.mockReturnValue(false)
+    test('Redirect if registration is disabled', () => {
+        mockUseConfigStore.get.mockReturnValue(false) // False means registration is disabled
         vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
 
-        const wrapper = mount(PageLogin, {
+        // Mount the component
+        const wrapper = mount(PageRegister, {
             global: {
                 stubs: [
                     'router-link',
                     'UFCardBoxLarge',
-                    'UFCardBoxHalf',
                     'UFCardBox',
                     'UFAlert',
+                    'FormRegister',
                     'FontAwesomeIcon'
                 ]
             }
         })
-        expect(wrapper.find('[data-test="gotoVerification"]').exists()).toBe(false)
+        expect(wrapper.exists()).toBe(true)
+
+        // Expect the router to have been called with the correct path
+        expect(mockedPush).toHaveBeenCalledTimes(1)
+        expect(mockedPush).toHaveBeenCalledWith({ name: 'account.login' })
     })
 })
