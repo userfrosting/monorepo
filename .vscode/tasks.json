@@ -96,6 +96,17 @@
             "type": "shell",
             "command": "vendor/bin/phpstan analyse"
         },
+        {
+            "label": "Workspace - Update PHP Headers",
+            "type": "shell",
+            "command": [
+                "vendor/bin/php-cs-fixer fix --config packages/framework/.php-cs-fixer.php &&",
+                "vendor/bin/php-cs-fixer fix --config packages/sprinkle-account/.php-cs-fixer.php &&",
+                "vendor/bin/php-cs-fixer fix --config packages/sprinkle-admin/.php-cs-fixer.php &&",
+                "vendor/bin/php-cs-fixer fix --config packages/sprinkle-core/.php-cs-fixer.php &&",
+                "vendor/bin/php-cs-fixer fix --config packages/skeleton/.php-cs-fixer.headers.php"
+            ],
+        },
         
         /**
          * UserFrosting (skeleton) Tasks
@@ -127,72 +138,8 @@
         },
 
         /**
-         * Theme Pink Cupcake Tasks
-         */
-        {
-            "label": "Pink Cupcake - Build",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/theme-pink-cupcake build"
-        },
-        {
-            "label": "Pink Cupcake - Type Check",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/theme-pink-cupcake typecheck"
-        },
-        {
-            "label": "Pink Cupcake - Format",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/theme-pink-cupcake format"
-        },
-        {
-            "label": "Pink Cupcake - Test",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/theme-pink-cupcake test"
-        },
-        {
-            "label": "Pink Cupcake - Coverage",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/theme-pink-cupcake coverage"
-        },
-        {
-            "label": "Pink Cupcake - Lint",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/theme-pink-cupcake lint"
-        },
-
-        /**
          * Sprinkle Core Tasks
          */ 
-        {
-            "label": "Core - Build",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-core build"
-        },
-        {
-            "label": "Core - Type Check",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-core typecheck"
-        },
-        {
-            "label": "Core - Format",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-core format"
-        },
-        {
-            "label": "Core - Test",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-core test"
-        },
-        {
-            "label": "Core - Coverage",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-core coverage"
-        },
-        {
-            "label": "Core - Lint",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-core lint"
-        },
         {
             "label": "Core - PHPUnit",
             "type": "shell",
@@ -204,44 +151,14 @@
             "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Core Sprinkle'"
         },
         {
-            "label": "Skeleton - PHPStan",
+            "label": "Core - PHPStan",
             "type": "shell",
             "command": "vendor/bin/phpstan analyse packages/sprinkle-core"
         },
 
         /**
          * Sprinkle Account Tasks
-         */ 
-        {
-            "label": "Account - Build",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-account build"
-        },
-        {
-            "label": "Account - Type Check",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-account typecheck"
-        },
-        {
-            "label": "Account - Format",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-account format"
-        },
-        {
-            "label": "Account - Test",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-account test"
-        },
-        {
-            "label": "Account - Coverage",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-account coverage"
-        },
-        {
-            "label": "Account - Lint",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-account lint"
-        },
+         */
         {
             "label": "Account - PHPUnit",
             "type": "shell",
@@ -253,7 +170,7 @@
             "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Account Sprinkle'"
         },
         {
-            "label": "Skeleton - PHPStan",
+            "label": "Account - PHPStan",
             "type": "shell",
             "command": "vendor/bin/phpstan analyse packages/sprinkle-account"
         },
@@ -261,36 +178,6 @@
         /**
          * Sprinkle Admin Tasks
          */ 
-        {
-            "label": "Admin - Build",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-admin build"
-        },
-        {
-            "label": "Admin - Type Check",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-admin typecheck"
-        },
-        {
-            "label": "Admin - Format",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-admin format"
-        },
-        {
-            "label": "Admin - Test",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-admin test"
-        },
-        {
-            "label": "Admin - Coverage",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-admin coverage"
-        },
-        {
-            "label": "Admin - Lint",
-            "type": "shell",
-            "command": "npm run --workspace=@userfrosting/sprinkle-admin lint"
-        },
         {
             "label": "Admin - PHPUnit",
             "type": "shell",
@@ -302,7 +189,7 @@
             "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Admin Sprinkle'"
         },
         {
-            "label": "Skeleton - PHPStan",
+            "label": "Admin - PHPStan",
             "type": "shell",
             "command": "vendor/bin/phpstan analyse packages/sprinkle-admin"
         },
@@ -321,7 +208,7 @@
             "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Framework'"
         },
         {
-            "label": "Skeleton - PHPStan",
+            "label": "Framework - PHPStan",
             "type": "shell",
             "command": "vendor/bin/phpstan analyse packages/framework"
         }
