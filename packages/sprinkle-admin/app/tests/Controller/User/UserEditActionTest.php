@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use UserFrosting\Alert\AlertStream;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
@@ -179,13 +178,6 @@ class UserEditActionTest extends AdminTestCase
             'description' => 'Email <strong>' . $user->email . '</strong> is already in use.',
             'status'      => 400,
         ], $response);
-
-        // Test message
-        // TODO : AlertStream should not be used anymore, but there really is a message returned here.
-        /** @var AlertStream */
-        $ms = $this->ci->get(AlertStream::class);
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('danger', array_reverse($messages)[0]['type']);
     }
 
     public function testPageForFailedValidation(): void
@@ -215,11 +207,5 @@ class UserEditActionTest extends AdminTestCase
             'description' => 'Invalid email address.',
             'status'      => 400,
         ], $response);
-
-        // Test message
-        /** @var AlertStream */
-        $ms = $this->ci->get(AlertStream::class);
-        $messages = $ms->getAndClearMessages();
-        $this->assertSame('danger', array_reverse($messages)[0]['type']);
     }
 }

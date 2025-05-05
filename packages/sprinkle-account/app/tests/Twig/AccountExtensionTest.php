@@ -14,7 +14,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Slim\Views\Twig;
-use UserFrosting\Alert\AlertStream;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
@@ -78,7 +77,7 @@ class AccountExtensionTest extends TestCase
 
     public function testCurrentUser(): void
     {
-        // Define mock AlertStream and register with Container
+        // Define mock Authenticator and register with Container
         /** @var Authenticator */
         $authenticator = Mockery::mock(Authenticator::class);
 

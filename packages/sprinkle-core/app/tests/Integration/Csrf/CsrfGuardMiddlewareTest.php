@@ -15,7 +15,6 @@ namespace UserFrosting\Sprinkle\Core\Tests\Integration\Csrf;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\App;
 use Slim\Views\Twig;
-use UserFrosting\Alert\AlertStream;
 use UserFrosting\Config\Config;
 use UserFrosting\Routes\RouteDefinitionInterface;
 use UserFrosting\Session\Session;
@@ -42,10 +41,6 @@ class CsrfGuardMiddlewareTest extends TestCase
 
     public function testFailCsrf(): void
     {
-        /** @var AlertStream */
-        $ms = $this->ci->get(AlertStream::class);
-        $ms->resetMessageStream();
-
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/csrf');
         $response = $this->handleRequest($request);
@@ -54,11 +49,6 @@ class CsrfGuardMiddlewareTest extends TestCase
         $this->assertResponseStatus(400, $response);
         $this->assertJsonResponse('Bad Request', $response, 'title');
         $this->assertJsonResponse('Missing CSRF token. Try refreshing the page and then submitting again?', $response, 'description');
-
-        // Test message
-        $messages = $ms->getAndClearMessages();
-        $this->assertCount(1, $messages);
-        $this->assertSame('danger', end($messages)['type']); // @phpstan-ignore-line
     }
 
     public function testSuccessCsrf(): void
@@ -115,10 +105,6 @@ class CsrfGuardMiddlewareTest extends TestCase
 
     public function testCsrfStorage(): void
     {
-        /** @var AlertStream */
-        $ms = $this->ci->get(AlertStream::class);
-        $ms->resetMessageStream();
-
         /** @var Config */
         $config = $this->ci->get(Config::class);
         $csrfKey = $config->getString('session.keys.csrf');
@@ -133,11 +119,6 @@ class CsrfGuardMiddlewareTest extends TestCase
 
         // Assert response status & body
         $this->assertResponseStatus(400, $response);
-
-        // Test message
-        $messages = $ms->getAndClearMessages();
-        $this->assertCount(1, $messages);
-        $this->assertSame('danger', end($messages)['type']); // @phpstan-ignore-line
     }
 
     public function testTwigCsrf(): void

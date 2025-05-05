@@ -21,6 +21,11 @@ use UserFrosting\Sprinkle\Core\Error\Handler\PhpMailerExceptionHandler;
 use UserFrosting\Sprinkle\Core\Error\Handler\UserMessageExceptionHandler;
 use UserFrosting\Sprinkle\Core\Exceptions\Contracts\UserMessageException;
 
+/**
+ * Note: Starting with UserFrosting 6.0, `UserMessageException` instances are
+ * no longer sent to the Alert Stream. To restore the behavior from
+ * UserFrosting 5, use the `AlertStreamExceptionHandler` instead.
+ */
 class ErrorHandlerService implements ServicesProviderInterface
 {
     public function register(): array

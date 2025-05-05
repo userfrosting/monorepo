@@ -12,23 +12,19 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
-use DI\Attribute\Inject;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use UserFrosting\Alert\AlertStream;
-use UserFrosting\Sprinkle\Core\Exceptions\Contracts\UserMessageException;
-use UserFrosting\Support\Message\UserMessage;
 
 /**
- * Generic handler for exceptions that will be presented to the end user.
- * Override the default behavior and status code.
+ * Handles exceptions intended to be presented to the end user. Overrides the
+ * default behavior and status code. Exceptions handled by this class are not
+ * logged and do not display detailed information. They include a developer-
+ * facing message and title, as well as a separate user-facing message. The
+ * user-facing message is displayed to the end user either as an HTML page or
+ * a JSON response.
  */
 final class UserMessageExceptionHandler extends ExceptionHandler
 {
-    #[Inject]
-    protected AlertStream $alert;
-
     /**
      * Don't log theses exceptions.
      */
@@ -51,37 +47,5 @@ final class UserMessageExceptionHandler extends ExceptionHandler
     protected function determineStatusCode(ServerRequestInterface $request, Throwable $exception): int
     {
         return intval($exception->getCode());
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Adds the exception message to the alert stream.
-     */
-    public function handle(ServerRequestInterface $request, Throwable $exception): ResponseInterface
-    {
-        if ($exception instanceof UserMessageException) {
-            $title = $this->translateExceptionPart($exception->getTitle());
-            $description = $this->translateExceptionPart($exception->getDescription());
-            $this->alert->addMessage('danger', "$title: $description");
-        }
-
-        return parent::handle($request, $exception);
-    }
-
-    /**
-     * Translate a string or UserMessage to a string.
-     *
-     * @param string|UserMessage $message
-     *
-     * @return string
-     */
-    protected function translateExceptionPart(string|UserMessage $message): string
-    {
-        if ($message instanceof UserMessage) {
-            return $this->translator->translate($message->message, $message->parameters);
-        }
-
-        return $this->translator->translate($message);
     }
 }
