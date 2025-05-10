@@ -22,6 +22,7 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                 <UFSprunjeHeader sort="name">{{ $t('USER') }}</UFSprunjeHeader>
                 <UFSprunjeHeader sort="last_activity">{{ $t('ACTIVITY.LAST') }}</UFSprunjeHeader>
                 <UFSprunjeHeader sort="status">{{ $t('STATUS') }}</UFSprunjeHeader>
+                <UFSprunjeHeader sort="status">{{ $t('EMAIL') }}</UFSprunjeHeader>
                 <UFSprunjeHeader>{{ $t('ACTIONS') }}</UFSprunjeHeader>
             </template>
 
@@ -46,11 +47,16 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                     <UFLabel :severity="Severity.Danger" v-if="item.flag_enabled == false">
                         {{ $t('DISABLED') }}
                     </UFLabel>
-                    <UFLabel :severity="Severity.Warning" v-else-if="item.flag_verified == false">
-                        {{ $t('UNACTIVATED') }}
-                    </UFLabel>
                     <UFLabel :severity="Severity.Success" v-else>
                         {{ $t('ACTIVE') }}
+                    </UFLabel>
+                </UFSprunjeColumn>
+                <UFSprunjeColumn>
+                    <UFLabel :severity="Severity.Warning" v-if="item.flag_verified == false">
+                        {{ $t('UNVERIFIED') }}
+                    </UFLabel>
+                    <UFLabel :severity="Severity.Success" v-else>
+                        {{ $t('VERIFIED') }}
                     </UFLabel>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>

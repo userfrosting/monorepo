@@ -34,9 +34,6 @@ const { slug } = defineProps<{
                     <UFLabel :severity="Severity.Danger" v-if="item.flag_enabled == false">
                         {{ $t('DISABLED') }}
                     </UFLabel>
-                    <UFLabel :severity="Severity.Warning" v-else-if="item.flag_verified == false">
-                        {{ $t('UNACTIVATED') }}
-                    </UFLabel>
                     <UFLabel :severity="Severity.Success" v-else>
                         {{ $t('ENABLED') }}
                     </UFLabel>

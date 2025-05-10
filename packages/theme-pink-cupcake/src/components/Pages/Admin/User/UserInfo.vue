@@ -31,6 +31,14 @@ const emits = defineEmits(['updated'])
         <dl class="uk-description-list" v-if="$checkAccess('view_user_field')">
             <dt><font-awesome-icon icon="envelope" /> {{ $t('EMAIL') }}</dt>
             <dd class="uk-text-meta">{{ user.email }}</dd>
+            <dd class="uk-text-meta">
+                <UFLabel :severity="Severity.Warning" v-if="user.flag_verified == false">
+                    {{ $t('UNVERIFIED') }}
+                </UFLabel>
+                <UFLabel :severity="Severity.Success" v-else>
+                    {{ $t('VERIFIED') }}
+                </UFLabel>
+            </dd>
             <dt><font-awesome-icon icon="users" /> {{ $t('GROUP') }}</dt>
             <dd class="uk-text-meta" v-if="user.group">
                 <router-link :to="{ name: 'admin.group', params: { slug: user.group.slug } }">
@@ -46,9 +54,6 @@ const emits = defineEmits(['updated'])
             <dd class="uk-text-meta">
                 <UFLabel :severity="Severity.Danger" v-if="user.flag_enabled == false">
                     {{ $t('DISABLED') }}
-                </UFLabel>
-                <UFLabel :severity="Severity.Warning" v-else-if="user.flag_verified == false">
-                    {{ $t('UNACTIVATED') }}
                 </UFLabel>
                 <UFLabel :severity="Severity.Success" v-else>
                     {{ $t('ACTIVE') }}
