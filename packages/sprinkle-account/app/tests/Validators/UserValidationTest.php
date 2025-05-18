@@ -11,7 +11,6 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Validators;
 
 use Exception;
-use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Exceptions\EmailNotUniqueException;
 use UserFrosting\Sprinkle\Account\Exceptions\MissingRequiredParamException;
@@ -21,9 +20,9 @@ use UserFrosting\Sprinkle\Account\Validators\UserValidation;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
 /**
- * Tests the Registration class.
+ * Tests the UserValidation Validator class.
  */
-class UserVerificationTest extends AccountTestCase
+class UserValidationTest extends AccountTestCase
 {
     use RefreshDatabase;
 

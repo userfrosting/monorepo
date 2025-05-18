@@ -92,8 +92,6 @@ class UserExtensionTest extends AccountTestCase
         // A real query is required to trigger a SQL Exception
         $this->assertCount(0, $member->activities()->get());
         $this->assertCount(0, $member->group()->get());
-        $this->assertCount(0, $member->passwordResets()->get());
-        $this->assertCount(0, $member->verifications()->get());
         $this->assertCount(0, $member->persistences()->get());
         $this->assertCount(0, $member->permissions()->get());
         $this->assertCount(0, $member->roles()->get());

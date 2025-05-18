@@ -21,12 +21,10 @@ parameters:
     - UserFrosting\Sprinkle\Core\Database\Models\Interfaces\ThrottleModelInterface
     - UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface
     - UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface
-    - UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PasswordResetInterface
     - UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PermissionInterface
     - UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PersistenceInterface
     - UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface
     - UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface
-    - UserFrosting\Sprinkle\Account\Database\Models\Interfaces\VerificationInterface
 includes:
   - packages/sprinkle-account/phpstan-baseline.neon
   - packages/sprinkle-admin/phpstan-baseline.neon

@@ -30,7 +30,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Exceptions\LocaleNotFoundException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Account\Validators\UserValidation;
-use UserFrosting\Sprinkle\Admin\Mail\PasswordEmail;
+use UserFrosting\Sprinkle\Admin\Mail\UserCreatedEmail;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocaleInterface;
 use UserFrosting\Sprinkle\Core\Log\DebugLoggerInterface;
@@ -67,7 +67,7 @@ class UserCreateAction
         protected GroupInterface $groupModel,
         protected SiteLocaleInterface $siteLocale,
         protected UserActivityLogger $userActivityLogger,
-        protected PasswordEmail $passwordEmail,
+        protected UserCreatedEmail $userCreationEmail,
         protected UserInterface $userModel,
         protected UserValidation $userValidation,
         protected DebugLoggerInterface $debugLogger,
@@ -148,7 +148,7 @@ class UserCreateAction
         $this->userValidation->validate($user);
 
         // Ready to save
-        $user = $this->db->transaction(function () use ($user, $data, $currentUser) {
+        $user = $this->db->transaction(function () use ($user, $currentUser) {
             // Store new user to database
             $user->save();
 
@@ -162,10 +162,8 @@ class UserCreateAction
                 'user_id' => $user->id,
             ]);
 
-            // If the password_mode is manual, do not send an email to set it. Else, send the email.
-            if ($data['password'] === '') {
-                $this->passwordEmail->send($user);
-            }
+            // Send an email to the user who's been created
+            $this->userCreationEmail->send($user);
 
             return $user;
         });

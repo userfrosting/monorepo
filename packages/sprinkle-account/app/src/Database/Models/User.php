@@ -29,12 +29,10 @@ use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\HasherInterface;
 use UserFrosting\Sprinkle\Account\Database\Factories\UserFactory;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
-use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PasswordResetInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PermissionInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PersistenceInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
-use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\VerificationInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
 
@@ -126,8 +124,6 @@ class User extends Model implements UserInterface
 
         // Remove all user info
         $this->activities()->delete(); // @phpstan-ignore-line Laravel magic method
-        $this->passwordResets()->delete(); // @phpstan-ignore-line Laravel magic method
-        $this->verifications()->delete(); // @phpstan-ignore-line Laravel magic method
         $this->persistences()->delete(); // @phpstan-ignore-line Laravel magic method
 
         // Delete the user
@@ -442,34 +438,6 @@ class User extends Model implements UserInterface
 
         // Define foreign key in case User is extended
         return $this->belongsTo($relation);
-    }
-
-    /**
-     * Get all password reset requests for this user.
-     *
-     * @return HasMany
-     */
-    public function passwordResets(): HasMany
-    {
-        /** @var string */
-        $relation = static::$ci?->get(PasswordResetInterface::class);
-
-        // Define foreign key in case User is extended
-        return $this->hasMany($relation, 'user_id');
-    }
-
-    /**
-     * Get all verification request for this user.
-     *
-     * @return HasMany
-     */
-    public function verifications(): HasMany
-    {
-        /** @var string */
-        $relation = static::$ci?->get(VerificationInterface::class);
-
-        // Define foreign key in case User is extended
-        return $this->hasMany($relation, 'user_id');
     }
 
     /**

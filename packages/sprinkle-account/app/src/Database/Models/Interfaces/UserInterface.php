@@ -30,32 +30,30 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
  *
- * @property int                                $id
- * @property string                             $user_name
- * @property string                             $first_name
- * @property string                             $last_name
- * @property string                             $full_name
- * @property string                             $email
- * @property string                             $locale
- * @property int|null                           $group_id
- * @property bool                               $flag_verified
- * @property bool                               $flag_enabled
- * @property string                             $password
- * @property \Carbon\Carbon|null                $password_last_set
- * @property string                             $avatar
- * @property timestamp                          $created_at
- * @property timestamp                          $updated_at
- * @property timestamp|null                     $deleted_at
- * @property GroupInterface|null                $group
- * @property Collection<ActivityInterface>      $activities
- * @property Collection<PasswordResetInterface> $passwordResets
- * @property Collection<PersistenceInterface>   $persistences
- * @property Collection<PermissionInterface>    $permissions
- * @property Collection<RoleInterface>          $roles
- * @property Collection<VerificationInterface>  $verifications
- * @property ActivityInterface|null             $last_activity
- * @property ActivityInterface|null             $lastActivity
- * @property array<string, mixed>               $apiData
+ * @property int                              $id
+ * @property string                           $user_name
+ * @property string                           $first_name
+ * @property string                           $last_name
+ * @property string                           $full_name
+ * @property string                           $email
+ * @property string                           $locale
+ * @property int|null                         $group_id
+ * @property bool                             $flag_verified
+ * @property bool                             $flag_enabled
+ * @property string                           $password
+ * @property \Carbon\Carbon|null              $password_last_set
+ * @property string                           $avatar
+ * @property timestamp                        $created_at
+ * @property timestamp                        $updated_at
+ * @property timestamp|null                   $deleted_at
+ * @property GroupInterface|null              $group
+ * @property Collection<ActivityInterface>    $activities
+ * @property Collection<PersistenceInterface> $persistences
+ * @property Collection<PermissionInterface>  $permissions
+ * @property Collection<RoleInterface>        $roles
+ * @property ActivityInterface|null           $last_activity
+ * @property ActivityInterface|null           $lastActivity
+ * @property array<string, mixed>             $apiData
  *
  * @method        $this joinLastActivity()
  * @method static $this joinLastActivity()
@@ -236,25 +234,11 @@ interface UserInterface
     // public function onLogout($params = []);
 
     /**
-     * Get all password reset requests for this user.
-     *
-     * @return HasMany
-     */
-    public function passwordResets(): HasMany;
-
-    /**
      * Get all of the permissions this user has, through its roles.
      *
      * @return BelongsToManyThrough
      */
     public function permissions(): BelongsToManyThrough;
-
-    /**
-     * Get all verification request for this user.
-     *
-     * @return HasMany
-     */
-    public function verifications(): HasMany;
 
     /**
      * Get all persistence items for this user.

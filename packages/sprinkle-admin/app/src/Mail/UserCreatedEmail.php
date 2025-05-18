@@ -15,19 +15,17 @@ namespace UserFrosting\Sprinkle\Admin\Mail;
 use Slim\Views\Twig;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
-use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 
-class PasswordEmail
+class UserCreatedEmail
 {
     /**
      * Inject dependencies.
      */
     public function __construct(
         protected Config $config,
-        protected PasswordResetRepository $repoPasswordReset,
         protected Twig $twig,
         protected Mailer $mailer,
     ) {
@@ -38,7 +36,7 @@ class PasswordEmail
      *
      * @param UserInterface $user The user to send the email for
      */
-    public function send(UserInterface $user, string $template = 'mail/password-create.html.twig'): void
+    public function send(UserInterface $user, string $template = 'mail/user-created.html.twig'): void
     {
         // Create and send verification email
         $message = new TwigMailMessage($this->twig, $template);

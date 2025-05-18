@@ -130,7 +130,7 @@ class UserCreateActionTest extends AdminTestCase
         /** @var Mailer */
         $mailer = Mockery::mock(Mailer::class)
             ->makePartial()
-            ->shouldNotReceive('send')
+            ->shouldReceive('send')->once()
             ->getMock();
         $this->ci->set(Mailer::class, $mailer);
 

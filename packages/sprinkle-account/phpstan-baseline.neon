@@ -36,11 +36,6 @@ parameters:
 			path: app/src/Database/Models/Activity.php
 
 		-
-			message: "#^PHPDoc type array\\<string\\> of property UserFrosting\\\\Sprinkle\\\\Account\\\\Database\\\\Models\\\\PasswordReset\\:\\:\\$casts is not the same as PHPDoc type array of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$casts\\.$#"
-			count: 1
-			path: app/src/Database/Models/PasswordReset.php
-
-		-
 			message: "#^PHPDoc type array\\<string\\> of property UserFrosting\\\\Sprinkle\\\\Account\\\\Database\\\\Models\\\\Persistence\\:\\:\\$casts is not the same as PHPDoc type array of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$casts\\.$#"
 			count: 1
 			path: app/src/Database/Models/Persistence.php
@@ -66,11 +61,6 @@ parameters:
 			path: app/src/Database/Models/User.php
 
 		-
-			message: "#^PHPDoc type array\\<string\\> of property UserFrosting\\\\Sprinkle\\\\Account\\\\Database\\\\Models\\\\Verification\\:\\:\\$casts is not the same as PHPDoc type array of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$casts\\.$#"
-			count: 1
-			path: app/src/Database/Models/Verification.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:whereIn\\(\\)\\.$#"
 			count: 1
 			path: app/src/Listener/AssignDefaultRoles.php
@@ -81,19 +71,9 @@ parameters:
 			path: app/src/Rememberme/PDOStorage.php
 
 		-
-			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:exists\\(\\)\\.$#"
-			count: 1
-			path: app/src/Repository/TokenRepository.php
-
-		-
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:orderBy\\(\\)\\.$#"
 			count: 2
 			path: app/tests/Database/Models/ActivityTest.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/tests/Database/Models/PasswordResetTest.php
 
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\:\\:count\\(\\)\\.$#"
@@ -159,11 +139,6 @@ parameters:
 			message: "#^Dynamic call to static method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:count\\(\\)\\.$#"
 			count: 2
 			path: app/tests/Database/Models/RoleTest.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\HasMany\\:\\:count\\(\\)\\.$#"
-			count: 1
-			path: app/tests/Database/Models/VerificationTest.php
 
 		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\:\\:pluck\\(\\)\\.$#"
