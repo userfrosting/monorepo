@@ -53,7 +53,7 @@ class EmailOtpProvider extends SendableOtpProvider implements EmailVerificationP
     /**
      * {@inheritDoc}
      */
-    protected function sendCode(UserInterface $user, string $code): void
+    protected function sendCode(UserInterface $user, string $code, int $timeout): void
     {
         // Create and send verification email
         $message = new TwigMailMessage($this->twig, $this->template);
@@ -62,8 +62,9 @@ class EmailOtpProvider extends SendableOtpProvider implements EmailVerificationP
         $message->from($this->config->get('address_book.admin'))
                 ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                 ->addParams([
-                    'user' => $user,
-                    'code' => $code,
+                    'user'    => $user,
+                    'code'    => $code,
+                    'timeout' => round($timeout / 60, 0),
                 ]);
 
         $this->mailer->send($message);

@@ -55,7 +55,7 @@ abstract class SendableOtpProvider implements MFAProvider
         $this->model->storeCode($user, $code, $timeout);
 
         // Send the code to the user
-        $this->sendCode($user, $code);
+        $this->sendCode($user, $code, $timeout);
     }
 
     /**
@@ -81,6 +81,7 @@ abstract class SendableOtpProvider implements MFAProvider
      *
      * @param UserInterface $user
      * @param string        $code
+     * @param int           $timeout The timeout for the code, in seconds
      */
-    abstract protected function sendCode(UserInterface $user, string $code): void;
+    abstract protected function sendCode(UserInterface $user, string $code, int $timeout): void;
 }
