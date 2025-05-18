@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Mail;
 
-use Carbon\Carbon;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
@@ -42,10 +40,6 @@ class PasswordEmail
      */
     public function send(UserInterface $user, string $template = 'mail/password-create.html.twig'): void
     {
-        // Try to generate a new verification request
-        $timeout = $this->config->getInt('password_reset.timeouts.create', 86400);
-        $verification = $this->repoPasswordReset->create($user, $timeout);
-
         // Create and send verification email
         $message = new TwigMailMessage($this->twig, $template);
 
@@ -53,10 +47,7 @@ class PasswordEmail
         $message->from($this->config->get('address_book.admin'))
                 ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
                 ->addParams([
-                    'user'                       => $user,
-                    'create_password_expiration' => $timeout / 3600 . ' hours',
-                    'token'                      => $verification->getToken(),
-                    'request_date'               => Carbon::now()->format('Y-m-d H:i:s'),
+                    'user' => $user,
                 ]);
 
         $this->mailer->send($message);

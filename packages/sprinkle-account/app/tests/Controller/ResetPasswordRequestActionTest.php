@@ -20,7 +20,7 @@ use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 
-class ForgetPasswordRequestActionTest extends AccountTestCase
+class ResetPasswordRequestActionTest extends AccountTestCase
 {
     use RefreshDatabase;
     use MockeryPHPUnitIntegration;

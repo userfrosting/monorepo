@@ -12,12 +12,10 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
-use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
 class UserPasswordActionTest extends AdminTestCase
@@ -67,13 +65,6 @@ class UserPasswordActionTest extends AdminTestCase
         $user = User::factory()->create();
         $this->actAsUser($user, permissions: ['update_user_field']);
 
-        /** @var Mailer */
-        $mailer = Mockery::mock(Mailer::class)
-            ->makePartial()
-            ->shouldReceive('send')->once()
-            ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
-
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/api/users/u/' . $user->user_name . '/password-reset');
         $response = $this->handleRequest($request);
@@ -81,7 +72,7 @@ class UserPasswordActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'A password reset link will be sent to <strong>' . $user->email . '</strong>.',
+            'message' => '<strong>' . $user->full_name . '</strong>\'s password has been reset.',
         ], $response);
     }
 }

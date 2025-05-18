@@ -65,6 +65,10 @@ return [
                 'TITLE'       => 'Login Required',
                 'DESCRIPTION' => 'Please login to continue',
             ],
+            'PASSWORD_EXPIRED' => [
+                'TITLE'       => 'Password Expired',
+                'DESCRIPTION' => 'Your password has expired. Please reset your password.',
+            ],
             'PASSWORD_RESET' => [
                 'TITLE'       => 'Invalid Password Reset Token',
                 'DESCRIPTION' => 'This password reset request could not be found, or has expired.',
@@ -155,16 +159,6 @@ return [
         'CURRENT'               => 'Current Password',
         'CURRENT_EXPLAIN'       => 'You must confirm your current password to make changes',
 
-        'FORGOT'    => [
-            '@TRANSLATION'      => 'Forgotten password',
-            'EMAIL'             => 'Please enter the email address you used to sign up. A verification code will be sent to your email.',
-            'INVALID'           => 'This password reset request could not be found or has expired. Please try submitting your request again.',
-            'PAGE'              => 'Use this form to reset your password in case you don\'t have access to your account.',
-            'QUESTION'          => 'Forgot your password ?',
-            'REQUEST_SENT'      => 'If the email <strong>{{email}}</strong> matches an account in our system, a verification code will be sent to <strong>{{email}}</strong>.',
-            'SUCCESS'           => 'Your new password is set. You can now log in with your new password.',
-        ],
-
         'INVALID'           => "Current password doesn't match the one we have on record",
 
         'NEW'               => [
@@ -174,10 +168,12 @@ return [
         ],
 
         'RESET' => [
-            '@TRANSLATION'      => 'Reset Password',
-            'CHOOSE'            => 'Choose a new password for your account.',
-            // 'CONFIRM'           => 'Are you sure you want to send <strong>{{full_name}} ({{ user_name }})</strong> a link that will allow them to reset their password ?',
-            'SEND'              => 'Set New Password',
+            '@TRANSLATION'  => 'Reset your password',
+            'EMAIL'         => 'Please enter the email address you used to sign up. A verification code will be sent to your email.',
+            'INVALID'       => 'This password reset request could not be found or has expired. Please try submitting your request again.',
+            'PAGE'          => 'Use this form to reset your password in case you don\'t have access to your account.',
+            'REQUEST_SENT'  => 'If the email <strong>{{email}}</strong> matches an account in our system, a verification code will be sent to <strong>{{email}}</strong>.',
+            'SUCCESS'       => 'Your new password is set. You can now log in with your new password.',
         ],
 
         'UPDATED'           => 'Account password updated',

@@ -18,8 +18,8 @@ use UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
- * Groups table migration
- * Changes `group_id` column properties to allow user to be created without a group.
+ * User table upgrade migration
+ * Drop the `theme` and `last_activity_id` columns.
  * Version 5.0.0.
  */
 class UpdateUsersTable extends Migration

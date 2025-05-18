@@ -16,10 +16,10 @@ use UserFrosting\Sprinkle\Account\Exceptions\Contracts\LoginException;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
- * Disabled account exception. Used when an account has been disabled.
+ * Password expired exception.
  */
-final class AccountDisabledException extends AccountException implements LoginException
+final class PasswordExpiredException extends AccountException implements LoginException
 {
-    protected string $title = 'ACCOUNT.EXCEPTION.DISABLED.TITLE';
-    protected string|UserMessage $description = 'ACCOUNT.EXCEPTION.DISABLED.DESCRIPTION';
+    protected string $title = 'ACCOUNT.EXCEPTION.PASSWORD_EXPIRED.TITLE';
+    protected string|UserMessage $description = 'ACCOUNT.EXCEPTION.PASSWORD_EXPIRED.DESCRIPTION';
 }

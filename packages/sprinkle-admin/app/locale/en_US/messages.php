@@ -143,8 +143,10 @@ return [
         2 => 'Users',
 
         'ADMIN' => [
-            'CHANGE_PASSWORD'    => 'Change User Password',
-            'PASSWORD_RESET'     => 'A password reset link will be sent to <strong>{{email}}</strong>.',
+            'CHANGE_PASSWORD'        => 'Change User\'s Password',
+            'PASSWORD_RESET_SUCCESS' => '<strong>{{full_name}}</strong>\'s password has been reset.',
+            'PASSWORD_RESET'         => 'Reset user\'s password',
+            'PASSWORD_RESET_CONFIRM' => 'Are you sure you want to force reset <strong>{{full_name}}</strong>\'s password? Their current password will be deactivated and they will need to reset it using the "reset password" feature on their next login attempt.',
         ],
         'ACTIVATE'          => 'Activate user',
         'ACTIVATE_CONFIRM'  => 'Are you sure you want to activate <strong>{{full_name}} ({{user_name}})</strong> ?',

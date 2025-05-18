@@ -131,6 +131,7 @@ class MigrationsTest extends AccountTestCase
                 'flag_verified',
                 'flag_enabled',
                 'password',
+                'password_last_set',
                 'deleted_at',
                 'created_at',
                 'updated_at',

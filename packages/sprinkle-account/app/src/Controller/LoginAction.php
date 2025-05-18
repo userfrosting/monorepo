@@ -24,9 +24,8 @@ use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Event\UserRedirectedAfterLoginEvent;
-use UserFrosting\Sprinkle\Account\Exceptions\AccountDisabledException;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountException;
-use UserFrosting\Sprinkle\Account\Exceptions\AccountNotVerifiedException;
+use UserFrosting\Sprinkle\Account\Exceptions\Contracts\LoginException;
 use UserFrosting\Sprinkle\Account\Exceptions\InvalidCredentialsException;
 use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
@@ -171,9 +170,8 @@ class LoginAction
 
             // Rethrow as InvalidCredentialsException not give away the actual
             // exception to the end user for security. We only allows
-            // AccountDisabledException or AccountNotVerifiedException to be
-            // thrown to the end user.
-            if ($e instanceof AccountDisabledException || $e instanceof AccountNotVerifiedException) {
+            // LoginException to be thrown to the end user.
+            if ($e instanceof LoginException) {
                 throw $e;
             }
 

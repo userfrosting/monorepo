@@ -14,27 +14,27 @@ namespace UserFrosting\Sprinkle\Admin\Controller\User;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Views\Twig;
+use UserFrosting\Config\Config;
 use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Mail\PasswordResetEmail;
+use UserFrosting\Sprinkle\Core\Mail\Mailer;
 
 /**
- * Processes the request to send a user a password reset email.
+ * Processes an admin request to reset a user password.
  *
- * Processes the request from the user update form, checking that:
- * 1. The target user's new email address, if specified, is not already in use;
- * 2. The logged-in user has the necessary permissions to update the posted field(s);
- * 3. We're not trying to disable the master account;
- * 4. The submitted data is valid.
- * This route requires authentication.
+ * Handles an admin request to revoke a user's password. This action will require
+ * the user to reset their password using the "reset password" feature upon their
+ * next login. This route requires authentication.
  *
+ * Middleware: UserInjector, AuthGuard, NoCache
+ * Route: /api/users/u/{user_name}/password-reset
+ * Route Name: api.users.password-reset
  * Request type: POST
  */
-
-// TODO : Replace this email
-class UserPasswordAction
+class UserPasswordResetAction
 {
     /**
      * Inject dependencies.
@@ -42,7 +42,9 @@ class UserPasswordAction
     public function __construct(
         protected Translator $translator,
         protected Authenticator $authenticator,
-        protected PasswordResetEmail $passwordEmail,
+        protected Twig $twig,
+        protected Config $config,
+        protected Mailer $mailer,
     ) {
     }
 
@@ -57,9 +59,7 @@ class UserPasswordAction
     {
         $this->handle($user);
         $payload = json_encode([
-            'message' => $this->translator->translate('USER.ADMIN.PASSWORD_RESET', [
-                'email' => $user->email,
-            ]),
+            'message' => $this->translator->translate('USER.ADMIN.PASSWORD_RESET_SUCCESS', $user->toArray()),
         ], JSON_THROW_ON_ERROR);
         $response->getBody()->write($payload);
 
@@ -73,11 +73,8 @@ class UserPasswordAction
      */
     protected function handle(UserInterface $user): void
     {
-        // Access-controlled page based on the user.
         $this->validateAccess($user);
-
-        // Send password reset email.
-        $this->passwordEmail->send($user, 'mail/password-reset.html.twig');
+        $this->expireUserPassword($user);
     }
 
     /**
@@ -90,5 +87,18 @@ class UserPasswordAction
         if (!$this->authenticator->checkAccess('update_user_field')) {
             throw new ForbiddenException();
         }
+    }
+
+    /**
+     * Invalidate the user's password by setting the password_last_set attribute
+     * to null. This forces the user to reset their password the next time they
+     * log in.
+     *
+     * @param UserInterface $user The user to reset the password for
+     */
+    protected function expireUserPassword(UserInterface $user): void
+    {
+        $user->password_last_set = null;
+        $user->save();
     }
 }

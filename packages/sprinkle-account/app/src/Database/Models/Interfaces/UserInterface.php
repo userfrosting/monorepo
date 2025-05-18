@@ -41,6 +41,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  * @property bool                               $flag_verified
  * @property bool                               $flag_enabled
  * @property string                             $password
+ * @property \Carbon\Carbon|null                $password_last_set
  * @property string                             $avatar
  * @property timestamp                          $created_at
  * @property timestamp                          $updated_at
@@ -157,6 +158,13 @@ interface UserInterface
      * @return bool
      */
     public function isMaster(): bool;
+
+    /**
+     * Returns whether or not this user's password is expired.
+     *
+     * @return bool
+     */
+    public function isPasswordExpired(): bool;
 
     /**
      * Get all activities for this user.

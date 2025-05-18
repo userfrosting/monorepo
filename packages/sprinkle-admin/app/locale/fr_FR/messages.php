@@ -143,8 +143,10 @@ return [
         2       => 'Utilisateurs',
 
         'ADMIN' => [
-            'CHANGE_PASSWORD'    => 'Changer le mot de passe',
-            'PASSWORD_RESET'     => 'Un lien de réinitialisation du mot de passe sera envoyé à <strong>{{email}}</strong>.',
+            'CHANGE_PASSWORD'        => 'Changer le mot de passe de l\'utilisateur',
+            'PASSWORD_RESET_SUCCESS' => 'Le mot de passer de <strong>{{full_name}}</strong> a été réinitialisé.',
+            'PASSWORD_RESET'         => 'Réinitialiser le mot de passe de l\'utilisateur',
+            'PASSWORD_RESET_CONFIRM' => 'Êtes-vous sûr de vouloir réinitialiser le mot de passe de <strong>{{full_name}}</strong> ? Son mot de passe actuel sera désactivé et il devra le réinitialiser via la fonctionnalité « Réinitialiser le mot de passe » lors de sa prochaine connexion.',
         ],
         'ACTIVATE'         => 'Autoriser l\'utilisateur',
         'ACTIVATE_CONFIRM' => 'Êtes-vous sûr de vouloir activer <strong>{{full_name}} ({{user_name}})</strong> ?',

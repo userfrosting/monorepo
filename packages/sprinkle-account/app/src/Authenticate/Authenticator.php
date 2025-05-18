@@ -34,6 +34,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\AccountNotVerifiedException;
 use UserFrosting\Sprinkle\Account\Exceptions\AuthCompromisedException;
 use UserFrosting\Sprinkle\Account\Exceptions\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Exceptions\InvalidCredentialsException;
+use UserFrosting\Sprinkle\Account\Exceptions\PasswordExpiredException;
 use UserFrosting\Sprinkle\Account\Helpers\DynamicUserModel;
 use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 
@@ -111,6 +112,14 @@ class Authenticator
         // but lets not give away the combination in case of someone bruteforcing
         if (!$user->comparePassword($password)) {
             throw new InvalidCredentialsException();
+        }
+
+        // If the password is expired, throw exception
+        // This check is intentionally placed here instead of in
+        // validateUserAccount(), so that the exception is thrown only after
+        // the password has been successfully validated.
+        if ($user->isPasswordExpired()) {
+            throw new PasswordExpiredException();
         }
 
         // Dispatch event. Listeners can throw exception to stop authentication
@@ -457,7 +466,7 @@ class Authenticator
     {
         // Check that the user has a password set (so, rule out newly created accounts without a password)
         if ($user->password === '') {
-            throw new AccountInvalidException();
+            throw new PasswordExpiredException();
         }
 
         // Check that the user's account is enabled

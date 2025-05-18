@@ -186,7 +186,7 @@ describe('PageForgotPassword.vue', () => {
 
         // Make sure the current step is set to 3 (done step)
         expect(wrapperVm.currentStep).toBe(4)
-        expect(wrapper.text()).toContain('SUCCESS PASSWORD.FORGOT.SUCCESS')
+        expect(wrapper.text()).toContain('SUCCESS PASSWORD.RESET.SUCCESS')
     })
 
     test('third step handles api errors', async () => {

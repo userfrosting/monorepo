@@ -30,8 +30,8 @@ export default [
             guest: {
                 redirect: { name: 'home' }
             },
-            title: 'PASSWORD.FORGOT', // Get a new password / Obtenir un nouveau mot de passe
-            description: 'PASSWORD.FORGOT.PAGE'
+            title: 'PASSWORD.RESET',
+            description: 'PASSWORD.RESET.PAGE'
         },
         component: () => import('../views/ForgotPassword.vue')
     },

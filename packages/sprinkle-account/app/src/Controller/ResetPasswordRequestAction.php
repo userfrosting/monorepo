@@ -24,7 +24,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  * Route Name: account.forgotPassword.request
  * Request type: POST
  */
-class ForgetPasswordRequestAction extends VerificationRequestAbstract
+class ResetPasswordRequestAction extends VerificationRequestAbstract
 {
     protected function getSchemaName(): string
     {
@@ -38,6 +38,6 @@ class ForgetPasswordRequestAction extends VerificationRequestAbstract
 
     protected function getMessage(): string
     {
-        return 'PASSWORD.FORGOT.REQUEST_SENT';
+        return 'PASSWORD.RESET.REQUEST_SENT';
     }
 }

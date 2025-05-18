@@ -65,6 +65,10 @@ return [
                 'TITLE'       => 'Connexion requise',
                 'DESCRIPTION' => 'Veuillez vous connecter pour continuer',
             ],
+            'PASSWORD_EXPIRED' => [
+                'TITLE'       => 'Mot de passe expiré',
+                'DESCRIPTION' => 'Votre mot de passe a expiré. Veuillez réinitialiser votre mot de passe.',
+            ],
             'PASSWORD_RESET' => [
                 'TITLE'       => 'Jeton de réinitialisation de mot de passe invalide',
                 'DESCRIPTION' => 'Cette demande de réinitialisation de mot de passe est introuvable ou a expiré.',
@@ -155,16 +159,6 @@ return [
         'CURRENT'         => 'Mot de passe actuel',
         'CURRENT_EXPLAIN' => 'Vous devez confirmer votre mot de passe actuel pour apporter des modifications',
 
-        'FORGOT'          => [
-            '@TRANSLATION'      => 'Mot de passe oublié?',
-            'EMAIL'             => 'Veuillez saisir l\'adresse e-mail que vous avez utilisée pour vous inscrire. Un lien avec les instructions pour réinitialiser votre mot de passe vous sera envoyé par email.',
-            'INVALID'           => 'Cette demande de réinitialisation de mot de passe n\'a pas pu être trouvée ou a expiré. Veuillez réessayer de soumettre votre demande.',
-            'PAGE'              => 'Utilisez ce formulaire pour réinitialiser votre mot de passe si vous n\'avez pas accès à votre compte.',
-            'QUESTION'          => 'Mot de passe oublié ?',
-            'REQUEST_SENT'      => 'Si l\'adresse e-mail <strong>{{email}}</strong> correspond à un compte dans notre système, un code de vérification sera envoyé à <strong>{{email}}</strong>.',
-            'SUCCESS'           => 'Votre nouveau mot de passe est défini. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.',
-        ],
-
         'INVALID'           => 'Le mot de passe actuel ne correspond pas à celui que nous avons au dossier',
 
         'NEW'               => [
@@ -175,10 +169,12 @@ return [
 
         'RESET'             => [
             '@TRANSLATION' => 'Réinitialiser le mot de passe',
-            'CHOOSE'       => 'Veuillez choisir un nouveau mot de passe pour continuer.',
-            // 'CONFIRM'      => 'Êtes-vous sûr de vouloir envoyer à <strong>{{full_name}} ({{user_name}})</strong> un lien qui leur permettra de réinitialiser leur mot de passe ?',
-            // 'PAGE'         => 'Choisissez un nouveau mot de passe pour votre compte.',
-            'SEND'         => 'Définir un nouveau mot de passe',
+            'EMAIL'        => 'Veuillez saisir l\'adresse e-mail que vous avez utilisée pour vous inscrire. Un lien avec les instructions pour réinitialiser votre mot de passe vous sera envoyé par email.',
+            'INVALID'      => 'Cette demande de réinitialisation de mot de passe n\'a pas pu être trouvée ou a expiré. Veuillez réessayer de soumettre votre demande.',
+            'PAGE'         => 'Utilisez ce formulaire pour réinitialiser votre mot de passe si vous n\'avez pas accès à votre compte.',
+            'YOURS'        => 'Mot de passe oublié ?',
+            'REQUEST_SENT' => 'Si l\'adresse e-mail <strong>{{email}}</strong> correspond à un compte dans notre système, un code de vérification sera envoyé à <strong>{{email}}</strong>.',
+            'SUCCESS'      => 'Votre nouveau mot de passe est défini. Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.',
         ],
 
         'UPDATED' => 'Mot de passe du compte mis à jour',

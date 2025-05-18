@@ -21,7 +21,7 @@ use UserFrosting\Sprinkle\Admin\Controller\User\UserApi;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserCreateAction;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserDeleteAction;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserEditAction;
-use UserFrosting\Sprinkle\Admin\Controller\User\UserPasswordAction;
+use UserFrosting\Sprinkle\Admin\Controller\User\UserPasswordResetAction;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserPermissionSprunje;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserRoleSprunje;
 use UserFrosting\Sprinkle\Admin\Controller\User\UsersSprunjeAction;
@@ -53,7 +53,7 @@ class UsersRoutes implements RouteDefinitionInterface
                   ->add(UserInjector::class);
             $group->post('', UserCreateAction::class)
                   ->setName('api.users.create');
-            $group->post('/u/{user_name}/password-reset', UserPasswordAction::class)
+            $group->post('/u/{user_name}/password-reset', UserPasswordResetAction::class)
                   ->add(UserInjector::class)
                   ->setName('api.users.password-reset');
             $group->put('/u/{user_name}', UserEditAction::class)

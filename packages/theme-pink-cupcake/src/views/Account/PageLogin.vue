@@ -11,7 +11,7 @@ usePageMeta().hideTitle = true
         <ul class="uk-list">
             <li>
                 <router-link :to="{ name: 'account.forgot-password' }">
-                    {{ $t('PASSWORD.FORGOT.QUESTION') }}
+                    {{ $t('PASSWORD.RESET') }}
                 </router-link>
             </li>
             <li v-if="useConfigStore().get('site.registration.require_email_verification')">

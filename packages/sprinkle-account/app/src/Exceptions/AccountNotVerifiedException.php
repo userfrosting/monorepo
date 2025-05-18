@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Exceptions;
 
+use UserFrosting\Sprinkle\Account\Exceptions\Contracts\LoginException;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
  * Unverified account exception. Used when an account is required to complete email verification, but hasn't done so yet.
  */
-final class AccountNotVerifiedException extends AccountException
+final class AccountNotVerifiedException extends AccountException implements LoginException
 {
     protected string $title = 'ACCOUNT.EXCEPTION.UNVERIFIED.TITLE';
     protected string|UserMessage $description = 'ACCOUNT.EXCEPTION.UNVERIFIED.DESCRIPTION';

@@ -78,6 +78,7 @@ class User extends Model implements UserInterface
      */
     protected $hidden = [
         'password',
+        'password_last_set',
     ];
 
     /**
@@ -85,6 +86,7 @@ class User extends Model implements UserInterface
      */
     protected $dates = [
         'deleted_at',
+        'password_last_set',
     ];
 
     /**
@@ -202,6 +204,7 @@ class User extends Model implements UserInterface
         }
 
         $this->attributes['password'] = $value;
+        $this->attributes['password_last_set'] = Carbon::now();
     }
 
     /**
@@ -319,6 +322,36 @@ class User extends Model implements UserInterface
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
         return $this->id == $masterId;
+    }
+
+    /**
+     * Returns whether or not this user's password is expired.
+     *
+     * @return bool
+     */
+    public function isPasswordExpired(): bool
+    {
+        // If the password is empty, it is expired
+        if ($this->password === '') {
+            return true;
+        }
+
+        // If the password was never set, it is expired
+        if ($this->password_last_set === null) {
+            return true;
+        }
+
+        // Determine if the user's password has expired based on the configured
+        // expiration timeout and the date the password was last set.
+        /** @var Config */
+        $config = static::$ci?->get(Config::class);
+        $expirationTimeout = $config->getInt('user.password.expiration.timeout', 0);
+
+        if ($expirationTimeout <= 0) {
+            return false;
+        }
+
+        return $this->password_last_set->addDays($expirationTimeout) < Carbon::now();
     }
 
     /**

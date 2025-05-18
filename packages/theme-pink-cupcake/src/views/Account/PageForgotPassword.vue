@@ -88,7 +88,7 @@ function reset() {
                 {{ $t('STEP_X', { step: Steps.Request }) }} -
                 {{ $t('ACCOUNT.VERIFICATION.CODE.IDENTIFY') }}
             </h3>
-            <p class="uk-text-meta">{{ $t('PASSWORD.FORGOT.EMAIL') }}</p>
+            <p class="uk-text-meta">{{ $t('PASSWORD.RESET.EMAIL') }}</p>
             <UFAlert v-if="apiError" :alert="apiError" />
             <FormEmailVerificationRequest
                 v-model="email"
@@ -135,7 +135,7 @@ function reset() {
                 :alert="{
                     style: Severity.Success,
                     title: $t('SUCCESS'),
-                    description: $t('PASSWORD.FORGOT.SUCCESS')
+                    description: $t('PASSWORD.RESET.SUCCESS')
                 }" />
             <div class="uk-text-center">
                 <router-link

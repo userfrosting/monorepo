@@ -37,6 +37,22 @@ return [
         'auth' => false,
     ],
 
+    /**
+     * ----------------------------------------------------------------------
+     * Configuration for the 'password' feature
+     * ----------------------------------------------------------------------
+     * Expiration of passwords is disabled by default. If you want to
+     * enable it, set 'enabled' to true and set the 'timeout' value to
+     * the number of days before the password expires. The user will be
+     * prompted to change their password when they log in after the
+     * timeout period has expired.
+     */
+    'password' => [
+        'expiration' => [
+            'timeout' => 0, // In days, zero means no expiration
+        ],
+    ],
+
     /*
     * ----------------------------------------------------------------------
     * Configuration for the 'password reset' feature

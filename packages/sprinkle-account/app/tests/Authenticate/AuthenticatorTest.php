@@ -26,12 +26,12 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountDisabledException;
-use UserFrosting\Sprinkle\Account\Exceptions\AccountInvalidException;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountNotFoundException;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountNotVerifiedException;
 use UserFrosting\Sprinkle\Account\Exceptions\AuthCompromisedException;
 use UserFrosting\Sprinkle\Account\Exceptions\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Exceptions\InvalidCredentialsException;
+use UserFrosting\Sprinkle\Account\Exceptions\PasswordExpiredException;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
@@ -97,7 +97,7 @@ class AuthenticatorTest extends AccountTestCase
         /** @var Authenticator */
         $authenticator = $this->ci->get(Authenticator::class);
 
-        $this->expectException(AccountInvalidException::class);
+        $this->expectException(PasswordExpiredException::class);
         $authenticator->authenticate('id', $user->id, '');
     }
 

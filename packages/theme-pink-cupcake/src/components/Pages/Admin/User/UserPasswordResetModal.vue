@@ -39,7 +39,10 @@ const confirmed = () => {
         href="#"
         v-bind="$attrs"
         :uk-toggle="'target: #confirm-user-reset-password-' + props.user.user_name">
-        <slot><font-awesome-icon icon="key" fixed-width /> {{ $t('PASSWORD.RESET') }}</slot>
+        <slot>
+            <font-awesome-icon icon="key" fixed-width />
+            {{ $t('USER.ADMIN.PASSWORD_RESET') }}
+        </slot>
     </a>
 
     <!-- This is the modal -->
@@ -52,7 +55,7 @@ const confirmed = () => {
         :rejectIcon="null"
         :acceptSeverity="Severity.Success">
         <template #prompt>
-            <div v-html="$t('PASSWORD.RESET.CONFIRM', user)"></div>
+            <div v-html="$t('USER.ADMIN.PASSWORD_RESET_CONFIRM', user)"></div>
         </template>
     </UFModalConfirmation>
 </template>
