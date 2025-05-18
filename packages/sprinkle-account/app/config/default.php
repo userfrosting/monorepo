@@ -55,19 +55,6 @@ return [
 
     /*
     * ----------------------------------------------------------------------
-    * Configuration for the 'password reset' feature
-    * ----------------------------------------------------------------------
-    */
-    'password_reset' => [
-        'algorithm'  => 'sha512',
-        'timeouts'   => [
-            'create' => 86400,
-            'reset'  => 10800,
-        ],
-    ],
-
-    /*
-    * ----------------------------------------------------------------------
     * RememberMe Package Settings
     * ----------------------------------------------------------------------
     * See https://github.com/gbirke/rememberme for an explanation of these settings

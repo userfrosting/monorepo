@@ -180,7 +180,7 @@ class RegisterAction
             // Send activation email
             if ($this->requireEmailVerification() === true) {
                 try {
-                    $this->emailVerification->generate($user, 600);
+                    $this->emailVerification->generate($user);
                 } catch (PHPMailerException $e) {
                     // Use abstract message for security reasons - We don't want to show email is not working
                     $exception = new RegistrationException($e->getMessage());

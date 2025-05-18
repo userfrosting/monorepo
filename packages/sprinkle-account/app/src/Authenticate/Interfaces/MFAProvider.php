@@ -39,7 +39,7 @@ interface MFAProvider
      * @param UserInterface $user    The user to create the OTP for.
      * @param int|null      $timeout The lifetime of the OTP in seconds, or null to use the provider default value.
      */
-    public function generate(UserInterface $user, ?int $timeout): void;
+    public function generate(UserInterface $user, ?int $timeout = null): void;
 
     /**
      * Validate the given OTP code for the given user.

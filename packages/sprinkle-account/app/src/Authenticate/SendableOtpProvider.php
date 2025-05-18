@@ -39,7 +39,7 @@ abstract class SendableOtpProvider implements MFAProvider
     /**
      * {@inheritDoc}
      */
-    public function generate(UserInterface $user, ?int $timeout): void
+    public function generate(UserInterface $user, ?int $timeout = null): void
     {
         // Remove any expired or existing verifications for this user
         $this->model->forUser($user)->delete();

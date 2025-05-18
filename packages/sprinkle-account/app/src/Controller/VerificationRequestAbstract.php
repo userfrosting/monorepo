@@ -117,9 +117,7 @@ abstract class VerificationRequestAbstract
             // exists but is already verified, we act as if the operation
             // succeeded. This prevents potential account enumeration attacks.
             if ($user !== null && $this->validateUser($user) === true) {
-                $this->emailVerification->generate($user, 600);
-                // TODO : Set the timeout in the config
-                // TODO : Catch PHPMailerException
+                $this->emailVerification->generate($user);
             }
         });
 
