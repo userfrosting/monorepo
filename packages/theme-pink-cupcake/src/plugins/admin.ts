@@ -1,7 +1,3 @@
-/**
- * Register every admin components & views globally
- * See : https://vuejs.org/guide/components/registration
- */
 import type { App } from 'vue'
 import {
     UFAdminDashboardPage,
@@ -38,6 +34,10 @@ import {
     UserRoles
 } from '../components/Pages/Admin'
 
+/**
+ * Register every admin components & views globally
+ * See : https://vuejs.org/guide/components/registration
+ */
 export default {
     install: (app: App) => {
         app.component('UFAdminDashboardPage', UFAdminDashboardPage)

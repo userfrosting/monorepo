@@ -28,6 +28,12 @@
 @notification-message-warning-border: @global-warning-background;
 @notification-message-warning-icon-color: @global-warning-background;
 
+// Info
+@notification-message-info-color: @global-color;
+@notification-message-info-background: @global-info-background-lighten;
+@notification-message-info-border: @global-info-background;
+@notification-message-info-icon-color: @global-info-background;
+
 // Undefined - Default style
 @notification-message-color: @global-color;
 @notification-message-background: @global-muted-background;
@@ -35,10 +41,12 @@
 @notification-message-icon-color: @global-secondary-background;
 
 // Icons
-@notification-icon-primary: '\f05a';
+@notification-icon: '\f0f3';
+@notification-icon-primary: '\f0f3';
 @notification-icon-success: '\f058';
 @notification-icon-danger: '\f057';
 @notification-icon-warning: '\f06a';
+@notification-icon-info: '\f05a';
 @notification-icon-left: 10px;
 @notification-icon-text-offset: 35px;
 
@@ -80,6 +88,14 @@
     border-left: @notification-message-border-width solid @notification-message-warning-border;
 }
 
+// N.B.: Info doesn't exist by default in UIkit, so we create it instead of
+// using a hook.
+.uk-notification-message-info {
+    color: @notification-message-info-color;
+    background: @notification-message-info-background;
+    border-left: @notification-message-border-width solid @notification-message-info-border;
+}
+
 // Apply "undefined" message style
 .hook-notification-message() {
     background: @notification-message-background;
@@ -100,6 +116,8 @@
         left: @notification-icon-left;
         line-height: @notification-message-line-height;
         -webkit-font-smoothing: antialiased;
+        content: @notification-icon;
+        color: @notification-message-icon-color;
     }
 
     .uk-notification-message-primary::before {
@@ -120,5 +138,10 @@
     .uk-notification-message-warning::before {
         content: @notification-icon-warning;
         color: @notification-message-warning-icon-color;
+    }
+
+    .uk-notification-message-info::before {
+        content: @notification-icon-info;
+        color: @notification-message-info-icon-color;
     }
 }

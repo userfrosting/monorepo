@@ -1,12 +1,4 @@
-/**
- * Register every admin components & views globally
- * See : https://vuejs.org/guide/components/registration
- */
 import type { App } from 'vue'
-
-/**
- * Register every Account view components globally
- */
 import {
     PageLogin,
     PageRegister,
@@ -17,10 +9,6 @@ import {
     PageUserSettingsPassword,
     PageUserSettingsEmail
 } from '../views/Account'
-
-/**
- * Register every Account Page components globally
- */
 import {
     FormEmailVerificationRequest,
     FormForgotPasswordSet,
@@ -32,6 +20,10 @@ import {
     FormUserProfile
 } from '../components/Pages/Account'
 
+/**
+ * Register every Account view components globally
+ * See : https://vuejs.org/guide/components/registration
+ */
 export default {
     install: (app: App) => {
         app.component('UFFormEmailVerificationRequest', FormEmailVerificationRequest)

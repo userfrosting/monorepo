@@ -1,10 +1,10 @@
-/**
- * Register every admin components & views globally
- * See : https://vuejs.org/guide/components/registration
- */
 import type { App } from 'vue'
 import { ErrorPage } from '../views/Core'
 
+/**
+ * Register every Core components & views globally
+ * See : https://vuejs.org/guide/components/registration
+ */
 export default {
     install: (app: App) => {
         app.component('UFErrorPage', ErrorPage)

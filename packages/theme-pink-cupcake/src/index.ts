@@ -8,6 +8,7 @@ import AdminSprinkle from './plugins/admin'
 import AccountSprinkle from './plugins/account'
 import CoreSprinkle from './plugins/core'
 import FontAwesome from './plugins/font-awesome'
+import UiKitNotifications from './plugins/notifications'
 
 /**
  * Import UIkit and its icons.
@@ -29,5 +30,6 @@ export default {
         app.use(AccountSprinkle) // TODO : Add option to disable this or load on demand
         app.use(CoreSprinkle)
         app.use(FontAwesome)
+        app.use(UiKitNotifications)
     }
 }

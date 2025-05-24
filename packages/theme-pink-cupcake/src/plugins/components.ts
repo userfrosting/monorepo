@@ -1,7 +1,3 @@
-/**
- * Register every component globally
- * See : https://vuejs.org/guide/components/registration
- */
 import type { App } from 'vue'
 import {
     UFAlert,
@@ -35,6 +31,10 @@ import {
     SprunjeTable
 } from '../components'
 
+/**
+ * Register every component globally
+ * See : https://vuejs.org/guide/components/registration
+ */
 export default {
     install: (app: App) => {
         app.component('UFAlert', UFAlert)
