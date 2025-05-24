@@ -1,11 +1,11 @@
 import { describe, expect, beforeEach, afterEach, test, vi } from 'vitest'
 import axios from 'axios'
-import { useConfigStore } from '../../stores/config'
+import { useConfigStore } from '../../stores/useConfigStore'
 import { useCsrf } from '../../composables/useCsrf'
 import { nextTick } from 'vue'
 
 // Mock the config store
-vi.mock('../../stores/config')
+vi.mock('../../stores/useConfigStore')
 const mockUseConfigStore = {
     get: vi.fn()
 }

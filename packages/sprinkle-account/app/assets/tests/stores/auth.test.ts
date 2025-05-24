@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import axios from 'axios'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
-import { useAuthStore } from '../../stores/auth'
+import { useAuthStore } from '../../stores/useAuthStore'
 import type { LoginRequest, LoginResponse, UserDataInterface } from 'app/assets/interfaces'
 
 const testUser: UserDataInterface = {

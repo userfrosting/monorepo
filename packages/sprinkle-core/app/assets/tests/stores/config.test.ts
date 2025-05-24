@@ -1,7 +1,7 @@
 import { describe, expect, beforeEach, test, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import axios from 'axios'
-import { useConfigStore } from '../../stores/config'
+import { useConfigStore } from '../../stores/useConfigStore'
 
 const testConfig = {
     name: 'Test Config',

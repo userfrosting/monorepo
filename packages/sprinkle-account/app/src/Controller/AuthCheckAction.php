@@ -45,6 +45,7 @@ class AuthCheckAction
 
         // Return 401 (Unauthorized) if user is not authenticated
         if ($user === null) {
+            // TODO : Throw an exception instead
             return $response->withStatus(401);
         }
 

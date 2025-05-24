@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from 'vitest'
 import { createApp } from 'vue'
-import { useConfigStore } from '../stores/config'
+import { useConfigStore } from '../stores/useConfigStore'
 import plugin from '..'
-import * as Config from '../stores/config'
+import * as Config from '../stores/useConfigStore'
 import * as Translator from '../stores/useTranslator'
 
 const mockConfigStore = {

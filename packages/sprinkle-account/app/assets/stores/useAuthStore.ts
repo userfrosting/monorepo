@@ -33,6 +33,8 @@ export const useAuthStore = defineStore('auth', {
         },
         unsetUser(): void {
             this.user = null
+
+            // TODO : The locale and CSRF should probably be reset to the default values here
         },
         async login(form: LoginRequest) {
             return axios
@@ -73,6 +75,7 @@ export const useAuthStore = defineStore('auth', {
                     // Test status is 401 and unset user, otherwise, throw error
                     if (err.response.status === 401) {
                         this.unsetUser()
+                        // TODO : See above. The locale and CSRF should won't be reset to the default values here
                     } else {
                         const error: AlertInterface = {
                             ...{

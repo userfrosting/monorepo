@@ -1,10 +1,10 @@
 import { describe, expect, test, vi } from 'vitest'
 import { createApp } from 'vue'
-import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '../stores/useAuthStore'
 import { useAuthGuard } from '../guards/authGuard'
 import { useRouter } from 'vue-router'
 import plugin from '..'
-import * as Auth from '../stores/auth'
+import * as Auth from '../stores/useAuthStore'
 import * as AuthGuard from '../guards/authGuard'
 
 const mockAuthStore = {
