@@ -8,6 +8,7 @@ import type {
     ValidateCodeRequest,
     ValidateCodeResponse
 } from '../interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 // TODO : Add validation
 // 'schema://requests/account-email.yaml'
@@ -24,11 +25,8 @@ export function useEmailVerificationApi() {
      * verification code by email to the user.
      *
      * @param email The user email to send the verification code to.
-     *
-     * @return {Promise} - The request success message given by the API. Throws an error
-     * (AlertInterface) if the request failed.
      */
-    async function requestVerificationCode(email: string): Promise<string> {
+    async function requestVerificationCode(email: string) {
         apiLoading.value = true
         apiError.value = null
         const data: ResendVerificationRequest = {
@@ -37,20 +35,11 @@ export function useEmailVerificationApi() {
 
         return axios
             .post<ResendVerificationResponse>('/account/verify/request', data)
-            .then((response): string => {
-                return response.data.message
+            .then((response): ResendVerificationResponse => {
+                return response.data
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
-
-                throw apiError.value
+                apiError.value = err.response?.data ?? { description: err.message }
             })
             .finally(() => {
                 apiLoading.value = false
@@ -63,14 +52,8 @@ export function useEmailVerificationApi() {
      *
      * @param email string - The email to validate.
      * @param code string - The verification code to validate.
-     *
-     * @return {Promise} - A success message returned by the API. Throws an error
-     * (AlertInterface) if the request failed.
      */
-    async function submitVerificationCode(
-        email: string,
-        code: string
-    ): Promise<ValidateCodeResponse> {
+    async function submitVerificationCode(email: string, code: string) {
         apiLoading.value = true
         apiError.value = null
         const data: ValidateCodeRequest = {
@@ -81,21 +64,15 @@ export function useEmailVerificationApi() {
         return axios
             .post<ValidateCodeResponse>('/account/verify/email', data)
             .then((response): ValidateCodeResponse => {
-                return {
-                    message: response.data.message
-                }
+                useAlertsStore().push({
+                    ...{ style: Severity.Success },
+                    ...response.data
+                })
+
+                return response.data
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
-
-                throw apiError.value
+                apiError.value = err.response?.data ?? { description: err.message }
             })
             .finally(() => {
                 apiLoading.value = false

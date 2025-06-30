@@ -26,6 +26,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Abstract class for handling verification requests. Can be used to send
@@ -73,10 +74,8 @@ abstract class VerificationRequestAbstract
     public function __invoke(Request $request, Response $response): Response
     {
         $message = $this->handle($request);
-        $payload = json_encode([
-            'message' => $message,
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

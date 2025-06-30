@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
+import { type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import type { GroupsSprunjerResponse } from '../interfaces'
 import type { GroupInterface } from '@userfrosting/sprinkle-account/interfaces'
 
@@ -33,14 +33,7 @@ export function useGroupsApi() {
                 groups.value = response.data.rows
             })
             .catch((err) => {
-                error.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                error.value = err.response.data
             })
             .finally(() => {
                 loading.value = false

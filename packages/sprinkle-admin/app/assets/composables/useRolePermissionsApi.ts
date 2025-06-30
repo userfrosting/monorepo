@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
+import type { ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
 import type { PermissionInterface } from '@userfrosting/sprinkle-account/interfaces'
 import type { PermissionSprunjeResponse, RolePermissionsSprunjeResponse } from '../interfaces'
 
@@ -17,7 +17,7 @@ import type { PermissionSprunjeResponse, RolePermissionsSprunjeResponse } from '
  */
 export function useRolePermissionsApi() {
     const loading = ref(false)
-    const error = ref<AlertInterface | null>()
+    const error = ref<ApiErrorResponse | null>()
     const selected = ref<Number[]>([])
     const permissions = ref<PermissionInterface[]>([])
 
@@ -32,13 +32,7 @@ export function useRolePermissionsApi() {
             })
             .catch((err) => {
                 loading.value = false
-                error.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger
-                    },
-                    ...err.response.data
-                }
+                error.value = err.response.data
             })
     }
 
@@ -62,13 +56,7 @@ export function useRolePermissionsApi() {
                 })
             })
             .catch((err) => {
-                error.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger
-                    },
-                    ...err.response.data
-                }
+                error.value = err.response.data
             })
             .finally(() => {
                 loading.value = false

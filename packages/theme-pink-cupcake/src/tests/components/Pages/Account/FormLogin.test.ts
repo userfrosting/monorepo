@@ -1,7 +1,7 @@
 import { describe, test, afterEach, expect, vi } from 'vitest'
+import { ref } from 'vue'
 import { mount, config } from '@vue/test-utils'
-import UIkit from 'uikit'
-import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
+import { useLoginApi } from '@userfrosting/sprinkle-account/composables'
 import type { LoginRequest } from '@userfrosting/sprinkle-account/interfaces'
 import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import FormLogin from '../../../../components/Pages/Account/FormLogin.vue'
@@ -11,24 +11,20 @@ import UFAlert from '../../../../components/UFAlert.vue'
 config.global.stubs['UFAlert'] = UFAlert
 config.global.stubs['FontAwesomeIcon'] = { template: '<span></span>' }
 
-// Mock the auth store
-vi.mock('@userfrosting/sprinkle-account/stores')
-const mockUseAuthStore = {
-    login: vi.fn()
-}
-
 // Login form data
 const form: LoginRequest = {
     user_name: 'john.doe',
-    password: 'password'
+    password: 'password',
+    rememberme: true
 }
 
-// UiKit notification data
-const uikitNotification = {
-    message: 'Welcome back John Doe!',
-    status: 'primary',
-    pos: 'top-right',
-    timeout: 4000
+// Mock the auth store
+vi.mock('@userfrosting/sprinkle-account/composables')
+const mockUseLoginApi = {
+    submitLogin: vi.fn().mockResolvedValue({}),
+    defaultFormData: vi.fn().mockReturnValue(form),
+    apiError: ref<AlertInterface | null>(null),
+    apiLoading: ref(false)
 }
 
 describe('FormLogin.vue', () => {
@@ -36,69 +32,54 @@ describe('FormLogin.vue', () => {
         vi.clearAllMocks()
     })
 
-    test('renders correctly', () => {
+    test('handles successful login', async () => {
+        vi.mocked(useLoginApi).mockReturnValue(mockUseLoginApi as any)
+
         const wrapper = mount(FormLogin)
         expect(wrapper.exists()).toBe(true)
-    })
-
-    test('handles successful login', async () => {
-        mockUseAuthStore.login.mockResolvedValueOnce({ message: 'Welcome back John Doe!' })
-        vi.mocked(useAuthStore).mockReturnValue(mockUseAuthStore as any)
-        vi.spyOn(UIkit, 'notification')
-
-        const wrapper = mount(FormLogin)
         await (wrapper.vm as any).sendLogin(form)
 
-        // Spy on the authStore & UIkit notification method
-        expect(useAuthStore).toHaveBeenCalled()
-        expect(mockUseAuthStore.login).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).toHaveBeenCalledWith(uikitNotification)
+        expect(useLoginApi).toHaveBeenCalled()
+        expect(mockUseLoginApi.submitLogin).toHaveBeenCalledTimes(1)
+        expect(wrapper.find('[data-test="error"]').exists()).toBe(false)
+        expect(wrapper.find('button[data-test="submit"]').attributes('disabled')).not.toBeDefined()
     })
 
-    test('handles login failure', async () => {
+    test('handles apiError', async () => {
         const error: AlertInterface = { title: 'Invalid credentials' }
-        mockUseAuthStore.login.mockRejectedValueOnce(error)
-        vi.mocked(useAuthStore).mockReturnValue(mockUseAuthStore as any)
-        vi.spyOn(UIkit, 'notification')
+        mockUseLoginApi.apiError.value = error
+        vi.mocked(useLoginApi).mockReturnValue(mockUseLoginApi as any)
 
         const wrapper = mount(FormLogin)
-        await (wrapper.vm as any).sendLogin(form)
 
-        // Spy on the authStore & UIkit notification method
-        expect(useAuthStore).toHaveBeenCalled()
-        expect(mockUseAuthStore.login).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).not.toHaveBeenCalled()
         expect(wrapper.find('[data-test="error"]').exists()).toBe(true)
         expect(wrapper.get('[data-test="error"]').text()).toMatch('Invalid credentials')
     })
 
-    test('manages loading state correctly', async () => {
-        mockUseAuthStore.login.mockResolvedValueOnce({ full_name: 'John Doe' })
-        vi.mocked(useAuthStore).mockReturnValue(mockUseAuthStore as any)
+    test('handles apiLoading', async () => {
+        mockUseLoginApi.apiLoading.value = true
+        vi.mocked(useLoginApi).mockReturnValue(mockUseLoginApi as any)
 
-        const wrapper = mount(FormLogin).vm as any
-        expect(wrapper.loading).toBe(false)
-        const sendLoginPromise = wrapper.sendLogin(form)
-        expect(wrapper.loading).toBe(true)
-        await sendLoginPromise
-        expect(wrapper.loading).toBe(false)
+        const wrapper = mount(FormLogin)
+
+        expect(wrapper.find('button[data-test="submit"]').attributes('disabled')).toBeDefined()
     })
 
     test('Handle login using the v-model', async () => {
-        mockUseAuthStore.login.mockResolvedValueOnce({ message: 'Welcome back John Doe!' })
-        vi.mocked(useAuthStore).mockReturnValue(mockUseAuthStore as any)
-        vi.spyOn(UIkit, 'notification')
+        vi.mocked(useLoginApi).mockReturnValue(mockUseLoginApi as any)
 
         const wrapper = mount(FormLogin)
-        wrapper.find('[data-test="username"]').setValue('john.doe')
-        wrapper.find('[data-test="password"]').setValue('password')
+        wrapper.find('[data-test="username"]').setValue('doe.john')
+        wrapper.find('[data-test="password"]').setValue('drowssap')
+        wrapper.find('[data-test="rememberme"]').setValue(false)
         await wrapper.find('form').trigger('submit')
 
-        // Spy on the authStore & UIkit notification method
-        expect(useAuthStore).toHaveBeenCalled()
-        expect(mockUseAuthStore.login).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).toHaveBeenCalledWith(uikitNotification)
+        expect(useLoginApi).toHaveBeenCalled()
+        expect(mockUseLoginApi.submitLogin).toHaveBeenCalledTimes(1)
+        expect(mockUseLoginApi.submitLogin).toHaveBeenCalledWith({
+            user_name: 'doe.john',
+            password: 'drowssap',
+            rememberme: false
+        })
     })
 })

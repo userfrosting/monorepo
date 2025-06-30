@@ -72,7 +72,8 @@ class UserPasswordActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => '<strong>' . $user->full_name . '</strong>\'s password has been reset.',
+            'title'       => '<strong>' . $user->full_name . '</strong>\'s password has been reset.',
+            'description' => '',
         ], $response);
     }
 }

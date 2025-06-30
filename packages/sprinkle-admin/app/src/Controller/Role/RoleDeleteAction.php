@@ -23,6 +23,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Admin\Exceptions\RoleException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
@@ -62,10 +63,13 @@ class RoleDeleteAction
     public function __invoke(RoleInterface $role, Response $response): Response
     {
         $this->handle($role);
-        $payload = json_encode([
-            'message' => $this->translator->translate('ROLE.DELETION_SUCCESSFUL', $role->toArray()),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Message
+        $message = $this->translator->translate('ROLE.DELETION_SUCCESSFUL', $role->toArray());
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

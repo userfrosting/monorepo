@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import UIkit from 'uikit'
 import { useRoleDeleteApi } from '@userfrosting/sprinkle-admin/composables'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
@@ -18,23 +17,10 @@ const emits = defineEmits(['deleted'])
 // Methods
 const deleteConfirmed = () => {
     deleteRole(props.role.slug)
-        .then((response) => {
+        .then(() => {
             emits('deleted')
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
         })
-        .catch((error) => {
-            UIkit.notification({
-                message: error.description,
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        .catch(() => {})
 }
 </script>
 

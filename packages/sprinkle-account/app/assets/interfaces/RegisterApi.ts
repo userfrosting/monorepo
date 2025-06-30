@@ -1,4 +1,4 @@
-import type { UserInterface } from './models/userInterface'
+import type { ApiResponse } from '@userfrosting/sprinkle-core/interfaces'
 
 /**
  * API Interfaces - What the API expects and what it returns
@@ -18,7 +18,4 @@ export interface RegisterRequest {
     spiderbro: string
 }
 
-export interface RegisterResponse {
-    user: UserInterface
-    message: string
-}
+export interface RegisterResponse extends ApiResponse {}

@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import type { UserEditRequest, UserEditResponse } from '../interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 // TODO : Add validation
 // 'schema://requests/user/edit-info.yaml'
@@ -19,21 +20,14 @@ export function useUserEditApi() {
         return axios
             .put<UserEditResponse>('/api/users/u/' + user_name, data)
             .then((response) => {
-                return {
-                    success: response.data.success,
-                    message: response.data.message,
-                    user: response.data.user
-                }
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                apiError.value = err.response.data
 
                 throw apiError.value
             })

@@ -1,6 +1,6 @@
 import { ref, toValue, watchEffect } from 'vue'
 import axios from 'axios'
-import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
+import { type ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
 import type { GroupResponse } from '../interfaces'
 
 /**
@@ -20,7 +20,7 @@ import type { GroupResponse } from '../interfaces'
  */
 export function useGroupApi(slug: any) {
     const loading = ref(false)
-    const error = ref<AlertInterface | null>()
+    const error = ref<ApiErrorResponse | null>()
     const group = ref<GroupResponse>({
         id: 0,
         name: '',
@@ -43,14 +43,7 @@ export function useGroupApi(slug: any) {
                 group.value = response.data
             })
             .catch((err) => {
-                error.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                error.value = err.response.data
             })
             .finally(() => {
                 loading.value = false

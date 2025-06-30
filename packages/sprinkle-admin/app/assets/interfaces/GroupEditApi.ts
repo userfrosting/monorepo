@@ -1,3 +1,5 @@
+import type { ApiResponse } from '@userfrosting/sprinkle-core/interfaces'
+
 /**
  * Interfaces - What the API expects and what it returns
  */
@@ -8,8 +10,4 @@ export interface GroupEditRequest {
     icon: string
 }
 
-export interface GroupEditResponse {
-    success: boolean
-    message: string
-    group: GroupEditRequest
-}
+export interface GroupEditResponse extends ApiResponse {}

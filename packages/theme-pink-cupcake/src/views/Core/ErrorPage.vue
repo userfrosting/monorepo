@@ -10,17 +10,17 @@ onMounted(() => {
 
 const props = defineProps({
     errorCode: {
-        type: String
+        type: [String, Number]
     }
 })
 
 const faIcon = computed(() => {
-    switch (props.errorCode) {
-        case '401':
+    switch (parseInt(props.errorCode as string)) {
+        case 401:
             return 'lock'
-        case '403':
+        case 403:
             return 'ban'
-        case '404':
+        case 404:
             return 'magnifying-glass'
         default:
             return 'triangle-exclamation'
@@ -28,13 +28,13 @@ const faIcon = computed(() => {
 })
 
 const title = computed(() => {
-    switch (props.errorCode) {
-        case '400':
-        case '401':
-        case '403':
-        case '404':
-        case '405':
-        case '410':
+    switch (parseInt(props.errorCode as string)) {
+        case 400:
+        case 401:
+        case 403:
+        case 404:
+        case 405:
+        case 410:
             return 'ERROR.' + props.errorCode + '.TITLE'
         default:
             return 'ERROR.TITLE'
@@ -42,13 +42,13 @@ const title = computed(() => {
 })
 
 const description = computed(() => {
-    switch (props.errorCode) {
-        case '400':
-        case '401':
-        case '403':
-        case '404':
-        case '405':
-        case '410':
+    switch (parseInt(props.errorCode as string)) {
+        case 400:
+        case 401:
+        case 403:
+        case 404:
+        case 405:
+        case 410:
             return 'ERROR.' + props.errorCode + '.DESCRIPTION'
         default:
             return 'ERROR.DESCRIPTION'

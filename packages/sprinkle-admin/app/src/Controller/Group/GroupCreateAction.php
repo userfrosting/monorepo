@@ -27,6 +27,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Admin\Exceptions\GroupException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
@@ -70,12 +71,11 @@ class GroupCreateAction
     {
         $this->validateAccess();
         $group = $this->handle($request)->toArray();
-        $payload = json_encode([
-            'success' => true,
-            'message' => $this->translator->translate('GROUP.CREATION_SUCCESSFUL', $group),
-            'group'   => $group,
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Write response
+        $message = $this->translator->translate('GROUP.CREATION_SUCCESSFUL', $group);
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

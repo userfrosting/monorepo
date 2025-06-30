@@ -28,6 +28,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Admin\Exceptions\GroupException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
@@ -72,12 +73,13 @@ class GroupEditAction
     public function __invoke(GroupInterface $group, Request $request, Response $response): Response
     {
         $group = $this->handle($group, $request);
-        $payload = json_encode([
-            'success' => true,
-            'message' => $this->translator->translate('GROUP.UPDATE', $group->toArray()),
-            'group'   => $group,
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Message
+        $message = $this->translator->translate('GROUP.UPDATE', $group->toArray());
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

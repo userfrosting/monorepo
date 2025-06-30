@@ -4,5 +4,12 @@
  * Generic API Response interface.
  */
 export interface ApiResponse {
-    message: string
+    title: string
+    description?: string
+}
+
+export interface ApiErrorResponse {
+    title: string
+    description: string
+    status: number
 }

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UIkit from 'uikit'
 import { ref } from 'vue'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import { useGroupCreateApi } from '@userfrosting/sprinkle-admin/composables'
 import type { GroupCreateRequest } from '@userfrosting/sprinkle-admin/interfaces'
 import GroupForm from './GroupForm.vue'
@@ -32,31 +31,22 @@ const emits = defineEmits(['saved'])
  */
 const submitForm = () => {
     submitGroupCreate(formData.value)
-        .then((response) => {
+        .then(() => {
             // Emit the saved event
             emits('saved')
 
             // Close the modal
             UIkit.modal('#modal-group-create').hide()
 
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
+            // Reset the form data
+            formData.value = {
+                slug: '',
+                name: '',
+                description: '',
+                icon: 'users'
+            }
         })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        .catch(() => {})
 }
 </script>
 

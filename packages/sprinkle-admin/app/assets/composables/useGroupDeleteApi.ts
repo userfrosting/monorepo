@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import type { GroupDeleteResponse } from '../interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 /**
  * API Composable
@@ -17,20 +18,15 @@ export function useGroupDeleteApi() {
         return axios
             .delete<GroupDeleteResponse>('/api/groups/g/' + slug)
             .then((response) => {
-                return {
-                    success: response.data.success,
-                    message: response.data.message
-                }
+                // Add the message to the alert stream
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                apiError.value = err.response.data
 
                 throw apiError.value
             })

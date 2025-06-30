@@ -27,6 +27,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\PasswordResetInvalidException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Sprinkle\Core\Util\RouteParserInterface;
 
 /**
@@ -87,10 +88,8 @@ class ForgetPasswordSetPasswordAction
     public function __invoke(Request $request, Response $response): Response
     {
         $this->handle($request);
-        $payload = json_encode([
-            'message' => $this->translator->translate('PASSWORD.UPDATED'),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+        $payload = new ApiResponse($this->translator->translate('PASSWORD.UPDATED'));
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

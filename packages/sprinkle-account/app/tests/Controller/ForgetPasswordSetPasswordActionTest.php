@@ -56,7 +56,8 @@ class ForgetPasswordSetPasswordActionTest extends AccountTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Account password updated'
+            'title'       => 'Account password updated',
+            'description' => '',
         ], $response);
     }
 

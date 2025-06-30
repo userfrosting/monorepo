@@ -5,6 +5,7 @@ import {
     type ApiResponse,
     Severity
 } from '@userfrosting/sprinkle-core/interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 export function useConfigCacheApi() {
     const loading = ref(false)
@@ -15,19 +16,16 @@ export function useConfigCacheApi() {
         return axios
             .post<ApiResponse>('/api/config/clear-cache')
             .then((response) => {
-                return response.data.message
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
+
+                return response.data
             })
             .catch((err) => {
-                error.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
-
-                throw error
+                error.value = err.response.data
             })
             .finally(() => {
                 loading.value = false

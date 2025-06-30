@@ -31,6 +31,7 @@ use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Handles a request from a guest user to verify an email using a verification
@@ -103,11 +104,13 @@ class EmailVerificationValidationAction
             throw new VerificationDisabledException();
         }
 
+        // Handle the request and perform the verification
         $this->handle($request);
-        $payload = json_encode([
-            'message' => $this->translator->translate('ACCOUNT.VERIFICATION.COMPLETE'),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Write response
+        $message = $this->translator->translate('ACCOUNT.VERIFICATION.COMPLETE');
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

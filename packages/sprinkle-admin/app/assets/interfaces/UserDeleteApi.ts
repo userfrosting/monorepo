@@ -1,4 +1,3 @@
-export interface UserDeleteResponse {
-    success: boolean
-    message: string
-}
+import type { ApiResponse } from '@userfrosting/sprinkle-core/interfaces'
+
+export interface UserDeleteResponse extends ApiResponse {}

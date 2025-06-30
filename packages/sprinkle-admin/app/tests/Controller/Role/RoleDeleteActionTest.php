@@ -101,7 +101,8 @@ class RoleDeleteActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Successfully deleted role <strong>' . $role->name . '</strong>',
+            'title'       => 'Successfully deleted role <strong>' . $role->name . '</strong>',
+            'description' => '',
         ], $response);
 
         // Make sure the user is deleted from the db by querying it

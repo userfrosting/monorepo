@@ -24,6 +24,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Admin\Exceptions\AccountNotFoundException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Processes the request to delete an existing user.
@@ -65,11 +66,13 @@ class UserDeleteAction
     public function __invoke(UserInterface $user, Response $response): Response
     {
         $this->handle($user);
-        $payload = json_encode([
-            'success' => true,
-            'message' => $this->translator->translate('DELETION_SUCCESSFUL', $user->toArray()),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Message
+        $message = $this->translator->translate('DELETION_SUCCESSFUL', $user->toArray());
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

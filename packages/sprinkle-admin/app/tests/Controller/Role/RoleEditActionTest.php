@@ -114,9 +114,8 @@ class RoleEditActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure(['message', 'role'], $response);
-        $this->assertJsonResponse('Details updated for role <strong>The Foo</strong>', $response, 'message');
-        $this->assertJsonResponse('The Foo', $response, 'role.name');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('Details updated for role <strong>The Foo</strong>', $response, 'title');
 
         // Test that the user was updated
         /** @var Role */
@@ -151,9 +150,8 @@ class RoleEditActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure(['message', 'role'], $response);
-        $this->assertJsonResponse('Details updated for role <strong>' . $role->name . '</strong>', $response, 'message');
-        $this->assertJsonResponse($role->slug, $response, 'role.slug');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('Details updated for role <strong>' . $role->name . '</strong>', $response, 'title');
     }
 
     public function testPostForFailedValidation(): void

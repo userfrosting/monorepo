@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import UIkit from 'uikit'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import { useUserEmailEditApi } from '@userfrosting/sprinkle-account/composables'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
 import type { EmailEditRequest } from '@userfrosting/sprinkle-account/interfaces'
@@ -30,32 +28,13 @@ const { submitEmailEdit } = useUserEmailEditApi()
  * Methods - Submit the form to the API and handle the response.
  */
 const submitForm = () => {
-    submitEmailEdit(formData.value)
-        .then((response) => {
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
+    submitEmailEdit(formData.value).then(() => {
+        // Reset form data
+        formData.value.passwordcheck = ''
 
-            // Reset form data
-            formData.value.passwordcheck = ''
-
-            // Refresh the user
-            check()
-        })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        // Refresh the user
+        check()
+    })
 }
 </script>
 

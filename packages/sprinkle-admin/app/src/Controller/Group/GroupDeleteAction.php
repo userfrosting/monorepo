@@ -23,6 +23,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Admin\Exceptions\GroupException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
@@ -62,11 +63,13 @@ class GroupDeleteAction
     public function __invoke(GroupInterface $group, Response $response): Response
     {
         $userMessage = $this->handle($group);
-        $payload = json_encode([
-            'success' => true,
-            'message' => $this->translator->translate($userMessage->message, $userMessage->parameters),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Message
+        $message = $this->translator->translate($userMessage->message, $userMessage->parameters);
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

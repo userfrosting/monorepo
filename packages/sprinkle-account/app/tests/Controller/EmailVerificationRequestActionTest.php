@@ -54,7 +54,7 @@ class EmailVerificationRequestActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonStructure(['message'], $response);
+        $this->assertJsonStructure(['title', 'description'], $response);
         $this->assertResponseStatus(200, $response);
     }
 
@@ -77,7 +77,7 @@ class EmailVerificationRequestActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonStructure(['message'], $response);
+        $this->assertJsonStructure(['title', 'description'], $response);
         $this->assertResponseStatus(200, $response);
     }
 

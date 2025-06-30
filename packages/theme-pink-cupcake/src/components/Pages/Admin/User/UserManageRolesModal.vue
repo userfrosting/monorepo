@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import UIkit from 'uikit'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { useUserRolesApi, useUserUpdateApi } from '@userfrosting/sprinkle-admin/composables'
 
@@ -24,32 +23,13 @@ const { user } = defineProps<{
 const { loading, selected, roles, fetch } = useUserRolesApi()
 const { submitUserUpdate } = useUserUpdateApi()
 const submitForm = () => {
-    submitUserUpdate(user.user_name, 'roles', { roles: selected.value })
-        .then((response) => {
-            // Emit the saved event
-            emits('saved')
+    submitUserUpdate(user.user_name, 'roles', { roles: selected.value }).then(() => {
+        // Emit the saved event
+        emits('saved')
 
-            // Close the modal
-            UIkit.modal('#' + modalName.value).hide()
-
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        // Close the modal
+        UIkit.modal('#' + modalName.value).hide()
+    })
 }
 
 /**

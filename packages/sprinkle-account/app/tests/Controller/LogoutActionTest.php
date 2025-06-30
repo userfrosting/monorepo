@@ -60,7 +60,10 @@ class LogoutActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse([], $response);
+        $this->assertJsonResponse([
+            'title'       => 'You have been logged out successfully.',
+            'description' => '',
+        ], $response);
         $this->assertResponseStatus(302, $response);
         $this->assertTrue($authenticator->guest());
 

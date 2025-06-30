@@ -122,7 +122,8 @@ class UserUpdateFieldActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Account details updated for user <strong>' . $userToEdit->user_name . '</strong>',
+            'title'       => 'Account details updated for user <strong>' . $userToEdit->user_name . '</strong>',
+            'description' => '',
         ], $response);
     }
 
@@ -163,7 +164,8 @@ class UserUpdateFieldActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Account for user <strong>' . $user->user_name . '</strong> has been successfully enabled.',
+            'title'       => 'Account for user <strong>' . $user->user_name . '</strong> has been successfully enabled.',
+            'description' => '',
         ], $response);
     }
 
@@ -185,7 +187,8 @@ class UserUpdateFieldActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Account for user <strong>' . $userToEdit->user_name . '</strong> has been successfully disabled.',
+            'title'       => 'Account for user <strong>' . $userToEdit->user_name . '</strong> has been successfully disabled.',
+            'description' => '',
         ], $response);
     }
 
@@ -203,7 +206,8 @@ class UserUpdateFieldActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => $user->user_name . "'s account has been manually activated",
+            'title'       => $user->user_name . "'s account has been manually activated",
+            'description' => '',
         ], $response);
     }
 
@@ -236,7 +240,8 @@ class UserUpdateFieldActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Account details updated for user <strong>' . $user->user_name . '</strong>',
+            'title'       => 'Account details updated for user <strong>' . $user->user_name . '</strong>',
+            'description' => '',
         ], $response);
 
         // Make sure the user has the new roles.
@@ -258,7 +263,8 @@ class UserUpdateFieldActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertJsonResponse([
-            'message' => 'Account details updated for user <strong>' . $user->user_name . '</strong>',
+            'title'       => 'Account details updated for user <strong>' . $user->user_name . '</strong>',
+            'description' => '',
         ], $response);
         $this->assertResponseStatus(200, $response);
 

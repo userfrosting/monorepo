@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
+import { type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import type { ConfigSystemInfoResponse } from '../interfaces'
 
 export function useConfigSystemInfoApi() {
@@ -29,16 +29,7 @@ export function useConfigSystemInfoApi() {
                 data.value = response.data
             })
             .catch((err) => {
-                error.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
-
-                throw error
+                error.value = err.response.data
             })
             .finally(() => {
                 loading.value = false

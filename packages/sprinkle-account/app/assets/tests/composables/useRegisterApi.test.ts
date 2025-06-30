@@ -1,30 +1,12 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import axios from 'axios'
-import type { UserInterface } from 'app/assets/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
-import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
+import { useAlertsStore, useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import type { RegisterRequest } from '../../interfaces'
 import { useRegisterApi } from '../../composables'
 
 const { submitRegistration, defaultRegistrationForm, availableLocales, captchaUrl, apiLoading } =
     useRegisterApi()
-
-const testUser: UserInterface = {
-    id: 1,
-    user_name: 'JohnDoe',
-    first_name: 'John',
-    last_name: 'Doe',
-    full_name: 'John Doe',
-    email: 'john.doe@example.com',
-    avatar: '',
-    flag_enabled: true,
-    flag_verified: true,
-    group_id: null,
-    locale: 'en_US',
-    created_at: '',
-    updated_at: '',
-    deleted_at: null
-}
 
 const form: RegisterRequest = {
     first_name: 'John',
@@ -38,10 +20,13 @@ const form: RegisterRequest = {
     spiderbro: 'http://'
 }
 
-// Mock the config store
+// Mock the config & alert stores
 vi.mock('@userfrosting/sprinkle-core/stores')
 const mockUseConfigStore = {
     get: vi.fn()
+}
+const mockUseAlertsStore = {
+    push: vi.fn()
 }
 
 describe('register', () => {
@@ -98,15 +83,19 @@ describe('register', () => {
 
     test('should register successfully', async () => {
         // Arrange
-        const response = { data: testUser }
+        vi.mocked(useAlertsStore).mockReturnValue(mockUseAlertsStore as any)
+        const response = { data: { title: 'Registration successful' } }
         vi.spyOn(axios, 'post').mockResolvedValue(response as any)
 
         // Act
-        const result = await submitRegistration(form)
+        await submitRegistration(form)
 
         // Assert
         expect(axios.post).toHaveBeenCalledWith('/account/register', form)
-        expect(result).toStrictEqual(testUser)
+        expect(mockUseAlertsStore.push).toHaveBeenCalledWith({
+            title: 'Registration successful',
+            style: Severity.Success
+        })
     })
 
     test('should throw an error when registration fails', async () => {
@@ -117,15 +106,16 @@ describe('register', () => {
         // Act & Assert
         await expect(submitRegistration(form)).rejects.toEqual({
             description: 'Registration failed',
-            style: Severity.Danger,
-            closeBtn: true
+            style: Severity.Danger
         })
         expect(axios.post).toHaveBeenCalledWith('/account/register', form)
     })
 
     test('should set loading state to true', async () => {
         // Arrange
-        vi.spyOn(axios, 'post').mockResolvedValue({ data: testUser } as any)
+        const response = { data: { title: 'Registration successful' } }
+        vi.spyOn(axios, 'post').mockResolvedValue(response)
+        vi.mocked(useAlertsStore).mockReturnValue(mockUseAlertsStore as any)
 
         // Act
         expect(apiLoading.value).toBe(false)

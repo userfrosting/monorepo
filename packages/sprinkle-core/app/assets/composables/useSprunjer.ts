@@ -33,7 +33,13 @@
  */
 import { ref, toValue, watchEffect, computed } from 'vue'
 import axios from 'axios'
-import type { AssociativeArray, Sprunjer, SprunjerData, SprunjerResponse } from '../interfaces'
+import type {
+    ApiErrorResponse,
+    AssociativeArray,
+    Sprunjer,
+    SprunjerData,
+    SprunjerResponse
+} from '../interfaces'
 
 export const useSprunjer = (
     dataUrl: string | (() => string),
@@ -60,6 +66,7 @@ export const useSprunjer = (
 
     // State
     const loading = ref<boolean>(false)
+    const error = ref<ApiErrorResponse | null>(null)
 
     /**
      * Api fetch function
@@ -87,8 +94,7 @@ export const useSprunjer = (
                 data.value.filterable = response.data.filterable ?? []
             })
             .catch((err) => {
-                // TODO : User toast alert, or export alert
-                console.error(err)
+                error.value = err.response.data as ApiErrorResponse
             })
             .finally(() => {
                 loading.value = false
@@ -169,6 +175,7 @@ export const useSprunjer = (
         data,
         fetch,
         loading,
+        error,
         downloadCsv,
         totalPages,
         countFiltered,

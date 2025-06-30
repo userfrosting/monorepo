@@ -139,6 +139,7 @@ return [
         'PAGE'         => 'Connectez-vous à votre compte',
     ],
     'LOGOUT'         => 'Déconnexion',
+    'LOGGED_OUT'     => 'Vous avez été déconnecté avec succès.',
 
     'NAME_AND_EMAIL' => 'Nom et email',
 

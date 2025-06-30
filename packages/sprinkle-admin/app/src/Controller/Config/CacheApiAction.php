@@ -19,6 +19,7 @@ use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Core\Bakery\ClearCacheCommand;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Controller class for clear cache api.
@@ -52,11 +53,9 @@ class CacheApiAction
         // Message
         $message = $this->translator->translate('SITE_CONFIG.CACHE.CLEARED');
 
-        // Write empty response
-        $payload = json_encode([
-            'message' => $message,
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

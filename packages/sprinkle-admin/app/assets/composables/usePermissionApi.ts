@@ -1,6 +1,6 @@
 import { ref, toValue, watchEffect } from 'vue'
 import axios from 'axios'
-import { type AlertInterface, Severity } from '@userfrosting/sprinkle-core/interfaces'
+import { type ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
 import type { PermissionResponse } from '../interfaces'
 
 /**
@@ -21,7 +21,7 @@ import type { PermissionResponse } from '../interfaces'
  */
 export function usePermissionApi(id: any) {
     const loading = ref(false)
-    const error = ref<AlertInterface | null>()
+    const error = ref<ApiErrorResponse | null>()
     const permission = ref<PermissionResponse>({
         id: 0,
         slug: '',
@@ -43,13 +43,7 @@ export function usePermissionApi(id: any) {
                 permission.value = response.data
             })
             .catch((err) => {
-                error.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger
-                    },
-                    ...err.response.data
-                }
+                error.value = err.response.data
             })
             .finally(() => {
                 loading.value = false

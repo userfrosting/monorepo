@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UIkit from 'uikit'
 import { ref, watch } from 'vue'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import { useUserUpdateApi } from '@userfrosting/sprinkle-admin/composables'
 import type { UserPasswordRequest } from '@userfrosting/sprinkle-admin/interfaces'
 import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
@@ -46,29 +45,10 @@ const { submitUserUpdate } = useUserUpdateApi()
  * Methods - Submit the form to the API and handle the response.
  */
 const submitForm = () => {
-    submitUserUpdate(props.user.user_name, 'password', formData.value)
-        .then((response) => {
-            // Close the modal
-            UIkit.modal('#modal-user-password-' + props.user.user_name).hide()
-
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+    submitUserUpdate(props.user.user_name, 'password', formData.value).then(() => {
+        // Close the modal
+        UIkit.modal('#modal-user-password-' + props.user.user_name).hide()
+    })
 }
 </script>
 

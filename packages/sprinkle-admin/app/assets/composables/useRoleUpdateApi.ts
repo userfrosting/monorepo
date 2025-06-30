@@ -1,7 +1,8 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
-import type { ApiResponse, AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
+import type { ApiResponse, ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 // TODO : Add validation
 // 'schema://requests/role/edit-field.yaml'
@@ -16,7 +17,7 @@ import type { ApiResponse, AlertInterface } from '@userfrosting/sprinkle-core/in
  */
 export function useRoleUpdateApi() {
     const apiLoading = ref<Boolean>(false)
-    const apiError = ref<AlertInterface | null>(null)
+    const apiError = ref<ApiErrorResponse | null>(null)
 
     async function submitRoleUpdate(slug: string, fieldName: string, formData: any) {
         apiLoading.value = true
@@ -25,21 +26,15 @@ export function useRoleUpdateApi() {
         return axios
             .put<ApiResponse>('/api/roles/r/' + slug + '/' + fieldName, formData)
             .then((response) => {
-                return {
-                    message: response.data.message
-                }
+                useAlertsStore().push({
+                    ...{ style: Severity.Success },
+                    ...response.data
+                })
+
+                return response.data
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
-
-                throw apiError.value
+                apiError.value = err.response.data
             })
             .finally(() => {
                 apiLoading.value = false

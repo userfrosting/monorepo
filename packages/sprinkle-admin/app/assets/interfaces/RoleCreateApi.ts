@@ -1,4 +1,4 @@
-import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
+import type { ApiResponse } from '@userfrosting/sprinkle-core/interfaces'
 
 /**
  * API Interfaces - What the API expects and what it returns
@@ -12,7 +12,4 @@ export interface RoleCreateRequest {
     description: string
 }
 
-export interface RoleCreateResponse {
-    message: string
-    role: RoleInterface
-}
+export interface RoleCreateResponse extends ApiResponse {}

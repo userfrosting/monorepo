@@ -36,6 +36,7 @@ use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
 
 /**
@@ -98,15 +99,16 @@ class RegisterAction
     public function __invoke(Request $request, Response $response): Response
     {
         $newUser = $this->handle($request);
+
+        // Message
         $message = ($this->requireEmailVerification())
         ? 'REGISTRATION.COMPLETE_VERIFICATION'
         : 'REGISTRATION.COMPLETE';
-        $data = [
-            'user'    => $newUser,
-            'message' => $this->translator->translate($message, $newUser),
-        ];
-        $payload = json_encode($data, JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+        $message = $this->translator->translate($message, $newUser);
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

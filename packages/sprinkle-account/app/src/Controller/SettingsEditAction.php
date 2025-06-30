@@ -26,6 +26,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Exceptions\PasswordInvalidException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Processes a request to update a user's account information.
@@ -71,10 +72,12 @@ class SettingsEditAction
     {
         $this->handle($request);
 
-        $payload = json_encode([
-            'message' => $this->translator->translate('ACCOUNT.SETTINGS.UPDATED'),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+        // Message
+        $message = $this->translator->translate('ACCOUNT.SETTINGS.UPDATED');
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

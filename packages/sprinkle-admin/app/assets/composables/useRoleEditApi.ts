@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import type { RoleEditRequest, RoleEditResponse } from '../interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 // TODO : Add validation
 // 'schema://requests/role/edit-info.yaml'
@@ -19,17 +20,15 @@ export function useRoleEditApi() {
         return axios
             .put<RoleEditResponse>('/api/roles/r/' + slug, data)
             .then((response) => {
-                return response.data
+                // Add the message to the alert stream
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                apiError.value = err.response.data
 
                 throw apiError.value
             })

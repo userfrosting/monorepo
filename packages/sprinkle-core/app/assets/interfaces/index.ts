@@ -27,4 +27,4 @@ export type { SprunjerRequest, SprunjerResponse } from './sprunjerApi'
 export type { DictionaryResponse, DictionaryEntries, DictionaryConfig } from './DictionaryApi'
 
 // Misc
-export type { ApiResponse } from './ApiResponse'
+export type { ApiResponse, ApiErrorResponse } from './ApiResponse'

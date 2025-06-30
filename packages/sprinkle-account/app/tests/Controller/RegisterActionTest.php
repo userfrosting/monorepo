@@ -156,22 +156,8 @@ class RegisterActionTest extends AccountTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure(['user', 'message'], $response);
-        $this->assertJsonStructure([
-            'user_name',
-            'first_name',
-            'last_name',
-            'email',
-            'locale',
-            'flag_verified',
-            'flag_enabled',
-            'updated_at',
-            'created_at',
-            'id',
-            'full_name',
-            'avatar',
-        ], $response, 'user');
-        $this->assertJsonResponse('You have successfully registered. You can now sign in.', $response, 'message');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('You have successfully registered. You can now sign in.', $response, 'title');
 
         // Make sure the user is added to the db by querying it
         /** @var User */
@@ -246,22 +232,8 @@ class RegisterActionTest extends AccountTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure(['user', 'message'], $response);
-        $this->assertJsonStructure([
-            'user_name',
-            'first_name',
-            'last_name',
-            'email',
-            'locale',
-            'flag_verified',
-            'flag_enabled',
-            'updated_at',
-            'created_at',
-            'id',
-            'full_name',
-            'avatar',
-        ], $response, 'user');
-        $this->assertJsonResponse('You have successfully registered. A link to activate your account has been sent to <strong>testRegister@test.com</strong>. You will not be able to sign in until you complete this step.', $response, 'message');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('You have successfully registered. A link to activate your account has been sent to <strong>testRegister@test.com</strong>. You will not be able to sign in until you complete this step.', $response, 'title');
     }
 
     public function testRegisterWithFailedEmailVerification(): void

@@ -47,7 +47,8 @@ class SettingsEditActionTest extends AccountTestCase
 
         // Assert response status & body
         $this->assertJsonResponse([
-            'message' => 'Account settings updated',
+            'title'       => 'Account settings updated',
+            'description' => '',
         ], $response);
         $this->assertResponseStatus(200, $response);
 

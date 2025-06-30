@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import UIkit from 'uikit'
 import { useEmailVerificationApi, useRegisterApi } from '@userfrosting/sprinkle-account/composables'
-import type {
-    RegisterRequest,
-    ValidateCodeResponse
-} from '@userfrosting/sprinkle-account/interfaces'
+import type { RegisterRequest } from '@userfrosting/sprinkle-account/interfaces'
 import { useConfigStore, useTranslator } from '@userfrosting/sprinkle-core/stores'
 import FaCode from '../../Content/2FaCode.vue'
 
@@ -47,33 +43,20 @@ const displayVerification = ref(false)
  * Methods - Submit the form to the API and handle the response.
  */
 const submitForm = async () => {
-    await submitRegistration(formData.value).then((response) => {
-        UIkit.notification({
-            message: response.message,
-            status: 'success',
-            pos: 'top-right',
-            timeout: 4000
+    await submitRegistration(formData.value)
+        .then(() => {
+            // Switch to the verification form on success
+            // TODO : Only if email verification is required?
+            displayVerification.value = true
         })
-
-        // Switch to the verification form
-        displayVerification.value = true
-    })
+        .catch(() => {})
 }
 
 async function sendVerification() {
-    await submitVerificationCode(formData.value.email, code.value).then(
-        (response: ValidateCodeResponse) => {
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
-
-            // Redirect to the login page
-            router.push({ name: 'account.login' })
-        }
-    )
+    await submitVerificationCode(formData.value.email, code.value).then(() => {
+        // Redirect to the login page on success
+        router.push({ name: 'account.login' })
+    })
 }
 
 /**

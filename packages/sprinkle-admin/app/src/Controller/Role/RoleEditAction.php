@@ -28,6 +28,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Admin\Exceptions\RoleException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
@@ -72,11 +73,13 @@ class RoleEditAction
     public function __invoke(RoleInterface $role, Request $request, Response $response): Response
     {
         $role = $this->handle($role, $request)->toArray();
-        $payload = json_encode([
-            'message' => $this->translator->translate('ROLE.UPDATED', $role),
-            'role'    => $role,
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Message
+        $message = $this->translator->translate('ROLE.UPDATED', $role);
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

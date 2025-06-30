@@ -21,6 +21,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Processes an admin request to reset a user password.
@@ -58,10 +59,13 @@ class UserPasswordResetAction
     public function __invoke(UserInterface $user, Response $response): Response
     {
         $this->handle($user);
-        $payload = json_encode([
-            'message' => $this->translator->translate('USER.ADMIN.PASSWORD_RESET_SUCCESS', $user->toArray()),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Message
+        $message = $this->translator->translate('USER.ADMIN.PASSWORD_RESET_SUCCESS', $user->toArray());
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

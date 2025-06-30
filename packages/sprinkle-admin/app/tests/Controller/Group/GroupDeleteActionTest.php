@@ -101,8 +101,8 @@ class GroupDeleteActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'success' => true,
-            'message' => 'Successfully deleted group <strong>' . $groupToDelete->name . '</strong>',
+            'title'       => 'Successfully deleted group <strong>' . $groupToDelete->name . '</strong>',
+            'description' => '',
         ], $response);
 
         // Make sure the user is deleted from the db by querying it

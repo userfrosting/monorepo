@@ -15,9 +15,11 @@ namespace UserFrosting\Sprinkle\Account\Controller;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Event\UserRedirectedAfterLogoutEvent;
 use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Processes an account login request.
@@ -47,6 +49,7 @@ class LogoutAction
         protected Authenticator $authenticator,
         protected EventDispatcherInterface $eventDispatcher,
         protected CsrfGuard $csrf,
+        protected Translator $translator,
     ) {
     }
 
@@ -68,9 +71,10 @@ class LogoutAction
                                  ->withHeader('Location', $event->getRedirect());
         }
 
-        // Write empty response
-        $payload = json_encode([], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+        // Write response
+        $message = $this->translator->translate('LOGGED_OUT');
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json')
                         ->withHeader($this->csrf->getTokenNameKey(), $this->csrf->getTokenName() ?? '')

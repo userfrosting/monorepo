@@ -4,7 +4,7 @@
  * Represents the interface for the Sprunjer composable.
  */
 import type { Ref, ComputedRef } from 'vue'
-import type { AssociativeArray } from '.'
+import type { ApiErrorResponse, AssociativeArray } from '.'
 
 export interface Sprunjer {
     dataUrl: string | (() => string)
@@ -15,6 +15,7 @@ export interface Sprunjer {
     data: Ref<SprunjerData>
     fetch: () => void
     loading: Ref<boolean>
+    error: Ref<ApiErrorResponse | null>
     totalPages: ComputedRef<number>
     downloadCsv: () => void
     countFiltered: ComputedRef<number>

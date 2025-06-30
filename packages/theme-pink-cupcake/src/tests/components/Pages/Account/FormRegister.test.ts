@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { mount, config } from '@vue/test-utils'
 import { describe, test, expect, vi, afterEach } from 'vitest'
-import UIkit from 'uikit'
 import type { UserInterface, RegisterRequest } from '@userfrosting/sprinkle-account/interfaces'
 import { useRegisterApi } from '@userfrosting/sprinkle-account/composables'
 import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
@@ -130,7 +129,6 @@ describe('FormRegister.vue', () => {
             apiLoading: ref(true),
             apiError: ref(null)
         })
-        vi.spyOn(UIkit, 'notification')
 
         const wrapper = mount(FormRegister)
         // @ts-ignore
@@ -140,8 +138,6 @@ describe('FormRegister.vue', () => {
         // Spy on the authStore & UIkit notification method
         expect(mockedSubmitRegistration).toHaveBeenCalledTimes(1)
         expect(mockedSubmitRegistration).toHaveBeenCalledWith(testForm)
-        expect(UIkit.notification).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).toHaveBeenCalledWith(uikitNotification)
     })
 
     test('disables submit button when loading', () => {
@@ -197,7 +193,6 @@ describe('FormRegister.vue', () => {
             apiLoading: ref(true),
             apiError: ref(null)
         })
-        vi.spyOn(UIkit, 'notification')
 
         const wrapper = mount(FormRegister)
 
@@ -217,7 +212,5 @@ describe('FormRegister.vue', () => {
         // Spy on the authStore & UIkit notification method
         expect(mockedSubmitRegistration).toHaveBeenCalledTimes(1)
         expect(mockedSubmitRegistration).toHaveBeenCalledWith(testForm)
-        expect(UIkit.notification).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).toHaveBeenCalledWith(uikitNotification)
     })
 })

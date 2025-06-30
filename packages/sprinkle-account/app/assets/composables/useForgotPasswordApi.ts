@@ -8,6 +8,7 @@ import type {
     ForgotPasswordSetPasswordRequest,
     ForgotPasswordSetPasswordResponse
 } from '../interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 /**
  * API Composable
@@ -21,11 +22,8 @@ export function useForgotPasswordApi() {
      * user by email.
      *
      * @param email The user email to send the one time code to.
-     *
-     * @return {Promise} - The request success message given by the API. Throws an error
-     * (AlertInterface) if the request failed.
      */
-    async function requestCode(email: string): Promise<string> {
+    async function requestCode(email: string) {
         apiLoading.value = true
         apiError.value = null
         const data: ForgotPasswordCodeRequest = {
@@ -33,18 +31,15 @@ export function useForgotPasswordApi() {
         }
         return axios
             .post<ForgotPasswordCodeResponse>('/account/forgot-password/request', data)
-            .then((response): string => {
-                return response.data.message
+            .then((response) => {
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                apiError.value = err.response.data
 
                 throw apiError.value
             })
@@ -59,32 +54,22 @@ export function useForgotPasswordApi() {
      *
      * @param email string - The email to validate.
      * @param code string - The verification code to validate.
-     *
-     * @return {Promise} - A success message returned by the API. Throws an error
-     * (AlertInterface) if the request failed.
      */
-    async function setPassword(
-        data: ForgotPasswordSetPasswordRequest
-    ): Promise<ForgotPasswordSetPasswordResponse> {
+    async function setPassword(data: ForgotPasswordSetPasswordRequest) {
         apiLoading.value = true
         apiError.value = null
 
         return axios
             .post<ForgotPasswordSetPasswordResponse>('/account/forgot-password/set-password', data)
-            .then((response): ForgotPasswordSetPasswordResponse => {
-                return {
-                    message: response.data.message
-                }
+            .then((response) => {
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                apiError.value = err.response.data
 
                 throw apiError.value
             })

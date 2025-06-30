@@ -1,7 +1,14 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import axios from 'axios'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 import { useEmailVerificationApi } from '../../composables/useEmailVerificationApi'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
+
+// Mock the alert store
+vi.mock('@userfrosting/sprinkle-core/stores')
+const mockUseAlertsStore = {
+    push: vi.fn()
+}
 
 describe('useEmailVerificationApi', () => {
     afterEach(() => {
@@ -15,13 +22,15 @@ describe('useEmailVerificationApi', () => {
         const successMessage = 'Verification email sent successfully'
 
         // Set axios mock
-        vi.spyOn(axios, 'post').mockResolvedValueOnce({ data: { message: successMessage } })
+        vi.spyOn(axios, 'post').mockResolvedValueOnce({ data: { title: successMessage } })
 
         // Act
         const result = await requestVerificationCode(email)
 
         // Assert
-        expect(result).toBe(successMessage)
+        expect(result).toEqual({
+            title: successMessage
+        })
         expect(apiLoading.value).toBe(false)
         expect(apiError.value).toBeNull()
         expect(axios.post).toHaveBeenCalledWith('/account/verify/request', { email })
@@ -42,8 +51,6 @@ describe('useEmailVerificationApi', () => {
         }
         const expectedError = {
             description: 'This verification code is not valid, or the account is already verified.',
-            style: Severity.Danger,
-            closeBtn: true,
             status: '400',
             title: 'Verification Exception'
         }
@@ -52,7 +59,7 @@ describe('useEmailVerificationApi', () => {
         vi.spyOn(axios, 'post').mockRejectedValueOnce(errorResponse)
 
         // Act & Assert
-        await expect(requestVerificationCode(email)).rejects.toEqual(expectedError)
+        await requestVerificationCode(email)
         expect(apiLoading.value).toBe(false)
         expect(apiError.value).toEqual(expectedError)
     })
@@ -63,14 +70,15 @@ describe('useEmailVerificationApi', () => {
         const code = '123456'
         const successMessage = 'Verification successful'
 
-        // Set axios mock
+        // Set mocks
+        vi.mocked(useAlertsStore).mockReturnValue(mockUseAlertsStore as any)
         vi.spyOn(axios, 'post').mockResolvedValueOnce({ data: { message: successMessage } })
 
         // Act & Assert
         const result = await submitVerificationCode(email, code)
+        expect(apiError.value).toBeNull()
         expect(result).toEqual({ message: successMessage })
         expect(apiLoading.value).toBe(false)
-        expect(apiError.value).toBeNull()
         expect(axios.post).toHaveBeenCalledWith('/account/verify/email', { email, code })
     })
 
@@ -92,11 +100,7 @@ describe('useEmailVerificationApi', () => {
         vi.spyOn(axios, 'post').mockRejectedValueOnce(errorResponse)
 
         // Act & Assert
-        await expect(submitVerificationCode(email, code)).rejects.toEqual({
-            description: 'Invalid verification code',
-            style: Severity.Danger,
-            closeBtn: true
-        })
+        await submitVerificationCode(email, code)
         expect(apiLoading.value).toBe(false)
         expect(apiError.value).toEqual({
             description: 'Invalid verification code',
@@ -111,7 +115,8 @@ describe('useEmailVerificationApi', () => {
         const code = '123456'
         const successMessage = 'Verification successful'
 
-        // Set axios mock
+        // Set mocks
+        vi.mocked(useAlertsStore).mockReturnValue(mockUseAlertsStore as any)
         vi.spyOn(axios, 'post').mockResolvedValueOnce({ data: { message: successMessage } })
 
         // Act & Assert

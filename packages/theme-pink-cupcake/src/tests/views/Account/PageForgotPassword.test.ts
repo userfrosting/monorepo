@@ -90,7 +90,6 @@ describe('PageForgotPassword.vue', () => {
             apiLoading: ref(false),
             apiError: ref(null)
         })
-        vi.spyOn(UIkit, 'notification')
 
         // Mount component, set test email, and emit submit event on the form
         const wrapper = mount(PageForgotPassword, wrapperGlobals)
@@ -111,8 +110,6 @@ describe('PageForgotPassword.vue', () => {
         expect(
             vi.mocked(useForgotPasswordApi).mock.results[0].value.requestCode
         ).toHaveBeenCalledWith(email)
-        expect(UIkit.notification).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).toHaveBeenCalledWith(uikitNotificationRequestSent)
     })
 
     test('first step handles api errors', async () => {
@@ -186,7 +183,7 @@ describe('PageForgotPassword.vue', () => {
 
         // Make sure the current step is set to 3 (done step)
         expect(wrapperVm.currentStep).toBe(4)
-        expect(wrapper.text()).toContain('SUCCESS PASSWORD.RESET.SUCCESS')
+        expect(wrapper.text()).toContain('STEP_X - SUCCESS ! PASSWORD.RESET.SUCCESS')
     })
 
     test('third step handles api errors', async () => {

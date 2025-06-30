@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import UIkit from 'uikit'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { useRolePermissionsApi, useRoleUpdateApi } from '@userfrosting/sprinkle-admin/composables'
 
@@ -25,31 +24,14 @@ const { loading, selected, permissions, fetch } = useRolePermissionsApi()
 const { submitRoleUpdate } = useRoleUpdateApi()
 const submitForm = () => {
     submitRoleUpdate(role.slug, 'permissions', { permissions: selected.value })
-        .then((response) => {
+        .then(() => {
             // Emit the saved event
             emits('saved')
 
             // Close the modal
             UIkit.modal('#' + modalName.value).hide()
-
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
         })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        .catch(() => {})
 }
 
 /**

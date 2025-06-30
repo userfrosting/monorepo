@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
-import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
+import { useAlertsStore, useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import type { RegisterRequest, RegisterResponse } from '../interfaces'
 
 /**
@@ -44,16 +44,17 @@ export function useRegisterApi() {
         return axios
             .post<RegisterResponse>('/account/register', data)
             .then((response) => {
-                return response.data
+                // Add success message to the alerts store
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
             })
             .catch((err) => {
                 apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
+                    ...(err.response?.data ?? { description: err.message }),
+                    style: Severity.Danger
                 }
 
                 throw apiError.value

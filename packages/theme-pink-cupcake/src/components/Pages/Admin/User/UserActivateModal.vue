@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import UIkit from 'uikit'
 import { useUserUpdateApi } from '@userfrosting/sprinkle-admin/composables'
 import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
@@ -21,24 +20,9 @@ const updateUser = (fieldName: string, value: string) => {
     const payload: Record<string, any> = {}
     payload[fieldName] = value
 
-    submitUserUpdate(props.user.user_name, fieldName, payload)
-        .then((response) => {
-            emits('saved')
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
-        .catch((error) => {
-            UIkit.notification({
-                message: error.description,
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+    submitUserUpdate(props.user.user_name, fieldName, payload).then(() => {
+        emits('saved')
+    })
 }
 </script>
 

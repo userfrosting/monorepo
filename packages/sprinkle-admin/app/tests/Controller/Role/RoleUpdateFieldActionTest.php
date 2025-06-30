@@ -122,7 +122,8 @@ class RoleUpdateFieldActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Details updated for role <strong>New Foo</strong>',
+            'title'       => 'Details updated for role <strong>New Foo</strong>',
+            'description' => '',
         ], $response);
 
         // Make sure the role has the new name.
@@ -162,7 +163,8 @@ class RoleUpdateFieldActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Permissions updated for role <strong>' . $role->name . '</strong>',
+            'title'       => 'Permissions updated for role <strong>' . $role->name . '</strong>',
+            'description' => '',
         ], $response);
 
         // Make sure the role has the new permissions.
@@ -189,7 +191,8 @@ class RoleUpdateFieldActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'Permissions updated for role <strong>' . $role->name . '</strong>',
+            'title'       => 'Permissions updated for role <strong>' . $role->name . '</strong>',
+            'description' => '',
         ], $response);
 
         // Make sure the user has the new roles.

@@ -27,6 +27,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\EmailNotUniqueException;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id).
@@ -70,12 +71,13 @@ class UserEditAction
     public function __invoke(UserInterface $user, Request $request, Response $response): Response
     {
         $user = $this->handle($user, $request)->toArray();
-        $payload = json_encode([
-            'success' => true,
-            'message' => $this->translator->translate('DETAILS_UPDATED', $user),
-            'user'    => $user,
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Message
+        $message = $this->translator->translate('DETAILS_UPDATED', $user);
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

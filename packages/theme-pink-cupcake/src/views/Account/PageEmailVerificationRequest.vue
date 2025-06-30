@@ -35,19 +35,10 @@ const code = ref<string>('')
  * Methods - Submit the form to the API and handle the response.
  */
 async function sendRequestCode() {
-    await requestVerificationCode(email.value)
-        .then((message) => {
-            UIkit.notification({
-                message: message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
-
-            // Move to the validation step
-            currentStep.value = Steps.Validation
-        })
-        .catch(() => {})
+    await requestVerificationCode(email.value).then(() => {
+        // Move to the validation step
+        currentStep.value = Steps.Validation
+    })
 }
 
 async function sendVerification() {

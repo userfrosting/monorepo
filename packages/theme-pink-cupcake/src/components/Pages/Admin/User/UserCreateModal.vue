@@ -34,31 +34,14 @@ const emits = defineEmits(['saved'])
  */
 const submitForm = () => {
     submitUserCreate(formData.value)
-        .then((response) => {
+        .then(() => {
             // Emit the saved event
             emits('saved')
 
             // Close the modal
             UIkit.modal('#modal-user-create').hide()
-
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
         })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        .catch(() => {})
 }
 
 /**

@@ -29,6 +29,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
 use UserFrosting\Sprinkle\Admin\Exceptions\MissingRequiredParamException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
@@ -77,10 +78,9 @@ class RoleUpdateFieldAction
         Response $response
     ): Response {
         $message = $this->handle($role, $field, $request);
-        $payload = json_encode([
-            'message' => $this->translator->translate($message->message, $message->parameters),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+        $message = $this->translator->translate($message->message, $message->parameters);
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

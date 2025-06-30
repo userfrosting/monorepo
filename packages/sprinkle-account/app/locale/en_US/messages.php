@@ -138,7 +138,8 @@ return [
         '@TRANSLATION' => 'Log in',
         'PAGE'         => 'Log in to your account',
     ],
-    'LOGOUT' => 'Logout',
+    'LOGOUT'     => 'Logout',
+    'LOGGED_OUT' => 'You have been logged out successfully.',
 
     'NAME_AND_EMAIL' => 'Name and email',
 

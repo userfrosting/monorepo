@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import UIkit from 'uikit'
-import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import { useForgotPasswordApi } from '@userfrosting/sprinkle-account/composables'
 import type { ForgotPasswordSetPasswordRequest } from '@userfrosting/sprinkle-account/interfaces'
 import FormEmailVerificationRequest from '../../components/Pages/Account/FormEmailVerificationRequest.vue'
@@ -37,14 +35,7 @@ const passwordc = ref<string>('')
  */
 async function sendRequestCode() {
     await requestCode(email.value)
-        .then((message) => {
-            UIkit.notification({
-                message: message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
-
+        .then(() => {
             // Move to the validation step
             currentStep.value = Steps.Validation
         })
@@ -131,12 +122,7 @@ function reset() {
             <h3 class="uk-card-title">
                 {{ $t('STEP_X', { step: Steps.Done }) }} - {{ $t('SUCCESS') }} !
             </h3>
-            <UFAlert
-                :alert="{
-                    style: Severity.Success,
-                    title: $t('SUCCESS'),
-                    description: $t('PASSWORD.RESET.SUCCESS')
-                }" />
+            <p>{{ $t('PASSWORD.RESET.SUCCESS') }}</p>
             <div class="uk-text-center">
                 <router-link
                     class="uk-button uk-button-primary"

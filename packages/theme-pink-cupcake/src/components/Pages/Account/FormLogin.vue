@@ -1,47 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import UIkit from 'uikit'
-import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import type { LoginRequest } from '@userfrosting/sprinkle-account/interfaces'
-import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
+import { useLoginApi } from '@userfrosting/sprinkle-account/composables'
 
-// Variables
-const loading = ref(false)
-const error = ref<AlertInterface | null>()
-let form: LoginRequest = {
-    user_name: '',
-    password: '',
-    rememberme: false
-}
+/**
+ * API - Use the login API.
+ */
+const { submitLogin, defaultFormData, apiLoading, apiError } = useLoginApi()
 
-// Form action
-async function sendLogin() {
-    loading.value = true
-    error.value = null
-    const auth = useAuthStore()
-    await auth
-        .login(form)
-        .then((response) => {
-            UIkit.notification({
-                message: response.message,
-                status: 'primary',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
-        .catch((err: AlertInterface) => {
-            error.value = err
-        })
-        .finally(() => {
-            loading.value = false
-        })
+/**
+ * Variables - Copy the default form data to a reactive variable.
+ */
+const form = ref<LoginRequest>(defaultFormData())
+
+/**
+ * Methods - Submit the form to the API and handle the response.
+ */
+const sendLogin = async () => {
+    await submitLogin(form.value).catch(() => {})
 }
 </script>
 
 <template>
     <form v-on:submit.prevent="sendLogin()">
         <fieldset class="uk-fieldset">
-            <UFAlert data-test="error" v-if="error" :alert="error" />
+            <UFAlert data-test="error" v-if="apiError" :alert="apiError" />
             <div class="uk-margin">
                 <label class="uk-form-label" for="first_name">{{ $t('USERNAME') }}</label>
                 <div class="uk-inline uk-width-1-1">
@@ -86,7 +69,7 @@ async function sendLogin() {
             <div class="uk-text-center">
                 <button
                     class="uk-button uk-button-primary uk-width-1-3"
-                    :disabled="loading"
+                    :disabled="apiLoading ? true : false"
                     data-test="submit">
                     {{ $t('LOGIN') }}
                 </button>

@@ -34,6 +34,7 @@ use UserFrosting\Sprinkle\Admin\Mail\UserCreatedEmail;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocaleInterface;
 use UserFrosting\Sprinkle\Core\Log\DebugLoggerInterface;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Processes the request to create a new user (from the admin controls).
@@ -87,12 +88,13 @@ class UserCreateAction
     {
         $this->validateAccess();
         $user = $this->handle($request)->toArray();
-        $payload = json_encode([
-            'success' => true,
-            'message' => $this->translator->translate('USER.CREATED', $user),
-            'user'    => $user,
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+
+        // Message
+        $message = $this->translator->translate('USER.CREATED', $user);
+
+        // Write response
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

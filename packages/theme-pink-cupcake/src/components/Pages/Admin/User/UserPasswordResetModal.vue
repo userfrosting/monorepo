@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import UIkit from 'uikit'
 import { useUserPasswordResetApi } from '@userfrosting/sprinkle-admin/composables'
 import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
@@ -15,22 +14,6 @@ const props = defineProps<{
 // Methods
 const confirmed = () => {
     passwordReset(props.user.user_name)
-        .then((response) => {
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
-        .catch((error) => {
-            UIkit.notification({
-                message: error.description,
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
 }
 </script>
 

@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { describe, test, expect, vi, afterEach } from 'vitest'
 import { mount, config } from '@vue/test-utils'
-import UIkit from 'uikit'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import { useEmailVerificationApi } from '@userfrosting/sprinkle-account/composables'
 import PageEmailVerificationRequest from '../../../views/Account/PageEmailVerificationRequest.vue'
@@ -89,7 +88,6 @@ describe('PageEmailVerificationRequest.vue', () => {
             apiLoading: ref(false),
             apiError: ref(null)
         })
-        vi.spyOn(UIkit, 'notification')
 
         // Mount component, set test email, and emit submit event on the form
         const wrapper = mount(PageEmailVerificationRequest, wrapperGlobals)
@@ -112,8 +110,6 @@ describe('PageEmailVerificationRequest.vue', () => {
         expect(
             vi.mocked(useEmailVerificationApi).mock.results[0].value.requestVerificationCode
         ).toHaveBeenCalledWith(email)
-        expect(UIkit.notification).toHaveBeenCalledTimes(1)
-        expect(UIkit.notification).toHaveBeenCalledWith(uikitNotificationRequestSent)
     })
 
     test('first step handles api errors', async () => {

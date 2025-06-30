@@ -1,8 +1,12 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import { Severity } from '@userfrosting/sprinkle-core/interfaces'
-import type { ApiResponse, AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
+import {
+    type ApiResponse,
+    type ApiErrorResponse,
+    Severity
+} from '@userfrosting/sprinkle-core/interfaces'
 import type { PasswordEditRequest } from '../interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 // TODO : Add validation
 // 'schema://requests/account-settings.yaml'
@@ -12,7 +16,7 @@ import type { PasswordEditRequest } from '../interfaces'
  */
 export function useUserPasswordEditApi() {
     const apiLoading = ref<Boolean>(false)
-    const apiError = ref<AlertInterface | null>(null)
+    const apiError = ref<ApiErrorResponse | null>(null)
 
     async function submitPasswordEdit(data: PasswordEditRequest) {
         apiLoading.value = true
@@ -20,19 +24,14 @@ export function useUserPasswordEditApi() {
         return axios
             .post<ApiResponse>('/account/settings', data)
             .then((response) => {
-                return {
-                    message: response.data.message
-                }
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                apiError.value = err.response.data
 
                 throw apiError.value
             })

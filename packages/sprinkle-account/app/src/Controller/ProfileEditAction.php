@@ -26,6 +26,7 @@ use UserFrosting\Sprinkle\Account\Exceptions\LocaleNotFoundException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
+use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
  * Processes a request to update a user's profile information.
@@ -69,12 +70,10 @@ class ProfileEditAction
     {
         $this->handle($request);
 
-        $payload = json_encode([
-            // TODO : The message won't be in the right locale if the user
-            //        changed it. We need to find a way to handle this.
-            'message' => $this->translator->translate('PROFILE.UPDATED'),
-        ], JSON_THROW_ON_ERROR);
-        $response->getBody()->write($payload);
+        // Write response
+        $message = $this->translator->translate('PROFILE.UPDATED');
+        $payload = new ApiResponse($message);
+        $response->getBody()->write((string) $payload);
 
         return $response->withHeader('Content-Type', 'application/json');
     }

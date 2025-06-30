@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import UIkit from 'uikit'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import { useUserPasswordEditApi } from '@userfrosting/sprinkle-account/composables'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
 import type { PasswordEditRequest } from '@userfrosting/sprinkle-account/interfaces'
@@ -26,15 +24,7 @@ const { submitPasswordEdit } = useUserPasswordEditApi()
  */
 const submitForm = () => {
     submitPasswordEdit(formData.value)
-        .then((response) => {
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
-
+        .then(() => {
             // Reset form data
             formData.value = {
                 passwordcheck: '',
@@ -45,16 +35,7 @@ const submitForm = () => {
             // Refresh the user - In case we need to relogin
             check()
         })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        .catch(() => {})
 }
 </script>
 

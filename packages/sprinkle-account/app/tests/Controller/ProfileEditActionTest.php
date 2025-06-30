@@ -48,7 +48,8 @@ class ProfileEditActionTest extends AccountTestCase
 
         // Assert response status & body
         $this->assertJsonResponse([
-            'message' => 'Profile settings updated',
+            'title'       => 'Profile settings updated',
+            'description' => '',
         ], $response);
         $this->assertResponseStatus(200, $response);
 

@@ -98,14 +98,8 @@ class UserCreateActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure([
-            'success',
-            'message',
-            'user',
-        ], $response);
-        $this->assertJsonResponse(true, $response, 'success');
-        $this->assertJsonResponse('User <strong>foo</strong> has been successfully created', $response, 'message');
-        $this->assertJsonResponse('Foo', $response, 'user.first_name');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('User <strong>foo</strong> has been successfully created', $response, 'title');
 
         // Make sure the user is added to the db by querying it
         /** @var User */
@@ -151,14 +145,8 @@ class UserCreateActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure([
-            'success',
-            'message',
-            'user',
-        ], $response);
-        $this->assertJsonResponse(true, $response, 'success');
-        $this->assertJsonResponse('User <strong>foo</strong> has been successfully created', $response, 'message');
-        $this->assertJsonResponse('Foo', $response, 'user.first_name');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('User <strong>foo</strong> has been successfully created', $response, 'title');
 
         // Make sure the user is added to the db by querying it
         /** @var User */
@@ -246,12 +234,7 @@ class UserCreateActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure([
-            'success',
-            'message',
-            'user',
-        ], $response);
-        $this->assertJsonResponse($group->id, $response, 'user.group_id');
+        $this->assertJsonStructure(['title', 'description'], $response);
 
         // Make sure the user is added to the db by querying it
         /** @var User */
@@ -296,7 +279,7 @@ class UserCreateActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonResponse(true, $response, 'success');
+        $this->assertJsonStructure(['title', 'description'], $response);
 
         // Make sure the user is added to the db by querying it
         /** @var User */

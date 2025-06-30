@@ -115,14 +115,8 @@ class GroupEditActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure([
-            'success',
-            'message',
-            'group',
-        ], $response);
-        $this->assertJsonResponse(true, $response, 'success');
-        $this->assertJsonResponse('Details updated for group <strong>The Foo</strong>', $response, 'message');
-        $this->assertJsonResponse('The Foo', $response, 'group.name');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('Details updated for group <strong>The Foo</strong>', $response, 'title');
 
         // Test that the user was updated
         /** @var Group */
@@ -158,12 +152,8 @@ class GroupEditActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure([
-            'success',
-            'message',
-            'group',
-        ], $response);
-        $this->assertJsonResponse($group->name, $response, 'group.name');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('Details updated for group <strong>' . $group->name . '</strong>', $response, 'title');
     }
 
     public function testPostForFailedValidation(): void

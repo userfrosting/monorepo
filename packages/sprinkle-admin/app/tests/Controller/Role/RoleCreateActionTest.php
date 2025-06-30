@@ -80,9 +80,8 @@ class RoleCreateActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure(['message', 'role'], $response);
-        $this->assertJsonResponse('Successfully created role <strong>The Foo</strong>', $response, 'message');
-        $this->assertJsonResponse('The Foo', $response, 'role.name');
+        $this->assertJsonStructure(['title', 'description'], $response);
+        $this->assertJsonResponse('Successfully created role <strong>The Foo</strong>', $response, 'title');
 
         // Make sure the user is added to the db by querying it
         /** @var Role */

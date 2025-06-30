@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UIkit from 'uikit'
 import { ref, watch } from 'vue'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import { useRoleEditApi } from '@userfrosting/sprinkle-admin/composables'
 import type { RoleEditRequest } from '@userfrosting/sprinkle-admin/interfaces'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
@@ -56,31 +55,14 @@ const emits = defineEmits(['saved'])
  */
 const submitForm = () => {
     submitRoleEdit(props.role.slug, formData.value)
-        .then((response) => {
+        .then(() => {
             // Emit the saved event
-            emits('saved', response.role)
+            emits('saved')
 
             // Close the modal
             UIkit.modal('#modal-role-edit-' + props.role.slug).hide()
-
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
         })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        .catch(() => {})
 }
 </script>
 

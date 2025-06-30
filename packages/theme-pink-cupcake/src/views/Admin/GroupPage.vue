@@ -27,7 +27,7 @@ watch(
 
 <template>
     <template v-if="error">
-        <UFAlert :alert="error" />
+        <UFErrorPage :errorCode="error.status" />
     </template>
     <template v-else>
         <div class="uk-child-width-expand" uk-grid>

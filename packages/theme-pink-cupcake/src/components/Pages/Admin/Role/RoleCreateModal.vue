@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UIkit from 'uikit'
 import { ref } from 'vue'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 import { useRoleCreateApi } from '@userfrosting/sprinkle-admin/composables'
 import type { RoleCreateRequest } from '@userfrosting/sprinkle-admin/interfaces'
 import RoleForm from './RoleForm.vue'
@@ -31,31 +30,14 @@ const emits = defineEmits(['saved'])
  */
 const submitForm = () => {
     submitRoleCreate(formData.value)
-        .then((response) => {
+        .then(() => {
             // Emit the saved event
             emits('saved')
 
             // Close the modal
             UIkit.modal('#modal-role-create').hide()
-
-            // Display a success notification
-            UIkit.notification({
-                message: response.message,
-                status: 'success',
-                pos: 'top-right',
-                timeout: 4000
-            })
         })
-        .catch((error) => {
-            // Display an error notification
-            const { translate } = useTranslator()
-            UIkit.notification({
-                message: error.description ?? translate('ERROR.MISC'),
-                status: 'danger',
-                pos: 'top-right',
-                timeout: 4000
-            })
-        })
+        .catch(() => {})
 }
 </script>
 

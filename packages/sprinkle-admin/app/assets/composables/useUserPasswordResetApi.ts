@@ -1,7 +1,8 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
+import { Severity, type ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
 import type { UserDeleteResponse } from '../interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 /**
  * API Composable
@@ -9,7 +10,7 @@ import type { UserDeleteResponse } from '../interfaces'
 export function useUserPasswordResetApi() {
     // Form data
     const loadingState = ref<Boolean>(false)
-    const apiError = ref<AlertInterface | null>(null)
+    const apiError = ref<ApiErrorResponse | null>(null)
 
     async function passwordReset(user_name: string) {
         loadingState.value = true
@@ -17,19 +18,14 @@ export function useUserPasswordResetApi() {
         return axios
             .post<UserDeleteResponse>('/api/users/u/' + user_name + '/password-reset')
             .then((response) => {
-                return {
-                    message: response.data.message
-                }
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
             })
             .catch((err) => {
-                apiError.value = {
-                    ...{
-                        description: 'An error as occurred',
-                        style: Severity.Danger,
-                        closeBtn: true
-                    },
-                    ...err.response.data
-                }
+                apiError.value = err.response.data
 
                 throw apiError.value
             })

@@ -113,13 +113,10 @@ class UserEditActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonStructure([
-            'success',
-            'message',
-            'user',
+            'title',
+            'description'
         ], $response);
-        $this->assertJsonResponse(true, $response, 'success');
-        $this->assertJsonResponse('Account details updated for user <strong>' . $userToEdit->user_name . '</strong>', $response, 'message'); // N.B.: The username CANNOT be changed
-        $this->assertJsonResponse('Foo', $response, 'user.first_name');
+        $this->assertJsonResponse('Account details updated for user <strong>' . $userToEdit->user_name . '</strong>', $response, 'title'); // N.B.: The username CANNOT be changed
 
         // Test that the user was updated
         /** @var User */

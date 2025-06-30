@@ -1,4 +1,6 @@
 export { useRegisterApi } from './useRegisterApi'
+export { useLoginApi } from './useLoginApi'
+export { useLogoutApi } from './useLogoutApi'
 export { useUserProfileEditApi } from './useUserProfileEditApi'
 export { useUserPasswordEditApi } from './useUserPasswordEditApi'
 export { useUserEmailEditApi } from './useUserEmailEditApi'

@@ -121,8 +121,8 @@ class UserDeleteActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'success' => true,
-            'message' => 'User <strong>' . $userToDelete->user_name . '</strong> has been successfully deleted.',
+            'title'       => 'User <strong>' . $userToDelete->user_name . '</strong> has been successfully deleted.',
+            'description' => '',
         ], $response);
 
         // Make sure the user is deleted from the db by querying it

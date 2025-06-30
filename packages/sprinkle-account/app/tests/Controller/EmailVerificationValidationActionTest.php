@@ -56,7 +56,8 @@ class EmailVerificationValidationActionTest extends AccountTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'message' => 'You have successfully verified your account. You can now login.'
+            'title'       => 'You have successfully verified your account. You can now login.',
+            'description' => '',
         ], $response);
     }
 
