@@ -81,7 +81,7 @@ jobs:
             - uses: actions/checkout@v4
 
             - name: Prettier dry run
-              uses: creyD/prettier_action@v4.3
+              uses: creyD/prettier_action@v4.6
               with:
                   dry: True
                   prettier_options: --check packages/**/app/assets/**/*.* packages/theme-pink-cupcake/src/**/*.*
