@@ -21,4 +21,5 @@ final class AuthGuardException extends AccountException
 {
     protected string $title = 'ACCOUNT.EXCEPTION.LOGIN_REQUIRED.TITLE';
     protected string|UserMessage $description = 'ACCOUNT.EXCEPTION.LOGIN_REQUIRED.DESCRIPTION';
+    protected int $httpCode = 401; // Unauthorized
 }

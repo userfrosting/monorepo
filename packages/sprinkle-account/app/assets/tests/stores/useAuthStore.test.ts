@@ -80,48 +80,10 @@ describe('useAuthStore', () => {
         const result = await authStore.check()
 
         // Assert
-        expect(axios.get).toHaveBeenCalledWith('/account/auth-check')
+        expect(axios.get).toHaveBeenCalledWith('/account/auth')
         expect(result).toStrictEqual(testUser)
         expect(authStore.user).toStrictEqual(testUser)
     })
-
-    test('should unset the user when authentication check fails', async () => {
-        // Arrange
-        const authStore = useAuthStore()
-        const error = { response: { data: {} } }
-        vi.spyOn(axios, 'get').mockRejectedValue({
-            response: { status: 401, data: error.response.data }
-        } as any)
-
-        // Assert initial state
-        authStore.setUser(testUser)
-        expect(authStore.user).toStrictEqual(testUser)
-
-        // Act & Assert
-        await authStore.check()
-        expect(axios.get).toHaveBeenCalledWith('/account/auth-check')
-        expect(authStore.user).toBeNull()
-    })
-
-    // TODO : Update when 401 error handling is moved to the global error handler
-    // test('should throw an error when authentication return anything other than a 401 status', async () => {
-    //     // Arrange
-    //     const authStore = useAuthStore()
-    //     vi.spyOn(axios, 'get').mockRejectedValue({ response: { data: {} } } as any)
-
-    //     // Assert initial state
-    //     authStore.setUser(testUser)
-    //     expect(authStore.user).toStrictEqual(testUser)
-
-    //     // Act & Assert
-    //     await expect(authStore.check()).rejects.toEqual({
-    //         description: 'An error as occurred',
-    //         style: Severity.Danger,
-    //         closeBtn: true
-    //     })
-    //     expect(axios.get).toHaveBeenCalledWith('/account/auth-check')
-    //     expect(authStore.user).toStrictEqual(testUser) // User is not nulled
-    // })
 
     test('should check if the user has a permission', () => {
         // Arrange

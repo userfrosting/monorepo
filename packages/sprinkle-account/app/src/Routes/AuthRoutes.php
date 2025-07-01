@@ -57,7 +57,7 @@ class AuthRoutes implements RouteDefinitionInterface
 
         // No guard
         $app->group('/account', function (RouteCollectorProxy $group) {
-            $group->get('/auth-check', AuthCheckAction::class)->setName('account.authCheck');
+            $group->get('/auth', AuthCheckAction::class)->setName('account.authCheck');
             $group->get('/captcha', CaptchaAction::class)->setName('account.captcha');
             $group->get('/check-username', CheckUsernameAction::class)->setName('account.checkUsername');
             $group->get('/suggest-username', SuggestUsernameAction::class)->setName('account.suggestUsername');

@@ -13,6 +13,13 @@ import { useAxiosInterceptor } from './composables'
 export default {
     install: (app: App) => {
         /**
+         * Add Axios error handler.
+         * Load first to ensure that all axios requests are intercepted.
+         * This is important for the config loading and translator loading.
+         */
+        useAxiosInterceptor()
+
+        /**
          * Load configuration
          */
         useConfigStore().load()
@@ -24,11 +31,6 @@ export default {
         translator.load()
         app.config.globalProperties.$t = translator.translate
         app.config.globalProperties.$tdate = translator.translateDate
-
-        /**
-         * Add Axios error handler.
-         */
-        useAxiosInterceptor()
 
         /**
          * Setup CSRF Protection.

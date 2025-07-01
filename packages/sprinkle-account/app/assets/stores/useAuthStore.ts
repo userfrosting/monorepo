@@ -35,19 +35,13 @@ export const useAuthStore = defineStore('auth', {
         },
         async check() {
             return axios
-                .get<AuthCheckResponse>('/account/auth-check')
+                .get<AuthCheckResponse>('/account/auth')
                 .then((response) => {
                     this.setUser(response.data)
 
                     return this.user
                 })
-                .catch((err) => {
-                    // Test status is 401 and unset user, otherwise, throw error
-                    // TODO : Move to the global error handler, aoo all 401 errors unset the user
-                    if (err.response.status === 401) {
-                        this.unsetUser()
-                    }
-                })
+                .catch(() => {})
         }
     }
 })

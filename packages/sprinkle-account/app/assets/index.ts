@@ -2,6 +2,7 @@ import type { App } from 'vue'
 import type { Router } from 'vue-router'
 import { useAuthStore } from './stores/useAuthStore'
 import { useAuthGuard } from './guards/authGuard'
+import { useAxiosInterceptor } from './composables'
 
 /**
  * Account Sprinkle initialization recipe.
@@ -11,6 +12,13 @@ import { useAuthGuard } from './guards/authGuard'
  */
 export default {
     install: (app: App, options: { router: Router }) => {
+        /**
+         * Add Axios error handler.
+         * Load first to ensure that all axios requests are intercepted.
+         * This is important for the config loading and translator loading.
+         */
+        useAxiosInterceptor()
+
         /**
          * Run auth check on load
          */

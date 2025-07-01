@@ -40,7 +40,7 @@ class AuthCheckActionTest extends AccountTestCase
 
     public function testGuest(): void
     {
-        $request = $this->createJsonRequest('GET', '/account/auth-check');
+        $request = $this->createJsonRequest('GET', '/account/auth');
         $response = $this->handleRequest($request);
         $this->assertResponseStatus(401, $response);
     }
@@ -71,7 +71,7 @@ class AuthCheckActionTest extends AccountTestCase
         $this->ci->set(Authenticator::class, $authenticator);
 
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('GET', '/account/auth-check');
+        $request = $this->createJsonRequest('GET', '/account/auth');
         $response = $this->handleRequest($request);
 
         // Assert response status & body

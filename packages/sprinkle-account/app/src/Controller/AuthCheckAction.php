@@ -15,12 +15,13 @@ namespace UserFrosting\Sprinkle\Account\Controller;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
+use UserFrosting\Sprinkle\Account\Exceptions\AuthGuardException;
 
 /**
  * Return if the user is authenticated, and if he is, also return the user data.
  *
  * Middleware: None
- * Route: /account/authcheck
+ * Route: /account/auth
  * Route Name: account.authCheck
  * Request type: GET
  */
@@ -43,14 +44,15 @@ class AuthCheckAction
     {
         $user = $this->authenticator->user();
 
-        // Return 401 (Unauthorized) if user is not authenticated
+        // Return 401 (Unauthorized) exception if user is not authenticated
+        // Doing it explicitly instead of relying on the AuthGuard middleware in
+        // case this action is called directly without the middleware.
         if ($user === null) {
-            // TODO : Throw an exception instead, so the error handler wont show an exception page
-            return $response->withStatus(401);
+            throw new AuthGuardException();
         }
 
         // Write the user data to the response body otherwise
-        $payload = json_encode($user->apiData, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+        $payload = json_encode($user->apiData, JSON_THROW_ON_ERROR);
         $response->getBody()->write($payload);
 
         return $response->withHeader('Content-Type', 'application/json');
