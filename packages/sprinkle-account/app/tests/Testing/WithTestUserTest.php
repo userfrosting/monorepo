@@ -52,7 +52,7 @@ class WithTestUserTest extends AccountTestCase
     {
         $request = $this->createJsonRequest('GET', '/test');
         $response = $this->handleRequest($request);
-        $this->assertResponseStatus(400, $response);
+        $this->assertResponseStatus(401, $response);
     }
 
     public function testWithUser(): void

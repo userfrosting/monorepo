@@ -62,7 +62,7 @@ class AuthGuardTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Asserts
-        $this->assertResponseStatus(400, $response);
+        $this->assertResponseStatus(401, $response);
         $body = (string) $response->getBody();
         $this->assertNotSame('Hello', $body);
         $this->assertStringContainsString('Login Required', $body);

@@ -41,7 +41,7 @@ class UsersSprunjeActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertJsonResponse('Login Required', $response, 'title');
-        $this->assertResponseStatus(400, $response);
+        $this->assertResponseStatus(401, $response);
     }
 
     public function testPageForForbiddenException(): void

@@ -81,7 +81,7 @@ class LogoutActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status
-        $this->assertResponseStatus(400, $response);
+        $this->assertResponseStatus(401, $response);
     }
 }
 
