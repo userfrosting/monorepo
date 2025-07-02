@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useAuthStore } from '../stores'
+import { useCsrf } from '@userfrosting/sprinkle-core/composables'
 
 /**
  * Axios Error Handler
@@ -17,6 +18,7 @@ export const useAxiosInterceptor = () => {
             if (error.response.status === 401) {
                 const authStore = useAuthStore()
                 authStore.unsetUser()
+                useCsrf().fetchCsrfToken()
             }
 
             return Promise.reject(error)

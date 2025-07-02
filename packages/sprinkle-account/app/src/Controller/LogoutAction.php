@@ -22,21 +22,12 @@ use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
 /**
- * Processes an account login request.
+ * Processes an account logout request.
  *
- * Processes the request from the form on the login page, checking that:
- * 1. The user is not already logged in.
- * 2. The rate limit for this type of request is being observed.
- * 3. Email login is enabled, if an email address was used.
- * 4. The user account exists.
- * 5. The user account is enabled and verified.
- * 6. The user entered a valid username/email and password.
- * This route, by definition, is "public access".
- *
- * Middleware: GuestGuard
- * Route: /account/login
- * Route Name: account.login
- * Request type: POST
+ * Middleware: AuthGuard
+ * Route: /account/logout
+ * Route Name: account.logout
+ * Request type: GET
  */
 class LogoutAction
 {

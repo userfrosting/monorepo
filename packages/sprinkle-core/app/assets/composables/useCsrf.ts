@@ -35,6 +35,14 @@ export const useCsrf = () => {
     }
 
     /**
+     * Fetch the CSRF token from the server
+     */
+    async function fetchCsrfToken() {
+        const response = await axios.get('/api/csrf')
+        updateFromHeaders(response.headers)
+    }
+
+    /**
      * Get the CSRF token name and value keys from config.
      */
     function getNameKey(): string {
@@ -115,6 +123,7 @@ export const useCsrf = () => {
         name,
         token,
         isEnabled,
-        updateFromHeaders
+        updateFromHeaders,
+        fetchCsrfToken
     }
 }
