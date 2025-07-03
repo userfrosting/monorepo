@@ -1,13 +1,13 @@
-import ActivitiesView from './ActivitiesView.vue'
-import DashboardView from './DashboardView.vue'
-import GroupsView from './GroupsView.vue'
-import GroupView from './GroupView.vue'
-import PermissionsView from './PermissionsView.vue'
-import PermissionView from './PermissionView.vue'
-import RolesView from './RolesView.vue'
-import RoleView from './RoleView.vue'
-import UsersView from './UsersView.vue'
-import UserView from './UserView.vue'
+import ActivitiesView from './PageActivities.vue'
+import DashboardView from './PageDashboard.vue'
+import GroupsView from './PageGroups.vue'
+import GroupView from './PageGroup.vue'
+import PermissionsView from './PagePermissions.vue'
+import PermissionView from './PagePermission.vue'
+import RolesView from './PageRoles.vue'
+import RoleView from './PageRole.vue'
+import UsersView from './PageUsers.vue'
+import UserView from './PageUser.vue'
 
 export {
     ActivitiesView,

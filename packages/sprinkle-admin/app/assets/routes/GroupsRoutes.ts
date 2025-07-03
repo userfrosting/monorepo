@@ -15,7 +15,7 @@ export default [
                         slug: 'uri_groups'
                     }
                 },
-                component: () => import('../views/GroupsView.vue')
+                component: () => import('../views/PageGroups.vue')
             },
             {
                 path: 'g/:slug',
@@ -26,7 +26,7 @@ export default [
                         slug: 'uri_group'
                     }
                 },
-                component: () => import('../views/GroupView.vue')
+                component: () => import('../views/PageGroup.vue')
             }
         ]
     }

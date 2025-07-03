@@ -13,12 +13,12 @@ export default [
             {
                 path: '',
                 name: 'admin.permissions',
-                component: () => import('../views/PermissionsView.vue')
+                component: () => import('../views/PagePermissions.vue')
             },
             {
                 path: 'p/:id', // permissions/p/{id}
                 name: 'admin.permission',
-                component: () => import('../views/PermissionView.vue'),
+                component: () => import('../views/PagePermission.vue'),
                 meta: {
                     description: 'PERMISSION.INFO_PAGE'
                 }

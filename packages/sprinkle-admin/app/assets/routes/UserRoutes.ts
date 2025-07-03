@@ -15,7 +15,7 @@ export default [
                         slug: 'uri_users'
                     }
                 },
-                component: () => import('../views/UsersView.vue')
+                component: () => import('../views/PageUsers.vue')
             },
             {
                 path: 'u/:user_name', // users/u/{user_name}
@@ -27,7 +27,7 @@ export default [
                         slug: 'uri_user'
                     }
                 },
-                component: () => import('../views/UserView.vue')
+                component: () => import('../views/PageUser.vue')
             }
         ]
     }

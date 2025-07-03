@@ -12,7 +12,7 @@ export default [
             title: 'ERROR.404.TITLE',
             description: 'ERROR.404.DESCRIPTION'
         },
-        component: () => import('../views/404NotFound.vue')
+        component: () => import('../views/Page404NotFound.vue')
     },
     {
         path: '/:pathMatch(.*)*',
@@ -21,7 +21,7 @@ export default [
             title: 'ERROR.401.TITLE',
             description: 'ERROR.401.DESCRIPTION'
         },
-        component: () => import('../views/401Unauthorized.vue')
+        component: () => import('../views/Page401Unauthorized.vue')
     },
     {
         path: '/:pathMatch(.*)*',
@@ -30,7 +30,7 @@ export default [
             title: 'ERROR.403.TITLE',
             description: 'ERROR.403.DESCRIPTION'
         },
-        component: () => import('../views/403Forbidden.vue')
+        component: () => import('../views/Page403Forbidden.vue')
     },
     {
         path: '/:pathMatch(.*)*',
@@ -39,6 +39,6 @@ export default [
             title: 'ERROR.TITLE',
             description: 'ERROR.DESCRIPTION'
         },
-        component: () => import('../views/ErrorPage.vue')
+        component: () => import('../views/PageError.vue')
     }
 ]

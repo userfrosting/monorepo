@@ -10,6 +10,6 @@ export default [
             title: 'ACTIVITY.PAGE',
             description: 'ACTIVITY.PAGE_DESCRIPTION'
         },
-        component: () => import('../views/ActivitiesView.vue')
+        component: () => import('../views/PageActivities.vue')
     }
 ]

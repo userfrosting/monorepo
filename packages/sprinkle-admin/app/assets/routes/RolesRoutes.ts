@@ -15,7 +15,7 @@ export default [
                         slug: 'uri_roles'
                     }
                 },
-                component: () => import('../views/RolesView.vue')
+                component: () => import('../views/PageRoles.vue')
             },
             {
                 path: 'r/:slug', // roles/r/{slug}
@@ -26,7 +26,7 @@ export default [
                         slug: 'uri_role'
                     }
                 },
-                component: () => import('../views/RoleView.vue')
+                component: () => import('../views/PageRole.vue')
             }
         ]
     }

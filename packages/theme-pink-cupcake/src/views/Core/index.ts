@@ -1,3 +1,3 @@
-import ErrorPage from './ErrorPage.vue'
+import ErrorPage from './PageError.vue'
 
 export { ErrorPage }

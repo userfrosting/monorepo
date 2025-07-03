@@ -9,7 +9,7 @@ export default [
             title: 'LOGIN',
             description: 'LOGIN.PAGE'
         },
-        component: () => import('../views/LoginView.vue')
+        component: () => import('../views/PageLogin.vue')
     },
     {
         path: '/account/register',
@@ -21,7 +21,7 @@ export default [
             title: 'REGISTER',
             description: 'REGISTER.PAGE'
         },
-        component: () => import('../views/RegisterView.vue')
+        component: () => import('../views/PageRegister.vue')
     },
     {
         path: '/account/forgot-password',
@@ -33,7 +33,7 @@ export default [
             title: 'PASSWORD.RESET',
             description: 'PASSWORD.RESET.PAGE'
         },
-        component: () => import('../views/ForgotPassword.vue')
+        component: () => import('../views/PageForgotPassword.vue')
     },
     {
         path: '/account/verification',
@@ -45,7 +45,7 @@ export default [
             title: 'ACCOUNT.VERIFICATION',
             description: 'ACCOUNT.VERIFICATION.EXPLAIN'
         },
-        component: () => import('../views/ResendVerificationView.vue')
+        component: () => import('../views/PageResendVerification.vue')
     },
     {
         path: '/account/settings',
@@ -56,7 +56,7 @@ export default [
             title: 'ACCOUNT.SETTINGS',
             description: 'ACCOUNT.SETTINGS.DESCRIPTION'
         },
-        component: () => import('../views/UserSettings.vue'),
+        component: () => import('../views/PageUserSettings.vue'),
         children: [
             {
                 path: 'profile',
@@ -66,7 +66,7 @@ export default [
                         slug: 'update_account_settings'
                     }
                 },
-                component: () => import('../views/UserSettingsProfile.vue')
+                component: () => import('../views/PageUserSettingsProfile.vue')
             },
             {
                 path: 'password',
@@ -76,7 +76,7 @@ export default [
                         slug: 'update_account_settings'
                     }
                 },
-                component: () => import('../views/UserSettingsPassword.vue')
+                component: () => import('../views/PageUserSettingsPassword.vue')
             },
             {
                 path: 'email',
@@ -86,7 +86,7 @@ export default [
                         slug: 'update_account_settings'
                     }
                 },
-                component: () => import('../views/UserSettingsEmail.vue')
+                component: () => import('../views/PageUserSettingsEmail.vue')
             }
         ]
     }

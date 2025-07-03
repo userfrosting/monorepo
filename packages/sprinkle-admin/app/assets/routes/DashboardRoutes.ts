@@ -9,6 +9,6 @@ export default [
             },
             title: 'DASHBOARD'
         },
-        component: () => import('../views/DashboardView.vue')
+        component: () => import('../views/PageDashboard.vue')
     }
 ]

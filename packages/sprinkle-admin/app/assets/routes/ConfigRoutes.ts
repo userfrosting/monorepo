@@ -8,7 +8,7 @@ export default [
             title: 'SITE_CONFIG',
             description: 'SITE_CONFIG.PAGE_DESCRIPTION'
         },
-        component: () => import('../views/ConfigView.vue'),
+        component: () => import('../views/PageConfig.vue'),
         children: [
             {
                 path: 'info',
@@ -18,7 +18,7 @@ export default [
                         slug: 'view_system_info'
                     }
                 },
-                component: () => import('../views/ConfigInfoView.vue')
+                component: () => import('../views/PageConfigInfo.vue')
             },
             {
                 path: 'cache',
@@ -28,7 +28,7 @@ export default [
                         slug: 'clear_cache'
                     }
                 },
-                component: () => import('../views/ConfigCacheView.vue')
+                component: () => import('../views/PageConfigCache.vue')
             }
         ]
     }
