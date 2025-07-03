@@ -14,5 +14,8 @@
     "vite:build": "vue-tsc && vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^5.2.2"
   }
 }
