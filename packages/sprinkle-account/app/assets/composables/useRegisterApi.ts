@@ -64,10 +64,33 @@ export function useRegisterApi() {
             })
     }
 
+    async function suggestUsername() {
+        apiLoading.value = true
+        apiError.value = null
+
+        return axios
+            .get('/account/suggest-username')
+            .then((response) => {
+                return response.data.user_name
+            })
+            .catch((err) => {
+                apiError.value = {
+                    ...(err.response?.data ?? { description: err.message }),
+                    style: Severity.Danger
+                }
+
+                throw apiError.value
+            })
+            .finally(() => {
+                apiLoading.value = false
+            })
+    }
+
     return {
         submitRegistration,
         defaultRegistrationForm,
         availableLocales,
+        suggestUsername,
         captchaUrl,
         apiLoading,
         apiError

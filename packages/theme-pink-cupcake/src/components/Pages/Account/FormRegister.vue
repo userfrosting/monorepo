@@ -59,6 +59,11 @@ async function sendVerification() {
     })
 }
 
+const suggestUsername = async () => {
+    const response = await useRegisterApi().suggestUsername()
+    formData.value.user_name = response
+}
+
 /**
  * Computed - Generate the TOS agreement localized link
  */
@@ -118,15 +123,22 @@ const tos = computed(() => {
                     <label class="uk-form-label" for="form-stacked-text">{{
                         $t('USERNAME')
                     }}</label>
-                    <!-- TODO -->
-                    <!-- <span class="pull-right"><a href="#" id="form-register-username-suggest">[{{translate('SUGGEST')}}]</a></span> -->
-                    <input
-                        class="uk-input"
-                        type="text"
-                        :placeholder="$t('USERNAME.CHOOSE')"
-                        aria-label="Username"
-                        data-test="username"
-                        v-model="formData.user_name" />
+                    <div class="uk-form-controls uk-grid-small" uk-grid>
+                        <div class="uk-width-2-3">
+                            <input
+                                class="uk-input"
+                                type="text"
+                                :placeholder="$t('USERNAME.CHOOSE')"
+                                aria-label="Username"
+                                data-test="username"
+                                v-model="formData.user_name" />
+                        </div>
+                        <div class="uk-width-1-3">
+                            <a class="uk-button uk-button-default" @click="suggestUsername()">{{
+                                $t('SUGGEST')
+                            }}</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="uk-margin">
