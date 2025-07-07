@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+- Add AlertsStore + Notification Plugin
+- Add Axios interceptor for global error handling
+- Add Axios interceptor for unsetting the user on 401 errors
+- Add username suggestion feature to registration form
+- Fix user-created mail template
+- Rename files for consistency & convention
+- Refactor frontend error management
+- Update dependencies
+
 ## 6.0.0-alpha.5 - 2025-05-23
 - Implement CSRF protection
 - Add remember me checkbox
