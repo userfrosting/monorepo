@@ -34,8 +34,11 @@
         "app/assets/"
     ],
     "dependencies": {
+        "@regle/core": "^1.6.0",
+        "@regle/rules": "^1.6.0",
         "dot-prop": "^9.0.0",
-        "luxon": "^3.5.0"
+        "luxon": "^3.5.0",
+        "yaml": "^2.8.0"
     },
     "peerDependencies": {
         "axios": "^1.5.0",

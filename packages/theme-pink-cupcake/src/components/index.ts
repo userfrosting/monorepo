@@ -1,4 +1,5 @@
 import UFAlert from './UFAlert.vue'
+import UFFormValidationError from './Form/UFFormValidationError.vue'
 import UFLabel from './UFLabel.vue'
 import UFModal from './Modals/UFModal.vue'
 import UFModalAlert from './Modals/UFModalAlert.vue'
@@ -38,6 +39,7 @@ import SprunjeTable from './Sprunjer/SprunjeTable.vue'
 
 export {
     UFAlert,
+    UFFormValidationError,
     UFLabel,
     UFModal,
     UFModalAlert,

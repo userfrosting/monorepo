@@ -1,6 +1,7 @@
 import type { App } from 'vue'
 import {
     UFAlert,
+    UFFormValidationError,
     UFLabel,
     UFModal,
     UFModalAlert,
@@ -38,6 +39,7 @@ import {
 export default {
     install: (app: App) => {
         app.component('UFAlert', UFAlert)
+            .component('UFFormValidationError', UFFormValidationError)
             .component('UFLabel', UFLabel)
             .component('UFModal', UFModal)
             .component('UFModalAlert', UFModalAlert)
@@ -72,6 +74,7 @@ export default {
 declare module 'vue' {
     export interface GlobalComponents {
         UFAlert: typeof UFAlert
+        UFFormValidationError: typeof UFFormValidationError
         UFLabel: typeof UFLabel
         UFModal: typeof UFModal
         UFModalAlert: typeof UFModalAlert

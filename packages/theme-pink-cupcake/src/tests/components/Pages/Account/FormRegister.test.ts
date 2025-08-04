@@ -61,14 +61,6 @@ const testForm: RegisterRequest = {
     spiderbro: 'http://'
 }
 
-// UiKit notification data
-const uikitNotification = {
-    message: 'Succesfully registered John Doe!',
-    status: 'success',
-    pos: 'top-right',
-    timeout: 4000
-}
-
 // Mock the config & translator store
 vi.mock('@userfrosting/sprinkle-core/stores', () => ({
     useConfigStore: () => ({

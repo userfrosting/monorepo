@@ -26,10 +26,9 @@ const testUser: UserDataInterface = {
 }
 
 // Mock useTranslator load function
-const loadTranslator = vi.fn()
 vi.mock('@userfrosting/sprinkle-core/stores', () => ({
     useTranslator: () => ({
-        load: loadTranslator
+        load: vi.fn()
     }),
     useConfigStore: () => ({
         get: vi.fn().mockReturnValue(false)

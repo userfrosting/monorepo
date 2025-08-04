@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import { useUserProfileEditApi } from '@userfrosting/sprinkle-account/composables'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
-import type { ProfileEditRequest } from '@userfrosting/sprinkle-account/interfaces'
 
 /**
  * Variables - Copy the user data to a reactive variable.
@@ -15,12 +13,6 @@ if (user === null) {
     throw new Error('User is null.')
 }
 
-const formData = ref<ProfileEditRequest>({
-    first_name: user.first_name,
-    last_name: user.last_name,
-    locale: user.locale
-})
-
 function getAvailableLocales(): string[] {
     return useConfigStore().get('locales.available')
 }
@@ -28,7 +20,16 @@ function getAvailableLocales(): string[] {
 /**
  * API - Use the profile edit API.
  */
-const { submitProfileEdit } = useUserProfileEditApi()
+const { submitProfileEdit, r$, formData } = useUserProfileEditApi()
+
+/**
+ * Initialize form data with user profile information.
+ */
+formData.value = {
+    first_name: user.first_name,
+    last_name: user.last_name,
+    locale: user.locale
+}
 
 /**
  * Methods - Submit the form to the API and handle the response.
@@ -47,6 +48,7 @@ const submitForm = () => {
                     <font-awesome-icon class="fa-form-icon" icon="edit" fixed-width />
                     <input
                         class="uk-input"
+                        :class="{ 'uk-form-danger': r$.first_name.$error }"
                         type="text"
                         :placeholder="$t('FIRST_NAME')"
                         aria-label="First Name"
@@ -54,6 +56,7 @@ const submitForm = () => {
                         tabindex="1"
                         autofocus
                         v-model="formData.first_name" />
+                    <UFFormValidationError :errors="r$.$errors.first_name" />
                 </div>
             </div>
 
@@ -63,12 +66,14 @@ const submitForm = () => {
                     <font-awesome-icon class="fa-form-icon" icon="edit" fixed-width />
                     <input
                         class="uk-input"
+                        :class="{ 'uk-form-danger': r$.last_name.$error }"
                         type="text"
                         :placeholder="$t('LAST_NAME')"
                         aria-label="Last Name"
                         data-test="last_name"
                         tabindex="2"
                         v-model="formData.last_name" />
+                    <UFFormValidationError :errors="r$.$errors.last_name" />
                 </div>
             </div>
 
@@ -88,7 +93,9 @@ const submitForm = () => {
                             :key="key">
                             {{ value }}
                         </option>
+                        <option value="spanish">Spanish</option>
                     </select>
+                    <UFFormValidationError :errors="r$.$errors.locale" />
                 </div>
             </div>
 
