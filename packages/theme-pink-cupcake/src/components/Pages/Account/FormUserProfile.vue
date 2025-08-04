@@ -20,7 +20,7 @@ function getAvailableLocales(): string[] {
 /**
  * API - Use the profile edit API.
  */
-const { submitProfileEdit, r$, formData } = useUserProfileEditApi()
+const { submitProfileEdit, r$, formData, apiLoading } = useUserProfileEditApi()
 
 /**
  * Initialize form data with user profile information.
@@ -100,7 +100,11 @@ const submitForm = () => {
             </div>
 
             <div class="uk-text-center" uk-margin>
-                <button class="uk-button uk-button-primary" type="submit" tabindex="4">
+                <button
+                    class="uk-button uk-button-primary"
+                    :disabled="r$.$error || apiLoading"
+                    type="submit"
+                    tabindex="4">
                     {{ $t('SAVE') }}
                 </button>
             </div>

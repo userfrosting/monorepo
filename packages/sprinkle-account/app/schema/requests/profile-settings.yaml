@@ -16,6 +16,9 @@ last_name:
       min: 1
       max: 30
       message: VALIDATE.LENGTH_RANGE
+    required:
+      label: "&LAST_NAME"
+      message: VALIDATE.REQUIRED
 locale:
   validators:
     required:

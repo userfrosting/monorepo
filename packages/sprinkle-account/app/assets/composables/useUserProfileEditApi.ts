@@ -12,7 +12,7 @@ import schemaFile from '../../schema/requests/profile-settings.yaml?raw'
  * API Composable
  */
 export function useUserProfileEditApi() {
-    const apiLoading = ref<Boolean>(false)
+    const apiLoading = ref<boolean>(false)
     const apiError = ref<ApiErrorResponse | null>(null)
     const formData = ref<ProfileEditRequest>({
         first_name: '',
