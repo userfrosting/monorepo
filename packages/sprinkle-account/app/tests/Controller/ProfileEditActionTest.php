@@ -41,7 +41,7 @@ class ProfileEditActionTest extends AccountTestCase
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/settings/profile', [
             'first_name' => 'foo',
-            //'last_name'  => 'bar', // don't change this one
+            'last_name'  => $user->last_name, // don't change this one
             'locale'     => 'en_US',
         ]);
         $response = $this->handleRequest($request);
@@ -94,6 +94,7 @@ class ProfileEditActionTest extends AccountTestCase
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/settings/profile', [
             'first_name' => 'foo',
+            'last_name'  => 'bar',
             'locale'     => 'es_ES',
         ]);
         $response = $this->handleRequest($request);
@@ -131,6 +132,7 @@ class ProfileEditActionTest extends AccountTestCase
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/settings/profile', [
             'first_name' => 'foobarfoo',
+            'last_name'  => 'foobarfoo',
             'locale'     => 'foobarfoo',
         ]);
         $response = $this->handleRequest($request);
