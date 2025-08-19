@@ -1,4 +1,4 @@
-import { parse } from 'yaml'
+import { parse as YamlParse } from 'yaml'
 import { withMessage, required, maxLength, minLength, email } from '@regle/rules'
 import { useTranslator } from '../stores'
 
@@ -36,6 +36,16 @@ export function useRuleSchemaAdapter() {
         }
 
         return regleSchema
+    }
+
+    /**
+     * Parse the YAML schema string into a JavaScript object.
+     *
+     * @param rawSchema The YAML schema string to parse.
+     * @returns The parsed YAML schema as a JavaScript object.
+     */
+    function parse(rawSchema: string): Record<string, any> {
+        return YamlParse(rawSchema)
     }
 
     function translateMessage(fieldRulesMeta: { message?: string; [key: string]: any }): string {
@@ -84,9 +94,15 @@ export function useRuleSchemaAdapter() {
             }
         }
 
+        // matches
+        if (key === 'matches' && schemaFieldRules.matches) {
+            console.warn('Validation rule "matches" not implemented yet')
+            // console.debug('Matched rule: matches', schemaFieldRules.matches)
+            // sameAs: sameAs(() => form.value.password),
+        }
+
         // equals : TODO
         // integer : TODO
-        // matches : TODO
         // member_of : TODO
         // no_leading_whitespace : TODO
         // no_trailing_whitespace : TODO
@@ -101,5 +117,5 @@ export function useRuleSchemaAdapter() {
         // username : TODO
     }
 
-    return { adapt }
+    return { adapt, parse, translateMessage }
 }

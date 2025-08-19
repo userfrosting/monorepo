@@ -1,23 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useUserPasswordEditApi } from '@userfrosting/sprinkle-account/composables'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
-import type { PasswordEditRequest } from '@userfrosting/sprinkle-account/interfaces'
 
 /**
  * Variables
  */
 const { check } = useAuthStore()
-const formData = ref<PasswordEditRequest>({
-    passwordcheck: '',
-    password: '',
-    passwordc: ''
-})
 
 /**
  * API - Use the password edit API.
  */
-const { submitPasswordEdit } = useUserPasswordEditApi()
+const { submitPasswordEdit, r$, formData, apiLoading, minLength, maxLength } =
+    useUserPasswordEditApi()
 
 /**
  * Methods - Submit the form to the API and handle the response.
@@ -46,8 +40,9 @@ const submitForm = () => {
                 <label class="uk-form-label" for="form-stacked-text">{{
                     $t('PASSWORD.NEW')
                 }}</label>
-                <!-- <span class="uk-text-meta">{{ $t('PASSWORD.CONFIRM_NEW_EXPLAIN') }}</span> -->
-                <!-- {{translate('PASSWORD.BETWEEN', {min: site.password.length.min, max: site.password.length.max})}} -->
+                <span class="uk-text-meta">
+                    {{ $t('PASSWORD.BETWEEN', { min: minLength, max: maxLength }) }}
+                </span>
                 <div class="uk-inline uk-width-1-1">
                     <font-awesome-icon class="fa-form-icon" icon="key" fixed-width />
                     <input
@@ -60,6 +55,7 @@ const submitForm = () => {
                         tabindex="1"
                         autocomplete="false"
                         v-model="formData.password" />
+                    <UFFormValidationError :errors="r$.$errors.password" />
                 </div>
             </div>
 
@@ -78,6 +74,7 @@ const submitForm = () => {
                         data-test="passwordc"
                         tabindex="2"
                         v-model="formData.passwordc" />
+                    <UFFormValidationError :errors="r$.$errors.passwordc" />
                 </div>
             </div>
 
@@ -98,11 +95,16 @@ const submitForm = () => {
                         data-test="passwordcheck"
                         tabindex="3"
                         v-model="formData.passwordcheck" />
+                    <UFFormValidationError :errors="r$.$errors.passwordcheck" />
                 </div>
             </div>
 
             <div class="uk-text-center" uk-margin>
-                <button class="uk-button uk-button-primary" type="submit" tabindex="4">
+                <button
+                    class="uk-button uk-button-primary"
+                    type="submit"
+                    tabindex="4"
+                    :disabled="r$.$error || apiLoading">
                     {{ $t('SAVE') }}
                 </button>
             </div>
