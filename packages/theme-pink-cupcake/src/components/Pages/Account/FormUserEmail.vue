@@ -59,7 +59,9 @@ const submitForm = () => {
                         autofocus
                         tabindex="1"
                         autocomplete="off"
-                        data-1p-ignore data-lpignore="true" data-protonpass-ignore="true"
+                        data-1p-ignore
+                        data-lpignore="true"
+                        data-protonpass-ignore="true"
                         v-model="formData.email" />
                     <UFFormValidationError :errors="r$.$errors.email" />
                 </div>
