@@ -14,15 +14,18 @@ if (user === null) {
     throw new Error('User is null.')
 }
 
-const formData = ref<EmailEditRequest>({
-    email: user.email,
-    passwordcheck: ''
-})
-
 /**
  * API - Use the password edit API.
  */
-const { submitEmailEdit } = useUserEmailEditApi()
+const { submitEmailEdit, r$, formData, apiLoading } = useUserEmailEditApi()
+
+/**
+ * Initialize form data with user profile information.
+ */
+formData.value = {
+    email: user.email,
+    passwordcheck: ''
+}
 
 /**
  * Methods - Submit the form to the API and handle the response.
@@ -48,14 +51,17 @@ const submitForm = () => {
                     <font-awesome-icon class="fa-form-icon" icon="envelope" fixed-width />
                     <input
                         class="uk-input"
+                        :class="{ 'uk-form-danger': r$.email.$error }"
                         type="string"
                         placeholder="New Email"
                         aria-label="email"
                         data-test="email"
                         autofocus
                         tabindex="1"
-                        autocomplete="false"
+                        autocomplete="off"
+                        data-1p-ignore data-lpignore="true" data-protonpass-ignore="true"
                         v-model="formData.email" />
+                    <UFFormValidationError :errors="r$.$errors.email" />
                 </div>
             </div>
 
@@ -68,17 +74,23 @@ const submitForm = () => {
                     <font-awesome-icon class="fa-form-icon" icon="key" fixed-width />
                     <input
                         class="uk-input"
+                        :class="{ 'uk-form-danger': r$.passwordcheck.$error }"
                         type="password"
                         :placeholder="$t('PASSWORD.CURRENT')"
                         aria-label="Current Password"
                         data-test="passwordcheck"
                         tabindex="2"
                         v-model="formData.passwordcheck" />
+                    <UFFormValidationError :errors="r$.$errors.passwordcheck" />
                 </div>
             </div>
 
             <div class="uk-text-center" uk-margin>
-                <button class="uk-button uk-button-primary" type="submit" tabindex="3">
+                <button
+                    class="uk-button uk-button-primary"
+                    :disabled="r$.$error || apiLoading"
+                    type="submit"
+                    tabindex="3">
                     {{ $t('SAVE') }}
                 </button>
             </div>

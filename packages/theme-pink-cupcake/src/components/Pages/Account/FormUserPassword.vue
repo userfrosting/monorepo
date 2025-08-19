@@ -53,7 +53,7 @@ const submitForm = () => {
                         data-test="password"
                         autofocus
                         tabindex="1"
-                        autocomplete="false"
+                        autocomplete="new-password"
                         v-model="formData.password" />
                     <UFFormValidationError :errors="r$.$errors.password" />
                 </div>
@@ -73,6 +73,7 @@ const submitForm = () => {
                         aria-label="Confirm Password"
                         data-test="passwordc"
                         tabindex="2"
+                        autocomplete="new-password"
                         v-model="formData.passwordc" />
                     <UFFormValidationError :errors="r$.$errors.passwordc" />
                 </div>

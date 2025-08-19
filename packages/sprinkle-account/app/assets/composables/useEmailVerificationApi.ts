@@ -10,8 +10,7 @@ import type {
 } from '../interfaces'
 import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
-// TODO : Add validation
-// 'schema://requests/account-email.yaml'
+// TODO : Add validation (Need new yaml file)
 
 /**
  * API Composable
