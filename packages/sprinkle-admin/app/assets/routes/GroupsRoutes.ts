@@ -21,6 +21,7 @@ export default [
                 path: 'g/:slug',
                 name: 'admin.group',
                 meta: {
+                    title: 'GROUP.PAGE',
                     description: 'GROUP.INFO_PAGE',
                     permission: {
                         slug: 'uri_group'

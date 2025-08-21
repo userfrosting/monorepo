@@ -1,58 +1,138 @@
-import { ref, toValue, watchEffect } from 'vue'
+import { ref, toValue } from 'vue'
 import axios from 'axios'
-import { type ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
-import type { GroupResponse } from '../interfaces'
+import { useRegle } from '@regle/core'
+import { Severity, type ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
+import type {
+    GroupCreateRequest,
+    GroupCreateResponse,
+    GroupDeleteResponse,
+    GroupEditRequest,
+    GroupEditResponse,
+    GroupResponse
+} from '../interfaces'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
+import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
+import schemaFile from '../../schema/requests/group/create.yaml?raw'
 
 /**
- * API used to fetch a specific group.
- *
- * This interface is tied to the `GroupApi` API, accessed at the GET
- * `/api/groups/g/{slug}` endpoint and the `GroupApi` Typescript interface.
- *
- * This composable accept a {slug} to select the group. Any changes to the
- * {group} is watched and will trigger an update.
- *
- * Available ref:
- * - group: GroupApi
- * - error: AlertInterface | null
- * - loading: boolean
- * - fetchGroup(): void - Trigger a refresh of the data
+ * API Composable
  */
-export function useGroupApi(slug: any) {
-    const loading = ref(false)
-    const error = ref<ApiErrorResponse | null>()
-    const group = ref<GroupResponse>({
-        id: 0,
-        name: '',
+export function useGroupApi() {
+    const defaultFormData = (): GroupCreateRequest => ({
         slug: '',
+        name: '',
         description: '',
-        icon: '',
-        created_at: '',
-        updated_at: '',
-        deleted_at: null,
-        users_count: 0
+        icon: 'users'
     })
 
-    async function fetchGroup() {
-        loading.value = true
-        error.value = null
+    const apiLoading = ref<boolean>(false)
+    const apiError = ref<ApiErrorResponse | null>(null)
+    const formData = ref<GroupCreateRequest>(defaultFormData())
 
-        await axios
+    // Load the schema and set up the validator
+    const { r$ } = useRegle(formData, useRuleSchemaAdapter().adapt(schemaFile))
+
+    async function fetchGroup(slug: string) {
+        apiLoading.value = true
+        apiError.value = null
+
+        return axios
             .get<GroupResponse>('/api/groups/g/' + toValue(slug))
             .then((response) => {
-                group.value = response.data
+                return response.data
             })
             .catch((err) => {
-                error.value = err.response.data
+                apiError.value = err.response.data
+
+                throw apiError.value
             })
             .finally(() => {
-                loading.value = false
+                apiLoading.value = false
             })
     }
 
-    watchEffect(() => {
-        fetchGroup()
-    })
+    async function createGroup(data: GroupCreateRequest) {
+        apiLoading.value = true
+        apiError.value = null
+        return axios
+            .post<GroupCreateResponse>('/api/groups', data)
+            .then((response) => {
+                // Add the message to the alert stream
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
+            })
+            .catch((err) => {
+                apiError.value = err.response.data
 
-    return { group, error, loading, fetchGroup }
+                throw apiError.value
+            })
+            .finally(() => {
+                apiLoading.value = false
+            })
+    }
+
+    async function updateGroup(slug: string, data: GroupEditRequest) {
+        apiLoading.value = true
+        apiError.value = null
+        return axios
+            .put<GroupEditResponse>('/api/groups/g/' + slug, data)
+            .then((response) => {
+                // Add the message to the alert stream
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
+            })
+            .catch((err) => {
+                apiError.value = err.response.data
+
+                throw apiError.value
+            })
+            .finally(() => {
+                apiLoading.value = false
+            })
+    }
+
+    async function deleteGroup(slug: string) {
+        apiLoading.value = true
+        apiError.value = null
+        return axios
+            .delete<GroupDeleteResponse>('/api/groups/g/' + slug)
+            .then((response) => {
+                // Add the message to the alert stream
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
+            })
+            .catch((err) => {
+                apiError.value = err.response.data
+
+                throw apiError.value
+            })
+            .finally(() => {
+                apiLoading.value = false
+            })
+    }
+
+    function resetForm() {
+        formData.value = defaultFormData()
+    }
+
+    return {
+        fetchGroup,
+        createGroup,
+        updateGroup,
+        deleteGroup,
+        apiLoading,
+        apiError,
+        formData,
+        r$,
+        resetForm
+    }
 }

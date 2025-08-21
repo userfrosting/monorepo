@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { useGroupDeleteApi } from '@userfrosting/sprinkle-admin/composables'
+import { useGroupApi } from '@userfrosting/sprinkle-admin/composables'
 import type { GroupInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 
-// Variables
-const { deleteGroup } = useGroupDeleteApi()
+/**
+ * Variables and composables
+ */
+const { deleteGroup } = useGroupApi()
 
-// Props
+/**
+ * Props - The group object to delete
+ */
 const props = defineProps<{
     group: GroupInterface
 }>()
 
-// Emits
+/**
+ * Emits - Define the deleted event. This event is emitted when the group is deleted
+ * to notify the parent component to refresh the data.
+ */
 const emits = defineEmits(['deleted'])
 
-// Methods
+/**
+ * Methods - Submit the form to the API and handle the response.
+ */
 const deleteConfirmed = () => {
     deleteGroup(props.group.slug)
         .then(() => {

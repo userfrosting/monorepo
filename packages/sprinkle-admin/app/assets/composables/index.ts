@@ -7,9 +7,6 @@ export { useConfigSystemInfoApi } from './useConfigSystemInfoApi'
 
 // Group
 export { useGroupApi } from './useGroupApi'
-export { useGroupCreateApi } from './useGroupCreateApi'
-export { useGroupDeleteApi } from './useGroupDeleteApi'
-export { useGroupEditApi } from './useGroupEditApi'
 export { useGroupsApi } from './useGroupsApi'
 
 // Permission
