@@ -28,8 +28,8 @@ const { fetchGroup, apiError } = useGroupApi()
 /**
  * Methods - Fetch group
  */
-async function fetch() {
-    await fetchGroup(route.params.slug.toString()).then((fetchedGroup) => {
+function fetch() {
+    fetchGroup(route.params.slug.toString()).then((fetchedGroup) => {
         group.value = fetchedGroup
         page.title = group.value.name
     })
@@ -40,7 +40,7 @@ async function fetch() {
  */
 watch(
     () => route.params.slug,
-    async () => fetch(),
+    () => fetch(),
     { immediate: true }
 )
 </script>

@@ -28,8 +28,8 @@ const { fetchRole, apiError } = useRolesApi()
 /**
  * Methods - Fetch group
  */
-async function fetch() {
-    await fetchRole(route.params.slug.toString()).then((fetchedRole) => {
+function fetch() {
+    fetchRole(route.params.slug.toString()).then((fetchedRole) => {
         role.value = fetchedRole
         page.title = role.value.name
     })
@@ -40,7 +40,7 @@ async function fetch() {
  */
 watch(
     () => route.params.slug,
-    async () => fetch(),
+    () => fetch(),
     { immediate: true }
 )
 </script>
