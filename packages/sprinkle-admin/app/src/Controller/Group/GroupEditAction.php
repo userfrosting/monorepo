@@ -45,7 +45,7 @@ use UserFrosting\Support\Message\UserMessage;
 class GroupEditAction
 {
     // Request schema for client side form validation
-    protected string $schema = 'schema://requests/group/edit-info.yaml';
+    protected string $schema = 'schema://requests/group.yaml';
 
     /**
      * Inject dependencies.

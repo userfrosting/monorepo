@@ -44,7 +44,7 @@ use UserFrosting\Support\Message\UserMessage;
 class GroupCreateAction
 {
     // Request schema for client side form validation
-    protected string $schema = 'schema://requests/group/create.yaml';
+    protected string $schema = 'schema://requests/group.yaml';
 
     /**
      * Inject dependencies.

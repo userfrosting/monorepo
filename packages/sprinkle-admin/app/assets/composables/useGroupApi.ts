@@ -12,7 +12,7 @@ import type {
 } from '../interfaces'
 import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
-import schemaFile from '../../schema/requests/group/create.yaml?raw'
+import schemaFile from '../../schema/requests/group.yaml?raw'
 
 /**
  * API Composable
