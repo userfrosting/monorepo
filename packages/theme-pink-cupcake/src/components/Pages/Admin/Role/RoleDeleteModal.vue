@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useRolesApi } from '@userfrosting/sprinkle-admin/composables'
+import { useRoleApi } from '@userfrosting/sprinkle-admin/composables'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 
 /**
  * Variables and composables
  */
-const { deleteRole } = useRolesApi()
+const { deleteRole } = useRoleApi()
 
 /**
  * Props - The group object to delete

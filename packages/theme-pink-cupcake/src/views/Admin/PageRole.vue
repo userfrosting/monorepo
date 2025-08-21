@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
-import { useRolesApi } from '@userfrosting/sprinkle-admin/composables'
+import { useRoleApi } from '@userfrosting/sprinkle-admin/composables'
 import RoleInfo from '../../components/Pages/Admin/Role/RoleInfo.vue'
 import RoleUsers from '../../components/Pages/Admin/Role/RoleUsers.vue'
 import RolePermissions from '../../components/Pages/Admin/Role/RolePermissions.vue'
@@ -23,7 +23,7 @@ const role = ref<RoleResponse>({
     deleted_at: null,
     users_count: 0
 })
-const { fetchRole, apiError } = useRolesApi()
+const { fetchRole, apiError } = useRoleApi()
 
 /**
  * Methods - Fetch group

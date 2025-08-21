@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
-import { useRolesApi } from '@userfrosting/sprinkle-admin/composables'
+import { useRoleApi } from '@userfrosting/sprinkle-admin/composables'
 
 /**
  * Props - Optional role object for editing.
@@ -11,7 +11,7 @@ const props = defineProps<{ role?: RoleInterface }>()
 /**
  * API - Use the role edit API.
  */
-const { createRole, updateRole, r$, formData, apiLoading, resetForm } = useRolesApi()
+const { createRole, updateRole, r$, formData, apiLoading, resetForm } = useRoleApi()
 
 /**
  * Watchers - Watch for changes in the role prop and update formData

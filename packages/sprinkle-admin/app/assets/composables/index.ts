@@ -14,7 +14,6 @@ export { usePermissionApi } from './usePermissionApi'
 
 // Role
 export { useRoleApi } from './useRoleApi'
-export { useRolesApi } from './useRolesApi'
 export { useRoleUpdateApi } from './useRoleUpdateApi'
 export { useRolePermissionsApi } from './useRolePermissionsApi'
 
