@@ -1,39 +1,58 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { watch } from 'vue'
 import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
-import { useRoleApi } from '@userfrosting/sprinkle-admin/composables'
+import { useRolesApi } from '@userfrosting/sprinkle-admin/composables'
 import RoleInfo from '../../components/Pages/Admin/Role/RoleInfo.vue'
 import RoleUsers from '../../components/Pages/Admin/Role/RoleUsers.vue'
 import RolePermissions from '../../components/Pages/Admin/Role/RolePermissions.vue'
+import type { RoleResponse } from '@userfrosting/sprinkle-admin/interfaces'
 
 /**
  * Variables and composables
  */
 const route = useRoute()
 const page = usePageMeta()
-const { role, error, fetchRole } = useRoleApi(() => route.params.slug)
+const role = ref<RoleResponse>({
+    id: 0,
+    slug: '',
+    name: '',
+    description: '',
+    created_at: '',
+    updated_at: '',
+    deleted_at: null,
+    users_count: 0
+})
+const { fetchRole, apiError } = useRolesApi()
 
 /**
- * Watcher - Match page title to the user full name
+ * Methods - Fetch group
+ */
+async function fetch() {
+    await fetchRole(route.params.slug.toString()).then((fetchedRole) => {
+        role.value = fetchedRole
+        page.title = role.value.name
+    })
+}
+
+/**
+ * Watcher - Update page on slug change
  */
 watch(
-    () => role.value.slug,
-    () => {
-        page.title = role.value.name
-    },
+    () => route.params.slug,
+    async () => fetch(),
     { immediate: true }
 )
 </script>
 
 <template>
-    <template v-if="error">
-        <UFErrorPage :errorCode="error.status" />
+    <template v-if="apiError">
+        <UFErrorPage :errorCode="apiError.status" />
     </template>
     <template v-else>
         <div class="uk-child-width-expand" uk-grid>
             <div>
-                <RoleInfo :role="role" @updated="fetchRole()" />
+                <RoleInfo :role="role" @updated="fetch()" />
             </div>
             <div class="uk-width-2-3" v-if="$checkAccess('view_role_field')">
                 <RoleUsers :slug="role.slug" />

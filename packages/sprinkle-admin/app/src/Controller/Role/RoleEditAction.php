@@ -45,7 +45,7 @@ use UserFrosting\Support\Message\UserMessage;
 class RoleEditAction
 {
     // Request schema for client side form validation
-    protected string $schema = 'schema://requests/role/edit-info.yaml';
+    protected string $schema = 'schema://requests/role.yaml';
 
     /**
      * Inject dependencies.

@@ -21,6 +21,7 @@ export default [
                 path: 'r/:slug', // roles/r/{slug}
                 name: 'admin.role',
                 meta: {
+                    title: 'ROLE.PAGE',
                     description: 'ROLE.INFO_PAGE',
                     permission: {
                         slug: 'uri_role'

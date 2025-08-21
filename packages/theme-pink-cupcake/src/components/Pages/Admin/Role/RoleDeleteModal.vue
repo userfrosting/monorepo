@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { useRoleDeleteApi } from '@userfrosting/sprinkle-admin/composables'
+import { useRolesApi } from '@userfrosting/sprinkle-admin/composables'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 
-// Variables
-const { deleteRole } = useRoleDeleteApi()
+/**
+ * Variables and composables
+ */
+const { deleteRole } = useRolesApi()
 
-// Props
+/**
+ * Props - The group object to delete
+ */
 const props = defineProps<{
     role: RoleInterface
 }>()
 
-// Emits
+/**
+ * Emits - Define the deleted event. This event is emitted when the group is deleted
+ * to notify the parent component to refresh the data.
+ */
 const emits = defineEmits(['deleted'])
 
-// Methods
+/**
+ * Methods - Submit the form to the API and handle the response.
+ */
 const deleteConfirmed = () => {
     deleteRole(props.role.slug)
         .then(() => {

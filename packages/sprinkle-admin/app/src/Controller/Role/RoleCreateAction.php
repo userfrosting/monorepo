@@ -44,7 +44,7 @@ use UserFrosting\Support\Message\UserMessage;
 class RoleCreateAction
 {
     // Request schema for client side form validation
-    protected string $schema = 'schema://requests/role/create.yaml';
+    protected string $schema = 'schema://requests/role.yaml';
 
     /**
      * Inject dependencies.
