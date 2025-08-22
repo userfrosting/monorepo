@@ -73,7 +73,7 @@ class LoginActionTest extends AccountTestCase
 
         // Assert response status & body
         $this->assertJsonResponse($user->apiData, $response, 'user');
-        $this->assertJsonResponse('Welcome back, ' . $user->full_name . '!', $response, 'message');
+        $this->assertJsonResponse('Welcome back, ' . html_entity_decode($user->full_name) . '!', $response, 'message');
         $this->assertJsonResponse('/home', $response, 'redirect');
         $this->assertResponseStatus(200, $response);
 
