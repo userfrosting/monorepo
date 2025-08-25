@@ -1,5 +1,18 @@
 import { parse as YamlParse } from 'yaml'
-import { withMessage, required, maxLength, minLength, email } from '@regle/rules'
+import {
+    withMessage,
+    required,
+    maxLength,
+    minLength,
+    email,
+    integer,
+    numeric,
+    url,
+    oneOf,
+    between,
+    regex,
+    not
+} from '@regle/rules'
 import { useTranslator } from '../stores'
 
 export function useRuleSchemaAdapter() {
@@ -94,27 +107,112 @@ export function useRuleSchemaAdapter() {
             }
         }
 
-        // matches
+        // TODO : matches
         if (key === 'matches' && schemaFieldRules.matches) {
             console.warn('Validation rule "matches" not implemented yet')
             // console.debug('Matched rule: matches', schemaFieldRules.matches)
             // sameAs: sameAs(() => form.value.password),
         }
 
-        // equals : TODO
-        // integer : TODO
-        // member_of : TODO
-        // no_leading_whitespace : TODO
-        // no_trailing_whitespace : TODO
-        // not_equals : TODO
-        // not_matches : TODO
-        // not_member_of : TODO
-        // numeric : TODO
-        // range : TODO
-        // regex : TODO
-        // telephone : TODO
-        // uri : TODO
-        // username : TODO
+        // TODO : equals
+        if (key === 'equals' && schemaFieldRules.equals) {
+            console.warn('Validation rule "equals" not implemented yet')
+        }
+
+        // Integer
+        if (key === 'integer' && schemaFieldRules.integer) {
+            const message: string = translateMessage(schemaFieldRules.integer)
+            regleRules['integer'] = message === '' ? integer : withMessage(integer, message)
+        }
+
+        // member_of
+        if (key === 'member_of' && schemaFieldRules.member_of) {
+            const message: string = translateMessage(schemaFieldRules.member_of)
+            regleRules['member_of'] =
+                message === ''
+                    ? oneOf(schemaFieldRules.member_of.values)
+                    : withMessage(oneOf(schemaFieldRules.member_of.values), message)
+        }
+
+        // no_leading_whitespace
+        if (key === 'no_leading_whitespace' && schemaFieldRules.no_leading_whitespace) {
+            const message: string = translateMessage(schemaFieldRules.no_leading_whitespace)
+            regleRules['no_leading_whitespace'] =
+                message === '' ? regex(/^\S.*$/) : withMessage(regex(/^\S.*$/), message)
+        }
+
+        // no_trailing_whitespace
+        if (key === 'no_trailing_whitespace' && schemaFieldRules.no_trailing_whitespace) {
+            const message: string = translateMessage(schemaFieldRules.no_trailing_whitespace)
+            regleRules['no_trailing_whitespace'] =
+                message === '' ? regex(/^.*\S$/) : withMessage(regex(/^.*\S$/), message)
+        }
+
+        // TODO : not_equals
+        if (key === 'not_equals' && schemaFieldRules.not_equals) {
+            console.warn('Validation rule "not_equals" not implemented yet')
+        }
+
+        // TODO : not_matches
+        if (key === 'not_matches' && schemaFieldRules.not_matches) {
+            console.warn('Validation rule "not_matches" not implemented yet')
+        }
+
+        // not_member_of
+        if (key === 'not_member_of' && schemaFieldRules.not_member_of) {
+            const message: string = translateMessage(schemaFieldRules.not_member_of)
+            regleRules['not_member_of'] =
+                message === ''
+                    ? not(oneOf(schemaFieldRules.not_member_of.values))
+                    : withMessage(not(oneOf(schemaFieldRules.not_member_of.values)), message)
+        }
+
+        // Numeric
+        if (key === 'numeric' && schemaFieldRules.numeric) {
+            const message: string = translateMessage(schemaFieldRules.numeric)
+            regleRules['numeric'] = message === '' ? numeric : withMessage(numeric, message)
+        }
+
+        // Range
+        if (key === 'range' && schemaFieldRules.range) {
+            const message: string = translateMessage(schemaFieldRules.range)
+            regleRules['range'] =
+                message === ''
+                    ? between(schemaFieldRules.range.min, schemaFieldRules.range.max)
+                    : withMessage(
+                          between(schemaFieldRules.range.min, schemaFieldRules.range.max),
+                          message
+                      )
+        }
+
+        // Regex
+        if (key === 'regex' && schemaFieldRules.regex) {
+            const message: string = translateMessage(schemaFieldRules.regex)
+            regleRules['regex'] =
+                message === ''
+                    ? regex(new RegExp(schemaFieldRules.regex.regex))
+                    : withMessage(regex(new RegExp(schemaFieldRules.regex.regex)), message)
+        }
+
+        // TODO : telephone
+        if (key === 'telephone' && schemaFieldRules.telephone) {
+            console.warn('Validation rule "telephone" not implemented yet')
+        }
+
+        // uri
+        if (key === 'uri' && schemaFieldRules.uri) {
+            const message: string = translateMessage(schemaFieldRules.uri)
+            regleRules['uri'] = message === '' ? url : withMessage(url, message)
+        }
+
+        // Username
+        if (key === 'username' && schemaFieldRules.username) {
+            const message: string = translateMessage(schemaFieldRules.username)
+            regleRules['username'] =
+                message === ''
+                    ? regex(/^([a-z0-9.\-_])+$/i)
+                    : withMessage(regex(/^([a-z0-9.\-_])+$/i), message)
+        }
     }
 
     return { adapt, parse, translateMessage }
