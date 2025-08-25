@@ -93,7 +93,6 @@ const submitForm = () => {
                             :key="key">
                             {{ value }}
                         </option>
-                        <option value="spanish">Spanish</option>
                     </select>
                     <UFFormValidationError :errors="r$.$errors.locale" />
                 </div>
