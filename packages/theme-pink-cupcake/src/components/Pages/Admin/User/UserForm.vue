@@ -1,29 +1,27 @@
 <script setup lang="ts">
+import { watch } from 'vue'
+import { useUserApi } from '@userfrosting/sprinkle-admin/composables'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import type { UserCreateRequest, UserEditRequest } from '@userfrosting/sprinkle-admin/interfaces'
 import type { GroupInterface } from '@userfrosting/sprinkle-account/interfaces'
 
 /**
- * Props
+ * Props - List of groups for the dropdown, plus optional user object for
+ * editing.
  */
-const { groups } = defineProps<{
+const props = defineProps<{
     groups: GroupInterface[]
+    user?: UserCreateRequest | UserEditRequest
 }>()
 
 /**
- * Form Model
+ * API - Use the user edit API.
  */
-const formData = defineModel<UserEditRequest | UserCreateRequest>({
-    default: {
-        user_name: '',
-        group_id: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        locale: ''
-    }
-})
+const { createUser, updateUser, r$, formData, apiLoading, resetForm } = useUserApi()
 
+/**
+ * Helper methods
+ */
 function getAvailableLocales(): string[] {
     return useConfigStore().get('locales.available')
 }
@@ -32,17 +30,56 @@ function getDefaultLocale(): string {
     return useConfigStore().get('site.registration.user_defaults.locale', 'en_US')
 }
 
-// Apply default locale to form data
-formData.value.locale = getDefaultLocale()
+/**
+ * Watchers - Watch for changes in the group prop and update formData
+ * accordingly. Useful when the group prop is updated from the parent component,
+ * or the modal is reused.
+ */
+watch(
+    () => props.user,
+    (user) => {
+        if (user) {
+            formData.value.user_name = user.user_name
+            formData.value.group_id = user.group_id
+            formData.value.first_name = user.first_name
+            formData.value.last_name = user.last_name
+            formData.value.email = user.email
+            formData.value.locale = user.locale
+        } else {
+            // Apply default locale to form data
+            formData.value.locale = getDefaultLocale()
+        }
+    },
+    { immediate: true }
+)
 
 /**
  * Emits
  */
-const emits = defineEmits(['submit'])
+const emits = defineEmits(['success'])
+
+/**
+ * Methods - Submit the form to the API and handle the response.
+ */
+const submitForm = async () => {
+    // Make sure validation is up to date
+    const isValid = await r$.$validate()
+    if (!isValid.valid) return
+
+    const apiCall = props.user
+        ? updateUser(props.user.user_name, formData.value)
+        : createUser(formData.value)
+    apiCall
+        .then(() => {
+            emits('success')
+            resetForm()
+        })
+        .catch(() => {})
+}
 </script>
 
 <template>
-    <form v-on:submit.prevent="emits('submit')">
+    <form v-on:submit.prevent="submitForm()">
         <fieldset class="uk-fieldset uk-form-stacked">
             <div class="uk-margin">
                 <label class="uk-form-label" for="form-stacked-text">{{ $t('USERNAME') }}</label>
@@ -50,6 +87,7 @@ const emits = defineEmits(['submit'])
                     <font-awesome-icon class="fa-form-icon" icon="edit" fixed-width />
                     <input
                         class="uk-input"
+                        :class="{ 'uk-form-danger': r$.user_name.$error }"
                         type="text"
                         :placeholder="$t('USERNAME')"
                         aria-label="Username"
@@ -58,6 +96,7 @@ const emits = defineEmits(['submit'])
                         tabindex="1"
                         autocomplete="false"
                         v-model="formData.user_name" />
+                    <UFFormValidationError :errors="r$.$errors.user_name" />
                 </div>
             </div>
 
@@ -67,6 +106,7 @@ const emits = defineEmits(['submit'])
                     <font-awesome-icon class="fa-form-icon" icon="users" fixed-width />
                     <select
                         class="uk-input uk-select"
+                        :class="{ 'uk-form-danger': r$.group_id.$error }"
                         aria-label="Group"
                         data-test="group"
                         tabindex="2"
@@ -77,6 +117,7 @@ const emits = defineEmits(['submit'])
                             {{ group.name }}
                         </option>
                     </select>
+                    <UFFormValidationError :errors="r$.$errors.group_id" />
                 </div>
             </div>
 
@@ -86,12 +127,14 @@ const emits = defineEmits(['submit'])
                     <font-awesome-icon class="fa-form-icon" icon="edit" fixed-width />
                     <input
                         class="uk-input"
+                        :class="{ 'uk-form-danger': r$.first_name.$error }"
                         type="text"
                         :placeholder="$t('FIRST_NAME')"
                         aria-label="First Name"
                         data-test="first_name"
                         tabindex="3"
                         v-model="formData.first_name" />
+                    <UFFormValidationError :errors="r$.$errors.first_name" />
                 </div>
             </div>
 
@@ -101,6 +144,7 @@ const emits = defineEmits(['submit'])
                     <font-awesome-icon class="fa-form-icon" icon="edit" fixed-width />
                     <input
                         class="uk-input"
+                        :class="{ 'uk-form-danger': r$.last_name.$error }"
                         type="text"
                         :placeholder="$t('LAST_NAME')"
                         aria-label="Last Name"
@@ -116,12 +160,14 @@ const emits = defineEmits(['submit'])
                     <font-awesome-icon class="fa-form-icon" icon="envelope" fixed-width />
                     <input
                         class="uk-input"
+                        :class="{ 'uk-form-danger': r$.email.$error }"
                         type="text"
                         :placeholder="$t('EMAIL')"
                         aria-label="Email"
                         data-test="email"
                         tabindex="5"
                         v-model="formData.email" />
+                    <UFFormValidationError :errors="r$.$errors.email" />
                 </div>
             </div>
 
@@ -131,6 +177,7 @@ const emits = defineEmits(['submit'])
                     <font-awesome-icon class="fa-form-icon" icon="language" fixed-width />
                     <select
                         class="uk-input uk-select"
+                        :class="{ 'uk-form-danger': r$.locale.$error }"
                         aria-label="Locale"
                         data-test="locale"
                         tabindex="6"
@@ -142,20 +189,19 @@ const emits = defineEmits(['submit'])
                             {{ value }}
                         </option>
                     </select>
+                    <UFFormValidationError :errors="r$.$errors.locale" />
                 </div>
             </div>
-
-            <!--
-            {% if 'password' not in form.fields.hidden %}
-                {% include "forms/partials/user-set-password.html.twig" %}
-            {% endif %}
-            -->
 
             <div class="uk-text-right" uk-margin>
                 <button class="uk-button uk-button-default uk-modal-close" type="button">
                     {{ $t('CANCEL') }}
                 </button>
-                <button class="uk-button uk-button-primary" type="submit" tabindex="7">
+                <button
+                    class="uk-button uk-button-primary"
+                    :disabled="r$.$error || apiLoading"
+                    type="submit"
+                    tabindex="7">
                     {{ $t('SAVE') }}
                 </button>
             </div>

@@ -14,7 +14,7 @@ import type { RolesSprunjeResponse, UserRoleSprunjeResponse } from '../interface
  * This composable accept a {username} to select the roles of a specific user.
  */
 export function useUserRolesApi() {
-    const loading = ref(false)
+    const loading = ref<boolean>(false)
     const error = ref<ApiErrorResponse | null>()
     const selected = ref<Number[]>([])
     const roles = ref<RoleInterface[]>([])

@@ -4,7 +4,9 @@ import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import type { ApiResponse, ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
 import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
-// TODO : Add validation
+// TODO : Add validation - This composable is only used to associates the
+// permissions with the role. It should have a dedicated schema for this, plus
+// be merged with 'useRolePermissionsApi'
 // 'schema://requests/role/edit-field.yaml'
 
 /**

@@ -47,7 +47,6 @@ watch(
 
 <template>
     <template v-if="apiError">
-        <div>An error occured</div>
         <UFErrorPage :errorCode="apiError.status" />
     </template>
     <template v-else>

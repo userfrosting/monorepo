@@ -39,7 +39,11 @@ const emits = defineEmits(['success'])
 /**
  * Methods - Submit the form to the API and handle the response.
  */
-const submitForm = () => {
+const submitForm = async () => {
+    // Make sure validation is up to date
+    const isValid = await r$.$validate()
+    if (!isValid.valid) return
+
     const apiCall = props.group
         ? updateGroup(props.group.slug, formData.value)
         : createGroup(formData.value)

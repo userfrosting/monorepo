@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { useUserDeleteApi } from '@userfrosting/sprinkle-admin/composables'
+import { useUserApi } from '@userfrosting/sprinkle-admin/composables'
 import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 
-// Variables
-const { deleteUser } = useUserDeleteApi()
+/**
+ * Variables and composables
+ */
+const { deleteUser } = useUserApi()
 
-// Props
+/**
+ * Props - The user object to delete
+ */
 const props = defineProps<{
     user: UserInterface
 }>()
 
-// Emits
+/**
+ * Emits - Define the deleted event. This event is emitted when the user is deleted
+ * to notify the parent component to refresh the data.
+ */
 const emits = defineEmits(['deleted'])
 
-// Methods
+/**
+ * Methods - Submit the form to the API and handle the response.
+ */
 const deleteConfirmed = () => {
     deleteUser(props.user.user_name)
         .then(() => {

@@ -15,7 +15,26 @@ import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
 import schemaFile from '../../schema/requests/role.yaml?raw'
 
 /**
- * API Composable
+ * Vue composable for Role CRUD operations.
+ *
+ * Endpoints:
+ * - GET    /api/roles/r/{slug}  -> RoleResponse
+ * - POST   /api/roles           -> RoleCreateResponse
+ * - PUT    /api/roles/r/{slug}  -> RoleEditResponse
+ * - DELETE /api/roles/r/{slug}  -> RoleDeleteResponse
+ *
+ * Reactive state:
+ * - apiLoading: boolean
+ * - apiError: ApiErrorResponse | null
+ * - formData: RoleCreateRequest
+ * - r$: validation state from Regle for formData
+ *
+ * Methods:
+ * - fetchRole(slug: string): Promise<RoleResponse>
+ * - createRole(data: RoleCreateRequest): Promise<void>
+ * - updateRole(slug: string, data: RoleEditRequest): Promise<void>
+ * - deleteRole(slug: string): Promise<void>
+ * - resetForm(): void
  */
 export function useRoleApi() {
     const defaultFormData = (): RoleCreateRequest => ({

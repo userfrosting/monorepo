@@ -47,6 +47,14 @@ use UserFrosting\Support\Message\UserMessage;
 class UserUpdateFieldAction
 {
     // Request schema for client side form validation
+    // NOTE: This action uses the generic 'edit-field' schema shared by many
+    // fields (email, password, verification flag, etc.). That schema differs
+    // from the one used for user creation, which the frontend uses for client-
+    // side validation.
+    // Refactor plan:
+    //  1) Split this endpoint into dedicated action classes per field.
+    //  2) Give each action its own request schema; for shared properties,
+    //     align the edit schemas with the create-user schema.
     protected string $schema = 'schema://requests/user/edit-field.yaml';
 
     /**

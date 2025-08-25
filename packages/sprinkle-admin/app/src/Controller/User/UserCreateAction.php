@@ -117,10 +117,10 @@ class UserCreateAction
         // Whitelist and set parameter defaults
         $data = $this->transformer->transform($schema, $params);
 
-        // If no password is set, set password as empty on initial creation.
+        // Force set password as empty on initial creation.
         // We will then send email so new user can set it themselves via a
         // verification token.
-        $data['password'] = $data['password'] ?? '';
+        $data['password'] = '';
 
         // Get current user. Won't be null, as AuthGuard prevent it
         /** @var UserInterface */
@@ -192,13 +192,7 @@ class UserCreateAction
      */
     protected function getSchema(): RequestSchemaInterface
     {
-        $schema = new RequestSchema($this->schema);
-        $schema->set('password.validators.length.min', $this->config->get('site.password.length.min'));
-        $schema->set('password.validators.length.max', $this->config->get('site.password.length.max'));
-        $schema->set('passwordc.validators.length.min', $this->config->get('site.password.length.min'));
-        $schema->set('passwordc.validators.length.max', $this->config->get('site.password.length.max'));
-
-        return $schema;
+        return new RequestSchema($this->schema);
     }
 
     /**

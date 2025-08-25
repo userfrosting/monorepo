@@ -15,7 +15,26 @@ import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
 import schemaFile from '../../schema/requests/group.yaml?raw'
 
 /**
- * API Composable
+ * Vue composable for Group CRUD operations.
+ *
+ * Endpoints:
+ * - GET    /api/groups/g/{slug}  -> GroupResponse
+ * - POST   /api/groups           -> GroupCreateResponse
+ * - PUT    /api/groups/g/{slug}  -> GroupEditResponse
+ * - DELETE /api/groups/g/{slug}  -> GroupDeleteResponse
+ *
+ * Reactive state:
+ * - apiLoading: boolean
+ * - apiError: ApiErrorResponse | null
+ * - formData: GroupCreateRequest
+ * - r$: validation state from Regle for formData
+ *
+ * Methods:
+ * - fetchGroup(slug: string): Promise<GroupResponse>
+ * - createGroup(data: GroupCreateRequest): Promise<void>
+ * - updateGroup(slug: string, data: GroupEditRequest): Promise<void>
+ * - deleteGroup(slug: string): Promise<void>
+ * - resetForm(): void
  */
 export function useGroupApi() {
     const defaultFormData = (): GroupCreateRequest => ({

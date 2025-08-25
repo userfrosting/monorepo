@@ -1,66 +1,156 @@
-import { ref, toValue, watchEffect } from 'vue'
+import { ref, toValue } from 'vue'
 import axios from 'axios'
-import type { ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
-import type { UserResponse } from '../interfaces'
+import { useRegle } from '@regle/core'
+import { Severity, type ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
+import type {
+    UserCreateRequest,
+    UserCreateResponse,
+    UserDeleteResponse,
+    UserEditRequest,
+    UserEditResponse,
+    UserResponse
+} from '../interfaces'
+import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
+import schemaFile from '../../schema/requests/user/create.yaml?raw'
+import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 /**
- * API used to fetch data about a specific user.
+ * Vue composable for User CRUD operations.
  *
- * This interface is tied to the `UserApi` API, accessed at the GET
- * `/api/users/u/{user_name}` endpoint and the `UserResponse` Typescript
- * interface.
+ * Endpoints:
+ * - GET    /api/users/u/{user_name}  -> UserResponse
+ * - POST   /api/users                -> UserCreateResponse
+ * - PUT    /api/users/u/{user_name}  -> UserEditResponse
+ * - DELETE /api/users/u/{user_name}  -> UserDeleteResponse
  *
- * This composable accept a {user_name} to select the user. Any changes to the
- * {user_name} is watched and will trigger an update.
+ * Reactive state:
+ * - apiLoading: boolean
+ * - apiError: ApiErrorResponse | null
+ * - formData: UserCreateRequest
+ * - r$: validation state from Regle for formData
  *
- * Available ref:
- * - user: UserResponse
- * - error: AlertInterface | null
- * - loading: boolean
- * - fetchUser(): void - Trigger a refresh of the user data
+ * Methods:
+ * - fetchUser(user_name: string): Promise<UserResponse>
+ * - createUser(data: UserCreateRequest): Promise<void>
+ * - updateUser(user_name: string, data: UserEditRequest): Promise<void>
+ * - deleteUser(user_name: string): Promise<void>
+ * - resetForm(): void
  */
-export function useUserApi(user_name: any) {
-    const loading = ref(false)
-    const error = ref<ApiErrorResponse | null>()
-    const user = ref<UserResponse>({
-        id: 0,
+export function useUserApi() {
+    const defaultFormData = (): UserCreateRequest => ({
         user_name: '',
+        group_id: 0,
         first_name: '',
         last_name: '',
-        full_name: '',
         email: '',
-        avatar: '',
-        flag_enabled: false,
-        flag_verified: false,
-        group_id: null,
-        locale: '',
-        created_at: '',
-        updated_at: '',
-        deleted_at: null,
-        locale_name: '',
-        group: null
+        locale: 'users'
     })
 
-    async function fetchUser() {
-        loading.value = true
-        error.value = null
+    const apiLoading = ref<boolean>(false)
+    const apiError = ref<ApiErrorResponse | null>()
+    const formData = ref<UserCreateRequest>(defaultFormData())
 
-        await axios
+    // Load the schema and set up the validator
+    const { r$ } = useRegle(formData, useRuleSchemaAdapter().adapt(schemaFile))
+
+    async function fetchUser(user_name: string) {
+        apiLoading.value = true
+        apiError.value = null
+
+        return axios
             .get<UserResponse>('/api/users/u/' + toValue(user_name))
             .then((response) => {
-                user.value = response.data
+                return response.data
             })
             .catch((err) => {
-                error.value = err.response.data
+                apiError.value = err.response.data
+
+                throw apiError.value
             })
             .finally(() => {
-                loading.value = false
+                apiLoading.value = false
             })
     }
 
-    watchEffect(() => {
-        fetchUser()
-    })
+    async function createUser(data: UserCreateRequest) {
+        apiLoading.value = true
+        apiError.value = null
+        return axios
+            .post<UserCreateResponse>('/api/users', data)
+            .then((response) => {
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
+            })
+            .catch((err) => {
+                apiError.value = err.response.data
 
-    return { user, error, loading, fetchUser }
+                throw apiError.value
+            })
+            .finally(() => {
+                apiLoading.value = false
+            })
+    }
+
+    async function updateUser(user_name: string, data: UserEditRequest) {
+        apiLoading.value = true
+        apiError.value = null
+        return axios
+            .put<UserEditResponse>('/api/users/u/' + user_name, data)
+            .then((response) => {
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
+            })
+            .catch((err) => {
+                apiError.value = err.response.data
+
+                throw apiError.value
+            })
+            .finally(() => {
+                apiLoading.value = false
+            })
+    }
+
+    async function deleteUser(user_name: string) {
+        apiLoading.value = true
+        apiError.value = null
+        return axios
+            .delete<UserDeleteResponse>('/api/users/u/' + user_name)
+            .then((response) => {
+                useAlertsStore().push({
+                    title: response.data.title,
+                    description: response.data.description,
+                    style: Severity.Success
+                })
+            })
+            .catch((err) => {
+                apiError.value = err.response.data
+
+                throw apiError.value
+            })
+            .finally(() => {
+                apiLoading.value = false
+            })
+    }
+
+    function resetForm() {
+        formData.value = defaultFormData()
+    }
+
+    return {
+        fetchUser,
+        createUser,
+        updateUser,
+        deleteUser,
+        apiError,
+        apiLoading,
+        formData,
+        r$,
+        resetForm
+    }
 }

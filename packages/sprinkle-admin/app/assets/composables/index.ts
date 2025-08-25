@@ -19,9 +19,6 @@ export { useRolePermissionsApi } from './useRolePermissionsApi'
 
 // User
 export { useUserApi } from './useUserApi'
-export { useUserCreateApi } from './useUserCreateApi'
-export { useUserDeleteApi } from './useUserDeleteApi'
-export { useUserEditApi } from './useUserEditApi'
 export { useUserUpdateApi } from './useUserUpdateApi'
 export { useUserPasswordResetApi } from './useUserPasswordResetApi'
 export { useUserRolesApi } from './useUserRolesApi'

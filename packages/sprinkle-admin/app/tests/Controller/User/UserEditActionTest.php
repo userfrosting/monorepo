@@ -116,12 +116,12 @@ class UserEditActionTest extends AdminTestCase
             'title',
             'description'
         ], $response);
-        $this->assertJsonResponse('Account details updated for user <strong>' . $userToEdit->user_name . '</strong>', $response, 'title'); // N.B.: The username CANNOT be changed
+        $this->assertJsonResponse('Account details updated for user <strong>foo</strong>', $response, 'title');
 
         // Test that the user was updated
         /** @var User */
         $editedUser = User::find($userToEdit->id);
-        $this->assertNotSame('foo', $editedUser->user_name); // Username not allowed by schema
+        $this->assertSame('foo', $editedUser->user_name);
         $this->assertSame('foo@bar.com', $editedUser->email);
         $this->assertNull($editedUser->group_id);
     }
@@ -160,9 +160,8 @@ class UserEditActionTest extends AdminTestCase
         $userToEdit = User::factory()->create();
 
         // Set post payload
-        $data = [
-            'email' => $user->email,
-        ];
+        $data = $userToEdit->toArray();
+        $data['email'] = $user->email;
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('PUT', '/api/users/u/' . $userToEdit->user_name, $data);

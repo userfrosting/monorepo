@@ -9,11 +9,11 @@ import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
  */
 export function useUserPasswordResetApi() {
     // Form data
-    const loadingState = ref<Boolean>(false)
+    const apiLoading = ref<boolean>(false)
     const apiError = ref<ApiErrorResponse | null>(null)
 
     async function passwordReset(user_name: string) {
-        loadingState.value = true
+        apiLoading.value = true
         apiError.value = null
         return axios
             .post<UserDeleteResponse>('/api/users/u/' + user_name + '/password-reset')
@@ -30,9 +30,9 @@ export function useUserPasswordResetApi() {
                 throw apiError.value
             })
             .finally(() => {
-                loadingState.value = false
+                apiLoading.value = false
             })
     }
 
-    return { loadingState, apiError, passwordReset }
+    return { apiLoading, apiError, passwordReset }
 }

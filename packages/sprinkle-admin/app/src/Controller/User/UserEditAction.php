@@ -43,7 +43,7 @@ use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 class UserEditAction
 {
     // Request schema for client side form validation
-    protected string $schema = 'schema://requests/user/edit-info.yaml';
+    protected string $schema = 'schema://requests/user/create.yaml';
 
     /**
      * Inject dependencies.
@@ -92,6 +92,25 @@ class UserEditAction
      */
     protected function handle(UserInterface $user, Request $request): UserInterface
     {
+        // Access-controlled resource.
+        // Verify the authenticated user has permission to edit the submitted
+        // fields for the target user.
+        if (!$this->authenticator->checkAccess('update_user_field')) {
+            throw new ForbiddenException();
+        }
+
+        // Get current user. Won't be null, as AuthGuard prevent it
+        /** @var UserInterface */
+        $currentUser = $this->authenticator->user();
+
+        // Only the master account can edit the master account!
+        if (
+            ($user->id === $this->config->get('reserved_user_ids.master')) &&
+            ($currentUser->id !== $this->config->get('reserved_user_ids.master'))
+        ) {
+            throw new ForbiddenException();
+        }
+
         // Get PUT parameters
         $params = (array) $request->getParsedBody();
 
@@ -114,23 +133,6 @@ class UserEditAction
             } else {
                 $fieldNames[] = $name;
             }
-        }
-
-        // Access-controlled resource - check that currentUser has permission to edit submitted fields for this user
-        if (!$this->authenticator->checkAccess('update_user_field')) {
-            throw new ForbiddenException();
-        }
-
-        // Get current user. Won't be null, as AuthGuard prevent it
-        /** @var UserInterface */
-        $currentUser = $this->authenticator->user();
-
-        // Only the master account can edit the master account!
-        if (
-            ($user->id === $this->config->get('reserved_user_ids.master')) &&
-            ($currentUser->id !== $this->config->get('reserved_user_ids.master'))
-        ) {
-            throw new ForbiddenException();
         }
 
         // Check if email already exists
