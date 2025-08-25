@@ -52,7 +52,7 @@
         "psr/event-dispatcher": "^1.0",
         "slim/csrf": "^1.3",
         "slim/psr7": "^1.4",
-        "slim/slim": "^4.14",
+        "slim/slim": "^4.15",
         "slim/twig-view": "^3.0",
         "symfony/console": "^6.4",
         "symfony/yaml": ">=4.4",
@@ -78,6 +78,15 @@
         "slam/phpstan-extensions": "^6.0",
         "symplify/monorepo-builder": "^11.2"
     },
+    "replace": {
+        "userfrosting/framework": "6.0.0-alpha.6",
+        "userfrosting/sprinkle-account": "6.0.0-alpha.6",
+        "userfrosting/sprinkle-admin": "6.0.0-alpha.6",
+        "userfrosting/sprinkle-core": "6.0.0-alpha.6",
+        "userfrosting/userfrosting": "6.0.0-alpha.6"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "UserFrosting\\": "packages/framework/src",
@@ -96,14 +105,5 @@
             "UserFrosting\\Tests\\App\\": "packages/skeleton/app/tests/",
             "Workers\\MonoRepo\\": "utils/"
         }
-    },
-    "replace": {
-        "userfrosting/framework": "6.0.0-alpha.6",
-        "userfrosting/sprinkle-account": "6.0.0-alpha.6",
-        "userfrosting/sprinkle-admin": "6.0.0-alpha.6",
-        "userfrosting/sprinkle-core": "6.0.0-alpha.6",
-        "userfrosting/userfrosting": "6.0.0-alpha.6"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
