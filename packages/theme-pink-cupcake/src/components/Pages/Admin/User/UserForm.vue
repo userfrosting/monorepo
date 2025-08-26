@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useUserApi } from '@userfrosting/sprinkle-admin/composables'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import type { UserCreateRequest, UserEditRequest } from '@userfrosting/sprinkle-admin/interfaces'
@@ -20,8 +20,14 @@ const props = defineProps<{
 const { createUser, updateUser, r$, formData, apiLoading, resetForm } = useUserApi()
 
 /**
- * Helper methods
+ * Helper methods & Variables
  */
+const usernameForcedUnlocked = ref<boolean>(false)
+const disabledChange = computed<boolean>(() => {
+    if (usernameForcedUnlocked.value) return false
+    return props.user != null
+})
+
 function getAvailableLocales(): string[] {
     return useConfigStore().get('locales.available')
 }
@@ -85,9 +91,20 @@ const submitForm = async () => {
                 <label class="uk-form-label" for="form-stacked-text">{{ $t('USERNAME') }}</label>
                 <div class="uk-inline uk-width-1-1">
                     <font-awesome-icon class="fa-form-icon" icon="edit" fixed-width />
+                    <button
+                        class="uk-button uk-button-default uk-form-button"
+                        type="button"
+                        :uk-tooltip="$t('USERNAME.UNMODIFIABLE')"
+                        @click="usernameForcedUnlocked = !usernameForcedUnlocked"
+                        v-if="props.user != null">
+                        <font-awesome-icon
+                            fixed-width
+                            :icon="usernameForcedUnlocked ? 'lock-open' : 'lock'" />
+                    </button>
                     <input
                         class="uk-input"
                         :class="{ 'uk-form-danger': r$.user_name.$error }"
+                        :disabled="disabledChange"
                         type="text"
                         :placeholder="$t('USERNAME')"
                         aria-label="Username"

@@ -1,0 +1,23 @@
+// Custom hooks
+// ========================================================================
+
+.hook-form-misc() {
+    // Adjust the uk-input width when using form buttons
+    .uk-form-button:not(.uk-form-button-flip) ~ .uk-input {
+        width: calc(100% - (@form-icon-width + 2 * @button-border-width)) !important;
+    }
+
+    .uk-form-button {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        height: @form-height;
+        width: @form-icon-width;
+        margin-right: 0 !important;
+        padding: 0 @fa-form-icon-padding !important;
+    }
+}

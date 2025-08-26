@@ -212,6 +212,7 @@ return [
         'INVALID'       => 'Nom d\'utilisateur invalide',
         'IN_USE'        => 'Le nom d\'utilisateur \'{{username}}\' est déjà utilisé.',
         'NOT_AVAILABLE' => 'Le nom d\'utilisateur <strong>{{user_name}}</strong> n\'est pas disponible. Choisissez un autre nom, ou cliquez sur « suggérer ».',
+        'UNMODIFIABLE'  => 'Le nom d\'utilisateur ne devrait pas être modifié. Cliquez pour déverrouiller et utilisez avec précaution.',
     ],
 
     'WELCOME'               => 'Bienvenue {{full_name}}!',
