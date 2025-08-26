@@ -211,7 +211,7 @@ return [
         'INVALID'       => 'Invalid username',
         'IN_USE'        => 'Username <strong>{{user_name}}</strong> is already in use.',
         'NOT_AVAILABLE' => "Username <strong>{{user_name}}</strong> is not available. Choose a different name, or click 'suggest'.",
-        'UNMODIFIABLE'  => 'Username should not be changed. Click to unlock, and use with caution.'
+        'UNMODIFIABLE'  => 'Username should not be changed. Click to unlock, and use with caution.',
     ],
 
     'WELCOME' => 'Welcome back, {{full_name}}!',
