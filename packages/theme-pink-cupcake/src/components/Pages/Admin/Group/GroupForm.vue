@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useGroupApi } from '@userfrosting/sprinkle-admin/composables'
 import type { GroupInterface } from '@userfrosting/sprinkle-account/interfaces'
 
@@ -11,16 +11,7 @@ const props = defineProps<{ group?: GroupInterface }>()
 /**
  * API - Use the group edit API.
  */
-const { createGroup, updateGroup, r$, formData, apiLoading, resetForm } = useGroupApi()
-
-/**
- * Helper methods & Variables
- */
-const slugForcedUnlocked = ref<boolean>(false)
-const disabledChange = computed<boolean>(() => {
-    if (slugForcedUnlocked.value) return false
-    return props.group != null
-})
+const { createGroup, updateGroup, r$, formData, apiLoading, resetForm, slugLocked } = useGroupApi()
 
 /**
  * Watchers - Watch for changes in the group prop and update formData
@@ -93,17 +84,14 @@ const submitForm = async () => {
                     <button
                         class="uk-button uk-button-default uk-form-button"
                         type="button"
-                        :uk-tooltip="$t('GROUP.SLUG_UNMODIFIABLE')"
-                        @click="slugForcedUnlocked = !slugForcedUnlocked"
-                        v-if="props.group != null">
-                        <font-awesome-icon
-                            fixed-width
-                            :icon="slugForcedUnlocked ? 'lock-open' : 'lock'" />
+                        :uk-tooltip="$t('OVERRIDE')"
+                        @click="slugLocked = !slugLocked">
+                        <font-awesome-icon fixed-width :icon="slugLocked ? 'lock' : 'lock-open'" />
                     </button>
                     <input
                         class="uk-input"
                         :class="{ 'uk-form-danger': r$.slug.$error }"
-                        :disabled="disabledChange"
+                        :disabled="slugLocked"
                         type="text"
                         :placeholder="$t('SLUG')"
                         aria-label="Group Slug"

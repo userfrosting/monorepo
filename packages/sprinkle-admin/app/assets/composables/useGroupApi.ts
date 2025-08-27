@@ -1,6 +1,7 @@
-import { ref, toValue } from 'vue'
+import { ref, toValue, watch } from 'vue'
 import axios from 'axios'
 import { useRegle } from '@regle/core'
+import slug from 'limax'
 import { Severity, type ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
 import type {
     GroupCreateRequest,
@@ -44,6 +45,7 @@ export function useGroupApi() {
         icon: 'users'
     })
 
+    const slugLocked = ref<boolean>(true)
     const apiLoading = ref<boolean>(false)
     const apiError = ref<ApiErrorResponse | null>(null)
     const formData = ref<GroupCreateRequest>(defaultFormData())
@@ -143,6 +145,15 @@ export function useGroupApi() {
         formData.value = defaultFormData()
     }
 
+    watch(
+        () => formData.value.name,
+        (name) => {
+            if (slugLocked.value) {
+                formData.value.slug = slug(name)
+            }
+        }
+    )
+
     return {
         fetchGroup,
         createGroup,
@@ -152,6 +163,7 @@ export function useGroupApi() {
         apiError,
         formData,
         r$,
-        resetForm
+        resetForm,
+        slugLocked
     }
 }
