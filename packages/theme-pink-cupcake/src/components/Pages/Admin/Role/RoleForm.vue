@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
 import { useRoleApi } from '@userfrosting/sprinkle-admin/composables'
 
@@ -12,6 +12,15 @@ const props = defineProps<{ role?: RoleInterface }>()
  * API - Use the role edit API.
  */
 const { createRole, updateRole, r$, formData, apiLoading, resetForm } = useRoleApi()
+
+/**
+ * Helper methods & Variables
+ */
+const slugForcedUnlocked = ref<boolean>(false)
+const disabledChange = computed<boolean>(() => {
+    if (slugForcedUnlocked.value) return false
+    return props.role != null
+})
 
 /**
  * Watchers - Watch for changes in the role prop and update formData
@@ -80,9 +89,20 @@ const submitForm = async () => {
                 <label class="uk-form-label" for="form-stacked-text">{{ $t('SLUG') }}</label>
                 <div class="uk-inline uk-width-1-1">
                     <font-awesome-icon class="fa-form-icon" icon="tag" fixed-width />
+                    <button
+                        class="uk-button uk-button-default uk-form-button"
+                        type="button"
+                        :uk-tooltip="$t('ROLE.SLUG_UNMODIFIABLE')"
+                        @click="slugForcedUnlocked = !slugForcedUnlocked"
+                        v-if="props.role != null">
+                        <font-awesome-icon
+                            fixed-width
+                            :icon="slugForcedUnlocked ? 'lock-open' : 'lock'" />
+                    </button>
                     <input
                         class="uk-input"
                         :class="{ 'uk-form-danger': r$.slug.$error }"
+                        :disabled="disabledChange"
                         type="text"
                         :placeholder="$t('SLUG')"
                         aria-label="Role Slug"
@@ -91,7 +111,6 @@ const submitForm = async () => {
                         v-model="formData.slug" />
                     <UFFormValidationError :errors="r$.$errors.slug" />
                 </div>
-                <!-- TODO : Disable + unlock button; Auto generate slug -->
             </div>
 
             <div class="uk-margin">
