@@ -14,13 +14,8 @@ namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Fortress\RequestSchema;
-use UserFrosting\Fortress\RequestSchema\RequestSchemaInterface;
-use UserFrosting\Fortress\Transformer\RequestDataTransformer;
-use UserFrosting\Fortress\Validator\ServerSideValidator;
 use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
-use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
 
@@ -37,9 +32,6 @@ use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
  */
 class CheckUsernameAction
 {
-    // Request schema to use to validate data.
-    protected string $schema = 'schema://requests/check-username.yaml';
-
     /**
      * Inject dependencies.
      */
@@ -47,8 +39,6 @@ class CheckUsernameAction
         protected Throttler $throttler,
         protected Translator $translator,
         protected UserInterface $userModel,
-        protected RequestDataTransformer $transformer,
-        protected ServerSideValidator $validator,
     ) {
     }
 
@@ -83,20 +73,14 @@ class CheckUsernameAction
         // GET parameters
         $params = $request->getQueryParams();
 
-        // Load the request schema
-        $schema = $this->getSchema();
-
-        // Whitelist and set parameter defaults
-        $data = $this->transformer->transform($schema, $params);
-
-        // Validate request data
-        $this->validateData($schema, $data);
-
         // Log throttle-able event
         $this->throttler->logEvent('check_username_request');
 
-        if ($this->userModel::findUnique($data['user_name'], 'user_name') !== null) {
-            $message = $this->translator->translate('USERNAME.NOT_AVAILABLE', $data);
+        // Condition : Username already exists
+        if (isset($params['user_name'])
+            && is_string($params['user_name'])
+            && $this->userModel::findUnique($params['user_name'], 'user_name') !== null) {
+            $message = $this->translator->translate('USERNAME.NOT_AVAILABLE', $params);
 
             return [
                 'available' => false,
@@ -119,35 +103,6 @@ class CheckUsernameAction
         if ($delay > 0) {
             $e = new ThrottlerDelayException();
             $e->setDelay($delay);
-
-            throw $e;
-        }
-    }
-
-    /**
-     * Load the request schema.
-     *
-     * @return RequestSchemaInterface
-     */
-    protected function getSchema(): RequestSchemaInterface
-    {
-        $schema = new RequestSchema($this->schema);
-
-        return $schema;
-    }
-
-    /**
-     * Validate request data.
-     *
-     * @param RequestSchemaInterface $schema
-     * @param mixed[]                $data
-     */
-    protected function validateData(RequestSchemaInterface $schema, array $data): void
-    {
-        $errors = $this->validator->validate($schema, $data);
-        if (count($errors) !== 0) {
-            $e = new ValidationException();
-            $e->addErrors($errors);
 
             throw $e;
         }

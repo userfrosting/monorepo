@@ -58,8 +58,11 @@ class CheckUsernameActionTest extends AccountTestCase
         $response = $this->handleRequest($request);
 
         // Assert response status & body
-        $this->assertJsonResponse('Validation error', $response, 'title');
-        $this->assertResponseStatus(400, $response);
+        $this->assertJsonResponse([
+            'available' => true,
+            'message'   => '',
+        ], $response);
+        $this->assertResponseStatus(200, $response);
     }
 
     public function testCheckUsernameWithUsernameNotAvailable(): void

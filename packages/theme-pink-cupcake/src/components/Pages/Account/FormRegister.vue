@@ -16,6 +16,7 @@ const {
     apiLoading,
     apiError,
     r$,
+    r$username,
     passwordMinLength,
     passwordMaxLength
 } = useRegisterApi()
@@ -32,13 +33,6 @@ const {
 const router = useRouter()
 const code = ref<string>('')
 const displayVerification = ref(false)
-
-/**
- * TODO :
- *  2. Check username availability
- *  3. Add password strength, other config
- *  4. Add password length
- */
 
 /**
  * Methods - Submit the form to the API and handle the response.
@@ -141,7 +135,9 @@ const tos = computed(() => {
                         <div class="uk-width-2-3">
                             <input
                                 class="uk-input"
-                                :class="{ 'uk-form-danger': r$.user_name.$error }"
+                                :class="{
+                                    'uk-form-danger': r$.user_name.$error || r$username.$error
+                                }"
                                 type="text"
                                 :placeholder="$t('USERNAME.CHOOSE')"
                                 aria-label="Username"
@@ -149,6 +145,7 @@ const tos = computed(() => {
                                 autocomplete="off"
                                 v-model="formData.user_name" />
                             <UFFormValidationError :errors="r$.$errors.user_name" />
+                            <UFFormValidationError :errors="r$username.$errors.user_name" />
                         </div>
                         <div class="uk-width-1-3">
                             <a class="uk-button uk-button-default" @click="suggestUsername()">{{

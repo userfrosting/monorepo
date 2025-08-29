@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import axios from 'axios'
-import { useRegle } from '@regle/core'
+import { createRule, useRegle, type Maybe } from '@regle/core'
 import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import { useAlertsStore, useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
@@ -28,6 +28,22 @@ export function useRegisterApi() {
 
     // Load the schema and set up the validator
     const { r$ } = useRegle(formData, useRuleSchemaAdapter().adapt(schemaFile))
+
+    const usernameRule = createRule({
+        async validator(value: Maybe<string>) {
+            const result = await validateUsername(value)
+
+            return { $valid: result.available, $message: result.message }
+        },
+
+        message: (metadata) => {
+            return metadata.$message
+        }
+    })
+
+    const { r$: r$username } = useRegle(formData, {
+        user_name: { usernameRule }
+    })
 
     /**
      * Get the default form for the registration
@@ -104,16 +120,30 @@ export function useRegisterApi() {
             })
     }
 
+    async function validateUsername(user_name: Maybe<string>) {
+        return axios
+            .get('/account/check-username', {
+                params: {
+                    user_name
+                }
+            })
+            .then((response) => {
+                return response.data
+            })
+    }
+
     return {
         submitRegistration,
         defaultRegistrationForm,
         availableLocales,
         suggestUsername,
+        validateUsername,
         captchaUrl,
         formData,
         apiLoading,
         apiError,
         r$,
+        r$username,
         passwordMinLength,
         passwordMaxLength
     }
