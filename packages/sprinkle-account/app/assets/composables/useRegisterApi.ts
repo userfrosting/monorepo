@@ -1,8 +1,11 @@
 import { ref } from 'vue'
 import axios from 'axios'
+import { useRegle } from '@regle/core'
 import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import { useAlertsStore, useConfigStore } from '@userfrosting/sprinkle-core/stores'
+import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
 import type { RegisterRequest, RegisterResponse } from '../interfaces'
+import schemaFile from '../../schema/requests/register.yaml?raw'
 
 /**
  * API Composable
@@ -10,6 +13,21 @@ import type { RegisterRequest, RegisterResponse } from '../interfaces'
 export function useRegisterApi() {
     const apiLoading = ref<Boolean>(false)
     const apiError = ref<AlertInterface | null>(null)
+    const passwordMinLength = ref<number>(0)
+    const passwordMaxLength = ref<number>(0)
+    const formData = ref<RegisterRequest>(defaultRegistrationForm())
+
+    // Retrieve min/max password length from site settings and update validator
+    // constraints
+    const config = useConfigStore()
+    passwordMinLength.value = config.get('site.password.length.min')
+    passwordMaxLength.value = config.get('site.password.length.max')
+
+    // TODO : Pass min/max to Regle (can't change defined regle, the message won't follow)
+    // TODO : matches rules is not implemented
+
+    // Load the schema and set up the validator
+    const { r$ } = useRegle(formData, useRuleSchemaAdapter().adapt(schemaFile))
 
     /**
      * Get the default form for the registration
@@ -92,7 +110,11 @@ export function useRegisterApi() {
         availableLocales,
         suggestUsername,
         captchaUrl,
+        formData,
         apiLoading,
-        apiError
+        apiError,
+        r$,
+        passwordMinLength,
+        passwordMaxLength
     }
 }

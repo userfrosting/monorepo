@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEmailVerificationApi, useRegisterApi } from '@userfrosting/sprinkle-account/composables'
-import type { RegisterRequest } from '@userfrosting/sprinkle-account/interfaces'
 import { useConfigStore, useTranslator } from '@userfrosting/sprinkle-core/stores'
 import FaCode from '../../Content/2FaCode.vue'
 
@@ -11,11 +10,14 @@ import FaCode from '../../Content/2FaCode.vue'
  */
 const {
     submitRegistration,
-    defaultRegistrationForm,
     availableLocales,
     captchaUrl,
+    formData,
     apiLoading,
-    apiError
+    apiError,
+    r$,
+    passwordMinLength,
+    passwordMaxLength
 } = useRegisterApi()
 
 const {
@@ -28,21 +30,24 @@ const {
  * Variables - Copy the default form data to a reactive variable.
  */
 const router = useRouter()
-const formData = ref<RegisterRequest>(defaultRegistrationForm())
 const code = ref<string>('')
 const displayVerification = ref(false)
 
 /**
  * TODO :
- *  1. Add Username Suggest
  *  2. Check username availability
  *  3. Add password strength, other config
+ *  4. Add password length
  */
 
 /**
  * Methods - Submit the form to the API and handle the response.
  */
 const submitForm = async () => {
+    // Make sure validation is up to date
+    const isValid = await r$.$validate()
+    if (!isValid.valid) return
+
     await submitRegistration(formData.value)
         .then(() => {
             // Switch to the verification form on success
@@ -89,30 +94,39 @@ const tos = computed(() => {
                         <div class="uk-width-1-2">
                             <input
                                 class="uk-input"
+                                :class="{ 'uk-form-danger': r$.first_name.$error }"
                                 type="text"
                                 :placeholder="$t('FIRST_NAME')"
                                 aria-label="First Name"
                                 id="first_name"
                                 data-test="first_name"
+                                autocomplete="off"
                                 v-model="formData.first_name" />
+                            <UFFormValidationError :errors="r$.$errors.first_name" />
                         </div>
                         <div class="uk-width-1-2">
                             <input
                                 class="uk-input"
+                                :class="{ 'uk-form-danger': r$.last_name.$error }"
                                 type="text"
                                 :placeholder="$t('LAST_NAME')"
                                 aria-label="Last Name"
                                 data-test="last_name"
+                                autocomplete="off"
                                 v-model="formData.last_name" />
+                            <UFFormValidationError :errors="r$.$errors.last_name" />
                         </div>
                         <div class="uk-width-1-1">
                             <input
                                 class="uk-input"
+                                :class="{ 'uk-form-danger': r$.email.$error }"
                                 type="email"
                                 :placeholder="$t('EMAIL')"
                                 aria-label="Email"
                                 data-test="email"
+                                autocomplete="off"
                                 v-model="formData.email" />
+                            <UFFormValidationError :errors="r$.$errors.email" />
                             <!-- TODO -->
                             <!-- {% if site.registration.require_email_verification %}{{ $t('EMAIL.VERIFICATION_REQUIRED') }}{% else %}{{ $t('EMAIL.YOUR') }}{% endif %} -->
                         </div>
@@ -127,11 +141,14 @@ const tos = computed(() => {
                         <div class="uk-width-2-3">
                             <input
                                 class="uk-input"
+                                :class="{ 'uk-form-danger': r$.user_name.$error }"
                                 type="text"
                                 :placeholder="$t('USERNAME.CHOOSE')"
                                 aria-label="Username"
                                 data-test="username"
+                                autocomplete="off"
                                 v-model="formData.user_name" />
+                            <UFFormValidationError :errors="r$.$errors.user_name" />
                         </div>
                         <div class="uk-width-1-3">
                             <a class="uk-button uk-button-default" @click="suggestUsername()">{{
@@ -145,24 +162,38 @@ const tos = computed(() => {
                     <label class="uk-form-label" for="form-stacked-text">{{
                         $t('PASSWORD')
                     }}</label>
+                    <span class="uk-text-meta">
+                        {{
+                            $t('PASSWORD.BETWEEN', {
+                                min: passwordMinLength,
+                                max: passwordMaxLength
+                            })
+                        }}
+                    </span>
                     <div class="uk-form-controls uk-grid-small" uk-grid>
                         <div class="uk-width-1-2">
                             <input
                                 class="uk-input"
+                                :class="{ 'uk-form-danger': r$.password.$error }"
                                 type="password"
                                 :placeholder="$t('PASSWORD')"
                                 aria-label="Password"
                                 data-test="password"
+                                autocomplete="off"
                                 v-model="formData.password" />
+                            <UFFormValidationError :errors="r$.$errors.password" />
                         </div>
                         <div class="uk-width-1-2">
                             <input
                                 class="uk-input"
+                                :class="{ 'uk-form-danger': r$.passwordc.$error }"
                                 type="password"
                                 :placeholder="$t('PASSWORD.CONFIRM')"
                                 aria-label="Confirm Password"
                                 data-test="passwordc"
+                                autocomplete="off"
                                 v-model="formData.passwordc" />
+                            <UFFormValidationError :errors="r$.$errors.passwordc" />
                         </div>
                         <!-- TODO -->
                         <!-- {{translate('PASSWORD.BETWEEN', {min: site.password.length.min, max: site.password.length.max})}} -->
@@ -174,6 +205,7 @@ const tos = computed(() => {
                     <span class="uk-text-meta">{{ $t('LOCALE.ACCOUNT') }}.</span>
                     <select
                         class="uk-select"
+                        :class="{ 'uk-form-danger': r$.locale.$error }"
                         id="form-stacked-select"
                         data-test="locale"
                         v-model="formData.locale">
@@ -181,6 +213,7 @@ const tos = computed(() => {
                             {{ value }}
                         </option>
                     </select>
+                    <UFFormValidationError :errors="r$.$errors.locale" />
                 </div>
 
                 <!-- {% if site.registration.captcha %} -->
@@ -190,12 +223,15 @@ const tos = computed(() => {
                         <div class="uk-width-2-3">
                             <input
                                 class="uk-input"
+                                :class="{ 'uk-form-danger': r$.captcha.$error }"
                                 type="text"
                                 :placeholder="$t('CAPTCHA.SPECIFY')"
                                 aria-label="Captcha"
                                 id="r-form-captcha"
                                 data-test="captcha"
+                                autocomplete="off"
                                 v-model="formData.captcha" />
+                            <UFFormValidationError :errors="r$.captcha.$errors" />
                         </div>
                         <div class="uk-width-1-3">
                             <img :src="captchaUrl()" id="captcha" data-target="#r-form-captcha" />
