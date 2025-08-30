@@ -20,14 +20,27 @@ const form: RegisterRequest = {
     spiderbro: 'http://'
 }
 
-// Mock the config & alert stores
-vi.mock('@userfrosting/sprinkle-core/stores')
-const mockUseConfigStore = {
-    get: vi.fn()
-}
-const mockUseAlertsStore = {
-    push: vi.fn()
-}
+// Mock composables
+const mockUseAlertsStorePush = vi.fn()
+vi.mock('@userfrosting/sprinkle-core/stores', () => ({
+    useConfigStore: () => ({
+        get: vi.fn().mockImplementation((key: string) => {
+            if (key === 'locales.available') return ['en_US', 'fr_FR', 'es_ES']
+            if (key === 'site.password.length.min') return 8
+            if (key === 'site.password.length.max') return 32
+            if (key === 'site.registration.user_defaults.locale') return 'fr_CA'
+            return undefined
+        })
+    }),
+    useTranslator: () => ({
+        translate: vi.fn().mockImplementation((key) => {
+            return key
+        })
+    }),
+    useAlertsStore: () => ({
+        push: mockUseAlertsStorePush
+    })
+}))
 
 describe('register', () => {
     afterEach(() => {
@@ -36,20 +49,7 @@ describe('register', () => {
     })
 
     test('should return default form', () => {
-        // Arrange
-        mockUseConfigStore.get.mockReturnValue('fr_CA')
-        vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
-
-        // Act
-        const result = defaultRegistrationForm()
-
-        // Assert
-        expect(useConfigStore).toHaveBeenCalled()
-        expect(mockUseConfigStore.get).toHaveBeenCalledWith(
-            'site.registration.user_defaults.locale',
-            'en_US'
-        )
-        expect(result).toEqual({
+        expect(defaultRegistrationForm()).toEqual({
             first_name: '',
             last_name: '',
             email: '',
@@ -63,18 +63,7 @@ describe('register', () => {
     })
 
     test('should return available locales', () => {
-        // Arrange
-        const locales = ['en_US', 'fr_FR', 'es_ES']
-        mockUseConfigStore.get.mockReturnValue(locales)
-        vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
-
-        // Act
-        const result = availableLocales()
-
-        // Assert
-        expect(useConfigStore).toHaveBeenCalled()
-        expect(mockUseConfigStore.get).toHaveBeenCalledWith('locales.available')
-        expect(result).toEqual(locales)
+        expect(availableLocales()).toEqual(['en_US', 'fr_FR', 'es_ES'])
     })
 
     test('should return captcha URL', () => {
@@ -83,8 +72,8 @@ describe('register', () => {
 
     test('should register successfully', async () => {
         // Arrange
-        vi.mocked(useAlertsStore).mockReturnValue(mockUseAlertsStore as any)
-        const response = { data: { title: 'Registration successful' } }
+        const { submitRegistration } = useRegisterApi()
+        const response = { data: { title: 'Registration successful', description: 'Welcome!' } }
         vi.spyOn(axios, 'post').mockResolvedValue(response as any)
 
         // Act
@@ -92,14 +81,17 @@ describe('register', () => {
 
         // Assert
         expect(axios.post).toHaveBeenCalledWith('/account/register', form)
-        expect(mockUseAlertsStore.push).toHaveBeenCalledWith({
+
+        expect(mockUseAlertsStorePush).toHaveBeenCalledWith({
             title: 'Registration successful',
+            description: 'Welcome!',
             style: Severity.Success
         })
     })
 
     test('should throw an error when registration fails', async () => {
         // Arrange
+        const { submitRegistration, apiError } = useRegisterApi()
         const error = { response: { data: { description: 'Registration failed' } } }
         vi.spyOn(axios, 'post').mockRejectedValue(error as any)
 
@@ -109,13 +101,17 @@ describe('register', () => {
             style: Severity.Danger
         })
         expect(axios.post).toHaveBeenCalledWith('/account/register', form)
+        expect(apiError.value).toEqual({
+            description: 'Registration failed',
+            style: Severity.Danger
+        })
     })
 
-    test('should set loading state to true', async () => {
+    test('should set loading state to true during registration', async () => {
         // Arrange
-        const response = { data: { title: 'Registration successful' } }
+        const { submitRegistration, apiLoading } = useRegisterApi()
+        const response = { data: { title: 'Registration successful', description: 'Welcome!' } }
         vi.spyOn(axios, 'post').mockResolvedValue(response)
-        vi.mocked(useAlertsStore).mockReturnValue(mockUseAlertsStore as any)
 
         // Act
         expect(apiLoading.value).toBe(false)
@@ -123,5 +119,62 @@ describe('register', () => {
         expect(apiLoading.value).toBe(true)
         await submitPromise
         expect(apiLoading.value).toBe(false)
+    })
+
+    test('should suggest a username successfully', async () => {
+        // Arrange
+        const { suggestUsername } = useRegisterApi()
+        const mockUsername = 'SuggestedUser'
+        vi.spyOn(axios, 'get').mockResolvedValue({ data: { user_name: mockUsername } })
+
+        // Act
+        const result = await suggestUsername()
+
+        // Assert
+        expect(axios.get).toHaveBeenCalledWith('/account/suggest-username')
+        expect(result).toBe(mockUsername)
+    })
+
+    test('should handle error when suggesting username', async () => {
+        // Arrange
+        const { suggestUsername, apiError } = useRegisterApi()
+        const error = { response: { data: { description: 'Suggest failed' } } }
+        vi.spyOn(axios, 'get').mockRejectedValue(error as any)
+
+        // Act & Assert
+        await expect(suggestUsername()).rejects.toEqual({
+            description: 'Suggest failed',
+            style: Severity.Danger
+        })
+        expect(apiError.value).toEqual({
+            description: 'Suggest failed',
+            style: Severity.Danger
+        })
+    })
+
+    test('should validate username successfully', async () => {
+        // Arrange
+        const { validateUsername } = useRegisterApi()
+        const username = 'JohnDoe'
+        const validationResponse = { available: true, message: 'Available' }
+        vi.spyOn(axios, 'get').mockResolvedValue({ data: validationResponse })
+
+        // Act
+        const result = await validateUsername(username)
+
+        // Assert
+        expect(axios.get).toHaveBeenCalledWith('/account/check-username', {
+            params: { user_name: username }
+        })
+        expect(result).toEqual(validationResponse)
+    })
+
+    test('should set password min and max length from config', () => {
+        // Act
+        const { passwordMinLength, passwordMaxLength } = useRegisterApi()
+
+        // Assert
+        expect(passwordMinLength.value).toBe(8)
+        expect(passwordMaxLength.value).toBe(32)
     })
 })
