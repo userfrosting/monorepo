@@ -14,18 +14,18 @@ const { slug } = defineProps<{
                 <UFSprunjeHeader sort="name">{{ $t('USER') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item }">
+            <template #body="{ row }">
                 <UFSprunjeColumn>
                     <strong>
                         <RouterLink
                             :to="{
                                 name: 'admin.user',
-                                params: { user_name: item.user_name }
+                                params: { user_name: row.user_name }
                             }">
-                            {{ item.full_name }} ({{ item.user_name }})
+                            {{ row.full_name }} ({{ row.user_name }})
                         </RouterLink>
                     </strong>
-                    <div class="uk-text-meta">{{ item.email }}</div>
+                    <div class="uk-text-meta">{{ row.email }}</div>
                 </UFSprunjeColumn>
             </template>
         </UFSprunjeTable>

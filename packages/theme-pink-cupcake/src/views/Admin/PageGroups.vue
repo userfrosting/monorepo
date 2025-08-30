@@ -23,21 +23,21 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
                 <UFSprunjeHeader>{{ $t('ACTIONS') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item, sprunjer }">
+            <template #body="{ row, sprunjer }">
                 <UFSprunjeColumn class="uk-width-1-6">
                     <strong>
                         <RouterLink
                             :to="{
                                 name: 'admin.group',
-                                params: { slug: item.slug }
+                                params: { slug: row.slug }
                             }">
-                            {{ item.name }}
+                            {{ row.name }}
                         </RouterLink>
                     </strong>
                 </UFSprunjeColumn>
-                <UFSprunjeColumn>{{ item.description }}</UFSprunjeColumn>
+                <UFSprunjeColumn>{{ row.description }}</UFSprunjeColumn>
                 <UFSprunjeColumn class="uk-text-center">
-                    <span class="uk-badge">{{ item.users_count }}</span>
+                    <span class="uk-badge">{{ row.users_count }}</span>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
                     <button class="uk-button uk-button-primary uk-text-nowrap" type="button">
@@ -51,7 +51,7 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
                                 <RouterLink
                                     :to="{
                                         name: 'admin.group',
-                                        params: { slug: item.slug }
+                                        params: { slug: row.slug }
                                     }"
                                     v-if="$checkAccess('uri_group')">
                                     <font-awesome-icon icon="eye" fixed-width /> View
@@ -59,14 +59,14 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
                             </li>
                             <li>
                                 <GroupEditModal
-                                    :group="item"
+                                    :group="row"
                                     @saved="sprunjer.fetch()"
                                     v-if="$checkAccess('update_group_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <GroupDeleteModal
-                                    :group="item"
+                                    :group="row"
                                     @deleted="sprunjer.fetch()"
                                     class="uk-drop-close"
                                     v-if="$checkAccess('delete_group')" />

@@ -6,19 +6,19 @@
                 <UFSprunjeHeader sort="properties">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item }">
+            <template #body="{ row }">
                 <UFSprunjeColumn>
                     <strong>
                         <RouterLink
                             :to="{
                                 name: 'admin.permission',
-                                params: { id: item.id }
+                                params: { id: row.id }
                             }">
-                            {{ item.name }}
+                            {{ row.name }}
                         </RouterLink>
                     </strong>
                 </UFSprunjeColumn>
-                <UFSprunjeColumn>{{ item.description }}</UFSprunjeColumn>
+                <UFSprunjeColumn>{{ row.description }}</UFSprunjeColumn>
             </template>
         </UFSprunjeTable>
     </UFCardBox>

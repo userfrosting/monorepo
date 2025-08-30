@@ -26,25 +26,25 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                 <UFSprunjeHeader>{{ $t('ACTIONS') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item, sprunjer }">
+            <template #body="{ row, sprunjer }">
                 <UFSprunjeColumn>
                     <strong>
                         <RouterLink
                             :to="{
                                 name: 'admin.user',
-                                params: { user_name: item.user_name }
+                                params: { user_name: row.user_name }
                             }">
-                            {{ item.full_name }} ({{ item.user_name }})
+                            {{ row.full_name }} ({{ row.user_name }})
                         </RouterLink>
                     </strong>
-                    <div class="uk-text-meta">{{ item.email }}</div>
+                    <div class="uk-text-meta">{{ row.email }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <div>{{ $tdate(item.last_activity.occurred_at) }}</div>
-                    <i>{{ item.last_activity.description }}</i>
+                    <div>{{ $tdate(row.last_activity.occurred_at) }}</div>
+                    <i>{{ row.last_activity.description }}</i>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <UFLabel :severity="Severity.Danger" v-if="item.flag_enabled == false">
+                    <UFLabel :severity="Severity.Danger" v-if="row.flag_enabled == false">
                         {{ $t('DISABLED') }}
                     </UFLabel>
                     <UFLabel :severity="Severity.Success" v-else>
@@ -52,7 +52,7 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                     </UFLabel>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <UFLabel :severity="Severity.Warning" v-if="item.flag_verified == false">
+                    <UFLabel :severity="Severity.Warning" v-if="row.flag_verified == false">
                         {{ $t('UNVERIFIED') }}
                     </UFLabel>
                     <UFLabel :severity="Severity.Success" v-else>
@@ -71,7 +71,7 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                                 <RouterLink
                                     :to="{
                                         name: 'admin.user',
-                                        params: { user_name: item.user_name }
+                                        params: { user_name: row.user_name }
                                     }"
                                     v-if="$checkAccess('uri_user')">
                                     <font-awesome-icon icon="eye" fixed-width /> {{ $t('VIEW') }}
@@ -79,33 +79,33 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                             </li>
                             <li>
                                 <UserEditModal
-                                    :user="item"
+                                    :user="row"
                                     @saved="sprunjer.fetch()"
                                     v-if="$checkAccess('update_user_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <UserPasswordModal
-                                    :user="item"
+                                    :user="row"
                                     v-if="$checkAccess('update_user_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <UserPasswordResetModal
-                                    :user="item"
+                                    :user="row"
                                     v-if="$checkAccess('update_user_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <UserActivateModal
-                                    :user="item"
+                                    :user="row"
                                     @saved="sprunjer.fetch()"
                                     v-if="$checkAccess('update_user_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <UserDeleteModal
-                                    :user="item"
+                                    :user="row"
                                     @deleted="sprunjer.fetch()"
                                     v-if="$checkAccess('delete_user')"
                                     class="uk-drop-close" />

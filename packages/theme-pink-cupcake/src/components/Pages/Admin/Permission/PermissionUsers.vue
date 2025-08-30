@@ -15,22 +15,22 @@ const { id } = defineProps<{
                 <UFSprunjeHeader>{{ $t('PERMISSION.VIA_ROLES') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item }">
+            <template #body="{ row }">
                 <UFSprunjeColumn>
                     <strong>
                         <RouterLink
                             :to="{
                                 name: 'admin.user',
-                                params: { user_name: item.user_name }
+                                params: { user_name: row.user_name }
                             }">
-                            {{ item.full_name }} ({{ item.user_name }})
+                            {{ row.full_name }} ({{ row.user_name }})
                         </RouterLink>
                     </strong>
-                    <div class="uk-text-meta">{{ item.email }}</div>
+                    <div class="uk-text-meta">{{ row.email }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
                     <RouterLink
-                        v-for="role in item.roles_via"
+                        v-for="role in row.roles_via"
                         :key="role.id"
                         :to="{ name: 'admin.role', params: { slug: role.slug } }">
                         <UFLabel>{{ role.name }}</UFLabel>

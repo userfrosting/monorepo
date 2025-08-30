@@ -15,16 +15,16 @@ const { user_name } = defineProps<{
                 <UFSprunjeHeader sort="description">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item }">
+            <template #body="{ row }">
                 <UFSprunjeColumn>
-                    <div>{{ $tdate(item.occurred_at) }}</div>
+                    <div>{{ $tdate(row.occurred_at) }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
                     <div>
-                        {{ item.ip_address }}
+                        {{ row.ip_address }}
                     </div>
                     <div>
-                        <i>{{ item.description }}</i>
+                        <i>{{ row.description }}</i>
                     </div>
                 </UFSprunjeColumn>
             </template>

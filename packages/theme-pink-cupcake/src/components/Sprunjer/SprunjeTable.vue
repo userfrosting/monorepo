@@ -71,7 +71,7 @@ provide('sprunjer', sprunjer)
                 </thead>
                 <tbody>
                     <tr v-for="row in rows" :key="row.id">
-                        <slot name="body" :item="row" :sprunjer="sprunjer"></slot>
+                        <slot name="body" :row="row" :sprunjer="sprunjer"></slot>
                     </tr>
                 </tbody>
             </table>

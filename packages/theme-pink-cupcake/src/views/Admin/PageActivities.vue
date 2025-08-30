@@ -10,31 +10,31 @@
                 <UFSprunjeHeader sort="description">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item }">
+            <template #body="{ row }">
                 <UFSprunjeColumn>
-                    <div>{{ $tdate(item.occurred_at) }}</div>
+                    <div>{{ $tdate(row.occurred_at) }}</div>
                 </UFSprunjeColumn>
-                <UFSprunjeColumn v-if="item.user">
+                <UFSprunjeColumn v-if="row.user">
                     <strong>
                         <RouterLink
                             :to="{
                                 name: 'admin.user',
-                                params: { user_name: item.user.user_name }
+                                params: { user_name: row.user.user_name }
                             }">
-                            {{ item.user.full_name }} ({{ item.user.user_name }})
+                            {{ row.user.full_name }} ({{ row.user.user_name }})
                         </RouterLink>
                     </strong>
-                    <div class="uk-text-meta">{{ item.user.email }}</div>
+                    <div class="uk-text-meta">{{ row.user.email }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn v-else>
                     <i>{{ $t('USER.DELETED') }}</i>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
                     <div>
-                        {{ item.ip_address }}
+                        {{ row.ip_address }}
                     </div>
                     <div>
-                        <i>{{ item.description }}</i>
+                        <i>{{ row.description }}</i>
                     </div>
                 </UFSprunjeColumn>
             </template>

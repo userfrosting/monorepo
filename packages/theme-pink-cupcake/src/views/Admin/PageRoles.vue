@@ -21,19 +21,19 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
                 <UFSprunjeHeader>{{ $t('ACTIONS') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item, sprunjer }">
+            <template #body="{ row, sprunjer }">
                 <UFSprunjeColumn>
                     <strong>
                         <RouterLink
                             :to="{
                                 name: 'admin.role',
-                                params: { slug: item.slug }
+                                params: { slug: row.slug }
                             }">
-                            {{ item.name }}
+                            {{ row.name }}
                         </RouterLink>
                     </strong>
                 </UFSprunjeColumn>
-                <UFSprunjeColumn>{{ item.description }}</UFSprunjeColumn>
+                <UFSprunjeColumn>{{ row.description }}</UFSprunjeColumn>
                 <UFSprunjeColumn>
                     <button class="uk-button uk-button-primary uk-text-nowrap" type="button">
                         {{ $t('ACTIONS') }} <span uk-drop-parent-icon></span>
@@ -46,7 +46,7 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
                                 <RouterLink
                                     :to="{
                                         name: 'admin.role',
-                                        params: { slug: item.slug }
+                                        params: { slug: row.slug }
                                     }"
                                     v-if="$checkAccess('uri_role')">
                                     <font-awesome-icon icon="eye" fixed-width /> View
@@ -54,20 +54,20 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
                             </li>
                             <li>
                                 <RoleEditModal
-                                    :role="item"
+                                    :role="row"
                                     @saved="sprunjer.fetch()"
                                     v-if="$checkAccess('update_role_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <RoleManagePermissionModal
-                                    :role="item"
+                                    :role="row"
                                     v-if="$checkAccess('update_role_field')"
                                     class="uk-drop-close" />
                             </li>
                             <li>
                                 <RoleDeleteModal
-                                    :role="item"
+                                    :role="row"
                                     @deleted="sprunjer.fetch()"
                                     v-if="$checkAccess('delete_role')"
                                     class="uk-drop-close" />

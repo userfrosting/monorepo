@@ -17,21 +17,21 @@ const { slug } = defineProps<{
                 <UFSprunjeHeader>{{ $t('STATUS') }}</UFSprunjeHeader>
             </template>
 
-            <template #body="{ item }">
+            <template #body="{ row }">
                 <UFSprunjeColumn>
                     <strong>
                         <RouterLink
                             :to="{
                                 name: 'admin.user',
-                                params: { user_name: item.user_name }
+                                params: { user_name: row.user_name }
                             }">
-                            {{ item.full_name }} ({{ item.user_name }})
+                            {{ row.full_name }} ({{ row.user_name }})
                         </RouterLink>
                     </strong>
-                    <div class="uk-text-meta">{{ item.email }}</div>
+                    <div class="uk-text-meta">{{ row.email }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <UFLabel :severity="Severity.Danger" v-if="item.flag_enabled == false">
+                    <UFLabel :severity="Severity.Danger" v-if="row.flag_enabled == false">
                         {{ $t('DISABLED') }}
                     </UFLabel>
                     <UFLabel :severity="Severity.Success" v-else>
