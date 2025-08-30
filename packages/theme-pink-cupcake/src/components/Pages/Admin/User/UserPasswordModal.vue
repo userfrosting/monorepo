@@ -47,20 +47,20 @@ const { submitUserUpdate } = useUserUpdateApi()
 const submitForm = () => {
     submitUserUpdate(props.user.user_name, 'password', formData.value).then(() => {
         // Close the modal
-        UIkit.modal('#modal-user-password-' + props.user.user_name).hide()
+        UIkit.modal('#modal-user-password-' + props.user.id).hide()
     })
 }
 </script>
 
 <template>
-    <a href="#" v-bind="$attrs" :uk-toggle="'target: #modal-user-password-' + props.user.user_name">
+    <a :href="'#modal-user-password-' + props.user.id" v-bind="$attrs" uk-toggle>
         <slot>
             <font-awesome-icon icon="key" fixed-width /> {{ $t('USER.ADMIN.CHANGE_PASSWORD') }}
         </slot>
     </a>
 
     <!-- This is the modal -->
-    <UFModal :id="'modal-user-password-' + props.user.user_name" closable>
+    <UFModal :id="'modal-user-password-' + props.user.id" closable>
         <template #header> {{ $t('USER.ADMIN.CHANGE_PASSWORD') }} </template>
         <template #default>
             <UserPasswordForm v-model="formData" @submit="submitForm()" />

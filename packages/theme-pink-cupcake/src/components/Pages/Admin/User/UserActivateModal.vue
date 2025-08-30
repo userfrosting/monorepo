@@ -28,32 +28,28 @@ const updateUser = (fieldName: string, value: string) => {
 
 <template>
     <a
-        href="#"
+        :href="'#confirm-user-activate-' + props.user.id"
         v-bind="$attrs"
-        :uk-toggle="'target: #confirm-user-activate-' + props.user.user_name"
+        uk-toggle
         v-if="user.flag_verified == false">
         <slot><font-awesome-icon icon="bolt" fixed-width /> {{ $t('USER.ACTIVATE') }}</slot>
     </a>
 
     <a
-        href="#"
+        :href="'#confirm-user-disable-' + props.user.id"
         v-bind="$attrs"
-        :uk-toggle="'target: #confirm-user-disable-' + props.user.user_name"
+        uk-toggle
         v-else-if="user.flag_enabled">
         <slot><font-awesome-icon icon="minus-circle" fixed-width /> {{ $t('USER.DISABLE') }}</slot>
     </a>
 
-    <a
-        href="#"
-        v-bind="$attrs"
-        :uk-toggle="'target: #confirm-user-enable-' + props.user.user_name"
-        v-else>
+    <a :href="'#confirm-user-enable-' + props.user.id" v-bind="$attrs" uk-toggle v-else>
         <slot><font-awesome-icon icon="plus-circle" fixed-width /> {{ $t('USER.ENABLE') }}</slot>
     </a>
 
     <!-- This is the modal -->
     <UFModalConfirmation
-        :id="'confirm-user-activate-' + props.user.user_name"
+        :id="'confirm-user-activate-' + props.user.id"
         title="USER.ACTIVATE"
         @confirmed="updateUser('flag_verified', '1')"
         acceptLabel="USER.ACTIVATE"
@@ -66,7 +62,7 @@ const updateUser = (fieldName: string, value: string) => {
     </UFModalConfirmation>
 
     <UFModalConfirmation
-        :id="'confirm-user-disable-' + props.user.user_name"
+        :id="'confirm-user-disable-' + props.user.id"
         title="USER.DISABLE"
         @confirmed="updateUser('flag_enabled', '0')"
         acceptLabel="USER.DISABLE"
@@ -79,7 +75,7 @@ const updateUser = (fieldName: string, value: string) => {
     </UFModalConfirmation>
 
     <UFModalConfirmation
-        :id="'confirm-user-enable-' + props.user.user_name"
+        :id="'confirm-user-enable-' + props.user.id"
         title="USER.ENABLE"
         @confirmed="updateUser('flag_enabled', '1')"
         acceptLabel="USER.ENABLE"

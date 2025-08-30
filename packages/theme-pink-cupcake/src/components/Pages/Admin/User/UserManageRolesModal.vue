@@ -48,11 +48,11 @@ const allSelected = computed({
     }
 })
 
-const modalName = computed(() => 'modal-user-manage-roles-' + user.user_name)
+const modalName = computed(() => 'modal-user-manage-roles-' + user.id)
 </script>
 
 <template>
-    <a v-bind="$attrs" :uk-toggle="'target: #' + modalName" @click="fetch(user.user_name)">
+    <a v-bind="$attrs" uk-toggle :href="'#' + modalName" @click="fetch(user.user_name)">
         <slot><font-awesome-icon icon="address-card" /> {{ $t('ROLE.MANAGE') }}</slot>
     </a>
 

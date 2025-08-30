@@ -34,13 +34,13 @@ const deleteConfirmed = () => {
 </script>
 
 <template>
-    <a href="#" v-bind="$attrs" :uk-toggle="'target: #confirm-role-delete-' + props.role.slug">
+    <a :href="'#confirm-role-delete-' + props.role.id" v-bind="$attrs" uk-toggle>
         <slot><font-awesome-icon icon="trash" fixed-width /> {{ $t('ROLE.DELETE') }}</slot>
     </a>
 
     <!-- This is the modal -->
     <UFModalConfirmation
-        :id="'confirm-role-delete-' + props.role.slug"
+        :id="'confirm-role-delete-' + props.role.id"
         :title="$t('ROLE.DELETE')"
         @confirmed="deleteConfirmed()"
         :acceptLabel="$t('ROLE.DELETE_YES')"

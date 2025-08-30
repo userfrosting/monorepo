@@ -50,11 +50,11 @@ const allSelected = computed({
     }
 })
 
-const modalName = computed(() => 'modal-role-manage-permission-' + role.slug)
+const modalName = computed(() => 'modal-role-manage-permission-' + role.id)
 </script>
 
 <template>
-    <a v-bind="$attrs" :uk-toggle="'target: #' + modalName" @click="fetch(role.slug)">
+    <a v-bind="$attrs" uk-toggle :href="'#' + modalName" @click="fetch(role.slug)">
         <slot><font-awesome-icon icon="key" /> {{ $t('PERMISSION.ASSIGN') }}</slot>
     </a>
 

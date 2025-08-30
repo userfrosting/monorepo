@@ -18,10 +18,7 @@ const confirmed = () => {
 </script>
 
 <template>
-    <a
-        href="#"
-        v-bind="$attrs"
-        :uk-toggle="'target: #confirm-user-reset-password-' + props.user.user_name">
+    <a :href="'#confirm-user-reset-password-' + props.user.id" v-bind="$attrs" uk-toggle>
         <slot>
             <font-awesome-icon icon="key" fixed-width />
             {{ $t('USER.ADMIN.PASSWORD_RESET') }}
@@ -30,7 +27,7 @@ const confirmed = () => {
 
     <!-- This is the modal -->
     <UFModalConfirmation
-        :id="'confirm-user-reset-password-' + props.user.user_name"
+        :id="'confirm-user-reset-password-' + props.user.id"
         :title="$t('PASSWORD.RESET')"
         @confirmed="confirmed()"
         :acceptLabel="$t('YES')"

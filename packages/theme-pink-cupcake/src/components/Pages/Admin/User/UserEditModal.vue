@@ -22,7 +22,7 @@ const emits = defineEmits(['saved'])
  */
 const formSuccess = () => {
     emits('saved')
-    UIkit.modal('#modal-user-edit-' + props.user.user_name).hide()
+    UIkit.modal('#modal-user-edit-' + props.user.id).hide()
 }
 
 /**
@@ -33,15 +33,15 @@ const { groups, updateGroups } = useGroupsApi()
 
 <template>
     <a
-        href="#"
+        :href="'#modal-user-edit-' + props.user.id"
         v-bind="$attrs"
-        :uk-toggle="'target: #modal-user-edit-' + props.user.user_name"
+        uk-toggle
         @click="updateGroups()">
         <slot> <font-awesome-icon icon="pen-to-square" fixed-width /> {{ $t('USER.EDIT') }} </slot>
     </a>
 
     <!-- This is the modal -->
-    <UFModal :id="'modal-user-edit-' + props.user.user_name" closable>
+    <UFModal :id="'modal-user-edit-' + props.user.id" closable>
         <template #header>{{ $t('USER.EDIT') }}</template>
         <template #default>
             <UserForm :user="props.user" :groups="groups" @success="formSuccess()" />

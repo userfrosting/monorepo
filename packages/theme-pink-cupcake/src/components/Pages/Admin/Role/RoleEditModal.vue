@@ -21,17 +21,17 @@ const emits = defineEmits(['saved'])
  */
 const formSuccess = () => {
     emits('saved')
-    UIkit.modal('#modal-role-edit-' + props.role.slug).hide()
+    UIkit.modal('#modal-role-edit-' + props.role.id).hide()
 }
 </script>
 
 <template>
-    <a href="#" v-bind="$attrs" :uk-toggle="'target: #modal-role-edit-' + props.role.slug">
+    <a :href="'#modal-role-edit-' + props.role.id" v-bind="$attrs" uk-toggle>
         <slot> <font-awesome-icon icon="pen-to-square" fixed-width /> {{ $t('ROLE.EDIT') }} </slot>
     </a>
 
     <!-- This is the modal -->
-    <UFModal :id="'modal-role-edit-' + props.role.slug" closable>
+    <UFModal :id="'modal-role-edit-' + props.role.id" closable>
         <template #header> {{ $t('ROLE.EDIT') }} </template>
         <template #default>
             <RoleForm :role="props.role" @success="formSuccess()" />

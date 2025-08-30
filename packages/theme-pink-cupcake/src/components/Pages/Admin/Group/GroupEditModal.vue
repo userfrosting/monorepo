@@ -21,17 +21,17 @@ const emits = defineEmits(['saved'])
  */
 const formSuccess = () => {
     emits('saved')
-    UIkit.modal('#modal-group-edit-' + props.group.slug).hide()
+    UIkit.modal('#modal-group-edit-' + props.group.id).hide()
 }
 </script>
 
 <template>
-    <a href="#" v-bind="$attrs" :uk-toggle="'target: #modal-group-edit-' + props.group.slug">
+    <a :href="'#modal-group-edit-' + props.group.id" v-bind="$attrs" uk-toggle>
         <slot> <font-awesome-icon icon="pen-to-square" fixed-width /> {{ $t('GROUP.EDIT') }} </slot>
     </a>
 
     <!-- This is the modal -->
-    <UFModal :id="'modal-group-edit-' + props.group.slug" closable>
+    <UFModal :id="'modal-group-edit-' + props.group.id" closable>
         <template #header> {{ $t('GROUP.EDIT') }} </template>
         <template #default>
             <GroupForm :group="props.group" @success="formSuccess()" />
