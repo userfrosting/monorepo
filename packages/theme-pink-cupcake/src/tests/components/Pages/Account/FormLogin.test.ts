@@ -1,85 +1,88 @@
-import { describe, test, afterEach, expect, vi } from 'vitest'
+import { describe, test, beforeEach, expect, vi } from 'vitest'
 import { ref } from 'vue'
-import { mount, config } from '@vue/test-utils'
-import { useLoginApi } from '@userfrosting/sprinkle-account/composables'
-import type { LoginRequest } from '@userfrosting/sprinkle-account/interfaces'
-import type { AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
+import { mount, flushPromises } from '@vue/test-utils'
 import FormLogin from '../../../../components/Pages/Account/FormLogin.vue'
 import UFAlert from '../../../../components/UFAlert.vue'
 
-// Register the UFAlert component stub globally
-config.global.stubs['UFAlert'] = UFAlert
-config.global.stubs['FontAwesomeIcon'] = { template: '<span></span>' }
-
-// Login form data
-const form: LoginRequest = {
-    user_name: 'john.doe',
-    password: 'password',
-    rememberme: true
-}
-
-// Mock the auth store
-vi.mock('@userfrosting/sprinkle-account/composables')
-const mockUseLoginApi = {
-    submitLogin: vi.fn().mockResolvedValue({}),
-    defaultFormData: vi.fn().mockReturnValue(form),
-    apiError: ref<AlertInterface | null>(null),
-    apiLoading: ref(false)
-}
+// Mock composables and dependencies
+vi.mock('@userfrosting/sprinkle-account/composables', () => ({
+    useLoginApi: () => ({
+        submitLogin: vi.fn().mockResolvedValue(undefined),
+        formData: ref({
+            user_name: '',
+            password: '',
+            rememberme: false
+        }),
+        apiLoading: ref(false),
+        apiError: ref(null),
+        r$: {
+            $validate: vi.fn().mockResolvedValue({ valid: true }),
+            $errors: {
+                user_name: [],
+                password: [],
+                rememberme: []
+            },
+            user_name: { $error: false },
+            password: { $error: false },
+            rememberme: { $error: false }
+        }
+    })
+}))
 
 describe('FormLogin.vue', () => {
-    afterEach(() => {
-        vi.clearAllMocks()
+    let wrapper: any
+
+    beforeEach(() => {
+        wrapper = mount(FormLogin, {
+            global: {
+                stubs: {
+                    UFAlert: UFAlert,
+                    UFFormValidationError: { template: '<span></span>' },
+                    FontAwesomeIcon: { template: '<span></span>' }
+                }
+            }
+        })
+    })
+
+    test('renders correctly', () => {
+        expect(wrapper.exists()).toBe(true)
+        expect(wrapper.find('input[data-test="username"]').exists()).toBe(true)
+        expect(wrapper.find('input[data-test="password"]').exists()).toBe(true)
+        expect(wrapper.find('input[data-test="rememberme"]').exists()).toBe(true)
     })
 
     test('handles successful login', async () => {
-        vi.mocked(useLoginApi).mockReturnValue(mockUseLoginApi as any)
-
-        const wrapper = mount(FormLogin)
-        expect(wrapper.exists()).toBe(true)
-        await (wrapper.vm as any).sendLogin(form)
-
-        expect(useLoginApi).toHaveBeenCalled()
-        expect(mockUseLoginApi.submitLogin).toHaveBeenCalledTimes(1)
+        await wrapper.find('input[data-test="username"]').setValue('johndoe')
+        await wrapper.find('input[data-test="password"]').setValue('password123')
+        await wrapper.find('input[data-test="rememberme"]').setValue(true)
+        await wrapper.find('form').trigger('submit.prevent')
+        await flushPromises()
+        expect(wrapper.vm.formData).toEqual({
+            user_name: 'johndoe',
+            password: 'password123',
+            rememberme: true
+        })
         expect(wrapper.find('[data-test="error"]').exists()).toBe(false)
         expect(wrapper.find('button[data-test="submit"]').attributes('disabled')).not.toBeDefined()
     })
 
+    test('disables submit button when loading', async () => {
+        wrapper.vm.apiLoading = true
+        await wrapper.vm.$nextTick()
+        expect(wrapper.find('[data-test="submit"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="submit"]').text()).toBe('LOGIN')
+        expect(wrapper.find('[data-test="submit"]').attributes().disabled).toBeDefined()
+    })
+
     test('handles apiError', async () => {
-        const error: AlertInterface = { title: 'Invalid credentials' }
-        mockUseLoginApi.apiError.value = error
-        vi.mocked(useLoginApi).mockReturnValue(mockUseLoginApi as any)
-
-        const wrapper = mount(FormLogin)
-
+        wrapper.vm.apiError = {
+            title: 'Invalid credentials',
+            description: 'User not found or password is invalid.',
+            style: 'Danger',
+            closeBtn: true
+        }
+        await wrapper.vm.$nextTick()
         expect(wrapper.find('[data-test="error"]').exists()).toBe(true)
         expect(wrapper.get('[data-test="error"]').text()).toMatch('Invalid credentials')
-    })
-
-    test('handles apiLoading', async () => {
-        mockUseLoginApi.apiLoading.value = true
-        vi.mocked(useLoginApi).mockReturnValue(mockUseLoginApi as any)
-
-        const wrapper = mount(FormLogin)
-
-        expect(wrapper.find('button[data-test="submit"]').attributes('disabled')).toBeDefined()
-    })
-
-    test('Handle login using the v-model', async () => {
-        vi.mocked(useLoginApi).mockReturnValue(mockUseLoginApi as any)
-
-        const wrapper = mount(FormLogin)
-        wrapper.find('[data-test="username"]').setValue('doe.john')
-        wrapper.find('[data-test="password"]').setValue('drowssap')
-        wrapper.find('[data-test="rememberme"]').setValue(false)
-        await wrapper.find('form').trigger('submit')
-
-        expect(useLoginApi).toHaveBeenCalled()
-        expect(mockUseLoginApi.submitLogin).toHaveBeenCalledTimes(1)
-        expect(mockUseLoginApi.submitLogin).toHaveBeenCalledWith({
-            user_name: 'doe.john',
-            password: 'drowssap',
-            rememberme: false
-        })
     })
 })

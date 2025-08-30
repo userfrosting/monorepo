@@ -1,10 +1,13 @@
 import { ref } from 'vue'
 import axios from 'axios'
+import { useRegle } from '@regle/core'
 import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/interfaces'
 import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
+import { useCsrf } from '@userfrosting/sprinkle-core/composables'
+import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
 import type { LoginRequest, LoginResponse } from '../interfaces'
 import { useAuthStore } from '../stores'
-import { useCsrf } from '@userfrosting/sprinkle-core/composables'
+import schemaFile from '../../schema/requests/login.yaml?raw'
 
 /**
  * API Composable
@@ -12,6 +15,10 @@ import { useCsrf } from '@userfrosting/sprinkle-core/composables'
 export function useLoginApi() {
     const apiLoading = ref<Boolean>(false)
     const apiError = ref<AlertInterface | null>(null)
+    const formData = ref<LoginRequest>(defaultFormData())
+
+    // Load the schema and set up the validator
+    const { r$ } = useRegle(formData, useRuleSchemaAdapter().adapt(schemaFile))
 
     /**
      * Get the default form for the login
@@ -60,6 +67,8 @@ export function useLoginApi() {
         submitLogin,
         defaultFormData,
         apiLoading,
-        apiError
+        apiError,
+        formData,
+        r$
     }
 }

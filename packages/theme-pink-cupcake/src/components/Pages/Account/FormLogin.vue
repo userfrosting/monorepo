@@ -1,23 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { LoginRequest } from '@userfrosting/sprinkle-account/interfaces'
 import { useLoginApi } from '@userfrosting/sprinkle-account/composables'
 
 /**
  * API - Use the login API.
  */
-const { submitLogin, defaultFormData, apiLoading, apiError } = useLoginApi()
-
-/**
- * Variables - Copy the default form data to a reactive variable.
- */
-const form = ref<LoginRequest>(defaultFormData())
+const { submitLogin, apiLoading, apiError, formData, r$ } = useLoginApi()
 
 /**
  * Methods - Submit the form to the API and handle the response.
  */
 const sendLogin = async () => {
-    await submitLogin(form.value).catch(() => {})
+    // Make sure validation is up to date
+    const isValid = await r$.$validate()
+    if (!isValid.valid) return
+
+    await submitLogin(formData.value).catch(() => {})
 }
 </script>
 
@@ -28,31 +25,29 @@ const sendLogin = async () => {
             <div class="uk-margin">
                 <label class="uk-form-label" for="first_name">{{ $t('USERNAME') }}</label>
                 <div class="uk-inline uk-width-1-1">
-                    <span class="uk-form-icon">
-                        <font-awesome-icon :icon="['fas', 'user']" />
-                    </span>
+                    <font-awesome-icon class="fa-form-icon" icon="user" fixed-width />
                     <input
                         class="uk-input"
                         type="text"
                         :placeholder="$t('USERNAME')"
                         aria-label="Username"
                         data-test="username"
-                        v-model="form.user_name" />
+                        v-model="formData.user_name" />
+                    <UFFormValidationError :errors="r$.$errors.user_name" />
                 </div>
             </div>
             <div class="uk-margin">
                 <label class="uk-form-label" for="first_name">{{ $t('PASSWORD') }}</label>
                 <div class="uk-inline uk-width-1-1">
-                    <span class="uk-form-icon">
-                        <font-awesome-icon :icon="['fas', 'lock']" />
-                    </span>
+                    <font-awesome-icon class="fa-form-icon" icon="lock" fixed-width />
                     <input
                         class="uk-input"
                         type="password"
                         :placeholder="$t('PASSWORD')"
                         aria-label="Password"
                         data-test="password"
-                        v-model="form.password" />
+                        v-model="formData.password" />
+                    <UFFormValidationError :errors="r$.$errors.password" />
                 </div>
             </div>
             <div class="uk-margin">
@@ -62,7 +57,7 @@ const sendLogin = async () => {
                         type="checkbox"
                         aria-label="Remember Me"
                         data-test="rememberme"
-                        v-model="form.rememberme" />
+                        v-model="formData.rememberme" />
                     {{ $t('REMEMBER_ME') }}
                 </label>
             </div>
