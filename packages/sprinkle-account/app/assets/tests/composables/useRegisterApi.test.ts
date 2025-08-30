@@ -1,12 +1,10 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import axios from 'axios'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
-import { useAlertsStore, useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import type { RegisterRequest } from '../../interfaces'
 import { useRegisterApi } from '../../composables'
 
-const { submitRegistration, defaultRegistrationForm, availableLocales, captchaUrl, apiLoading } =
-    useRegisterApi()
+const { defaultRegistrationForm, availableLocales, captchaUrl } = useRegisterApi()
 
 const form: RegisterRequest = {
     first_name: 'John',

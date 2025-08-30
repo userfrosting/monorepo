@@ -1,13 +1,8 @@
-import { afterEach, describe, expect, test, vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import axios from 'axios'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
-import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 import { useLoginApi } from '../../composables'
-import { useAuthStore } from '../../stores'
-import { useCsrf } from '@userfrosting/sprinkle-core/composables'
 import type { LoginRequest } from '../../interfaces'
-
-const { submitLogin, defaultFormData, apiLoading } = useLoginApi()
 
 const form: LoginRequest = {
     user_name: '',
@@ -15,113 +10,160 @@ const form: LoginRequest = {
     rememberme: false
 }
 
-// Mock the config & alert stores
-vi.mock('@userfrosting/sprinkle-core/stores')
-const mockUseAlertsStore = {
-    push: vi.fn()
-}
+// Mock the auth store
+const mockUseAuthStoreSetUser = vi.fn()
+const mockUseAuthStoreUnsetUser = vi.fn()
+vi.mock('../../stores', () => ({
+    useAuthStore: () => ({
+        setUser: mockUseAuthStoreSetUser,
+        unsetUser: mockUseAuthStoreUnsetUser
+    })
+}))
 
-vi.mock('../../stores')
-const mockUseAuthStore = {
-    setUser: vi.fn(),
-    unsetUser: vi.fn()
-}
+// Mock CSRF Composable - Use partial mocking
+const mockUseCsrfUpdateFromHeaders = vi.fn()
+vi.mock('@userfrosting/sprinkle-core/composables', async () => {
+    const actualModule = await vi.importActual('@userfrosting/sprinkle-core/composables')
+    return {
+        ...actualModule, // Keep all original exports
+        useCsrf: () => ({
+            updateFromHeaders: mockUseCsrfUpdateFromHeaders
+        })
+    }
+})
 
-vi.mock('@userfrosting/sprinkle-core/composables')
-const mockUseCsrf = {
-    updateFromHeaders: vi.fn()
-}
+// Mock composables
+const mockUseAlertsStorePush = vi.fn()
+vi.mock('@userfrosting/sprinkle-core/stores', () => ({
+    useTranslator: () => ({
+        translate: vi.fn().mockImplementation((key) => {
+            return key
+        })
+    }),
+    useAlertsStore: () => ({
+        push: mockUseAlertsStorePush
+    })
+}))
 
 describe('useLoginApi', () => {
-    afterEach(() => {
-        vi.clearAllMocks()
-        vi.resetAllMocks()
-    })
-
-    test('should return default form', () => {
-        // Act
-        const result = defaultFormData()
-
-        // Assert
-        expect(result).toEqual({
+    test('should initialize formData with default values', () => {
+        const { formData } = useLoginApi()
+        expect(formData.value).toEqual({
             user_name: '',
             password: '',
             rememberme: false
         })
     })
 
-    test('should login successfully', async () => {
+    test('should expose r$ from useRegle', () => {
+        const { r$ } = useLoginApi()
+        expect(r$).toBeDefined()
+    })
+
+    test('should set apiError on failed login', async () => {
+        const { submitLogin, apiError } = useLoginApi()
+        const error = { response: { data: { description: 'Invalid credentials' } } }
+        vi.spyOn(axios, 'post').mockRejectedValue(error as any)
+        await expect(submitLogin(form)).rejects.toEqual({
+            description: 'Invalid credentials',
+            style: Severity.Danger
+        })
+        expect(apiError.value).toEqual({
+            description: 'Invalid credentials',
+            style: Severity.Danger
+        })
+    })
+
+    test('should clear apiError before login', async () => {
+        const { submitLogin, apiError } = useLoginApi()
+        apiError.value = { description: 'Old error', style: Severity.Danger }
+        const error = { response: { data: { description: 'Invalid credentials' } } }
+        vi.spyOn(axios, 'post').mockRejectedValue(error as any)
+        await expect(submitLogin(form)).rejects.toBeDefined()
+        expect(apiError.value).toEqual({
+            description: 'Invalid credentials',
+            style: Severity.Danger
+        })
+    })
+
+    test('should reset apiLoading after error', async () => {
+        const { submitLogin, apiLoading } = useLoginApi()
+        const error = { response: { data: { description: 'Invalid credentials' } } }
+        vi.spyOn(axios, 'post').mockRejectedValue(error as any)
+        expect(apiLoading.value).toBe(false)
+        await expect(submitLogin(form)).rejects.toBeDefined()
+        expect(apiLoading.value).toBe(false)
+    })
+
+    test('should call alerts, auth, and csrf composables on successful login', async () => {
         // Arrange
-        vi.mocked(useAlertsStore).mockReturnValue(mockUseAlertsStore as any)
-        vi.mocked(useAuthStore).mockReturnValue(mockUseAuthStore as any)
-        vi.mocked(useCsrf).mockReturnValue(mockUseCsrf as any)
         const response = {
             data: {
                 message: 'Login successful',
-                user: { username: 'JohnDoe', email: 'john.doe@example.com' }
+                user: { username: 'JaneDoe', email: 'jane.doe@example.com' }
             },
             headers: { 'csrf-token': 'csrf-token-value' }
         }
-        vi.spyOn(axios, 'post').mockResolvedValue(response as any)
+        const axiosPostSpy = vi.spyOn(axios, 'post').mockResolvedValue(response as any)
 
         // Act
+        const { submitLogin } = useLoginApi()
         await submitLogin(form)
 
         // Assert
-        expect(axios.post).toHaveBeenCalledWith('/account/login', form)
-        expect(mockUseAlertsStore.push).toHaveBeenCalledWith({
+        expect(axiosPostSpy).toHaveBeenCalledWith('/account/login', form)
+        expect(mockUseAlertsStorePush).toHaveBeenCalledWith({
             title: 'Login successful',
             style: Severity.Success
         })
-        expect(mockUseAuthStore.setUser).toHaveBeenCalledWith(response.data.user)
-        expect(mockUseCsrf.updateFromHeaders).toHaveBeenCalledWith(response.headers)
+        expect(mockUseAuthStoreSetUser).toHaveBeenCalledWith(response.data.user)
+        expect(mockUseCsrfUpdateFromHeaders).toHaveBeenCalledWith(response.headers)
     })
 
-    test('should throw an error when login fails', async () => {
-        // Arrange
-        const error = { response: { data: { description: 'Login failed' } } }
-        vi.spyOn(axios, 'post').mockRejectedValue(error as any)
-
-        // Act & Assert
+    test('should throw and set apiError if axios throws without response data', async () => {
+        const { submitLogin, apiError } = useLoginApi()
+        const error = new Error('Network Error')
+        vi.spyOn(axios, 'post').mockRejectedValue(error)
         await expect(submitLogin(form)).rejects.toEqual({
-            description: 'Login failed',
+            description: 'Network Error',
             style: Severity.Danger
         })
-        expect(axios.post).toHaveBeenCalledWith('/account/login', form)
-    })
-
-    test('should throw an error when login fails due to a non api related cause', async () => {
-        // Arrange
-        const error = { response: { data: { description: 'Login successful' } } }
-        vi.spyOn(axios, 'post').mockResolvedValue(error as any)
-
-        // Act & Assert
-        // useAlertsStore is not defined on purpose to simulate it failing
-        await expect(submitLogin(form)).rejects.toEqual({
-            description: "Cannot read properties of undefined (reading 'push')",
+        expect(apiError.value).toEqual({
+            description: 'Network Error',
             style: Severity.Danger
         })
-        expect(axios.post).toHaveBeenCalledWith('/account/login', form)
     })
 
-    test('should set loading state to true', async () => {
-        vi.mocked(useAlertsStore).mockReturnValue(mockUseAlertsStore as any)
-        vi.mocked(useAuthStore).mockReturnValue(mockUseAuthStore as any)
-        vi.mocked(useCsrf).mockReturnValue(mockUseCsrf as any)
+    test('should reset formData to default values using defaultFormData', () => {
+        const { defaultFormData, formData } = useLoginApi()
+        formData.value = {
+            user_name: 'JohnDoe',
+            password: 'password123',
+            rememberme: true
+        }
+        formData.value = defaultFormData()
+        expect(formData.value).toEqual({
+            user_name: '',
+            password: '',
+            rememberme: false
+        })
+    })
+
+    test('should set apiLoading true during request and false after', async () => {
+        const { submitLogin, apiLoading } = useLoginApi()
         const response = {
             data: {
                 message: 'Login successful',
-                user: { username: 'JohnDoe', email: 'john.doe@example.com' }
+                user: { username: 'JaneDoe', email: 'jane.doe@example.com' }
             },
-            headers: { 'csrf-token': 'csrf-token-value' }
+            headers: {}
         }
-        vi.spyOn(axios, 'post').mockResolvedValue(response as any)
-
-        // Act
+        vi.spyOn(axios, 'post').mockImplementation(() => {
+            expect(apiLoading.value).toBe(true)
+            return Promise.resolve(response as any)
+        })
         expect(apiLoading.value).toBe(false)
-        const submitPromise = submitLogin(form)
-        expect(apiLoading.value).toBe(true)
-        await submitPromise
+        await submitLogin(form)
         expect(apiLoading.value).toBe(false)
     })
 })
