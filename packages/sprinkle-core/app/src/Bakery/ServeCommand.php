@@ -53,7 +53,7 @@ final class ServeCommand extends Command
         $this->io->info('Press `ctrl+c` to quit');
 
         $port = $input->getOption('port');
-        $this->executeCommand("php -S localhost:$port -t public");
+        $this->executeCommand("php -S localhost:$port -t public public/index.php");
 
         return self::SUCCESS;
     }
