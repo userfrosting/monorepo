@@ -23,6 +23,7 @@ use UserFrosting\ServicesProvider\ServicesProviderInterface;
 
 /**
  * Markdown service. Add CommonMark markdown parser with GitHub Flavored Markdown frontmatter support.
+ *
  * @see https://commonmark.thephpleague.com
  */
 class MarkdownService implements ServicesProviderInterface
@@ -40,7 +41,7 @@ class MarkdownService implements ServicesProviderInterface
                 $converter = new MarkdownConverter($environment);
 
                 return $converter;
-            }
+            },
         ];
     }
 }
