@@ -59,11 +59,7 @@ return [
         // 'FIRST'    => 'Première page',
         // 'LAST'     => 'Dernière page',
     ],
-    // TODO - Implement
-    'PRIVACY' => [
-        '@TRANSLATION' => 'Politique de confidentialité',
-        'DESCRIPTION'  => 'Notre politique de confidentialité décrit le type d\'informations que nous recueillons de votre part et comment nous les utiliserons.',
-    ],
+    'PRIVACY_POLICY' => 'Politique de confidentialité',
 
     'SLUG'                     => 'Jeton',
     'SLUG_IN_USE'              => 'Un jeton <strong>{{slug}}</strong> existe déjà',
@@ -78,6 +74,7 @@ return [
     'SUGGEST'                  => 'Suggérer',
 
     'THEME_BY'      => 'Thème créé avec',
+    'TOS'           => 'Termes et conditions',
 
     // Actions words
     'ACTIONS'                  => 'Actions',

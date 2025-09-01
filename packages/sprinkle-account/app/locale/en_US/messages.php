@@ -201,9 +201,7 @@ return [
     ],
     'REMEMBER_ME'               => 'Remember me',
 
-    'TOS'           => 'Terms and Conditions',
-    'TOS_AGREEMENT' => 'By registering an account with {{site_title}}, you accept the <a {{link_attributes | raw}}>terms and conditions</a>.',
-    // 'TOS_FOR'       => 'Terms and Conditions for {{title}}',
+    'TOS_AGREEMENT' => 'By registering an account with {{site_title}}, you accept the terms and conditions.',
 
     'USERNAME' => [
         '@TRANSLATION'  => 'Username',

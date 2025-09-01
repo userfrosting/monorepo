@@ -202,9 +202,7 @@ return [
     ],
     'REMEMBER_ME'             => 'Se souvenir de moi!',
 
-    'TOS'                     => 'Termes et conditions',
-    'TOS_AGREEMENT'           => 'En créant un compte avec {{site_title}}, vous acceptez les <a {{link_attributes | raw}}>termes et conditions</a>.',
-    // 'TOS_FOR'                 => 'Termes et conditions pour {{title}}',
+    'TOS_AGREEMENT'           => 'En créant un compte avec {{site_title}}, vous acceptez les termes et conditions.',
 
     'USERNAME'                => [
         '@TRANSLATION'  => 'Nom d\'utilisateur',

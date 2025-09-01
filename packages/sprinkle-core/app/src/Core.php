@@ -70,6 +70,7 @@ use UserFrosting\Sprinkle\Core\Middlewares\SessionMiddleware;
 use UserFrosting\Sprinkle\Core\Middlewares\URIMiddleware;
 use UserFrosting\Sprinkle\Core\Routes\AlertsRoutes;
 use UserFrosting\Sprinkle\Core\Routes\ApiRoutes;
+use UserFrosting\Sprinkle\Core\Routes\ContentRoutes;
 use UserFrosting\Sprinkle\Core\ServicesProvider\AlertStreamService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\CacheService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\ConfigService;
@@ -79,6 +80,7 @@ use UserFrosting\Sprinkle\Core\ServicesProvider\I18nService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\LocatorService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\LoggersService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\MailService;
+use UserFrosting\Sprinkle\Core\ServicesProvider\MarkdownService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\MigratorService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\RoutingService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\SeedService;
@@ -197,6 +199,7 @@ class Core implements
         return [
             AlertsRoutes::class,
             ApiRoutes::class,
+            ContentRoutes::class,
         ];
     }
 
@@ -217,6 +220,7 @@ class Core implements
             LocatorService::class,
             LoggersService::class,
             MailService::class,
+            MarkdownService::class,
             MigratorService::class,
             RoutingService::class,
             SeedService::class,

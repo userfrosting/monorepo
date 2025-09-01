@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import axios from 'axios'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEmailVerificationApi, useRegisterApi } from '@userfrosting/sprinkle-account/composables'
 import { useConfigStore, useTranslator } from '@userfrosting/sprinkle-core/stores'
@@ -70,9 +71,32 @@ const tos = computed(() => {
     const config = useConfigStore()
     const { translate } = useTranslator()
     return translate('TOS_AGREEMENT', {
-        site_title: config.get('site.title'),
-        link_attributes: '' // TODO
+        site_title: config.get('site.title')
     })
+})
+
+/**
+ * Load the TOS from the axios API
+ */
+const tosContent = ref({ metadata: { title: '' }, content: '' })
+onMounted(async () => {
+    try {
+        const response = await axios.get('/c/tos')
+        tosContent.value = response.data
+    } catch (e) {
+        tosContent.value = { metadata: { title: '' }, content: '' }
+    }
+})
+
+// Load the Privacy Policy from the axios API
+const privacyPolicyContent = ref({ metadata: { title: '' }, content: '' })
+onMounted(async () => {
+    try {
+        const response = await axios.get('/c/privacy')
+        privacyPolicyContent.value = response.data
+    } catch (e) {
+        privacyPolicyContent.value = { metadata: { title: '' }, content: '' }
+    }
 })
 </script>
 
@@ -192,8 +216,6 @@ const tos = computed(() => {
                                 v-model="formData.passwordc" />
                             <UFFormValidationError :errors="r$.$errors.passwordc" />
                         </div>
-                        <!-- TODO -->
-                        <!-- {{translate('PASSWORD.BETWEEN', {min: site.password.length.min, max: site.password.length.max})}} -->
                     </div>
                 </div>
 
@@ -237,8 +259,38 @@ const tos = computed(() => {
                 </div>
                 <!-- {% endif %} -->
 
-                <!-- TODO Add TOS in modal -->
-                <p v-html="tos"></p>
+                <!-- TOS modal -->
+                <div class="uk-margin uk-text-center">
+                    <p v-html="tos"></p>
+                    <a href="#show-tos" class="uk-button uk-button-default" uk-toggle>
+                        {{ $t('TOS') }}
+                    </a>
+                    <a href="#show-privacy" class="uk-button uk-button-default" uk-toggle>
+                        {{ $t('PRIVACY_POLICY') }}
+                    </a>
+                    <UFModal class="uk-modal-container" id="show-tos" closable>
+                        <template #header>{{ $t('TOS') }}</template>
+                        <p uk-overflow-auto v-html="tosContent.content"></p>
+                        <template #footer>
+                            <button
+                                class="uk-button uk-button-primary uk-width-1-1 uk-modal-close"
+                                type="button">
+                                Got it
+                            </button>
+                        </template>
+                    </UFModal>
+                    <UFModal class="uk-modal-container" id="show-privacy" closable>
+                        <template #header>{{ $t('PRIVACY_POLICY') }}</template>
+                        <p uk-overflow-auto v-html="privacyPolicyContent.content"></p>
+                        <template #footer>
+                            <button
+                                class="uk-button uk-button-primary uk-width-1-1 uk-modal-close"
+                                type="button">
+                                Got it
+                            </button>
+                        </template>
+                    </UFModal>
+                </div>
 
                 <div class="uk-text-center">
                     <button

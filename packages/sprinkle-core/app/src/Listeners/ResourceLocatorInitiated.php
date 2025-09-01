@@ -58,6 +58,9 @@ class ResourceLocatorInitiated
             new ResourceStream('schema'),
             new ResourceStream('templates'),
 
+            // Add readonly streams
+            new ResourceStream('markdown', readonly: true),
+
             // Add shared streams
             new ResourceStream('cache', shared: true),
             new ResourceStream('database', shared: true),

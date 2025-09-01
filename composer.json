@@ -59,7 +59,8 @@
         "twig/twig": "^3.3",
         "userfrosting/vite-php-twig": "^1.0.2",
         "vlucas/phpdotenv": "^5.3",
-        "vlucas/valitron": "^1.2.3"
+        "vlucas/valitron": "^1.2.3",
+        "league/commonmark": "^2.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.17",

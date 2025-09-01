@@ -59,11 +59,7 @@ return [
         // 'FIRST'    => 'First page',
         // 'LAST'     => 'Last page',
     ],
-    // TODO - Implement
-    'PRIVACY' => [
-        '@TRANSLATION' => 'Privacy Policy',
-        'DESCRIPTION'  => 'Our privacy policy outlines what kind of information we collect from you and how we will use it.',
-    ],
+    'PRIVACY_POLICY' => 'Privacy Policy',
 
     'SLUG'           => 'Slug',
     'SLUG_IN_USE'    => 'A <strong>{{slug}}</strong> slug already exists',
@@ -78,6 +74,7 @@ return [
     'SUGGEST'        => 'Suggest',
 
     'THEME_BY'      => 'Theme built with',
+    'TOS'           => 'Terms of Service',
 
     // Actions words
     'ACTIONS'                  => 'Actions',
