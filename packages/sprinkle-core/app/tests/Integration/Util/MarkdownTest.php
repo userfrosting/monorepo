@@ -31,7 +31,7 @@ class MarkdownTest extends CoreTestCase
 
     public function testBasicFile(): void
     {
-        $file = 'About';
+        $file = 'about';
         $locale = 'en_US';
         $markdownContent = '<p>Lorem <strong>ipsum</strong> dolor</p>' . PHP_EOL;
         $frontMatter = [];
@@ -81,7 +81,7 @@ class MarkdownTest extends CoreTestCase
 
     public function testLocalizedFileWithFrontMatter(): void
     {
-        $file = 'tEst'; // case not matching + md extension (later)
+        $file = 'test'; // case not matching + md extension (later)
         $locale = 'fr'; // locale identifier
         $markdownContent = '<p>Ceci est un <strong>test</strong> fonctionnel.</p>' . PHP_EOL;
         $frontMatter = [
@@ -134,7 +134,7 @@ class MarkdownTest extends CoreTestCase
 
     public function testFileNotFound(): void
     {
-        $file = 'About';
+        $file = 'about';
         $locale = 'en_US';
 
         /** @var ResourceLocatorInterface */
