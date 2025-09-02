@@ -42,12 +42,15 @@ class PersistenceTest extends AccountTestCase
         // Assert Initial DB state
         $this->assertSame(0, Persistence::count());
 
+        $token = 'f98103e9217f099208569d295c1b276f1821348636c268c854bb2a086e0037cd'; // TOKEN
+        $ptoken = 'a512c84ae422bfa80f18f86ff885a4c35769a784e5f63f34587fb18ae028d317'; // PTOKEN
+
         /** @var User */
         $user = User::factory()->create();
 
         $persistence = new Persistence([
-            'token'            => 'TOKEN',
-            'persistent_token' => 'PTOKEN',
+            'token'            => $token,
+            'persistent_token' => $ptoken,
         ]);
         $persistence->user()->associate($user);
         $persistence->save();
@@ -60,8 +63,8 @@ class PersistenceTest extends AccountTestCase
         /** @var Persistence */
         $fetched = Persistence::find($persistence->id);
         $this->assertSame($user->id, $fetched->user_id);
-        $this->assertSame('TOKEN', $fetched->token);
-        $this->assertSame('PTOKEN', $fetched->persistent_token);
+        $this->assertSame($token, $fetched->token);
+        $this->assertSame($ptoken, $fetched->persistent_token);
         $this->assertNull($fetched->expires_at);
 
         // Assert User relations
