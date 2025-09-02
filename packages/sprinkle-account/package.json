@@ -33,7 +33,8 @@
         "./views": "./app/assets/views/index.ts"
     },
     "files": [
-        "app/assets/"
+        "app/assets/",
+        "app/schema/"
     ],
     "peerDependencies": {
         "@userfrosting/sprinkle-core": "^6.0.0-beta",
