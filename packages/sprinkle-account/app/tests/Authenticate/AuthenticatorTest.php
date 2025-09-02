@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Tests\Authenticate;
 
-use Birke\Rememberme\Authenticator as RememberMe;
-use Birke\Rememberme\Cookie\PHPCookie;
-use Birke\Rememberme\LoginResult;
-use Birke\Rememberme\Storage\StorageInterface;
 use Illuminate\Cache\Repository as Cache;
+use mober\Rememberme\Authenticator as RememberMe;
+use mober\Rememberme\Cookie\PHPCookie;
+use mober\Rememberme\LoginResult;
+use mober\Rememberme\Storage\AbstractStorage;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PDOException;
@@ -341,7 +341,7 @@ class AuthenticatorTest extends AccountTestCase
             ->shouldReceive('isSuccess')->once()->andReturn(false)
             ->shouldReceive('hasPossibleManipulation')->once()->andReturn(true)
             ->getMock();
-        $storageInterface = $this->ci->get(StorageInterface::class);
+        $storageInterface = $this->ci->get(AbstractStorage::class);
         /** @var class-string */
         $class = RememberMe::class . '[login]';
         $rememberMe = Mockery::mock($class, [$storageInterface])
@@ -462,7 +462,7 @@ class AuthenticatorTest extends AccountTestCase
     public function testLoginSessionUserWithAuthExpired(): void
     {
         // Mock RememberMe to simulate a fake cookie.
-        $storageInterface = $this->ci->get(StorageInterface::class);
+        $storageInterface = $this->ci->get(AbstractStorage::class);
         $cookie = Mockery::mock(PHPCookie::class)
             ->makePartial()
             ->shouldReceive('getValue')->andReturn('foo')

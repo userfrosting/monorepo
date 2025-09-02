@@ -10,9 +10,9 @@
 
 namespace UserFrosting\Sprinkle\Account\Tests\Rememberme;
 
-use Birke\Rememberme\Storage\StorageInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use mober\Rememberme\Storage\AbstractStorage;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Persistence;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
@@ -39,10 +39,10 @@ class PDOStorageTest extends AccountTestCase
     protected string $validPersistentToken = '0e0530c1430da76495955eb06eb99d95';
     protected string $invalidToken = '7ae7c7caa0c7b880cb247bb281d527de';
 
-    // SHA1 hashes of the tokens
-    protected string $validDBToken = 'e0e6d29addce0fbdd0f845799be7d0395ed087c3';
-    protected string $validDBPersistentToken = 'd27d330764ef61e99adf5d16f90b95a2a63c209a';
-    protected string $invalidDBToken = 'ec15fbc40cdff6a2050a1bcbbc1b2196222f13f4';
+    // SHA256 hashes of the tokens
+    protected string $validDBToken = 'b1d2a86fa0da79e800fb7da591cf1fb69e833ee3b6a545bf18959d2f2460310b';
+    protected string $validDBPersistentToken = '874df7491a474a04d132691d0af6f64a2d546a4933818b0255d0ce346e0cd712';
+    protected string $invalidDBToken = '546cfd5dd78d826ad623b2a169a56b14c8de2194900bd101ae55f89d2ef25316';
 
     // Expiration date for the test tokens
     protected string $expire;
@@ -72,20 +72,20 @@ class PDOStorageTest extends AccountTestCase
         $this->insertTestData();
         $this->assertSame(1, Persistence::count());
         $result = $this->storage->findTriplet($this->testUser->id, $this->validToken, $this->validPersistentToken);
-        $this->assertSame(StorageInterface::TRIPLET_FOUND, $result);
+        $this->assertSame(AbstractStorage::TRIPLET_FOUND, $result);
     }
 
     public function testFindTripletReturnsNotFoundIfNoDataMatches(): void
     {
         $result = $this->storage->findTriplet($this->testUser->id, $this->validToken, $this->validPersistentToken);
-        $this->assertSame(StorageInterface::TRIPLET_NOT_FOUND, $result);
+        $this->assertSame(AbstractStorage::TRIPLET_NOT_FOUND, $result);
     }
 
     public function testFindTripletReturnsInvalidTokenIfTokenIsInvalid(): void
     {
         $this->insertTestData();
         $result = $this->storage->findTriplet($this->testUser->id, $this->invalidToken, $this->validPersistentToken);
-        $this->assertSame(StorageInterface::TRIPLET_INVALID, $result);
+        $this->assertSame(AbstractStorage::TRIPLET_INVALID, $result);
     }
 
     public function testStoreTripletSavesValuesIntoDatabase(): void

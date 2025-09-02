@@ -57,7 +57,7 @@ return [
     * ----------------------------------------------------------------------
     * RememberMe Package Settings
     * ----------------------------------------------------------------------
-    * See https://github.com/gbirke/rememberme for an explanation of these settings
+    * See https://github.com/m-ober/rememberme for an explanation of these settings
     *
     * Note that the 'domain' field can be set to match your top-level-domain if you
     * want to send the rememberme to all hosts in your domain.  An automatic config

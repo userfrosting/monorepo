@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Rememberme;
 
-use Birke\Rememberme\Storage\StorageInterface;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use mober\Rememberme\Storage\AbstractStorage;
 use UserFrosting\Sprinkle\Account\Database\Models\Persistence;
 
 /**
  * Store login tokens in database with PDO class.
  */
-class PDOStorage implements StorageInterface
+class PDOStorage extends AbstractStorage
 {
     /**
      * @param Capsule $db
@@ -36,12 +36,12 @@ class PDOStorage implements StorageInterface
         /** @var Persistence|null */
         $result = Persistence::notExpired()->where([
             'user_id'          => $credential,
-            'persistent_token' => sha1($persistentToken),
+            'persistent_token' => $this->hash($persistentToken),
         ])->first();
 
         if ($result === null) {
             return self::TRIPLET_NOT_FOUND;
-        } elseif ($result->token === sha1($token)) {
+        } elseif ($result->token === $this->hash($token)) {
             return self::TRIPLET_FOUND;
         }
 
@@ -55,8 +55,8 @@ class PDOStorage implements StorageInterface
     {
         $persistence = new Persistence([
             'user_id'          => $credential,
-            'token'            => sha1($token),
-            'persistent_token' => sha1($persistentToken),
+            'token'            => $this->hash($token),
+            'persistent_token' => $this->hash($persistentToken),
             'expires_at'       => date('Y-m-d H:i:s', $expire),
         ]);
         $persistence->save();
@@ -69,7 +69,7 @@ class PDOStorage implements StorageInterface
     {
         Persistence::where([
             'user_id'          => $credential,
-            'persistent_token' => sha1($persistentToken),
+            'persistent_token' => $this->hash($persistentToken),
         ])->delete();
     }
 

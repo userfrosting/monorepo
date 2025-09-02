@@ -30,6 +30,7 @@ use UserFrosting\Sprinkle\Account\Database\Migrations\v420\AddingForeignKeys;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v430\UpdateGroupsTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v430\UpdateUsersTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v500\UpdateUsersTable as V500UpdateUsersTable;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v520\UpdatePersistenceTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v600\DropPasswordResetsTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v600\DropVerificationsTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v600\UpdateUsersTable as V600UpdateUsersTable;
@@ -161,6 +162,8 @@ class Account implements
             UpdateUsersTable::class,
             // v500
             V500UpdateUsersTable::class,
+            // v520
+            UpdatePersistenceTable::class,
             // v600
             UserVerificationTable::class,
             V600UpdateUsersTable::class,

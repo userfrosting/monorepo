@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
-use Birke\Rememberme\Authenticator as RememberMe;
-use Birke\Rememberme\Storage\StorageInterface;
-use Birke\Rememberme\Triplet as RememberMeTriplet;
 use Illuminate\Cache\Repository as Cache;
+use mober\Rememberme\Authenticator as RememberMe;
+use mober\Rememberme\Storage\AbstractStorage;
+use mober\Rememberme\Triplet as RememberMeTriplet;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use UserFrosting\Config\Config;
 use UserFrosting\Session\Session;
@@ -63,7 +63,7 @@ class Authenticator
      * @param \UserFrosting\Event\EventDispatcher $eventDispatcher
      * @param RememberMe                          $rememberMe
      * @param Session                             $session
-     * @param StorageInterface                    $rememberMeStorage
+     * @param AbstractStorage                     $rememberMeStorage
      * @param UserInterface                       $userModel
      */
     public function __construct(
@@ -73,7 +73,7 @@ class Authenticator
         protected EventDispatcherInterface $eventDispatcher,
         protected RememberMe $rememberMe,
         protected Session $session,
-        protected StorageInterface $rememberMeStorage,
+        protected AbstractStorage $rememberMeStorage,
         protected UserInterface $userModel,
         protected CsrfGuard $csrf,
     ) {
@@ -486,11 +486,11 @@ class Authenticator
     }
 
     /**
-     * Setup \Birke\Rememberme\Cookie\PHPCookie configuration.
+     * Setup \mober\Rememberme\Cookie\PHPCookie configuration.
      */
     protected function setupCookie(): void
     {
-        /** @var \Birke\Rememberme\Cookie\PHPCookie */
+        /** @var \mober\Rememberme\Cookie\PHPCookie */
         $cookie = $this->rememberMe->getCookie();
 
         // Set cookie name

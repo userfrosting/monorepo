@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
-use Birke\Rememberme\Storage\StorageInterface;
+use mober\Rememberme\Storage\AbstractStorage;
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
@@ -27,8 +27,8 @@ class AuthService implements ServicesProviderInterface
     public function register(): array
     {
         return [
-            StorageInterface::class => \DI\autowire(PDOStorage::class),
-            HasherInterface::class  => \DI\autowire(Hasher::class),
+            AbstractStorage::class => \DI\autowire(PDOStorage::class),
+            HasherInterface::class => \DI\autowire(Hasher::class),
         ];
     }
 }
