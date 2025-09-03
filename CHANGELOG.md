@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+- Fix frontend package version reference
+- Fix schemas not available in npm packages
+- Revert previous comment preventing assets to be served in production mode
+
 ## 6.0.0-beta.1 - 2025-09-02
+- Add [Regle](https://reglejs.dev) for frontend form validation
+- Replace deprecated birke/rememberme 2.0 with mober/rememberme 5.1
+- Add Terms of Service and Privacy Policy functionality
+- Rename Sprunje "item" to "row"
+- Fix modal issue when the element has a dot in the slug
+- Log username and slug in edit forms
+- Update support for Slim 4.15
 
 ## 6.0.0-alpha.6 - 2025-07-07
 - Add AlertsStore + Notification Plugin
