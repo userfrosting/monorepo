@@ -62,7 +62,10 @@ class UserPasswordActionTest extends AdminTestCase
     public function testPost(): void
     {
         /** @var User */
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'first_name' => 'Kelly',
+            'last_name'  => 'Reilly'
+        ]);
         $this->actAsUser($user, permissions: ['update_user_field']);
 
         // Create request with method and url and fetch response
@@ -72,7 +75,7 @@ class UserPasswordActionTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertJsonResponse([
-            'title'       => '<strong>' . $user->full_name . '</strong>\'s password has been reset.',
+            'title'       => '<strong>Kelly Reilly</strong>\'s password has been reset.',
             'description' => '',
         ], $response);
     }
