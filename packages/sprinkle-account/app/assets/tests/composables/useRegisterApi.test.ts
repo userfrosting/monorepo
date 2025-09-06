@@ -1,12 +1,14 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import axios from 'axios'
-import { Severity } from '@userfrosting/sprinkle-core/interfaces'
-import type { RegisterRequest } from '../../interfaces'
+import { afterEach, describe, expect, test, vi } from 'vitest'
+// import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+// import axios from 'axios'
+// import { Severity } from '@userfrosting/sprinkle-core/interfaces'
+// import type { RegisterRequest } from '../../interfaces'
 import { useRegisterApi } from '../../composables'
 
-const { defaultRegistrationForm, availableLocales, captchaUrl } = useRegisterApi()
+const { defaultRegistrationForm} = useRegisterApi()
+// const { defaultRegistrationForm, availableLocales, captchaUrl } = useRegisterApi()
 
-const form: RegisterRequest = {
+/*const form: RegisterRequest = {
     first_name: 'John',
     last_name: 'Doe',
     email: 'john.doe@example.com',
@@ -16,7 +18,7 @@ const form: RegisterRequest = {
     locale: 'en_US',
     captcha: 'captcha',
     spiderbro: 'http://'
-}
+}*/
 
 // Mock composables
 const mockUseAlertsStorePush = vi.fn()
