@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-defineProps({
+const props = defineProps({
     length: {
         type: Number,
         default: 6,
@@ -9,7 +9,7 @@ defineProps({
     }
 })
 
-const max = computed(() => Math.pow(10, length) - 1)
+const max = computed(() => Math.pow(10, props.length) - 1)
 const code = defineModel()
 </script>
 

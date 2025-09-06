@@ -20,7 +20,6 @@ export default {
                 while (alerts.length) {
                     const alert = alertsStore.shift()
                     if (!alert) break
-                    // @ts-ignore Info is not a valid status in UIkit, but we have a custom case for it
                     UIkit.notification({
                         message: getAlertMessage(alert),
                         status: severityToStatus((alert.style ?? Severity.Default) as Severity),

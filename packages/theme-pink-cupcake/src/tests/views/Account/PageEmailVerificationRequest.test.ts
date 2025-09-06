@@ -53,16 +53,6 @@ const wrapperGlobals = {
 }
 
 /**
- * UiKit notification data
- */
-const uikitNotificationRequestSent = {
-    message: 'Verification email sent',
-    status: 'success',
-    pos: 'top-right',
-    timeout: 4000
-}
-
-/**
  * Tests
  */
 describe('PageEmailVerificationRequest.vue', () => {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import UIkit from 'uikit'
 import { useRouter } from 'vue-router'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import { useEmailVerificationApi } from '@userfrosting/sprinkle-account/composables'

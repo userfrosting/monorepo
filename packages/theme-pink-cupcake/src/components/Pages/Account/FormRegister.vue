@@ -83,7 +83,7 @@ onMounted(async () => {
     try {
         const response = await axios.get('/c/tos')
         tosContent.value = response.data
-    } catch (e) {
+    } catch {
         tosContent.value = { metadata: { title: '' }, content: '' }
     }
 })
@@ -94,7 +94,7 @@ onMounted(async () => {
     try {
         const response = await axios.get('/c/privacy')
         privacyPolicyContent.value = response.data
-    } catch (e) {
+    } catch {
         privacyPolicyContent.value = { metadata: { title: '' }, content: '' }
     }
 })

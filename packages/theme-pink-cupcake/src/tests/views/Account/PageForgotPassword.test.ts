@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { describe, test, expect, vi, afterEach } from 'vitest'
 import { mount, config } from '@vue/test-utils'
-import UIkit from 'uikit'
 import { useForgotPasswordApi } from '@userfrosting/sprinkle-account/composables'
 import PageForgotPassword from '../../../views/Account/PageForgotPassword.vue'
 import { CardBoxLarge, CardBox, UFAlert } from '../../../components'
@@ -52,16 +51,6 @@ const wrapperGlobals = {
     global: {
         stubs: ['FontAwesomeIcon', 'router-link']
     }
-}
-
-/**
- * UiKit notification data
- */
-const uikitNotificationRequestSent = {
-    message: 'Verification email sent',
-    status: 'success',
-    pos: 'top-right',
-    timeout: 4000
 }
 
 /**

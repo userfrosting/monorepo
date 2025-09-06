@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useUserEmailEditApi } from '@userfrosting/sprinkle-account/composables'
 import { useAuthStore } from '@userfrosting/sprinkle-account/stores'
-import type { EmailEditRequest } from '@userfrosting/sprinkle-account/interfaces'
 
 /**
  * Variables - Copy the user data to a reactive variable.
