@@ -1,0 +1,32 @@
+{
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "include": [
+        "packages/skeleton/env.d.ts",
+        "packages/skeleton/app/assets/**/*.js",
+        "packages/skeleton/app/assets/**/*.ts",
+        "packages/skeleton/app/assets/**/*.d.ts",
+        "packages/skeleton/app/assets/**/*.vue",
+        "packages/sprinkle-*/env.d.ts",
+        "packages/sprinkle-*/app/assets/**/*.ts",
+        "packages/sprinkle-*/app/assets/**/*.d.ts",
+        "packages/sprinkle-*/app/assets/**/*.vue",
+        "packages/theme-pink-cupcake/env.d.ts",
+        "packages/theme-pink-cupcake/src/**/*.ts",
+        "packages/theme-pink-cupcake/src/**/*.d.ts",
+        "packages/theme-pink-cupcake/src/**/*.vue",
+    ],
+    "exclude": ["vite.config.ts"],
+    "compilerOptions": {
+        "composite": true,
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "baseUrl": ".",
+        "rootDir": "packages",
+        "allowJs": true,
+        "types": ["@modyfi/vite-plugin-yaml/modules"]
+    },
+    "references": [
+        {
+            "path": "./tsconfig.node.json"
+        }
+    ]
+}

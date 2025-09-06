@@ -31,12 +31,12 @@
         {
             "label": "Workspace - Format",
             "type": "shell",
-            "command": "npm run --workspaces format"
+            "command": "npm run format"
         },
         {
             "label": "Workspace - Type Check",
             "type": "shell",
-            "command": "npm run --workspaces typecheck"
+            "command": "npm run typecheck"
         },
         {
             "label": "Workspace - Eslint",
