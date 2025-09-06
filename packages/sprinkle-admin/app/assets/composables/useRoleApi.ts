@@ -13,7 +13,7 @@ import type {
 } from '../interfaces'
 import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
-import schemaFile from '../../schema/requests/role.yaml?raw'
+import schemaFile from '../../schema/requests/role.yaml'
 
 /**
  * Vue composable for Role CRUD operations.

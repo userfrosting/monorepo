@@ -11,7 +11,7 @@ import type {
     UserResponse
 } from '../interfaces'
 import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
-import schemaFile from '../../schema/requests/user/create.yaml?raw'
+import schemaFile from '../../schema/requests/user/create.yaml'
 import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 
 /**

@@ -6,7 +6,7 @@ import type { ApiResponse, AlertInterface } from '@userfrosting/sprinkle-core/in
 import type { EmailEditRequest } from '../interfaces'
 import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
-import schemaFile from '../../schema/requests/account-email.yaml?raw'
+import schemaFile from '../../schema/requests/account-email.yaml'
 
 /**
  * API Composable

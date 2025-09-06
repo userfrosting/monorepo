@@ -6,7 +6,7 @@ import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 import { useCsrf, useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
 import type { LoginRequest, LoginResponse } from '../interfaces'
 import { useAuthStore } from '../stores'
-import schemaFile from '../../schema/requests/login.yaml?raw'
+import schemaFile from '../../schema/requests/login.yaml'
 
 /**
  * API Composable

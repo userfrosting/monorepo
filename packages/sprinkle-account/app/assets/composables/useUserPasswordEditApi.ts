@@ -9,7 +9,7 @@ import {
 import type { PasswordEditRequest } from '../interfaces'
 import { useAlertsStore, useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
-import schemaFile from '../../schema/requests/account-settings.yaml?raw'
+import schemaFile from '../../schema/requests/account-settings.yaml'
 
 /**
  * API Composable

@@ -5,7 +5,7 @@ import { Severity, type AlertInterface } from '@userfrosting/sprinkle-core/inter
 import { useAlertsStore, useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
 import type { RegisterRequest, RegisterResponse } from '../interfaces'
-import schemaFile from '../../schema/requests/register.yaml?raw'
+import schemaFile from '../../schema/requests/register.yaml'
 
 /**
  * API Composable

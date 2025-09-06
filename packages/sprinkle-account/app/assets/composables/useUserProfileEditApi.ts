@@ -6,7 +6,7 @@ import { useAlertsStore, useTranslator } from '@userfrosting/sprinkle-core/store
 import type { ApiResponse, ApiErrorResponse } from '@userfrosting/sprinkle-core/interfaces'
 import type { ProfileEditRequest } from '../interfaces'
 import { useRuleSchemaAdapter } from '@userfrosting/sprinkle-core/composables'
-import schemaFile from '../../schema/requests/profile-settings.yaml?raw'
+import schemaFile from '../../schema/requests/profile-settings.yaml'
 
 /**
  * API Composable

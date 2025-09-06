@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [6.0.0-beta.3](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.2...6.0.0-beta.3)
-- No changes
+- Add YAML loader 
 
 ## [6.0.0-beta.2](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.1...6.0.0-beta.2)
 - Fix assets not loading in production when using the PHP built in server

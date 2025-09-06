@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- Add 'limax' to optimizeDeps (Prevents "importing binding name 'default' cannot be resolved by star export entries")
+- Add YAML loader 
 
 ## 6.0.0-beta.2 - 2025-09-03
 - Fix frontend package version reference

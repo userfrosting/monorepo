@@ -1,4 +1,3 @@
-import { parse as YamlParse } from 'yaml'
 import {
     withMessage,
     required,
@@ -22,10 +21,7 @@ export function useRuleSchemaAdapter() {
      * @param rawSchema The YAML schema string to parse.
      * @returns RuleSchema The Regle schema object.
      */
-    function adapt(rawSchema: string) {
-        // The YAML data parsed to a JavaScript object
-        const sourceSchema = parse(rawSchema)
-
+    function adapt(sourceSchema: Record<string, any>): Record<string, any> {
         // The Regle schema object to be returned
         const regleSchema: any = {}
 
@@ -49,16 +45,6 @@ export function useRuleSchemaAdapter() {
         }
 
         return regleSchema
-    }
-
-    /**
-     * Parse the YAML schema string into a JavaScript object.
-     *
-     * @param rawSchema The YAML schema string to parse.
-     * @returns The parsed YAML schema as a JavaScript object.
-     */
-    function parse(rawSchema: string): Record<string, any> {
-        return YamlParse(rawSchema)
     }
 
     function translateMessage(fieldRulesMeta: { message?: string; [key: string]: any }): string {
@@ -215,5 +201,5 @@ export function useRuleSchemaAdapter() {
         }
     }
 
-    return { adapt, parse, translateMessage }
+    return { adapt, translateMessage }
 }
