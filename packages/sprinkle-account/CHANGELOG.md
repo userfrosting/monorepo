@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [6.0.0-beta.3](https://github.com/userfrosting/sprinkle-account/compare/6.0.0-beta.2...6.0.0-beta.3)
 - Add YAML loader 
+- Add/fix type definition
+- Cleanup `package.json` scripts & unused dev dependencies
 
 ## [6.0.0-beta.2](https://github.com/userfrosting/sprinkle-account/compare/6.0.0-beta.1...6.0.0-beta.2)
 - Update dependencies to version 6.0.0-beta across all packages

@@ -6,9 +6,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-- Add 'limax' to optimizeDeps (Prevents "importing binding name 'default' cannot be resolved by star export entries")
-- Add YAML loader
+- Add 'limax' to optimizeDeps (Prevents `importing binding name 'default' cannot be resolved by star export entries`)
+- Add YAML loader and replace `?raw` to load yaml files as string
 - Update Eslint config
+- [Pink Cupcake] Add missing index files references in `package.json`
+- [Skeleton] [Fix : user can be null per Typescript](https://github.com/userfrosting/monorepo/commit/dd6a9e15b0d43856745f641e4738b0527b44e76c)
+- Cleanup `package.json` scripts & unused dev dependencies
+- [Monorepo + Skeleton] Update VSCode tasks
+- [Monorepo] Add Eslint & Typescript to CI Action
+- Add/fix type definition
+- Fix various tests
 
 ## 6.0.0-beta.2 - 2025-09-03
 - Fix frontend package version reference

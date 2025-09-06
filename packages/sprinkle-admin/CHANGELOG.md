@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0-beta.2](https://github.com/userfrosting/sprinkle-admin/compare/6.0.0-beta.1...6.0.0-beta.2)
 - Add schema s to the final npm build
 - Update tests
+- Add/fix type definition
+- Cleanup `package.json` scripts & unused dev dependencies
 
 ## 6.0.0-beta.1
 First beta release of UserFrosting 6

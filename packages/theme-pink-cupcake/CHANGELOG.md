@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [6.0.0-beta.3](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.1...6.0.0-beta.2)
 - Add missing index files references in `package.json`
+- Add/fix type definition
+- Cleanup `package.json` scripts & unused dev dependencies
 
 ## [6.0.0-beta.2](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.1...6.0.0-beta.2)
 - Update dependencies to version 6.0.0-beta across all packages
