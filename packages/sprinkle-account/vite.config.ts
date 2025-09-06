@@ -2,37 +2,11 @@
 import { configDefaults } from 'vitest/config'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import dts from 'vite-plugin-dts'
 
 // https://vitejs.dev/config/
 // https://stackoverflow.com/a/74397545/445757
 export default defineConfig({
-    plugins: [vue(), dts()],
-    publicDir: false,
-    build: {
-        outDir: './dist',
-        lib: {
-            entry: {
-                main: 'app/assets/index.ts',
-                composables: 'app/assets/composables/index.ts',
-                guards: 'app/assets/guards/index.ts',
-                interfaces: 'app/assets/interfaces/index.ts',
-                routes: 'app/assets/routes/index.ts',
-                stores: 'app/assets/stores/index.ts',
-                views: 'app/assets/views/index.ts'
-            }
-        },
-        rollupOptions: {
-            external: ['vue', 'vue-router', 'pinia'],
-            output: {
-                exports: 'named',
-                globals: {
-                    vue: 'Vue',
-                    'vue-router': 'vueRouter'
-                }
-            }
-        }
-    },
+    plugins: [vue()],
     test: {
         coverage: {
             reportsDirectory: './_meta/_coverage',

@@ -10,16 +10,11 @@
     "packages/skeleton"
   ],
   "scripts": {
-    "vite:dev": "vite",
-    "vite:build": "vue-tsc && vite build",
     "test": "vitest",
+    "coverage": "vitest run --coverage",
     "typecheck": "vue-tsc --noEmit",
     "format": "prettier --write packages/skeleton/app/assets/ packages/sprinkle-*/app/assets packages/theme-pink-cupcake/src",
     "format-dry-run": "prettier --check packages/skeleton/app/assets/ packages/sprinkle-*/app/assets packages/theme-pink-cupcake/src",
-    "coverage": "vitest run --coverage",
     "lint": "eslint packages/skeleton/app/assets/ packages/sprinkle-*/app/assets packages/theme-pink-cupcake/src --fix"
-  },
-  "devDependencies": {
-    "webpack-dev-server": "^5.2.2"
   }
 }
