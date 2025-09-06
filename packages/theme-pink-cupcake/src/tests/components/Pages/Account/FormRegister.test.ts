@@ -93,6 +93,21 @@ describe('FormRegister.vue', () => {
                 }
             }
         })
+
+        // Mock axios for TOS and Privacy fetch
+        vi.mock('axios', () => ({
+            default: {
+                get: vi.fn((url: string) => {
+                    if (url === '/c/tos') {
+                        return Promise.resolve({ data: 'TOS...' })
+                    }
+                    if (url === '/c/privacy') {
+                        return Promise.resolve({ data: 'PRIVACY...' })
+                    }
+                    return Promise.resolve({ data: {} })
+                })
+            }
+        }))
     })
 
     test('renders correctly', () => {
