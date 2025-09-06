@@ -39,6 +39,11 @@
             "command": "npm run --workspaces typecheck"
         },
         {
+            "label": "Workspace - Eslint",
+            "type": "shell",
+            "command": "npm run lint"
+        },
+        {
             "label": "Workspace - Tests",
             "type": "shell",
             "command": "npm run test"
