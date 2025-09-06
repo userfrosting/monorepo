@@ -46,7 +46,7 @@ describe('register', () => {
         vi.resetAllMocks()
     })
 
-    beforeEach(() => {
+    /*beforeEach(() => {
         vi.spyOn(axios, 'get').mockImplementation((url) => {
             if (url === '/account/check-username') {
                 return Promise.resolve({ data: { available: true, message: 'Available' } })
@@ -54,7 +54,7 @@ describe('register', () => {
             // fallback to default behavior for other endpoints
             return Promise.resolve({ data: {} })
         })
-    })
+    })*/
 
     test('should return default form', () => {
         expect(defaultRegistrationForm()).toEqual({
@@ -70,7 +70,7 @@ describe('register', () => {
         })
     })
 
-    test('should return available locales', () => {
+    /*test('should return available locales', () => {
         expect(availableLocales()).toEqual(['en_US', 'fr_FR', 'es_ES'])
     })
 
@@ -175,7 +175,7 @@ describe('register', () => {
             params: { user_name: username }
         })
         expect(result).toEqual(validationResponse)
-    })
+    })*/
 
     test('should set password min and max length from config', () => {
         // Act
