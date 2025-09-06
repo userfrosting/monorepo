@@ -66,7 +66,7 @@ describe('PageForgotPassword.vue', () => {
 
         // Make sure the component is mounted and the current step is set to 1
         expect(wrapper.exists()).toBe(true)
-        // @ts-ignore
+        // @ts-expect-error : currentStep is defined in the component but TS doesn't see it
         expect(wrapper.vm.currentStep).toBe(1)
         expect(wrapper.text()).toContain('ACCOUNT.VERIFICATION.CODE.IDENTIFY')
     })
@@ -90,7 +90,6 @@ describe('PageForgotPassword.vue', () => {
         await wrapperVm.$nextTick()
 
         // Make sure the current step is set to 2 (validation step)
-        // @ts-ignore
         expect(wrapperVm.currentStep).toBe(2)
         expect(wrapper.text()).toContain('ACCOUNT.VERIFICATION.CODE.ENTER')
 
