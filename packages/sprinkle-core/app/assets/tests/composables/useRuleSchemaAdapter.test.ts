@@ -16,14 +16,17 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('should parse a basic schema', () => {
-        const yamlInput = `
-            foo:
-                validators:
-                    length:
-                        min: 1
+        const yamlInput = {
+            foo: {
+                validators: {
+                    length: {
+                        min: 1,
                         max: 132
+                    },
                     required: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -39,20 +42,26 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('should parse a schema with a custom message', () => {
-        const yamlInput = `
-            name:
-                validators:
-                    length:
-                        min: 2
+        const yamlInput = {
+            name: {
+                validators: {
+                    length: {
+                        min: 2,
                         max: 20
+                    },
                     required: true
-            email:
-                validators:
-                    length:
-                        min: 1
+                }
+            },
+            email: {
+                validators: {
+                    length: {
+                        min: 1,
                         max: 30
+                    },
                     email: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -74,13 +83,15 @@ describe('useRuleSchemaAdapter', () => {
 
     test('should parse a bad schema without errors', () => {
         // N.B.: The schema is missing the 'validators' key
-        const yamlInput = `
-            foo:
-                length:
-                    min: 1
+        const yamlInput = {
+            foo: {
+                length: {
+                    min: 1,
                     max: 132
+                },
                 required: true
-        `
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -96,16 +107,21 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('required rule', () => {
-        const yamlInput = `
-            first_name:
-                validators:
-                    required:
-                        label: "&FIRST_NAME"
-                        message: VALIDATE.REQUIRED
-            last_name:
-                validators:
+        const yamlInput = {
+            first_name: {
+                validators: {
+                    required: {
+                        label: '&FIRST_NAME',
+                        message: 'VALIDATE.REQUIRED'
+                    }
+                }
+            },
+            last_name: {
+                validators: {
                     required: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -125,15 +141,20 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('email rule', () => {
-        const yamlInput = `
-            email:
-                validators:
-                    email:
-                        message: VALIDATE.INVALID_EMAIL
-            email2:
-                validators:
+        const yamlInput = {
+            email: {
+                validators: {
+                    email: {
+                        message: 'VALIDATE.INVALID_EMAIL'
+                    }
+                }
+            },
+            email2: {
+                validators: {
                     email: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -151,26 +172,38 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('length rule', () => {
-        const yamlInput = `
-            tooShort:
-                validators:
-                    length:
+        const yamlInput = {
+            tooShort: {
+                validators: {
+                    length: {
                         min: 5
-            tooLong:
-                validators:
-                    length:
+                    }
+                }
+            },
+            tooLong: {
+                validators: {
+                    length: {
                         max: 2
-            tooShortWithMessage:
-                validators:
-                    length:
-                        min: 5
-                        message: VALIDATE.LENGTH_RANGE
-            tooLongWithMessage:
-                validators:
-                    length:
-                        max: 2
-                        message: VALIDATE.LENGTH_RANGE
-        `
+                    }
+                }
+            },
+            tooShortWithMessage: {
+                validators: {
+                    length: {
+                        min: 5,
+                        message: 'VALIDATE.LENGTH_RANGE'
+                    }
+                }
+            },
+            tooLongWithMessage: {
+                validators: {
+                    length: {
+                        max: 2,
+                        message: 'VALIDATE.LENGTH_RANGE'
+                    }
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -193,18 +226,25 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('integer rule', () => {
-        const yamlInput = `
-            foo:
-                validators:
+        const yamlInput = {
+            foo: {
+                validators: {
                     integer: true
-            bar:
-                validators:
-                    integer: 
-                        message: VALIDATE.INVALID_INTEGER
-            foobar:
-                validators:
+                }
+            },
+            bar: {
+                validators: {
+                    integer: {
+                        message: 'VALIDATE.INVALID_INTEGER'
+                    }
+                }
+            },
+            foobar: {
+                validators: {
                     integer: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -224,30 +264,30 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('member_of rule', () => {
-        const yamlInput = `
-            genus:
-                validators:
-                    member_of:
-                        values:
-                        - Megascops
-                        - Bubo
-                        - Glaucidium
-                        - Tyto
-                        - Athene
-                        message: Sorry, that is not one of the permitted genuses.
-            owls:
-                validators:
-                    member_of:
-                        values:
-                        - Foo
-                        - Bar
-            valid:
-                validators:
-                    member_of:
-                        values:
-                        - Foo
-                        - Bar
-        `
+        const yamlInput = {
+            genus: {
+                validators: {
+                    member_of: {
+                        values: ['Megascops', 'Bubo', 'Glaucidium', 'Tyto', 'Athene'],
+                        message: 'Sorry, that is not one of the permitted genuses.'
+                    }
+                }
+            },
+            owls: {
+                validators: {
+                    member_of: {
+                        values: ['Foo', 'Bar']
+                    }
+                }
+            },
+            valid: {
+                validators: {
+                    member_of: {
+                        values: ['Foo', 'Bar']
+                    }
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -274,30 +314,30 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('not_member_of rule', () => {
-        const yamlInput = `
-            genus:
-                validators:
-                    not_member_of:
-                        values:
-                        - Megascops
-                        - Bubo
-                        - Glaucidium
-                        - Tyto
-                        - Athene
-                        message: VALIDATE.NOT_MEMBER_OF
-            owls:
-                validators:
-                    not_member_of:
-                        values:
-                        - Foo
-                        - Bar
-            valid:
-                validators:
-                    not_member_of:
-                        values:
-                        - Foo
-                        - Bar
-        `
+        const yamlInput = {
+            genus: {
+                validators: {
+                    not_member_of: {
+                        values: ['Megascops', 'Bubo', 'Glaucidium', 'Tyto', 'Athene'],
+                        message: 'VALIDATE.NOT_MEMBER_OF'
+                    }
+                }
+            },
+            owls: {
+                validators: {
+                    not_member_of: {
+                        values: ['Foo', 'Bar']
+                    }
+                }
+            },
+            valid: {
+                validators: {
+                    not_member_of: {
+                        values: ['Foo', 'Bar']
+                    }
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -319,19 +359,26 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('no_leading_whitespace rule', () => {
-        const yamlInput = `
-            withMessage:
-                validators:
-                    no_leading_whitespace:
-                        label: "&USERNAME"
-                        message: VALIDATE.NO_LEAD_WS
-            defaultMessage:
-                validators:
+        const yamlInput = {
+            withMessage: {
+                validators: {
+                    no_leading_whitespace: {
+                        label: '&USERNAME',
+                        message: 'VALIDATE.NO_LEAD_WS'
+                    }
+                }
+            },
+            defaultMessage: {
+                validators: {
                     no_leading_whitespace: true
-            valid:
-                validators:
+                }
+            },
+            valid: {
+                validators: {
                     no_leading_whitespace: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -355,19 +402,26 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('no_trailing_whitespace rule', () => {
-        const yamlInput = `
-            withMessage:
-                validators:
-                    no_trailing_whitespace:
-                        label: "&USERNAME"
-                        message: VALIDATE.NO_TRAIL_WS
-            defaultMessage:
-                validators:
+        const yamlInput = {
+            withMessage: {
+                validators: {
+                    no_trailing_whitespace: {
+                        label: '&USERNAME',
+                        message: 'VALIDATE.NO_TRAIL_WS'
+                    }
+                }
+            },
+            defaultMessage: {
+                validators: {
                     no_trailing_whitespace: true
-            valid:
-                validators:
+                }
+            },
+            valid: {
+                validators: {
                     no_trailing_whitespace: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -391,18 +445,25 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('numeric rule', () => {
-        const yamlInput = `
-            withMessage:
-                validators:
-                    numeric:
-                        message: VALIDATE.INVALID_NUMERIC
-            defaultMessage:
-                validators:
+        const yamlInput = {
+            withMessage: {
+                validators: {
+                    numeric: {
+                        message: 'VALIDATE.INVALID_NUMERIC'
+                    }
+                }
+            },
+            defaultMessage: {
+                validators: {
                     numeric: true
-            valid:
-                validators:
+                }
+            },
+            valid: {
+                validators: {
                     numeric: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -422,24 +483,33 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('range rule', () => {
-        const yamlInput = `
-            withMessage:
-                validators:
-                    range:
-                        min: 0
+        const yamlInput = {
+            withMessage: {
+                validators: {
+                    range: {
+                        min: 0,
+                        max: 10,
+                        message: 'VALIDATE.INVALID_RANGE'
+                    }
+                }
+            },
+            defaultMessage: {
+                validators: {
+                    range: {
+                        min: 0,
                         max: 10
-                        message: VALIDATE.INVALID_RANGE
-            defaultMessage:
-                validators:
-                    range: 
-                        min: 0
+                    }
+                }
+            },
+            valid: {
+                validators: {
+                    range: {
+                        min: 0,
                         max: 10
-            valid:
-                validators:
-                    range: 
-                        min: 0
-                        max: 10
-        `
+                    }
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -462,21 +532,30 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('regex rule', () => {
-        const yamlInput = `
-            withMessage:
-                validators:
-                    regex:
-                        regex: ^who(o*)$
-                        message: VALIDATE.INVALID_VALUE
-            defaultMessage:
-                validators:
-                    regex: 
-                        regex: ^who(o*)$
-            valid:
-                validators:
-                    regex: 
-                        regex: ^who(o*)$
-        `
+        const yamlInput = {
+            withMessage: {
+                validators: {
+                    regex: {
+                        regex: '^who(o*)$',
+                        message: 'VALIDATE.INVALID_VALUE'
+                    }
+                }
+            },
+            defaultMessage: {
+                validators: {
+                    regex: {
+                        regex: '^who(o*)$'
+                    }
+                }
+            },
+            valid: {
+                validators: {
+                    regex: {
+                        regex: '^who(o*)$'
+                    }
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -499,18 +578,25 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('uri rule', () => {
-        const yamlInput = `
-            withMessage:
-                validators:
-                    uri:
-                        message: VALIDATE.INVALID_URL
-            defaultMessage:
-                validators:
+        const yamlInput = {
+            withMessage: {
+                validators: {
+                    uri: {
+                        message: 'VALIDATE.INVALID_URL'
+                    }
+                }
+            },
+            defaultMessage: {
+                validators: {
                     uri: true
-            valid:
-                validators:
+                }
+            },
+            valid: {
+                validators: {
                     uri: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
@@ -530,18 +616,25 @@ describe('useRuleSchemaAdapter', () => {
     })
 
     test('username rule', () => {
-        const yamlInput = `
-            withMessage:
-                validators:
-                    username:
-                        message: VALIDATE.INVALID_USERNAME
-            defaultMessage:
-                validators:
+        const yamlInput = {
+            withMessage: {
+                validators: {
+                    username: {
+                        message: 'VALIDATE.INVALID_USERNAME'
+                    }
+                }
+            },
+            defaultMessage: {
+                validators: {
                     username: true
-            valid:
-                validators:
+                }
+            },
+            valid: {
+                validators: {
                     username: true
-        `
+                }
+            }
+        }
 
         const { r$ } = useRegle(
             {
