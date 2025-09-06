@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-beta.3](https://github.com/userfrosting/framework/compare/6.0.0-beta.2...6.0.0-beta.3)
+- No changes
+
+## [6.0.0-beta.2](https://github.com/userfrosting/framework/compare/6.0.0-beta.1...6.0.0-beta.2)
+- No changes
+
+## 6.0.0-beta.1
+First beta release of UserFrosting 6
+
 ## [5.2.0](https://github.com/userfrosting/framework/compare/5.0.1...5.2.0)
 - [Testing] `assertJsonEquals`/`assertJsonNotEquals` (and `assertResponse` by extension) now use `assertEquals` under the hood instead of `assertSame` to better reflect their name. Added `assertJsonSame`/`assertJsonNotSame` for the old behavior.
 
