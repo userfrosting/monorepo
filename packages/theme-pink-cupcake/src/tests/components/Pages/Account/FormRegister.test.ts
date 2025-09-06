@@ -3,6 +3,7 @@ import { describe, expect, vi, beforeEach, test } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import FormRegister from '../../../../components/Pages/Account/FormRegister.vue'
 import UFAlert from '../../../../components/UFAlert.vue'
+import UFModal from '../../../../components/Modals/UFModal.vue'
 
 // Mock composables and dependencies
 vi.mock('@userfrosting/sprinkle-account/composables', () => ({
@@ -86,6 +87,7 @@ describe('FormRegister.vue', () => {
             global: {
                 stubs: {
                     UFAlert: UFAlert,
+                    UFModal: UFModal,
                     UFFormValidationError: { template: '<span></span>' },
                     FontAwesomeIcon: { template: '<span></span>' }
                 }
