@@ -5,7 +5,7 @@ import { afterEach, describe, expect, test, vi } from 'vitest'
 // import type { RegisterRequest } from '../../interfaces'
 import { useRegisterApi } from '../../composables'
 
-const { defaultRegistrationForm} = useRegisterApi()
+const { defaultRegistrationForm } = useRegisterApi()
 // const { defaultRegistrationForm, availableLocales, captchaUrl } = useRegisterApi()
 
 /*const form: RegisterRequest = {
