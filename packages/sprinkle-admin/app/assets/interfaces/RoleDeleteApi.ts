@@ -8,4 +8,4 @@ import type { ApiResponse } from '@userfrosting/sprinkle-core/interfaces'
  *
  * This api doesn't have a corresponding Request data interface.
  */
-export interface RoleDeleteResponse extends ApiResponse {}
+export type RoleDeleteResponse = ApiResponse

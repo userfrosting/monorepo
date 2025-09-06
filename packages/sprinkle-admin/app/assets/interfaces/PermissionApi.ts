@@ -8,4 +8,4 @@ import type { PermissionInterface } from '@userfrosting/sprinkle-account/interfa
  *
  * This api doesn't have a corresponding Request data interface.
  */
-export interface PermissionResponse extends PermissionInterface {}
+export type PermissionResponse = PermissionInterface

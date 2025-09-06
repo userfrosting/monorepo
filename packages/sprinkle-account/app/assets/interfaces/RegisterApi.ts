@@ -18,4 +18,4 @@ export interface RegisterRequest {
     spiderbro: string
 }
 
-export interface RegisterResponse extends ApiResponse {}
+export type RegisterResponse = ApiResponse

@@ -10,4 +10,4 @@ export interface GroupCreateRequest {
     icon: string
 }
 
-export interface GroupCreateResponse extends ApiResponse {}
+export type GroupCreateResponse = ApiResponse

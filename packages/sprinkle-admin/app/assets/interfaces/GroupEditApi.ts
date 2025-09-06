@@ -10,4 +10,4 @@ export interface GroupEditRequest {
     icon: string
 }
 
-export interface GroupEditResponse extends ApiResponse {}
+export type GroupEditResponse = ApiResponse

@@ -14,5 +14,5 @@ export interface ValidateCodeRequest {
     email: string
     code: string
 }
-export interface ResendVerificationResponse extends ApiResponse {}
-export interface ValidateCodeResponse extends ApiResponse {}
+export type ResendVerificationResponse = ApiResponse
+export type ValidateCodeResponse = ApiResponse

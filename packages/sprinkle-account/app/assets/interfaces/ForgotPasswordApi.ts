@@ -17,5 +17,5 @@ export interface ForgotPasswordSetPasswordRequest {
     passwordc: string
     code: string
 }
-export interface ForgotPasswordCodeResponse extends ApiResponse {}
-export interface ForgotPasswordSetPasswordResponse extends ApiResponse {}
+export type ForgotPasswordCodeResponse = ApiResponse
+export type ForgotPasswordSetPasswordResponse = ApiResponse

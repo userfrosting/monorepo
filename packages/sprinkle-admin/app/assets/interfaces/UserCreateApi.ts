@@ -12,4 +12,4 @@ export interface UserCreateRequest {
     locale: string
 }
 
-export interface UserCreateResponse extends ApiResponse {}
+export type UserCreateResponse = ApiResponse

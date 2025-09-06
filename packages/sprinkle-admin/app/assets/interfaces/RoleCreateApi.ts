@@ -12,4 +12,4 @@ export interface RoleCreateRequest {
     description: string
 }
 
-export interface RoleCreateResponse extends ApiResponse {}
+export type RoleCreateResponse = ApiResponse

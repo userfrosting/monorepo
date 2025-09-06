@@ -11,4 +11,4 @@ import type { UserDataInterface } from './'
  *
  * This api doesn't have a corresponding Request data interface.
  */
-export interface AuthCheckResponse extends UserDataInterface {}
+export type AuthCheckResponse = UserDataInterface
