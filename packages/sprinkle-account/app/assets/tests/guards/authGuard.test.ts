@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { useAuthGuard } from '../../guards/authGuard'
 import * as Auth from '../../stores/useAuthStore'
-import type { RouteGuard, RoutePermissionGuard } from 'app/assets/interfaces'
+import type { RouteGuard, RoutePermissionGuard } from '../../interfaces'
 
 // Default mock for the auth store and router
 const mockAuthStore = {

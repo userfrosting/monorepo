@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import { useAuthorizationManager } from '../../composables'
-import type { UserDataInterface } from 'app/assets/interfaces'
+import type { UserDataInterface } from '../../interfaces'
 
 // Mock the user and it's permissions
 const mockUser: UserDataInterface = {

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import axios from 'axios'
 import { useAuthStore } from '../../stores/useAuthStore'
-import type { UserDataInterface } from 'app/assets/interfaces'
+import type { UserDataInterface } from '../../interfaces'
 
 const testUser: UserDataInterface = {
     id: 1,
