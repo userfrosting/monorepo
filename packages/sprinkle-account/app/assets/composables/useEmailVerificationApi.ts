@@ -16,7 +16,7 @@ import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
  * API Composable
  */
 export function useEmailVerificationApi() {
-    const apiLoading = ref<Boolean>(false)
+    const apiLoading = ref<boolean>(false)
     const apiError = ref<AlertInterface | null>(null)
 
     /**

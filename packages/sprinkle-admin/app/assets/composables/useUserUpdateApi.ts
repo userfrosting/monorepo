@@ -12,7 +12,7 @@ import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
  * API Composable
  */
 export function useUserUpdateApi() {
-    const apiLoading = ref<Boolean>(false)
+    const apiLoading = ref<boolean>(false)
     const apiError = ref<ApiErrorResponse | null>(null)
 
     async function submitUserUpdate(user_name: string, fieldName: string, formData: any) {

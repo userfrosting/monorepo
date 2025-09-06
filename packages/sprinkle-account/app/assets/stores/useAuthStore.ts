@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', {
         isAuthenticated: (state): boolean => state.user !== null,
         checkAccess:
             (state) =>
-            (slug: string): Boolean => {
+            (slug: string): boolean => {
                 const authorizer = useAuthorizationManager(state.user)
                 return authorizer.checkAccess(slug)
             }

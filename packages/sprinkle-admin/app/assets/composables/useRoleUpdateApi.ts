@@ -18,7 +18,7 @@ import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
  * This composable can be used to update {field} for a specific role.
  */
 export function useRoleUpdateApi() {
-    const apiLoading = ref<Boolean>(false)
+    const apiLoading = ref<boolean>(false)
     const apiError = ref<ApiErrorResponse | null>(null)
 
     async function submitRoleUpdate(slug: string, fieldName: string, formData: any) {

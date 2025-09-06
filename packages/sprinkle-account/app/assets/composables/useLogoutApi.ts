@@ -13,7 +13,7 @@ import { useCsrf } from '@userfrosting/sprinkle-core/composables'
  * API Composable
  */
 export function useLogoutApi() {
-    const apiLoading = ref<Boolean>(false)
+    const apiLoading = ref<boolean>(false)
     const apiError = ref<AlertInterface | null>(null)
 
     async function submitLogout() {

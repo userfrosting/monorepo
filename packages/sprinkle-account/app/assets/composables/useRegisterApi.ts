@@ -11,7 +11,7 @@ import schemaFile from '../../schema/requests/register.yaml'
  * API Composable
  */
 export function useRegisterApi() {
-    const apiLoading = ref<Boolean>(false)
+    const apiLoading = ref<boolean>(false)
     const apiError = ref<AlertInterface | null>(null)
     const passwordMinLength = ref<number>(0)
     const passwordMaxLength = ref<number>(0)

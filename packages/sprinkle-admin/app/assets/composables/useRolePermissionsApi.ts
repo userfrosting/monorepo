@@ -18,7 +18,7 @@ import type { PermissionSprunjeResponse, RolePermissionsSprunjeResponse } from '
 export function useRolePermissionsApi() {
     const loading = ref<boolean>(false)
     const error = ref<ApiErrorResponse | null>()
-    const selected = ref<Number[]>([])
+    const selected = ref<number[]>([])
     const permissions = ref<PermissionInterface[]>([])
 
     // Step 1 - Fetch all permissions

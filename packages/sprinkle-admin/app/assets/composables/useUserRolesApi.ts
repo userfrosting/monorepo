@@ -16,7 +16,7 @@ import type { RolesSprunjeResponse, UserRoleSprunjeResponse } from '../interface
 export function useUserRolesApi() {
     const loading = ref<boolean>(false)
     const error = ref<ApiErrorResponse | null>()
-    const selected = ref<Number[]>([])
+    const selected = ref<number[]>([])
     const roles = ref<RoleInterface[]>([])
 
     // Step 1 - Fetch all permissions

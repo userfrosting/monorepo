@@ -12,7 +12,7 @@ import schemaFile from '../../schema/requests/login.yaml'
  * API Composable
  */
 export function useLoginApi() {
-    const apiLoading = ref<Boolean>(false)
+    const apiLoading = ref<boolean>(false)
     const apiError = ref<AlertInterface | null>(null)
     const formData = ref<LoginRequest>(defaultFormData())
 

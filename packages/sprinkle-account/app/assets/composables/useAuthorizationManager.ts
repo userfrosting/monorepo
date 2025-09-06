@@ -5,7 +5,7 @@ import type { UserDataInterface } from '../interfaces'
  * API Composable
  */
 export function useAuthorizationManager(user: UserDataInterface | null) {
-    function checkAccess(slug: string): Boolean {
+    function checkAccess(slug: string): boolean {
         // Trace debug information
         debugAuth(`==> Checking authorization access for ${user?.user_name}`, {
             user,

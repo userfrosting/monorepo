@@ -9,8 +9,8 @@ import { CardBoxLarge, CardBox, UFAlert } from '../../../components'
 /**
  * Variables - Test email & code vars
  */
-const email: String = 'john.doe@example.com'
-const code: String = '123456'
+const email: string = 'john.doe@example.com'
+const code: string = '123456'
 
 /**
  * Mocks - Router, ConfigStore, and EmailVerificationApi
