@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import axios from 'axios'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import type { RegisterRequest } from '../../interfaces'
@@ -46,6 +46,16 @@ describe('register', () => {
         vi.resetAllMocks()
     })
 
+    beforeEach(() => {
+        vi.spyOn(axios, 'get').mockImplementation((url) => {
+            if (url === '/account/check-username') {
+                return Promise.resolve({ data: { available: true, message: 'Available' } })
+            }
+            // fallback to default behavior for other endpoints
+            return Promise.resolve({ data: {} })
+        })
+    })
+
     test('should return default form', () => {
         expect(defaultRegistrationForm()).toEqual({
             first_name: '',
@@ -72,7 +82,7 @@ describe('register', () => {
         // Arrange
         const { submitRegistration } = useRegisterApi()
         const response = { data: { title: 'Registration successful', description: 'Welcome!' } }
-        vi.spyOn(axios, 'post').mockResolvedValue(response as any)
+        vi.spyOn(axios, 'post').mockResolvedValue(response)
 
         // Act
         await submitRegistration(form)
@@ -91,7 +101,7 @@ describe('register', () => {
         // Arrange
         const { submitRegistration, apiError } = useRegisterApi()
         const error = { response: { data: { description: 'Registration failed' } } }
-        vi.spyOn(axios, 'post').mockRejectedValue(error as any)
+        vi.spyOn(axios, 'post').mockRejectedValue(error)
 
         // Act & Assert
         await expect(submitRegistration(form)).rejects.toEqual({
@@ -137,7 +147,7 @@ describe('register', () => {
         // Arrange
         const { suggestUsername, apiError } = useRegisterApi()
         const error = { response: { data: { description: 'Suggest failed' } } }
-        vi.spyOn(axios, 'get').mockRejectedValue(error as any)
+        vi.spyOn(axios, 'get').mockRejectedValue(error)
 
         // Act & Assert
         await expect(suggestUsername()).rejects.toEqual({
