@@ -40,6 +40,7 @@
         "illuminate/database": "^10.0",
         "illuminate/events": "^10.0",
         "illuminate/filesystem": "^10.0",
+        "league/commonmark": "^2.7",
         "league/csv": "^9.2.1",
         "league/flysystem": "^3.22",
         "lcharette/webpack-encore-twig": "^1.1",
