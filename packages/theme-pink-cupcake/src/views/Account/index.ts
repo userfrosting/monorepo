@@ -1,19 +1,19 @@
+import EmailVerificationRequest from './PageEmailVerificationRequest.vue'
+import PageForgotPassword from './PageForgotPassword.vue'
 import PageLogin from './PageLogin.vue'
 import PageRegister from './PageRegister.vue'
-import PageForgotPassword from './PageForgotPassword.vue'
-import EmailVerificationRequest from './PageEmailVerificationRequest.vue'
 import PageUserSettings from './PageUserSettings.vue'
+import PageUserSettingsEmail from './PageUserSettingsEmail.vue'
 import PageUserSettingsPassword from './PageUserSettingsPassword.vue'
 import PageUserSettingsProfile from './PageUserSettingsProfile.vue'
-import PageUserSettingsEmail from './PageUserSettingsEmail.vue'
 
 export {
+    EmailVerificationRequest,
+    PageForgotPassword,
     PageLogin,
     PageRegister,
-    PageForgotPassword,
-    EmailVerificationRequest,
     PageUserSettings,
+    PageUserSettingsEmail,
     PageUserSettingsPassword,
-    PageUserSettingsProfile,
-    PageUserSettingsEmail
+    PageUserSettingsProfile
 }

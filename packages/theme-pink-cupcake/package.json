@@ -25,6 +25,8 @@
     },
     "exports": {
         ".": "./src/index.ts",
+        "./components/pages/account": "./src/components/Pages/Account/index.ts",
+        "./components/pages/admin": "./src/components/Pages/Admin/index.ts",
         "./components": "./src/components/index.ts",
         "./plugins": "./src/plugins/index.ts",
         "./views": "./src/views/index.ts",

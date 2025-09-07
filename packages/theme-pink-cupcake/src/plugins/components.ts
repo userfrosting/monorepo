@@ -1,20 +1,19 @@
 import type { App } from 'vue'
 import {
-    UFAlert,
+    UF2FaCode,
+    AppLink,
+    CardBox,
+    CardBoxHalf,
+    CardBoxLarge,
+    FooterContent,
+    HeaderPage,
+    InfoBox,
+    MainContent,
     UFFormValidationError,
-    UFLabel,
     UFModal,
     UFModalAlert,
     UFModalConfirmation,
     UFModalPrompt,
-    AppLink,
-    InfoBox,
-    CardBox,
-    CardBoxLarge,
-    CardBoxHalf,
-    MainContent,
-    HeaderPage,
-    FooterContent,
     NavBar,
     NavBarDropdown,
     NavBarDropdownSeparator,
@@ -27,9 +26,13 @@ import {
     SideBarItem,
     SideBarLabel,
     SprunjeColumn,
+    SprunjeFilters,
     SprunjeHeader,
     SprunjePaginator,
-    SprunjeTable
+    SprunjeSearch,
+    SprunjeTable,
+    UFAlert,
+    UFLabel
 } from '../components'
 
 /**
@@ -38,21 +41,20 @@ import {
  */
 export default {
     install: (app: App) => {
-        app.component('UFAlert', UFAlert)
+        app.component('UF2FaCode', UF2FaCode)
+            .component('UFAppLink', AppLink)
+            .component('UFCardBox', CardBox)
+            .component('UFCardBoxHalf', CardBoxHalf)
+            .component('UFCardBoxLarge', CardBoxLarge)
+            .component('UFFooterContent', FooterContent)
+            .component('UFHeaderPage', HeaderPage)
+            .component('UFInfoBox', InfoBox)
+            .component('UFMainContent', MainContent)
             .component('UFFormValidationError', UFFormValidationError)
-            .component('UFLabel', UFLabel)
             .component('UFModal', UFModal)
             .component('UFModalAlert', UFModalAlert)
             .component('UFModalConfirmation', UFModalConfirmation)
             .component('UFModalPrompt', UFModalPrompt)
-            .component('UFAppLink', AppLink)
-            .component('UFInfoBox', InfoBox)
-            .component('UFCardBox', CardBox)
-            .component('UFCardBoxLarge', CardBoxLarge)
-            .component('UFCardBoxHalf', CardBoxHalf)
-            .component('UFMainContent', MainContent)
-            .component('UFHeaderPage', HeaderPage)
-            .component('UFFooterContent', FooterContent)
             .component('UFNavBar', NavBar)
             .component('UFNavBarDropdown', NavBarDropdown)
             .component('UFNavBarDropdownSeparator', NavBarDropdownSeparator)
@@ -65,33 +67,37 @@ export default {
             .component('UFSideBarItem', SideBarItem)
             .component('UFSideBarLabel', SideBarLabel)
             .component('UFSprunjeColumn', SprunjeColumn)
+            .component('UFSprunjeFilters', SprunjeFilters)
             .component('UFSprunjeHeader', SprunjeHeader)
             .component('UFSprunjePaginator', SprunjePaginator)
+            .component('UFSprunjeSearch', SprunjeSearch)
             .component('UFSprunjeTable', SprunjeTable)
+            .component('UFAlert', UFAlert)
+            .component('UFLabel', UFLabel)
     }
 }
 
 declare module 'vue' {
     export interface GlobalComponents {
-        UFAlert: typeof UFAlert
+        UF2FaCode: typeof UF2FaCode
+        UFAppLink: typeof AppLink
+        UFCardBox: typeof CardBox
+        UFCardBoxHalf: typeof CardBoxHalf
+        UFCardBoxLarge: typeof CardBoxLarge
+        UFFooterContent: typeof FooterContent
+        UFHeaderPage: typeof HeaderPage
+        UFInfoBox: typeof InfoBox
+        UFMainContent: typeof MainContent
         UFFormValidationError: typeof UFFormValidationError
-        UFLabel: typeof UFLabel
         UFModal: typeof UFModal
         UFModalAlert: typeof UFModalAlert
         UFModalConfirmation: typeof UFModalConfirmation
         UFModalPrompt: typeof UFModalPrompt
-        UFAppLink: typeof AppLink
-        UFInfoBox: typeof InfoBox
-        UFCardBox: typeof CardBox
-        UFCardBoxLarge: typeof CardBoxLarge
-        UFMainContent: typeof MainContent
-        UFHeaderPage: typeof HeaderPage
-        UFFooterContent: typeof FooterContent
         UFNavBar: typeof NavBar
         UFNavBarDropdown: typeof NavBarDropdown
         UFNavBarDropdownSeparator: typeof NavBarDropdownSeparator
-        UFNavBarLogin: typeof NavBarLogin
         UFNavBarItem: typeof NavBarItem
+        UFNavBarLogin: typeof NavBarLogin
         UFNavBarUserCard: typeof NavBarUserCard
         UFNavBarUserCardButton: typeof NavBarUserCardButton
         UFSideBar: typeof SideBar
@@ -99,8 +105,12 @@ declare module 'vue' {
         UFSideBarItem: typeof SideBarItem
         UFSideBarLabel: typeof SideBarLabel
         UFSprunjeColumn: typeof SprunjeColumn
+        UFSprunjeFilters: typeof SprunjeFilters
         UFSprunjeHeader: typeof SprunjeHeader
         UFSprunjePaginator: typeof SprunjePaginator
+        UFSprunjeSearch: typeof SprunjeSearch
         UFSprunjeTable: typeof SprunjeTable
+        UFAlert: typeof UFAlert
+        UFLabel: typeof UFLabel
     }
 }

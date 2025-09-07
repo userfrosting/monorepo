@@ -1,18 +1,18 @@
 import type { App } from 'vue'
 import {
+    EmailVerificationRequest,
+    PageForgotPassword,
     PageLogin,
     PageRegister,
-    PageForgotPassword,
-    EmailVerificationRequest,
     PageUserSettings,
-    PageUserSettingsProfile,
+    PageUserSettingsEmail,
     PageUserSettingsPassword,
-    PageUserSettingsEmail
+    PageUserSettingsProfile
 } from '../views/Account'
 import {
     FormEmailVerificationRequest,
-    FormForgotPasswordSet,
     FormEmailVerificationValidation,
+    FormForgotPasswordSet,
     FormLogin,
     FormRegister,
     FormUserEmail,
@@ -26,42 +26,44 @@ import {
  */
 export default {
     install: (app: App) => {
-        app.component('UFFormEmailVerificationRequest', FormEmailVerificationRequest)
-            .component('UFFormForgotPasswordSet', FormForgotPasswordSet)
+        // Components from ../views/Account
+        app.component('UFEmailVerificationRequest', EmailVerificationRequest)
+            .component('UFPageForgotPassword', PageForgotPassword)
+            .component('UFPageLogin', PageLogin)
+            .component('UFPageRegister', PageRegister)
+            .component('UFPageUserSettings', PageUserSettings)
+            .component('UFPageUserSettingsEmail', PageUserSettingsEmail)
+            .component('UFPageUserSettingsPassword', PageUserSettingsPassword)
+            .component('UFPageUserSettingsProfile', PageUserSettingsProfile)
+            // Components from ../components/Pages/Account
+            .component('UFFormEmailVerificationRequest', FormEmailVerificationRequest)
             .component('UFFormEmailVerificationValidation', FormEmailVerificationValidation)
+            .component('UFFormForgotPasswordSet', FormForgotPasswordSet)
             .component('UFFormLogin', FormLogin)
             .component('UFFormRegister', FormRegister)
             .component('UFFormUserEmail', FormUserEmail)
             .component('UFFormUserPassword', FormUserPassword)
             .component('UFFormUserProfile', FormUserProfile)
-            .component('UFPageLogin', PageLogin)
-            .component('UFPageRegister', PageRegister)
-            .component('UFPageForgotPassword', PageForgotPassword)
-            .component('UFEmailVerificationRequest', EmailVerificationRequest)
-            .component('UFPageUserSettings', PageUserSettings)
-            .component('UFPageUserSettingsProfile', PageUserSettingsProfile)
-            .component('UFPageUserSettingsPassword', PageUserSettingsPassword)
-            .component('UFPageUserSettingsEmail', PageUserSettingsEmail)
     }
 }
 
 declare module 'vue' {
     export interface GlobalComponents {
+        UFEmailVerificationRequest: typeof EmailVerificationRequest
+        UFPageForgotPassword: typeof PageForgotPassword
+        UFPageLogin: typeof PageLogin
+        UFPageRegister: typeof PageRegister
+        UFPageUserSettings: typeof PageUserSettings
+        UFPageUserSettingsEmail: typeof PageUserSettingsEmail
+        UFPageUserSettingsPassword: typeof PageUserSettingsPassword
+        UFPageUserSettingsProfile: typeof PageUserSettingsProfile
         UFFormEmailVerificationRequest: typeof FormEmailVerificationRequest
-        UFFormForgotPasswordSet: typeof FormForgotPasswordSet
         UFFormEmailVerificationValidation: typeof FormEmailVerificationValidation
+        UFFormForgotPasswordSet: typeof FormForgotPasswordSet
         UFFormLogin: typeof FormLogin
         UFFormRegister: typeof FormRegister
         UFFormUserEmail: typeof FormUserEmail
         UFFormUserPassword: typeof FormUserPassword
         UFFormUserProfile: typeof FormUserProfile
-        UFPageLogin: typeof PageLogin
-        UFPageRegister: typeof PageRegister
-        UFPageForgotPassword: typeof PageForgotPassword
-        UFEmailVerificationRequest: typeof EmailVerificationRequest
-        UFPageUserSettings: typeof PageUserSettings
-        UFPageUserSettingsProfile: typeof PageUserSettingsProfile
-        UFPageUserSettingsPassword: typeof PageUserSettingsPassword
-        UFPageUserSettingsEmail: typeof PageUserSettingsEmail
     }
 }
