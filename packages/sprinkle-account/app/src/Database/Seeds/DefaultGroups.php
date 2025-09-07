@@ -42,22 +42,22 @@ class DefaultGroups implements SeedInterface
     {
         return [
             new Group([
-                'slug'        => 'terran',
-                'name'        => 'Terran',
-                'description' => 'The terrans are a young species with psionic potential. The terrans of the Koprulu sector descend from the survivors of a disastrous 23rd century colonization mission from Earth.',
-                'icon'        => 'sc sc-terran',
+                'slug'        => 'hippo',
+                'name'        => 'Hippos',
+                'description' => 'Hippos are large, mostly herbivorous mammals native to sub-Saharan Africa, known for their massive size and semi-aquatic lifestyle.',
+                'icon'        => 'hippo',
             ]),
             new Group([
-                'slug'        => 'zerg',
-                'name'        => 'Zerg',
-                'description' => 'Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.',
-                'icon'        => 'sc sc-zerg',
+                'slug'        => 'dove',
+                'name'        => 'Doves',
+                'description' => 'Doves are symbols of peace and harmony, often representing hope and new beginnings across various cultures.',
+                'icon'        => 'dove',
             ]),
             new Group([
-                'slug'        => 'protoss',
-                'name'        => 'Protoss',
-                'description' => 'The protoss, a.k.a. the Firstborn, are a sapient humanoid race native to Aiur. Their advanced technology complements and enhances their psionic mastery.',
-                'icon'        => 'sc sc-protoss',
+                'slug'        => 'dragon',
+                'name'        => 'Dragons',
+                'description' => 'Dragons are legendary creatures found in the myths of many cultures, often symbolizing power, wisdom, and strength.',
+                'icon'        => 'dragon',
             ]),
         ];
     }
