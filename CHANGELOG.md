@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Skeleton] Add exclude list for optimizeDeps in Vite config
 - [Skeleton] Add Admin Sprinkle to `main.ts`
 - [Pink-Cupcake] Add missing components from exports of Account and Admin pages
+- [Framework] Remove unused Fortress JS files
 
 ## 6.0.0-beta.3 - 2025-09-07
 - Add 'limax' to optimizeDeps (Prevents `importing binding name 'default' cannot be resolved by star export entries`)

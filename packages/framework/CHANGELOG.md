@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [6.0.0-beta.4](https://github.com/userfrosting/framework/compare/6.0.0-beta.3...6.0.0-beta.4)
-- No changes
+- Remove unused Fortress JS files
 
 ## [6.0.0-beta.3](https://github.com/userfrosting/framework/compare/6.0.0-beta.2...6.0.0-beta.3)
 - No changes
