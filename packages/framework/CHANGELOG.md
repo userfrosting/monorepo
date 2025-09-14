@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-beta.5](https://github.com/userfrosting/framework/compare/6.0.0-beta.4...6.0.0-beta.5)
+- Fix Resource getBasePath: Fix edge case where the location path is the same as the locator base path (eg. the location is in the main sprinkle)
+
 ## [6.0.0-beta.4](https://github.com/userfrosting/framework/compare/6.0.0-beta.3...6.0.0-beta.4)
 - Remove unused Fortress JS files
 

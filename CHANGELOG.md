@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - [Core] Run `vite:build` in production mode when `assets:build` is used
+- [Framework] Fix Resource getBasePath: Fix edge case where the location path is the same as the locator base path (eg. the location is in the main sprinkle)
 
 ## 6.0.0-beta.4 - 2025-09-08
 - [Core] Fix missing Composer dependency

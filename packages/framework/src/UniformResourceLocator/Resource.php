@@ -77,15 +77,24 @@ class Resource implements ResourceInterface
      */
     public function getBasePath(): string
     {
+        $locatorBasePath = $this->getLocatorBasePath();
+        $locationPath = $this->getLocation()?->getPath();
+        $streamPath = $this->getStream()->getPath();
+
         // Start with the stream relative path as a search path.
-        $searchPattern = preg_replace('#^' . preg_quote($this->getLocatorBasePath()) . '#', '', $this->stream->getPath()) ?? '';
+        $searchPattern = preg_replace('#^' . preg_quote($locatorBasePath) . '#', '', $streamPath) ?? '';
 
         // Add the location path to the search path if there's a location
-        if (!is_null($this->getLocation())) {
+        if (!is_null($locationPath)) {
             // We'll also need to remove the locator base path from the locator path
             // as it won't be removed by the previous attempt
-            $locatorPath = preg_replace('#^' . preg_quote($this->getLocatorBasePath()) . '#', '', $this->getLocation()->getPath());
-            $searchPattern = Normalizer::normalize($locatorPath . '/' . $searchPattern);
+            $locatorPath = preg_replace('#^' . preg_quote($locatorBasePath) . '#', '', $locationPath);
+
+            // If the locator path is not empty (i.e., locator base path
+            // is not the same as location path), add it to the search pattern.
+            if ($locatorPath !== '') {
+                $searchPattern = Normalizer::normalize($locatorPath . '/' . $searchPattern);
+            }
         }
 
         // Remove any `/` from the search pattern, as any locator/stream path will have a trailing slash
@@ -93,7 +102,8 @@ class Resource implements ResourceInterface
 
         // Remove the search path from the beginning of the resource path
         // then trim any beginning slashes from the resulting path
-        $result = preg_replace('#^' . preg_quote($searchPattern) . '#', '', $this->getPath()) ?? '';
+        $path = $this->getPath();
+        $result = preg_replace('#^' . preg_quote($searchPattern) . '#', '', $path) ?? '';
         $result = ltrim($result, '/');
 
         return $result;

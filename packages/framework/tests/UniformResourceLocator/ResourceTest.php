@@ -25,12 +25,12 @@ use UserFrosting\UniformResourceLocator\ResourceStreamInterface;
 class ResourceTest extends TestCase
 {
     protected ResourceStream $stream;
-    protected string $streamScheme = 'foo';
-    protected string $streamPath = 'foo/';
+    protected string $streamScheme = 'streamPath';
+    protected string $streamPath = 'streamPath/';
     protected bool $streamShared = false;
     protected ResourceLocation $location;
-    protected string $locationName = 'bar';
-    protected string $locationPath = 'bar/';
+    protected string $locationName = 'locationPath';
+    protected string $locationPath = 'locationPath/';
 
     public function setUp(): void
     {
@@ -80,6 +80,27 @@ class ResourceTest extends TestCase
     }
 
     /**
+     * Test edge case where the locator base path is the same as the location path,
+     * which would result in an empty string when removing the location path from
+     * the resource path to get the base path.
+     */
+    public function testGetBasePathForEdgeCase(): void
+    {
+        $resource = new Resource($this->stream, $this->location, $this->streamPath . 'test.txt', $this->locationPath);
+
+        // getBasePath
+        $this->assertSame('test.txt', $resource->getBasePath());
+
+        // Test `getUri` as the too are connected
+        $this->assertSame($this->streamScheme . '://' . 'test.txt', $resource->getUri());
+
+        // Test `getAbsolutePath` and `__toString`
+        $basePath = Normalizer::normalizePath($this->locationPath);
+        $this->assertSame($basePath . $this->streamPath . 'test.txt', $resource->getAbsolutePath());
+        $this->assertSame($resource->getAbsolutePath(), (string) $resource);
+    }
+
+    /**
      * Data provider for testGetBasePath.
      *
      * Return a list of basepath to test. The rela rel path will be constructed by the
@@ -91,19 +112,19 @@ class ResourceTest extends TestCase
     public static function resourcesProvider(): array
     {
         $paths = [
-            '',                       // No stream part. Shouldn't happen in real life
-            'test.txt',               // No stream part. Shouldn't happen in real life
-            'data/test.txt',          // No stream part. Shouldn't happen in real life
-            'bar/foo/test.txt',       // foo stream inside the bar location. Location always comes first
-            'foo/bar/test.txt',       // We remove the foo, as it's the base stream, but keep the bar, as it's not a location.
-            'foo/bar/foo/test.txt',   // We remove the foo, as it's the base stream, but keep the bar, as it's not a location.
-            'foo/test.txt',           // `foo/` is removed, because it's the stream part
-            'foo/foo/test.txt',       // The first `foo/` is removed, because it's the stream part, the other should be kept
-            'bar/test.txt',           // No stream part. Shouldn't happen in real life. Bar should be kept
-            'foo/',                   // With out extensions
-            'foo',
-            'foo/foo/',
-            'foo/foo',
+            'test.txt',                                 // No stream part. Shouldn't happen in real life
+            '',                                         // No stream part. Shouldn't happen in real life
+            'data/test.txt',                            // No stream part. Shouldn't happen in real life
+            'locationPath/streamPath/test.txt',         // streamPath stream inside the locationPath location. Location always comes first
+            'streamPath/locationPath/test.txt',         // We remove the streamPath, as it's the base stream, but keep the locationPath, as it's not a location.
+            'streamPath/locationPath/streamPath/test.txt', // We remove the streamPath, as it's the base stream, but keep the locationPath, as it's not a location.
+            'streamPath/test.txt',                      // `streamPath/` is removed, because it's the stream part
+            'streamPath/streamPath/test.txt',           // The first `streamPath/` is removed, because it's the stream part, the other should be kept
+            'locationPath/test.txt',                    // No stream part. Shouldn't happen in real life. locationPath should be kept
+            'streamPath/',                              // Without extensions
+            'streamPath',
+            'streamPath/streamPath/',
+            'streamPath/streamPath',
         ];
 
         $basePaths = [
@@ -204,9 +225,9 @@ class ResourceTest extends TestCase
         return [
             // RelPath, basename, filename, extension
             ['test.txt', 'test.txt', 'test', 'txt'],
-            ['/foo/test.txt', 'test.txt', 'test', 'txt'],
-            ['C:\\foo\\test.txt', 'test.txt', 'test', 'txt'],
-            ['foo/test.txt', 'test.txt', 'test', 'txt'],
+            ['/streamPath/test.txt', 'test.txt', 'test', 'txt'],
+            ['C:\\streamPath\\test.txt', 'test.txt', 'test', 'txt'],
+            ['streamPath/test.txt', 'test.txt', 'test', 'txt'],
             ['/test.txt', 'test.txt', 'test', 'txt'],
             ['lib.inc.php', 'lib.inc.php', 'lib.inc', 'php'],
         ];
