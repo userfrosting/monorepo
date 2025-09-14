@@ -32,7 +32,7 @@ class AssetsBuildCommandListener
      * @var string[] Commands to run with Vite
      */
     protected array $viteCommands = [
-        'assets:install'
+        'assets:install',
     ];
 
     public function __construct(protected Config $config)
