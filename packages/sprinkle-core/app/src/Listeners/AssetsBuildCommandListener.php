@@ -32,8 +32,7 @@ class AssetsBuildCommandListener
      * @var string[] Commands to run with Vite
      */
     protected array $viteCommands = [
-        'assets:install',
-        // 'assets:vite', // Disabled for now, bake should'n run the dev server
+        'assets:install'
     ];
 
     public function __construct(protected Config $config)
@@ -49,11 +48,39 @@ class AssetsBuildCommandListener
     {
         $bundler = $this->config->getString('assets.bundler', 'vite');
         $commands = match ($bundler) {
-            'vite'    => $this->viteCommands,
-            'webpack' => $this->webpackCommands,
-            default   => $this->viteCommands,
+            'vite'    => $this->getViteCommands(),
+            'webpack' => $this->getWebpackCommands(),
+            default   => $this->getViteCommands(), // Fallback to Vite
         };
 
         $event->addCommands($commands);
+    }
+
+    /**
+     * Get the list of commands to run when using Vite as the asset bundler.
+     *
+     * @return string[]
+     */
+    protected function getViteCommands(): array
+    {
+        // Enable the vite:build command if we are in production mode.
+        // The "Build" should not run the Vite dev server.
+        if ($this->config->getBool('assets.vite.dev', true) !== true) {
+            if (!in_array('assets:vite', $this->viteCommands, true)) {
+                $this->viteCommands[] = 'assets:vite';
+            }
+        }
+
+        return $this->viteCommands;
+    }
+
+    /**
+     * Get the list of commands to run when using Webpack as the asset bundler.
+     *
+     * @return string[]
+     */
+    protected function getWebpackCommands(): array
+    {
+        return $this->webpackCommands;
     }
 }

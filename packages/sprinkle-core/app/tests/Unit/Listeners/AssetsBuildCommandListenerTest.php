@@ -25,12 +25,14 @@ class AssetsBuildCommandListenerTest extends TestCase
      *
      * @param string   $bundler
      * @param string[] $expected
+     * @param bool     $viteDev
      */
-    public function testForWebpack(string $bundler, array $expected): void
+    public function testForBundle(string $bundler, array $expected, bool $viteDev): void
     {
         /** @var Config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('getString')->with('assets.bundler', 'vite')->once()->andReturn($bundler)
+            ->shouldReceive('getBool')->with('assets.vite.dev', true)->andReturn($viteDev)
             ->getMock();
 
         $event = new AssetsBuildCommandEvent();
@@ -42,14 +44,15 @@ class AssetsBuildCommandListenerTest extends TestCase
     }
 
     /**
-     * @return array<string|string[]>[]
+     * @return array<string|string[]|bool>[]
      */
     public static function bundlerProvider(): array
     {
         return [
-            ['webpack', ['assets:install', 'assets:webpack']],
-            ['foobar', ['assets:install']],
-            ['vite', ['assets:install']],
+            ['webpack', ['assets:install', 'assets:webpack'], false],
+            ['foobar', ['assets:install'], true],
+            ['vite', ['assets:install'], true],
+            ['vite', ['assets:install', 'assets:vite'], false],
         ];
     }
 }
