@@ -47,18 +47,7 @@ class Resource implements ResourceInterface
      */
     public function getUri(): string
     {
-        // Using parts so the separator is added only if both parts are not empty
-        $parts = [];
-
-        // Add resource base path if not empty
-        if ($this->getBasePath() != '') {
-            $parts[] = $this->getBasePath();
-        }
-
-        // Glue parts together.
-        $path = implode('/', $parts);
-
-        return $this->stream->getScheme() . '://' . $path;
+        return $this->stream->getScheme() . '://' . $this->getBasePath();
     }
 
     /**
