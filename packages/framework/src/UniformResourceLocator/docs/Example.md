@@ -118,8 +118,23 @@ echo $defaultResource->getExtension();
 echo $defaultResource->getFilename();
 // 'default'
 
+echo $defaultResource->getRelativeDirname();
+// 'floors/Floor2/config'
+
+echo $defaultResource->getAbsoluteDirname();
+// '/app/floors/Floor2/config'
+
+echo $defaultResource->getDirname();
+// ''
+
 echo $defaultResource->getUri();
 // 'config://default.json'
+
+echo $defaultResource->getDirUri();
+// 'config://'
+
+echo $defaultResource->isDir();
+// false
 ```
 
 If we want to know more about the Location where the file has been found, the `getLocation` method can be used to get the Location object, which can then be used to query more info about the location:

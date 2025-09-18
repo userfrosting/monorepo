@@ -103,9 +103,10 @@ class ResourceTest extends TestCase
     /**
      * Data provider for testGetBasePath.
      *
-     * Return a list of basepath to test. The rela rel path will be constructed by the
-     * test according to the stream used, so we'll assume the rel path are always
-     * correct. Also mix and match three provider : path, basePath and useLocation (true/false)
+     * Return a list of basePath values to test. The actual relative path
+     * will be constructed by the test according to the stream used, so
+     * we'll assume the relative paths are always correct. Also, mix and
+     * match three providers: path, basePath, and useLocation (true/false).
      *
      * @return mixed[]
      */
@@ -197,18 +198,28 @@ class ResourceTest extends TestCase
      * @param string $expectedBasename
      * @param string $expectedFilename
      * @param string $expectedExtension
+     * @param string $expectedDirname
      */
     public function testFilePropertiesGetters(
         string $path,
         string $expectedBasename,
         string $expectedFilename,
-        string $expectedExtension
+        string $expectedExtension,
+        string $expectedDirname
     ): void {
         $resource = new Resource($this->stream, $this->location, $this->locationPath . $this->streamPath . $path);
+
+        // Normalize $expectedDirname
+        $expectedFullDirname = Normalizer::normalizePath($this->locationPath . $this->streamPath . $expectedDirname);
+        $expectedFullDirname = rtrim($expectedFullDirname, '/\\');
+        $expectedDirname = Normalizer::normalizePath($expectedDirname);
+        $expectedDirname = rtrim($expectedDirname, '/\\');
 
         $this->assertSame($expectedBasename, $resource->getBasename());
         $this->assertSame($expectedFilename, $resource->getFilename());
         $this->assertSame($expectedExtension, $resource->getExtension());
+        $this->assertSame($expectedFullDirname, $resource->getAbsoluteDirname());
+        $this->assertSame($expectedDirname, $resource->getDirname());
     }
 
     /**
@@ -224,12 +235,48 @@ class ResourceTest extends TestCase
     {
         return [
             // RelPath, basename, filename, extension
-            ['test.txt', 'test.txt', 'test', 'txt'],
-            ['/streamPath/test.txt', 'test.txt', 'test', 'txt'],
-            ['C:\\streamPath\\test.txt', 'test.txt', 'test', 'txt'],
-            ['streamPath/test.txt', 'test.txt', 'test', 'txt'],
-            ['/test.txt', 'test.txt', 'test', 'txt'],
-            ['lib.inc.php', 'lib.inc.php', 'lib.inc', 'php'],
+            [
+                'test.txt',
+                'test.txt',
+                'test',
+                'txt',
+                '',
+            ],
+            [
+                '/streamPath/test.txt',
+                'test.txt',
+                'test',
+                'txt',
+                'streamPath',
+            ],
+            [
+                'C:\\streamPath\\test.txt',
+                'test.txt',
+                'test',
+                'txt',
+                'C:\\streamPath',
+            ],
+            [
+                'streamPath/test.txt',
+                'test.txt',
+                'test',
+                'txt',
+                'streamPath',
+            ],
+            [
+                '/test.txt',
+                'test.txt',
+                'test',
+                'txt',
+                '/',
+            ],
+            [
+                'lib.inc.php',
+                'lib.inc.php',
+                'lib.inc',
+                'php',
+                '',
+            ],
         ];
     }
 }

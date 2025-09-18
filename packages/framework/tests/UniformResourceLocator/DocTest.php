@@ -84,9 +84,9 @@ class DocTest extends TestCase
         $this->assertSame($this->getBasePath() . 'app/uploads/profile', $uploadResource->getAbsolutePath());
         $this->assertSame('uploads/profile', $uploadResource->getPath());
         $this->assertSame('profile', $uploadResource->getBasePath());
-        $this->assertSame('profile', $uploadResource->getBasename());
+        $this->assertSame('', $uploadResource->getBasename());
         $this->assertSame('', $uploadResource->getExtension());
-        $this->assertSame('profile', $uploadResource->getFilename());
+        $this->assertSame('', $uploadResource->getFilename());
         $this->assertSame('upload://profile', $uploadResource->getUri());
 
         // Side note, `getPath` doesn't add a `/` at the end, because NormalizePath normalize this behavior.

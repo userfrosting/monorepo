@@ -98,7 +98,7 @@ class BuildingLocatorTest extends TestCase
                       ->addStream(new ResourceStream('absCars', $this->getBasePath() . 'Garage/cars/', true)); // Search path -> Building/Garage/cars (Stream shared, no prefix, using absolute path)
     }
 
-    public function testGetResourceThrowExceptionIfShemeNotExist(): void
+    public function testGetResourceThrowExceptionIfSchemeNotExist(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         self::$locator->getResource('foo://');
@@ -215,11 +215,29 @@ class BuildingLocatorTest extends TestCase
      *
      * @param string      $scheme
      * @param string      $file
+     * @param string      $filename
+     * @param string      $basename
+     * @param string      $extension
+     * @param string      $dirname
+     * @param string      $relativeDirname
      * @param string|null $location
      * @param string[]    $expectedPaths
+     * @param string[]    $expectedAllPaths
+     * @param bool        $isDir
      */
-    public function testGetResource(string $scheme, string $file, ?string $location, array $expectedPaths): void
-    {
+    public function testGetResource(
+        string $scheme,
+        string $file,
+        string $filename,
+        string $basename,
+        string $extension,
+        string $dirname,
+        string $relativeDirname,
+        ?string $location,
+        array $expectedPaths,
+        array $expectedAllPaths,
+        bool $isDir
+    ): void {
         $locator = self::$locator;
         $uri = $scheme . '://' . $file;
 
@@ -228,8 +246,18 @@ class BuildingLocatorTest extends TestCase
         $this->assertEquals($this->getBasePath() . $expectedPaths[0], $resource);
         $this->assertEquals($this->getBasePath() . $expectedPaths[0], $locator($uri));
         $this->assertSame($expectedPaths[0], $resource->getPath());
-        $this->assertSame($uri, $resource->getUri());
         $this->assertInstanceOf(ResourceStreamInterface::class, $resource->getStream()); // @phpstan-ignore-line
+
+        // Test file attributes
+        $this->assertSame($uri, $resource->getUri());
+        $this->assertSame($isDir, $resource->isDir());
+        $this->assertSame($scheme . '://' . $dirname, $resource->getDirUri());
+        $this->assertSame($filename, $resource->getFilename());
+        $this->assertSame($basename, $resource->getBasename());
+        $this->assertSame($extension, $resource->getExtension());
+        $this->assertSame($this->getBasePath() . $relativeDirname, $resource->getAbsoluteDirname());
+        $this->assertSame($relativeDirname, $resource->getRelativeDirname());
+        $this->assertSame($dirname, $resource->getDirname());
 
         if (is_null($location)) {
             $this->assertNull($resource->getLocation());
@@ -244,11 +272,29 @@ class BuildingLocatorTest extends TestCase
      *
      * @param string      $scheme
      * @param string      $file
+     * @param string      $filename
+     * @param string      $basename
+     * @param string      $extension
+     * @param string      $dirname
+     * @param string      $relativeDirname
      * @param string|null $location
      * @param string[]    $expectedPaths
+     * @param string[]    $expectedAllPaths
+     * @param bool        $isDir
      */
-    public function testGetResources(string $scheme, string $file, ?string $location, array $expectedPaths): void
-    {
+    public function testGetResources(
+        string $scheme,
+        string $file,
+        string $filename,
+        string $basename,
+        string $extension,
+        string $dirname,
+        string $relativeDirname,
+        ?string $location,
+        array $expectedPaths,
+        array $expectedAllPaths,
+        bool $isDir
+    ): void {
         $locator = self::$locator;
         $uri = $scheme . '://' . $file;
 
@@ -293,11 +339,29 @@ class BuildingLocatorTest extends TestCase
      *
      * @param string      $scheme
      * @param string      $file
+     * @param string      $filename
+     * @param string      $basename
+     * @param string      $extension
+     * @param string      $dirname
+     * @param string      $relativeDirname
      * @param string|null $location
      * @param string[]    $expectedPaths
+     * @param string[]    $expectedAllPaths
+     * @param bool        $isDir
      */
-    public function testFindResource(string $scheme, string $file, ?string $location, array $expectedPaths): void
-    {
+    public function testFindResource(
+        string $scheme,
+        string $file,
+        string $filename,
+        string $basename,
+        string $extension,
+        string $dirname,
+        string $relativeDirname,
+        ?string $location,
+        array $expectedPaths,
+        array $expectedAllPaths,
+        bool $isDir
+    ): void {
         $locator = self::$locator;
         $uri = $scheme . '://' . $file;
 
@@ -467,56 +531,150 @@ class BuildingLocatorTest extends TestCase
     public static function resourceProvider(): array
     {
         return [
-            //[$scheme, $file, $location, $expectedPaths, $expectedAllPaths],
+            /**
+             * Return structure:
+             *  - $scheme
+             *  - $file
+             *  - $filename
+             *  - $basename
+             *  - $extension
+             *  - $dirname
+             *  - $relativeDirname
+             *  - $location
+             *  - $expectedPaths
+             *  - $expectedAllPaths
+             *  - $isDir
+             */
+
             // #0
-            ['files', 'test.json', 'Floor3', [
-                'Floors/Floor3/files/test.json',
-                'Floors/Floor2/files/test.json',
-                'Floors/Floor/files/test.json',
-            ], [
-                'Floors/Floor3/files/test.json',
-                'Floors/Floor2/files/test.json',
-                'Floors/Floor/files/test.json',
-            ]],
+            [
+                'files',     // scheme
+                'test.json', // file
+                'test',      // filename
+                'test.json', // basename
+                'json',      // extension
+                '',          // dirname
+                'Floors/Floor3/files', // relative dirname
+                'Floor3',    // location
+                [
+                    'Floors/Floor3/files/test.json',
+                    'Floors/Floor2/files/test.json',
+                    'Floors/Floor/files/test.json',
+                ],
+                [
+                    'Floors/Floor3/files/test.json',
+                    'Floors/Floor2/files/test.json',
+                    'Floors/Floor/files/test.json',
+                ],
+                false, // isDir
+            ],
 
             // #1
-            ['files', 'foo.json', 'Floor2', [
-                'Floors/Floor2/files/foo.json',
-            ], [
-                'Floors/Floor3/files/foo.json',
-                'Floors/Floor2/files/foo.json',
-                'Floors/Floor/files/foo.json',
-            ]],
+            [
+                'files',     // scheme
+                'foo.json',  // file
+                'foo',       // filename
+                'foo.json',  // basename
+                'json',      // extension
+                '',          // dirname
+                'Floors/Floor2/files', // relative dirname
+                'Floor2',    // location
+                [
+                    'Floors/Floor2/files/foo.json',
+                ],
+                [
+                    'Floors/Floor3/files/foo.json',
+                    'Floors/Floor2/files/foo.json',
+                    'Floors/Floor/files/foo.json',
+                ],
+                false, // isDir
+            ],
 
             // #2
-            ['files', 'test/blah.json', 'Floor1', [
-                'Floors/Floor/files/test/blah.json',
-            ], [
-                'Floors/Floor3/files/test/blah.json',
-                'Floors/Floor2/files/test/blah.json',
-                'Floors/Floor/files/test/blah.json',
-            ]],
+            [
+                'files',         // scheme
+                'test/blah.json', // file
+                'blah',          // filename
+                'blah.json',     // basename
+                'json',          // extension
+                'test',          // dirname
+                'Floors/Floor/files/test', // relative dirname
+                'Floor1',        // location
+                [
+                    'Floors/Floor/files/test/blah.json',
+                ],
+                [
+                    'Floors/Floor3/files/test/blah.json',
+                    'Floors/Floor2/files/test/blah.json',
+                    'Floors/Floor/files/test/blah.json',
+                ],
+                false, // isDir
+            ],
 
             // #3
             // N.B.: upload/data/files is not returned here as the `data` prefix is not used
-            ['files', '', 'Floor3', [
-                'Floors/Floor3/files',
-                'Floors/Floor2/files',
-                'Floors/Floor/files',
-            ], [
-                'Floors/Floor3/files',
-                'Floors/Floor2/files',
-                'Floors/Floor/files',
-            ]],
+            //       Plus, the relative dirname will still be it's parent.
+            [
+                'files',   // scheme
+                '',        // file
+                '',        // filename
+                '',        // basename
+                '',        // extension
+                '',        // dirname
+                'Floors/Floor3', // relative dirname
+                'Floor3',  // location
+                [
+                    'Floors/Floor3/files',
+                    'Floors/Floor2/files',
+                    'Floors/Floor/files',
+                ],
+                [
+                    'Floors/Floor3/files',
+                    'Floors/Floor2/files',
+                    'Floors/Floor/files',
+                ],
+                true, // isDir
+            ],
 
             // #4
-            ['conf', 'test.json', 'Floor2', [
-                'Floors/Floor2/config/test.json',
-            ], [
-                'Floors/Floor3/config/test.json',
-                'Floors/Floor2/config/test.json',
-                'Floors/Floor/config/test.json',
-            ]],
+            [
+                'conf',      // scheme
+                'test.json', // file
+                'test',      // filename
+                'test.json', // basename
+                'json',      // extension
+                '',          // dirname
+                'Floors/Floor2/config', // relative dirname
+                'Floor2',    // location
+                [
+                    'Floors/Floor2/config/test.json',
+                ],
+                [
+                    'Floors/Floor3/config/test.json',
+                    'Floors/Floor2/config/test.json',
+                    'Floors/Floor/config/test.json',
+                ],
+                false, // isDir
+            ],
+
+            // #5 - Dot file + subdirectory
+            [
+                'files',                          // scheme
+                'data/bar/.test',                 // file
+                '',                               // filename
+                '.test',                          // basename
+                'test',                           // extension
+                'data/bar',                       // dirname
+                'Floors/Floor2/files/data/bar',   // relative dirname
+                'Floor2',                         // location
+                [
+                    'Floors/Floor2/files/data/bar/.test',
+                ],
+                [
+                    'Floors/Floor2/files/data/bar/.test',
+                ],
+                false, // isDir
+            ],
         ];
     }
 

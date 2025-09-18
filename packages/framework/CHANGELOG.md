@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [6.0.0-beta.5](https://github.com/userfrosting/framework/compare/6.0.0-beta.4...6.0.0-beta.5)
 - Fix Resource getBasePath: Fix edge case where the location path is the same as the locator base path (eg. the location is in the main sprinkle)
+- Add new Resource methods to help find resource parent location : `getDirUri`, `getRelativeDirname`, `getAbsoluteDirname`, `getDirname` and `isDir`
+- Improve Resource handling when the resource is a directory
 
 ## [6.0.0-beta.4](https://github.com/userfrosting/framework/compare/6.0.0-beta.3...6.0.0-beta.4)
 - Remove unused Fortress JS files

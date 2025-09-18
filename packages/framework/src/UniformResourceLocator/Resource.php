@@ -51,6 +51,19 @@ class Resource implements ResourceInterface
     }
 
     /**
+     * Get Resource directory URI.
+     * Represents the directory path of the resource, indicating
+     * where it is located. Applies whether the resource is a file
+     * or a directory.
+     *
+     * @return string
+     */
+    public function getDirUri(): string
+    {
+        return $this->stream->getScheme() . '://' . $this->getDirname();
+    }
+
+    /**
      * Get the resource base path, aka the path that comes after the `://`.
      *
      * To to this, we use the relative path and remove
@@ -99,33 +112,87 @@ class Resource implements ResourceInterface
     }
 
     /**
-     * Extract the resource filename (test.txt -> test).
+     * Extract the resource filename (e.g. /location/stream/foo/test.txt -> test).
+     * If resource is a directory, return empty string.
      *
      * @return string
      */
     public function getFilename(): string
     {
-        return pathinfo($this->getPath(), PATHINFO_FILENAME);
+        return $this->isDir() ? '' : pathinfo($this->getPath(), PATHINFO_FILENAME);
     }
 
     /**
-     * Extract the trailing name component (test.txt -> test.txt).
+     * Extract the trailing name component (e.g. /location/stream/foo/test.txt -> test.txt).
+     * If resource is a directory, return empty string.
      *
      * @return string
      */
     public function getBasename(): string
     {
-        return pathinfo($this->getPath(), PATHINFO_BASENAME);
+        return $this->isDir() ? '' : pathinfo($this->getPath(), PATHINFO_BASENAME);
     }
 
     /**
-     * Extract the resource extension (test.txt -> txt).
+     * Extract the resource extension (e.g. /location/stream/test.txt -> txt).
+     * If resource is a directory, return empty string.
      *
      * @return string
      */
     public function getExtension(): string
     {
-        return pathinfo($this->getPath(), PATHINFO_EXTENSION);
+        return $this->isDir() ? '' : pathinfo($this->getPath(), PATHINFO_EXTENSION);
+    }
+
+    /**
+     * Extract the resource dirname, relative to the locator
+     * base path. This returns the path where the resource is
+     * located, whether it is a file or a directory.
+     * e.g. `/var/www/site/location/stream/foo/test.txt' -> `/location/stream/foo`
+     * e.g. `/var/www/site/location/stream/foo/bar' -> `/location/stream/foo`
+     *
+     * @return string
+     */
+    public function getRelativeDirname(): string
+    {
+        return pathinfo($this->getPath(), PATHINFO_DIRNAME);
+    }
+
+    /**
+     * Extract the absolute directory path of the resource.
+     * Returns the path where the resource is located, whether
+     * it is a file or a directory.
+     * e.g. `/var/www/site/location/stream/foo/test.txt' -> `/var/www/site/location/stream/foo`
+     *
+     * @return string
+     */
+    public function getAbsoluteDirname(): string
+    {
+        return pathinfo($this->getAbsolutePath(), PATHINFO_DIRNAME);
+    }
+
+    /**
+     * Extract the resource dirname, relative to the stream URI.
+     * Returns the path where the resource is located, whether it
+     * is a file or a directory.
+     *
+     * @return string
+     */
+    public function getDirname(): string
+    {
+        $result = pathinfo($this->getBasePath(), PATHINFO_DIRNAME);
+
+        return ($result === '.' || $result === '/') ? '' : $result;
+    }
+
+    /**
+     * Check if the resource is a directory.
+     *
+     * @return bool
+     */
+    public function isDir(): bool
+    {
+        return is_dir($this->getAbsolutePath());
     }
 
     /**
@@ -137,6 +204,8 @@ class Resource implements ResourceInterface
     }
 
     /**
+     * Return the absolute path to the resource on the filesystem.
+     *
      * @return string
      */
     public function getAbsolutePath(): string
@@ -155,6 +224,8 @@ class Resource implements ResourceInterface
     }
 
     /**
+     * Resource path, relative to the locator base path, and containing the stream and location path
+     *
      * @return string
      */
     public function getPath(): string
