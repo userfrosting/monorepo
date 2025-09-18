@@ -149,7 +149,7 @@ class Resource implements ResourceInterface
      * base path. This returns the path where the resource is
      * located, whether it is a file or a directory.
      * e.g. `/var/www/site/location/stream/foo/test.txt' -> `/location/stream/foo`
-     * e.g. `/var/www/site/location/stream/foo/bar' -> `/location/stream/foo`
+     * e.g. `/var/www/site/location/stream/foo/bar' -> `/location/stream/foo`.
      *
      * @return string
      */
@@ -162,7 +162,7 @@ class Resource implements ResourceInterface
      * Extract the absolute directory path of the resource.
      * Returns the path where the resource is located, whether
      * it is a file or a directory.
-     * e.g. `/var/www/site/location/stream/foo/test.txt' -> `/var/www/site/location/stream/foo`
+     * e.g. `/var/www/site/location/stream/foo/test.txt' -> `/var/www/site/location/stream/foo`.
      *
      * @return string
      */
@@ -224,7 +224,7 @@ class Resource implements ResourceInterface
     }
 
     /**
-     * Resource path, relative to the locator base path, and containing the stream and location path
+     * Resource path, relative to the locator base path, and containing the stream and location path.
      *
      * @return string
      */

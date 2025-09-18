@@ -72,7 +72,7 @@ interface ResourceInterface extends Stringable
      * base path. This returns the path where the resource is
      * located, whether it is a file or a directory.
      * e.g. `/var/www/site/location/stream/foo/test.txt' -> `/location/stream/foo`
-     * e.g. `/var/www/site/location/stream/foo/bar' -> `/location/stream/foo`
+     * e.g. `/var/www/site/location/stream/foo/bar' -> `/location/stream/foo`.
      *
      * @return string
      */
@@ -82,7 +82,7 @@ interface ResourceInterface extends Stringable
      * Extract the absolute directory path of the resource.
      * Returns the path where the resource is located, whether
      * it is a file or a directory.
-     * e.g. `/var/www/site/location/stream/foo/test.txt' -> `/var/www/site/location/stream/foo`
+     * e.g. `/var/www/site/location/stream/foo/test.txt' -> `/var/www/site/location/stream/foo`.
      *
      * @return string
      */
@@ -92,7 +92,7 @@ interface ResourceInterface extends Stringable
      * Extract the resource dirname, relative to the stream URI.
      * Returns the path where the resource is located, whether it
      * is a file or a directory.
-     * e.g. `/location/stream/foo/test.txt' -> `foo`
+     * e.g. `/location/stream/foo/test.txt' -> `foo`.
      *
      * @return string
      */
@@ -118,14 +118,14 @@ interface ResourceInterface extends Stringable
     public function getAbsolutePath(): string;
 
     /**
-     * Resource path, relative to the locator base path, and containing the stream and location path
+     * Resource path, relative to the locator base path, and containing the stream and location path.
      *
      * @return string
      */
     public function getPath(): string;
 
     /**
-     * Locator base Path
+     * Locator base Path.
      *
      * @return string
      */
