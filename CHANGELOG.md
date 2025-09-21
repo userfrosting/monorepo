@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Framework] Fix Resource getBasePath: Fix edge case where the location path is the same as the locator base path (eg. the location is in the main sprinkle)
 - [Framework] Add new Resource methods to help find resource parent location : `getDirUri`, `getRelativeDirname`, `getAbsoluteDirname`, `getDirname` and `isDir`
 - [Framework] Improve Resource handling when the resource is a directory
+- [Core + Skeleon] Go back to Vite default port (`5173`) + allows Vite port to be in env variable
 
 ## 6.0.0-beta.4 - 2025-09-08
 - [Core] Fix missing Composer dependency

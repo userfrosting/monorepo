@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [6.0.0-beta.5](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.4...6.0.0-beta.5)
 - Run `vite:build` in production mode when `assets:build` is used
+- Go back to Vite default port (`5173`) + allows Vite port to be in env variable
 
 ## [6.0.0-beta.4](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.3...6.0.0-beta.4)
 - Fix missing Composer dependency
