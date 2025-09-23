@@ -1,0 +1,69 @@
+services:
+  app:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./docker/app
+    env_file:
+      - ./app/.env
+    volumes:
+      - .:/app
+      - ./docker/app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - backend
+  nginx:
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8080:80"
+    build:
+      context: ./docker/nginx
+    volumes:
+      - .:/app
+    depends_on:
+      - app
+      - mailpit
+    networks:
+      - frontend
+      - backend
+  vue-frontend:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: .
+      dockerfile: ./docker/vue/Dockerfile
+    env_file:
+      - ./app/.env
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+    networks:
+      - frontend
+  mysql:
+    restart: unless-stopped
+    tty: true
+    build:
+      context: ./docker/mysql
+    env_file:
+      - ./app/.env
+    ports:
+      - "8503:3306"
+    volumes:
+      - userfrosting-db:/var/lib/mysql
+    networks:
+      - backend
+  mailpit:
+    image: 'axllent/mailpit:latest'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - backend
+volumes:
+  userfrosting-db:
+    driver: local
+networks:
+  frontend:
+  backend:
+    driver: bridge
