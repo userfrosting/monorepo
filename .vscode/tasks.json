@@ -60,7 +60,8 @@
         {
             "label": "Workspace - Bakery Serve",
             "type": "shell",
-            "command": "php bakery serve"
+            "command": "php bakery serve",
+            "isBackground": true
         },
         {
             "label": "Workspace - Composer Update",
@@ -119,7 +120,8 @@
         {
             "label": "Skeleton - Vite Dev",
             "type": "shell",
-            "command": "npm run --workspace=userfrosting vite:dev"
+            "command": "npm run --workspace=userfrosting vite:dev",
+            "isBackground": true
         },
         {
             "label": "Skeleton - Vite Build",
