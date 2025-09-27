@@ -218,6 +218,55 @@
             "label": "Framework - PHPStan",
             "type": "shell",
             "command": "vendor/bin/phpstan analyse packages/framework"
+        },
+
+        /**
+         * Docker Tasks
+         */
+        {
+            "label": "Docker - Build",
+            "type": "shell",
+            "command": "docker-compose build --no-cache"
+        },
+        {
+            "label": "Docker - Up",
+            "type": "shell",
+            "command": "docker-compose up -d"
+        },
+        {
+            "label": "Docker - Down",
+            "type": "shell",
+            "command": "docker-compose down"
+        },
+        {
+            "label": "Docker - Composer Update",
+            "type": "shell",
+            "command": "docker-compose exec app composer update"
+        },
+        {
+            "label": "Docker - Bakery Bake",
+            "type": "shell",
+            "command": "docker-compose exec app php bakery bake"
+        },
+        {
+            "label": "Docker - PHPUnit",
+            "type": "shell",
+            "command": "docker-compose exec app vendor/bin/phpunit"
+        },
+        {
+            "label": "Docker - PHP CS Fixer",
+            "type": "shell",
+            "command": "docker-compose exec app vendor/bin/php-cs-fixer fix"
+        },
+        {
+            "label": "Docker - PHPStan",
+            "type": "shell",
+            "command": "docker-compose exec app vendor/bin/phpstan analyse"
+        },
+        {
+            "label": "Docker - Shell (App)",
+            "type": "shell",
+            "command": "docker-compose exec app bash"
         }
     ]
 }

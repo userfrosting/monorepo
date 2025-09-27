@@ -36,6 +36,10 @@
 
 The app will be available at [http://localhost:8080](http://localhost:8080).
 
+## Docker
+
+[See this page](./docker/)
+
 ## Composer
 
 The monorepo is managed by [Monorepo-builder](https://github.com/symplify/monorepo-builder) on the Composer side.   

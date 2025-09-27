@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - Bump Vite and Axios versions 
+- Add Docker config for Monorepo
 - [Skeleton] Update Docker setup (@ssnukala)
 - [Core] Run `vite:build` in production mode when `assets:build` is used
 - [Framework] Fix Resource getBasePath: Fix edge case where the location path is the same as the locator base path (eg. the location is in the main sprinkle)
