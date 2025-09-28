@@ -7,38 +7,42 @@ First, install [Docker Compose or Docker Desktop](https://docs.docker.com/compos
 Second, initialize a new UserFrosting project:
 
 1. Get UserFrosting repository : 
-   ```
+   ```bash
    git clone https://github.com/userfrosting/monorepo.git UFMonorepo
    ```
 2. Change to the new directory : 
-   ```
+   ```bash
    cd UFMonorepo
    ```
 3. Copy the default env file : 
-   ```
+   ```bash
    cp packages/skeleton/app/.env.docker packages/skeleton/app/.env
    ```
 4. Build all the docker containers:
-   ```
+   ```bash
    docker-compose build --no-cache
    ```
 5. Start all the containers:
-   ```
+   ```bash
    docker-compose up -d
    ```
 6. Set some directory permissions (your may have to enter your root password):
-   ```
+   ```bash
    sudo chown -R $USER: .
    sudo chmod 777 packages/skeleton/app/{logs,cache,sessions}
    ```
 7. Install all composer modules used in UserFrosting:
-   ```
+   ```bash
    docker-compose exec app composer update
    ```
 8. Install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
-   ```
+   ```bash
    docker-compose exec app php bakery bake
    ```
+9. Restart Vue Container now that Bakery installed frontend assets:
+    ```bash
+    docker-compose restart vue-frontend
+    ```
 
 Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrosting homepage!
 
@@ -56,19 +60,20 @@ sudo chown -R $USER: .
 sudo chmod 777 packages/skeleton/app/{logs,cache,sessions}
 docker-compose exec app composer update
 docker-compose exec app php bakery bake
+docker-compose restart vue-frontend
 ```
 
 **Start / stop containers**
 
 If you need to stop the UserFrosting docker containers, just change to your userfrosting directory and run:
 
-```
+```bash
 docker-compose stop
 ```
 
 To start containers again, change to your userfrosting directory and run:
 
-```
+```bash
 docker-compose up -d
 ```
 
@@ -76,7 +81,7 @@ docker-compose up -d
 
 If you need to purge your docker containers (this will not delete any source file or sprinkle, but will empty the database), run:
 
-```
+```bash
 docker-compose down --remove-orphans
 ```
 
