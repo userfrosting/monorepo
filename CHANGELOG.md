@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 - Update Docker Readme
 - [Admin] Update Limax frontend dependency + [Skeleton] Remove Limax from optimizeDeps (4.2.0 is now an ESModule)
+- [Core] Fix deprecation with `thephpleague/csv`
 
 ## 6.0.0-beta.5 - 2025-09-28
 - Bump Vite and Axios versions 

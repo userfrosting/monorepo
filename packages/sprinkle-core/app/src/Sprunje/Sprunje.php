@@ -277,7 +277,7 @@ abstract class Sprunje
         $columnsToShow = ($this->columns === []) ? ['*'] : $this->columns;
         $filteredQuery->select($columnsToShow);
 
-        $csv = Writer::createFromFileObject(new \SplTempFileObject());
+        $csv = Writer::from(new \SplTempFileObject());
 
         // Defines variables for columns and rows arrays
         $columnNames = [];
