@@ -56,8 +56,8 @@ return [
         'vite'    => [
             'manifest' => 'assets://.vite/manifest.json',
             'dev'      => env('VITE_DEV_ENABLED', true),
-            'base'     => 'assets/',
-            'server'   => 'http://[::1]:' . env('VITE_PORT', 5173) . '/',
+            'base'     => '/assets/',
+            'server'   => 'http://[::1]:' . env('VITE_PORT', 5173),
         ],
         // Defines path to Webpack Encore `entrypoints.json` and `manifest.json` files.
         'webpack' => [

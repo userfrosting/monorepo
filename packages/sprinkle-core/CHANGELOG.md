@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - Fix deprecation with `thephpleague/csv`
+- Update assets config to be more robust in edge cases in production
 
 ## [6.0.0-beta.6](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.5...6.0.0-beta.6)
 - No changes
