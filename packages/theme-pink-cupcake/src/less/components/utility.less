@@ -1,14 +1,20 @@
 // Variables
 // ========================================================================
+// Overrides defaults
+@logo-font-size: 2.1rem;
+@logo-font-family: 'Montserrat', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
 @logo-color: #ffffff;
 @logo-hover-color: #ffffff;
+
+// Custom variables
+@logo-font-weight: 700;
+@logo-letter-spacing: -0.45px;
+@logo-text-transform: uppercase;
 
 // Custom hooks
 // ========================================================================
 .hook-logo() {
-    text-transform: uppercase;
-    letter-spacing: -0.45px;
-    font-size: 2.1rem;
-    font-weight: 700;
-    font-family: @navbar-navbar-nav-item-font;
+    text-transform: @logo-text-transform;
+    letter-spacing: @logo-letter-spacing;
+    font-weight: @logo-font-weight;
 }

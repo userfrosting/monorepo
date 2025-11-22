@@ -37,6 +37,7 @@
     ],
     "dependencies": {
         "@fontsource/montserrat": "^5.2.5",
+        "@fontsource/mulish": "^5.2.8",
         "@fortawesome/fontawesome-free": "^6.6.0",
         "@fortawesome/fontawesome-svg-core": "^6.4.2",
         "@fortawesome/free-brands-svg-icons": "^6.4.2",
