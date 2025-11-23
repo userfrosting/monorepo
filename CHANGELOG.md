@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- [Pink-Cupcake] CSS: Add webkit-font-smoothing
 
 ## 6.0.0-beta.6 - 2025-11-23
 - Update Docker Readme
