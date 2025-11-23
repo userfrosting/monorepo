@@ -10,6 +10,7 @@
     cacheDirectory=".phpunit.cache" 
     backupStaticProperties="false"
     displayDetailsOnTestsThatTriggerWarnings="true"
+    displayDetailsOnTestsThatTriggerDeprecations="true"
 >
   <coverage includeUncoveredFiles="true">
     <report>

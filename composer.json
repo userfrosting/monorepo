@@ -99,11 +99,11 @@
         }
     },
     "replace": {
-        "userfrosting/framework": "6.0.0-beta.5",
-        "userfrosting/sprinkle-account": "6.0.0-beta.5",
-        "userfrosting/sprinkle-admin": "6.0.0-beta.5",
-        "userfrosting/sprinkle-core": "6.0.0-beta.5",
-        "userfrosting/userfrosting": "6.0.0-beta.5"
+        "userfrosting/framework": "6.0.0-beta.6",
+        "userfrosting/sprinkle-account": "6.0.0-beta.6",
+        "userfrosting/sprinkle-admin": "6.0.0-beta.6",
+        "userfrosting/sprinkle-core": "6.0.0-beta.6",
+        "userfrosting/userfrosting": "6.0.0-beta.6"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
