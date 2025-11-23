@@ -33,7 +33,7 @@
 
 // Inverse
 // ========================================================================
-@inverse-sidebar-background: @global-secondary-background; 
+@inverse-sidebar-background: @global-secondary-background;
 @inverse-sidebar-active-background: darken(@inverse-sidebar-background, 5%);
 @inverse-sidebar-sublist-background: @inverse-sidebar-active-background;
 @inverse-sidebar-sublist-active-background: @inverse-sidebar-active-background;
@@ -63,7 +63,7 @@ aside.uf-sidenav {
         margin-left: @sidebar-width;
     }
 
-    .uk-nav-default, 
+    .uk-nav-default,
     .uk-nav-sub {
         line-height: @sidebar-item-line-height;
     }
@@ -94,18 +94,18 @@ aside.uf-sidenav {
         background-color: @sidebar-active-background;
         color: @sidebar-item-active-color;
     }
-    
+
     // Sub-nav items
     // Set base color for all links
-    .uk-nav-default .uk-nav-sub a { 
-        color: @sidebar-sublist-item-color; 
+    .uk-nav-default .uk-nav-sub a {
+        color: @sidebar-sublist-item-color;
     }
 
     // Set active and hover styles
     .uk-nav-default .uk-nav-sub li > a:hover,
-    .uk-nav-default .uk-nav-sub li.uk-active > a{ 
-        color: @sidebar-sublist-item-active-color; 
-        background-color: @sidebar-sublist-active-background; 
+    .uk-nav-default .uk-nav-sub li.uk-active > a {
+        color: @sidebar-sublist-item-active-color;
+        background-color: @sidebar-sublist-active-background;
     }
 
     // Set nav header padding
@@ -150,7 +150,7 @@ aside.uf-sidenav {
 aside.uf-sidenav-right {
     left: auto;
     right: 0;
-    
+
     ~ .uf-main {
         margin-right: @sidebar-width;
         margin-left: inherit;
@@ -174,7 +174,7 @@ aside.uf-sidenav-right {
  ========================================================================== */
 aside.uf-sidenav when (@sidebar-aside-color-mode = dark) {
     background-color: @inverse-sidebar-background;
-    
+
     .uk-nav-default > li > a {
         color: @inverse-sidebar-item-color;
     }
@@ -186,18 +186,18 @@ aside.uf-sidenav when (@sidebar-aside-color-mode = dark) {
         background-color: @inverse-sidebar-active-background;
         color: @inverse-sidebar-item-active-color;
     }
-    
+
     // Sub-nav items
     // Set base color for all links
-    .uk-nav-default .uk-nav-sub a { 
-        color: @inverse-sidebar-sublist-item-color; 
+    .uk-nav-default .uk-nav-sub a {
+        color: @inverse-sidebar-sublist-item-color;
     }
 
     // Set active and hover styles
     .uk-nav-default .uk-nav-sub li > a:hover,
-    .uk-nav-default .uk-nav-sub li.uk-active > a{ 
-        color: @inverse-sidebar-sublist-item-active-color; 
-        background-color: @inverse-sidebar-sublist-active-background; 
+    .uk-nav-default .uk-nav-sub li.uk-active > a {
+        color: @inverse-sidebar-sublist-item-active-color;
+        background-color: @inverse-sidebar-sublist-active-background;
     }
 
     // Move each nested level to the right and set background color
