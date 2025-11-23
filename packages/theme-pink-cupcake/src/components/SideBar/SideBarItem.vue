@@ -33,11 +33,11 @@ const isExternalLink = computed(() => {
             <span
                 v-if="icon"
                 :data-uk-icon="icon"
-                class="uk-margin-small-right"
+                class="uk-margin-xsmall-right"
                 data-test="icon"></span>
             <font-awesome-icon
                 v-if="faIcon"
-                class="uk-margin-small-right"
+                class="uk-margin-xsmall-right"
                 :icon="faIcon"
                 fixed-width
                 data-test="faIcon" />
@@ -50,11 +50,11 @@ const isExternalLink = computed(() => {
                 <span
                     v-if="icon"
                     :data-uk-icon="icon"
-                    class="uk-margin-small-right"
+                    class="uk-margin-xsmall-right"
                     data-test="icon"></span>
                 <font-awesome-icon
                     v-if="faIcon"
-                    class="uk-margin-small-right"
+                    class="uk-margin-xsmall-right"
                     :icon="faIcon"
                     fixed-width
                     data-test="faIcon" />

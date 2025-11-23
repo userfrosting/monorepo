@@ -6,16 +6,20 @@
 */
 @sidebar-aside-color-mode: dark;
 
-@sidebar-width: 260px;
-@sidebar-item-padding-vertical: 8px;
+@sidebar-width: 285px;
+@sidebar-item-padding-vertical: 4px;
 @sidebar-item-padding-horizontal: 20px;
 @sidebar-item-border-width: 3px;
 @sidebar-item-border-color: @global-theme-color;
-@sidebar-item-first-padding-top: 20px;
+@sidebar-item-first-padding-top: 12px;
+@sidebar-item-line-height: 1.8rem;
+@sidebar-sublist-padding-vertical: 0px;
+@sidebar-sublist-padding-horizontal: @sidebar-item-padding-horizontal;
+@sidebar-sublist-line-height: @sidebar-item-line-height;
 @sidebar-header-padding-vertical: @sidebar-item-padding-vertical;
 @sidebar-header-padding-horizontal: @sidebar-item-padding-horizontal;
-@sidebar-nested-padding: 4px;
-@sidebar-nested-padding-left: 24px;
+@sidebar-nested-padding-vertical: @sidebar-item-padding-vertical;
+@sidebar-nested-padding-horizontal: 12px;
 
 // Colors
 @sidebar-background: @global-background;
@@ -59,6 +63,11 @@ aside.uf-sidenav {
         margin-left: @sidebar-width;
     }
 
+    .uk-nav-default, 
+    .uk-nav-sub {
+        line-height: @sidebar-item-line-height;
+    }
+
     // Increment top padding for first item
     .uk-nav-default > li:first-child {
         padding-top: @sidebar-item-first-padding-top;
@@ -72,6 +81,9 @@ aside.uf-sidenav {
         transition: all 0.15s ease-out;
         font-size: @global-font-size;
         color: @sidebar-item-color;
+    }
+    .uk-nav-sub > li > a {
+        padding: @sidebar-sublist-padding-vertical @sidebar-sublist-padding-horizontal;
     }
 
     // Add theme colored border, background and text color for hover, open and active
@@ -104,14 +116,18 @@ aside.uf-sidenav {
 
     // Move each nested level to the right and set background color
     .uk-nav-default .uk-nav-sub {
-        padding-left: @sidebar-nested-padding-left;
+        padding: @sidebar-nested-padding-vertical @sidebar-nested-padding-horizontal;
         background-color: @sidebar-sublist-background;
     }
 
     // Set nested nav items sizing
     .uk-nav-default .uk-nav-sub a {
         font-size: @global-font-size;
-        padding: @sidebar-nested-padding;
+    }
+
+    // Hide parent icons in sub navigation
+    .uk-nav-sub .uk-nav-parent-icon {
+        display: none;
     }
 }
 
