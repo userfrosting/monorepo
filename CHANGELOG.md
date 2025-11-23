@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Admin] Update Limax frontend dependency + [Skeleton] Remove Limax from optimizeDeps (4.2.0 is now an ESModule)
 - [Core] Fix deprecation with `thephpleague/csv`
 - [Core] Update assets config to be more robust in edge cases in production
-- [Pink-Cupcake] Fix not found warning when importing the main Less file
 - [Skeleton] Add example file on how to overwrite the Less/CSS theme
-- [Pink-Cupcake] Update global font to match Learn style
-- [Pink-Cupcake] Improved sidebar theming, allowing for light variant
-- [Pink-Cupcake] Apply fixed-width to all sidebar items
+- [Pink-Cupcake] Fix fontsource resources not being found when importing the main Less file in skeleton
+- [Pink-Cupcake] Change body font to Mulish
+- [Pink-Cupcake] Improved sidebar theming, enabling a light variant with a single variable
+- [Pink-Cupcake] Fix icon not all having `fixed-width` in sidebar
 
 ## 6.0.0-beta.5 - 2025-09-28
 - Bump Vite and Axios versions 

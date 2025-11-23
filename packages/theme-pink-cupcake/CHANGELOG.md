@@ -6,10 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [6.0.0-beta.6](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.5...6.0.0-beta.6)
-- Fix not found warning when importing the main Less file
-- Update global font to match Learn style
-- Improved sidebar theming, allowing for light variant
-- Apply fixed-width to all sidebar items
+- Fix fontsource resources not being found when importing the main Less file in skeleton
+- Change body font to Mulish
+- Improved sidebar theming, enabling a light variant with a single variable
+- Fix icon not all having `fixed-width` in sidebar
 
 ## [6.0.0-beta.5](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.4...6.0.0-beta.5)
 - Bump Vite and Axios versions 
