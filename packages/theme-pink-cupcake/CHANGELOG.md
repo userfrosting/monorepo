@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0-beta.6](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.5...6.0.0-beta.6)
 - Fix not found warning when importing the main Less file
 - Update global font to match Learn style
+- Improved sidebar theming, allowing for light variant
 
 ## [6.0.0-beta.5](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.4...6.0.0-beta.5)
 - Bump Vite and Axios versions 

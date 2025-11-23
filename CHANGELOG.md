@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Pink-Cupcake] Fix not found warning when importing the main Less file
 - [Skeleton] Add example file on how to overwrite the Less/CSS theme
 - [Pink-Cupcake] Update global font to match Learn style
+- [Pink-Cupcake] Improved sidebar theming, allowing for light variant
 
 ## 6.0.0-beta.5 - 2025-09-28
 - Bump Vite and Axios versions 

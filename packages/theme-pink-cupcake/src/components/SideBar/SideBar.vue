@@ -1,5 +1,5 @@
 <template>
-    <aside class="uf-sidenav" id="uf-sidenav-aside">
+    <aside class="uf-sidenav">
         <ul class="uk-nav-default" uk-nav>
             <slot></slot>
         </ul>
