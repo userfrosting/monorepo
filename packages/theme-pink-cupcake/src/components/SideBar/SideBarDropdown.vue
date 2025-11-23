@@ -20,7 +20,7 @@ withDefaults(
 </script>
 
 <template>
-    <RouterLink :to="to" v-bind="$props" custom v-slot="{ isActive }">
+    <RouterLink v-bind="$props" custom v-slot="{ isActive }">
         <li class="uk-parent" :class="{ 'uk-open': isActive }">
             <a v-bind="$attrs">
                 <span
@@ -32,6 +32,7 @@ withDefaults(
                     v-if="faIcon"
                     class="uk-margin-small-right"
                     :icon="faIcon"
+                    fixed-width
                     data-test="faIcon" />
                 <slot name="label">{{ label }}</slot>
                 <span uk-nav-parent-icon v-if="!hideCaret" data-test="caret"></span>
