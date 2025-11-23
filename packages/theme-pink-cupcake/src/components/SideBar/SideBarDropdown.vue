@@ -20,7 +20,7 @@ withDefaults(
 </script>
 
 <template>
-    <RouterLink v-bind="$props" custom v-slot="{ isActive }">
+    <RouterLink :to="to" v-bind="$props" custom v-slot="{ isActive }">
         <li class="uk-parent" :class="{ 'uk-open': isActive }">
             <a v-bind="$attrs">
                 <span
