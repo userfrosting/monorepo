@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - [Pink-Cupcake] CSS: Add webkit-font-smoothing
+- [Core] MarkdownService now uses configuration from the config service to customize markdown parser behavior. New `markdown` config section added with `html_input`, `allow_unsafe_links`, and `max_nesting_level` options.
 
 ## 6.0.0-beta.6 - 2025-11-23
 - Update Docker Readme
