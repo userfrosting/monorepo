@@ -38,7 +38,6 @@ class SprinkleMarkdownRepositoryTest extends CoreTestCase
         $repository = new SprinkleMarkdownRepository($mockManager, $mockContainer);
         $extensions = $repository->all();
 
-        $this->assertIsArray($extensions);
         $this->assertEmpty($extensions);
     }
 
@@ -54,7 +53,6 @@ class SprinkleMarkdownRepositoryTest extends CoreTestCase
         $repository = new SprinkleMarkdownRepository($mockManager, $mockContainer);
         $extensions = $repository->all();
 
-        $this->assertIsArray($extensions);
         $this->assertEmpty($extensions);
     }
 
@@ -79,7 +77,6 @@ class SprinkleMarkdownRepositoryTest extends CoreTestCase
         $repository = new SprinkleMarkdownRepository($mockManager, $mockContainer);
         $extensions = $repository->all();
 
-        $this->assertIsArray($extensions);
         $this->assertCount(1, $extensions);
         $this->assertInstanceOf(ExtensionInterface::class, $extensions[0]);
         $this->assertInstanceOf(DummyMarkdownExtension::class, $extensions[0]);

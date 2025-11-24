@@ -14,9 +14,6 @@ namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
 use League\CommonMark\ConverterInterface;
 use League\CommonMark\Environment\Environment;
-use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
-use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
-use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\MarkdownConverter;
 use UserFrosting\Config\Config;
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
@@ -40,11 +37,8 @@ class MarkdownService implements ServicesProviderInterface
                 $markdownConfig = $config->get('markdown', []);
 
                 $environment = new Environment($markdownConfig);
-                $environment->addExtension(new CommonMarkCoreExtension());
-                $environment->addExtension(new FrontMatterExtension());
-                $environment->addExtension(new GithubFlavoredMarkdownExtension());
 
-                // Register custom markdown extensions from sprinkles
+                // Register markdown extensions from sprinkles
                 $this->registerMarkdownExtensions($environment, $extensionLoader);
 
                 // Instantiate the converter engine and start converting some Markdown!
