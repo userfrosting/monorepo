@@ -26,7 +26,6 @@ use UserFrosting\ServicesProvider\ServicesProviderInterface;
  *
  * @see https://commonmark.thephpleague.com
  * 
- * TODO : Should use the config service to customize the markdown parser behavior.
  * TODO : Should have a way to extend the markdown parser with custom extensions.
  */
 class MarkdownService implements ServicesProviderInterface
@@ -35,7 +34,10 @@ class MarkdownService implements ServicesProviderInterface
     {
         return [
             ConverterInterface::class => function (Config $config) {
-                $environment = new Environment([]);
+                // Get markdown configuration from config service
+                $markdownConfig = $config->get('markdown', []);
+                
+                $environment = new Environment($markdownConfig);
                 $environment->addExtension(new CommonMarkCoreExtension());
                 $environment->addExtension(new FrontMatterExtension());
                 $environment->addExtension(new GithubFlavoredMarkdownExtension());

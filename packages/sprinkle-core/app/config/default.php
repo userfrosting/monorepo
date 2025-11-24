@@ -315,6 +315,19 @@ return [
 
     /*
     * ----------------------------------------------------------------------
+    * Markdown Parser Config
+    * ----------------------------------------------------------------------
+    * Configuration for the CommonMark markdown parser.
+    * See https://commonmark.thephpleague.com/2.7/configuration/
+    */
+    'markdown' => [
+        'html_input'         => 'strip',  // How to handle HTML (strip, escape, allow)
+        'allow_unsafe_links' => false,    // Allow potentially unsafe links
+        'max_nesting_level'  => 100,      // Maximum nesting level
+    ],
+
+    /*
+    * ----------------------------------------------------------------------
     * Mail Service Config
     * ----------------------------------------------------------------------
     * See https://learn.userfrosting.com/mail/the-mailer-service
