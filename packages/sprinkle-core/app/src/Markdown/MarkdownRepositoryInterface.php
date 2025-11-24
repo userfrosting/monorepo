@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Core\Markdown;
 
 use League\CommonMark\Extension\ExtensionInterface;
-use UserFrosting\Support\Repository\RepositoryInterface;
+use UserFrosting\Support\ClassRepositoryInterface;
 
 /**
  * Markdown Extensions Repository Interface.
  *
- * @extends RepositoryInterface<ExtensionInterface>
+ * @extends ClassRepositoryInterface<ExtensionInterface>
  */
-interface MarkdownRepositoryInterface extends RepositoryInterface
+interface MarkdownRepositoryInterface extends ClassRepositoryInterface
 {
 }

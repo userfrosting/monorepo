@@ -53,7 +53,7 @@ final class SprinkleMarkdownRepository extends ClassRepository implements Markdo
                     throw new BadClassNameException("Extension class `$extensionClass` not found.");
                 }
                 $instance = $this->ci->get($extensionClass);
-                if (!is_object($instance) || !is_subclass_of($instance, ExtensionInterface::class)) {
+                if (!$instance instanceof ExtensionInterface) {
                     throw new BadInstanceOfException("Extension class `$extensionClass` doesn't implement " . ExtensionInterface::class . '.');
                 }
                 $instances[] = $instance;
