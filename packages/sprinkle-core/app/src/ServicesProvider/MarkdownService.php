@@ -20,20 +20,22 @@ use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\MarkdownConverter;
 use UserFrosting\Config\Config;
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
+use UserFrosting\Sprinkle\Core\Markdown\MarkdownRepositoryInterface;
+use UserFrosting\Sprinkle\Core\Markdown\SprinkleMarkdownRepository;
 
 /**
  * Markdown service. Add CommonMark markdown parser with GitHub Flavored Markdown frontmatter support.
  *
- * @see https://commonmark.thephpleague.com
+ * Sprinkles can register custom markdown extensions by implementing the MarkdownExtensionRecipe interface.
  *
- * TODO : Should have a way to extend the markdown parser with custom extensions.
+ * @see https://commonmark.thephpleague.com
  */
 class MarkdownService implements ServicesProviderInterface
 {
     public function register(): array
     {
         return [
-            ConverterInterface::class => function (Config $config) {
+            ConverterInterface::class => function (Config $config, MarkdownRepositoryInterface $extensionLoader) {
                 // Get markdown configuration from config service
                 $markdownConfig = $config->get('markdown', []);
 
@@ -42,11 +44,29 @@ class MarkdownService implements ServicesProviderInterface
                 $environment->addExtension(new FrontMatterExtension());
                 $environment->addExtension(new GithubFlavoredMarkdownExtension());
 
+                // Register custom markdown extensions from sprinkles
+                $this->registerMarkdownExtensions($environment, $extensionLoader);
+
                 // Instantiate the converter engine and start converting some Markdown!
                 $converter = new MarkdownConverter($environment);
 
                 return $converter;
             },
+
+            MarkdownRepositoryInterface::class => \DI\autowire(SprinkleMarkdownRepository::class),
         ];
+    }
+
+    /**
+     * Register all Markdown Extensions defined in Sprinkles MarkdownExtensionRecipe.
+     *
+     * @param Environment                   $environment
+     * @param MarkdownRepositoryInterface   $extensionLoader
+     */
+    protected function registerMarkdownExtensions(Environment $environment, MarkdownRepositoryInterface $extensionLoader): void
+    {
+        foreach ($extensionLoader as $extension) {
+            $environment->addExtension($extension);
+        }
     }
 }
