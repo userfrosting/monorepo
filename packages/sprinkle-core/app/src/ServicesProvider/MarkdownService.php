@@ -36,7 +36,7 @@ class MarkdownService implements ServicesProviderInterface
             ConverterInterface::class => function (Config $config) {
                 // Get markdown configuration from config service
                 $markdownConfig = $config->get('markdown', []);
-                
+
                 $environment = new Environment($markdownConfig);
                 $environment->addExtension(new CommonMarkCoreExtension());
                 $environment->addExtension(new FrontMatterExtension());
