@@ -13,7 +13,7 @@
 @sidebar-item-border-color: @global-theme-color;
 @sidebar-item-first-padding-top: 12px;
 @sidebar-item-line-height: 1.8rem;
-@sidebar-sublist-padding-vertical: 0px;
+@sidebar-sublist-padding-vertical: @sidebar-item-padding-vertical;
 @sidebar-sublist-padding-horizontal: @sidebar-item-padding-horizontal;
 @sidebar-sublist-line-height: @sidebar-item-line-height;
 @sidebar-header-padding-vertical: @sidebar-item-padding-vertical;
@@ -96,9 +96,10 @@ aside.uf-sidenav {
     }
 
     // Sub-nav items
-    // Set base color for all links
+    // Set base color and size for all links
     .uk-nav-default .uk-nav-sub a {
         color: @sidebar-sublist-item-color;
+        font-size: @global-font-size;
     }
 
     // Set active and hover styles
@@ -118,11 +119,6 @@ aside.uf-sidenav {
     .uk-nav-default .uk-nav-sub {
         padding: @sidebar-nested-padding-vertical @sidebar-nested-padding-horizontal;
         background-color: @sidebar-sublist-background;
-    }
-
-    // Set nested nav items sizing
-    .uk-nav-default .uk-nav-sub a {
-        font-size: @global-font-size;
     }
 
     // Hide parent icons in sub navigation
