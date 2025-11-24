@@ -25,7 +25,7 @@ use UserFrosting\ServicesProvider\ServicesProviderInterface;
  * Markdown service. Add CommonMark markdown parser with GitHub Flavored Markdown frontmatter support.
  *
  * @see https://commonmark.thephpleague.com
- * 
+ *
  * TODO : Should have a way to extend the markdown parser with custom extensions.
  */
 class MarkdownService implements ServicesProviderInterface
