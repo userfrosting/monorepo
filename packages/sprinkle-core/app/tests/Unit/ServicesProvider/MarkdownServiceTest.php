@@ -15,6 +15,9 @@ namespace UserFrosting\Sprinkle\Core\Tests\Unit\ServicesProvider;
 use ArrayIterator;
 use DI\Container;
 use League\CommonMark\ConverterInterface;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
+use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -43,12 +46,20 @@ class MarkdownServiceTest extends TestCase
     }
 
     /**
-     * Helper method to mock MarkdownRepositoryInterface with empty extensions.
+     * Helper method to mock MarkdownRepositoryInterface with core extensions.
+     * These are the minimum extensions needed for basic markdown conversion.
      */
     protected function mockEmptyMarkdownRepository(): void
     {
+        // Create instances of the core extensions
+        $extensions = [
+            new CommonMarkCoreExtension(),
+            new FrontMatterExtension(),
+            new GithubFlavoredMarkdownExtension(),
+        ];
+
         $repository = Mockery::mock(MarkdownRepositoryInterface::class)
-            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([]))
+            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator($extensions))
             ->getMock();
         $this->ci->set(MarkdownRepositoryInterface::class, $repository);
     }
