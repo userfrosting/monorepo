@@ -49,7 +49,7 @@ class MarkdownServiceTest extends TestCase
      * Helper method to mock MarkdownRepositoryInterface with core extensions.
      * These are the minimum extensions needed for basic markdown conversion.
      */
-    protected function mockEmptyMarkdownRepository(): void
+    protected function mockCoreMarkdownRepository(): void
     {
         // Create instances of the core extensions
         $extensions = [
@@ -80,7 +80,7 @@ class MarkdownServiceTest extends TestCase
         
         $this->ci->set(Config::class, $config);
 
-        $this->mockEmptyMarkdownRepository();
+        $this->mockCoreMarkdownRepository();
         
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
@@ -101,7 +101,7 @@ class MarkdownServiceTest extends TestCase
         
         $this->ci->set(Config::class, $config);
 
-        $this->mockEmptyMarkdownRepository();
+        $this->mockCoreMarkdownRepository();
         
         // Get the converter - should still work with empty config
         $converter = $this->ci->get(ConverterInterface::class);
@@ -125,7 +125,7 @@ class MarkdownServiceTest extends TestCase
         
         $this->ci->set(Config::class, $config);
 
-        $this->mockEmptyMarkdownRepository();
+        $this->mockCoreMarkdownRepository();
         
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
@@ -145,7 +145,7 @@ class MarkdownServiceTest extends TestCase
         
         $this->ci->set(Config::class, $config);
 
-        $this->mockEmptyMarkdownRepository();
+        $this->mockCoreMarkdownRepository();
         
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
@@ -169,7 +169,7 @@ class MarkdownServiceTest extends TestCase
         
         $this->ci->set(Config::class, $config);
 
-        $this->mockEmptyMarkdownRepository();
+        $this->mockCoreMarkdownRepository();
         
         $converter = $this->ci->get(ConverterInterface::class);
         
