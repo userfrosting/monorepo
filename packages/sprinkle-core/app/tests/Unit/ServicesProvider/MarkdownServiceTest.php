@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Core\Tests\Unit\ServicesProvider;
 
+use ArrayIterator;
 use DI\Container;
 use League\CommonMark\ConverterInterface;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use UserFrosting\Config\Config;
+use UserFrosting\Sprinkle\Core\Markdown\MarkdownRepositoryInterface;
 use UserFrosting\Sprinkle\Core\ServicesProvider\MarkdownService;
 use UserFrosting\Testing\ContainerStub;
 
@@ -55,6 +57,12 @@ class MarkdownServiceTest extends TestCase
             ->getMock();
         
         $this->ci->set(Config::class, $config);
+
+        // Mock empty MarkdownRepositoryInterface
+        $repository = Mockery::mock(MarkdownRepositoryInterface::class)
+            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([]))
+            ->getMock();
+        $this->ci->set(MarkdownRepositoryInterface::class, $repository);
         
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
@@ -74,6 +82,12 @@ class MarkdownServiceTest extends TestCase
             ->getMock();
         
         $this->ci->set(Config::class, $config);
+
+        // Mock empty MarkdownRepositoryInterface
+        $repository = Mockery::mock(MarkdownRepositoryInterface::class)
+            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([]))
+            ->getMock();
+        $this->ci->set(MarkdownRepositoryInterface::class, $repository);
         
         // Get the converter - should still work with empty config
         $converter = $this->ci->get(ConverterInterface::class);
@@ -96,6 +110,12 @@ class MarkdownServiceTest extends TestCase
             ->getMock();
         
         $this->ci->set(Config::class, $config);
+
+        // Mock empty MarkdownRepositoryInterface
+        $repository = Mockery::mock(MarkdownRepositoryInterface::class)
+            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([]))
+            ->getMock();
+        $this->ci->set(MarkdownRepositoryInterface::class, $repository);
         
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
@@ -114,6 +134,12 @@ class MarkdownServiceTest extends TestCase
             ->getMock();
         
         $this->ci->set(Config::class, $config);
+
+        // Mock empty MarkdownRepositoryInterface
+        $repository = Mockery::mock(MarkdownRepositoryInterface::class)
+            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([]))
+            ->getMock();
+        $this->ci->set(MarkdownRepositoryInterface::class, $repository);
         
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
@@ -136,6 +162,12 @@ class MarkdownServiceTest extends TestCase
             ->getMock();
         
         $this->ci->set(Config::class, $config);
+
+        // Mock empty MarkdownRepositoryInterface
+        $repository = Mockery::mock(MarkdownRepositoryInterface::class)
+            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([]))
+            ->getMock();
+        $this->ci->set(MarkdownRepositoryInterface::class, $repository);
         
         $converter = $this->ci->get(ConverterInterface::class);
         

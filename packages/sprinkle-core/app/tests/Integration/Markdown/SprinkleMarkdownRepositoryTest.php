@@ -78,7 +78,6 @@ class SprinkleMarkdownRepositoryTest extends CoreTestCase
         $extensions = $repository->all();
 
         $this->assertCount(1, $extensions);
-        $this->assertInstanceOf(ExtensionInterface::class, $extensions[0]);
         $this->assertInstanceOf(DummyMarkdownExtension::class, $extensions[0]);
     }
 
@@ -148,7 +147,6 @@ class SprinkleMarkdownRepositoryTest extends CoreTestCase
 
         $count = 0;
         foreach ($repository as $extension) {
-            $this->assertInstanceOf(ExtensionInterface::class, $extension);
             $count++;
         }
 

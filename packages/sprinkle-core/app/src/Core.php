@@ -14,6 +14,9 @@ namespace UserFrosting\Sprinkle\Core;
 
 use Lcharette\WebpackEncoreTwig\EntrypointsTwigExtension;
 use Lcharette\WebpackEncoreTwig\VersionedAssetsTwigExtension;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
+use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use UserFrosting\Event\AppInitiatedEvent;
 use UserFrosting\Event\BakeryInitiatedEvent;
 use UserFrosting\Event\EventListenerRecipe;
@@ -281,9 +284,9 @@ class Core implements
     public function getMarkdownExtensions(): array
     {
         return [
-            \League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension::class,
-            \League\CommonMark\Extension\FrontMatter\FrontMatterExtension::class,
-            \League\CommonMark\Extension\GithubFlavoredMarkdownExtension::class,
+            CommonMarkCoreExtension::class,
+            FrontMatterExtension::class,
+            GithubFlavoredMarkdownExtension::class,
         ];
     }
 
