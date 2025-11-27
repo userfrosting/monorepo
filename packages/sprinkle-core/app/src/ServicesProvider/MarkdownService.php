@@ -54,8 +54,8 @@ class MarkdownService implements ServicesProviderInterface
     /**
      * Register all Markdown Extensions defined in Sprinkles MarkdownExtensionRecipe.
      *
-     * @param Environment                   $environment
-     * @param MarkdownRepositoryInterface   $extensionLoader
+     * @param Environment                 $environment
+     * @param MarkdownRepositoryInterface $extensionLoader
      */
     protected function registerMarkdownExtensions(Environment $environment, MarkdownRepositoryInterface $extensionLoader): void
     {

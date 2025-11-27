@@ -77,14 +77,14 @@ class MarkdownServiceTest extends TestCase
                 'max_nesting_level'  => 100,
             ])
             ->getMock();
-        
+
         $this->ci->set(Config::class, $config);
 
         $this->mockCoreMarkdownRepository();
-        
+
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
-        
+
         // Verify it's a ConverterInterface
         $this->assertInstanceOf(ConverterInterface::class, $converter);
     }
@@ -98,14 +98,14 @@ class MarkdownServiceTest extends TestCase
             ->once()
             ->andReturn([])
             ->getMock();
-        
+
         $this->ci->set(Config::class, $config);
 
         $this->mockCoreMarkdownRepository();
-        
+
         // Get the converter - should still work with empty config
         $converter = $this->ci->get(ConverterInterface::class);
-        
+
         $this->assertInstanceOf(ConverterInterface::class, $converter);
     }
 
@@ -122,14 +122,14 @@ class MarkdownServiceTest extends TestCase
                 'max_nesting_level'  => 50,
             ])
             ->getMock();
-        
+
         $this->ci->set(Config::class, $config);
 
         $this->mockCoreMarkdownRepository();
-        
+
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
-        
+
         $this->assertInstanceOf(ConverterInterface::class, $converter);
     }
 
@@ -142,14 +142,14 @@ class MarkdownServiceTest extends TestCase
             ->once()
             ->andReturn([])
             ->getMock();
-        
+
         $this->ci->set(Config::class, $config);
 
         $this->mockCoreMarkdownRepository();
-        
+
         // Get the converter
         $converter = $this->ci->get(ConverterInterface::class);
-        
+
         // Test basic markdown conversion
         $result = $converter->convert('# Hello World');
         $this->assertStringContainsString('Hello World', (string) $result);
@@ -166,17 +166,17 @@ class MarkdownServiceTest extends TestCase
                 'html_input' => 'strip',
             ])
             ->getMock();
-        
+
         $this->ci->set(Config::class, $config);
 
         $this->mockCoreMarkdownRepository();
-        
+
         $converter = $this->ci->get(ConverterInterface::class);
-        
+
         // Convert markdown with HTML
         $result = $converter->convert('Hello <script>alert("xss")</script> World');
         $output = (string) $result;
-        
+
         // With 'strip', the script tag should be removed
         $this->assertStringNotContainsString('<script>', $output);
     }
