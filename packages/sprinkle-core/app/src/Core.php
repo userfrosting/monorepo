@@ -14,6 +14,9 @@ namespace UserFrosting\Sprinkle\Core;
 
 use Lcharette\WebpackEncoreTwig\EntrypointsTwigExtension;
 use Lcharette\WebpackEncoreTwig\VersionedAssetsTwigExtension;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
+use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use UserFrosting\Event\AppInitiatedEvent;
 use UserFrosting\Event\BakeryInitiatedEvent;
 use UserFrosting\Event\EventListenerRecipe;
@@ -90,6 +93,7 @@ use UserFrosting\Sprinkle\Core\ServicesProvider\TwigService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\VersionsService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\ViteService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\WebpackService;
+use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MarkdownExtensionRecipe;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MigrationRecipe;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\TwigExtensionRecipe;
 use UserFrosting\Sprinkle\Core\Twig\Extensions\AlertsExtension;
@@ -106,6 +110,7 @@ use UserFrosting\ViteTwig\ViteTwigExtension;
 class Core implements
     SprinkleRecipe,
     TwigExtensionRecipe,
+    MarkdownExtensionRecipe,
     MigrationRecipe,
     EventListenerRecipe,
     MiddlewareRecipe,
@@ -268,6 +273,20 @@ class Core implements
             UserAgentExtension::class,
             VersionedAssetsTwigExtension::class,
             ViteTwigExtension::class,
+        ];
+    }
+
+    /**
+     * Return an array of all registered Markdown Extensions.
+     *
+     * {@inheritDoc}
+     */
+    public function getMarkdownExtensions(): array
+    {
+        return [
+            CommonMarkCoreExtension::class,
+            FrontMatterExtension::class,
+            GithubFlavoredMarkdownExtension::class,
         ];
     }
 
