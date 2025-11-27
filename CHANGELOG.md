@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- [Core] Add markdown parser extension system via MarkdownExtensionRecipe. Sprinkles can now register custom markdown extensions through the new MarkdownRepositoryInterface.
+- [Pink-Cupcake] Minor UI tweaks to sidebar components
 - [Pink-Cupcake] CSS: Add webkit-font-smoothing
 - [Core] MarkdownService now uses configuration from the config service to customize markdown parser behavior. New `markdown` config section added with `html_input`, `allow_unsafe_links`, and `max_nesting_level` options.
 
