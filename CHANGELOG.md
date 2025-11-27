@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - [Core] Add markdown parser extension system via MarkdownExtensionRecipe. Sprinkles can now register custom markdown extensions through the new MarkdownRepositoryInterface.
+- [Pink-Cupcake] Add scroll-padding-top to prevent content from being hidden behind fixed headers when using anchor links
 - [Pink-Cupcake] Minor UI tweaks to sidebar components
 - [Pink-Cupcake] CSS: Add webkit-font-smoothing
 - [Core] MarkdownService now uses configuration from the config service to customize markdown parser behavior. New `markdown` config section added with `html_input`, `allow_unsafe_links`, and `max_nesting_level` options.
