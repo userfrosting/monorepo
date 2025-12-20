@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0-beta.7](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.6...6.0.0-beta.7)
 - Add scroll-padding-top to prevent content from being hidden behind fixed headers when using anchor links
 - Minor UI tweaks to sidebar components
+- Renamed sidebar class
 - CSS: Add webkit-font-smoothing
 
 ## [6.0.0-beta.6](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.5...6.0.0-beta.6)

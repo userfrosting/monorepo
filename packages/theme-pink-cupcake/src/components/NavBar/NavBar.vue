@@ -23,7 +23,7 @@ withDefaults(
                             <li>
                                 <a
                                     class="uk-navbar-item uk-logo"
-                                    uk-toggle="target: aside.uf-sidenav; cls: open">
+                                    uk-toggle="target: aside; cls: open">
                                     <font-awesome-icon icon="bars" />
                                 </a>
                             </li>
