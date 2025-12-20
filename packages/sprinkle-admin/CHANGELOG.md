@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [6.0.0-beta.7](https://github.com/userfrosting/sprinkle-admin/compare/6.0.0-beta.6...6.0.0-beta.7)
+- No changes
 
 ## [6.0.0-beta.6](https://github.com/userfrosting/sprinkle-admin/compare/6.0.0-beta.5...6.0.0-beta.6)
 - Update Limax frontend dependency
