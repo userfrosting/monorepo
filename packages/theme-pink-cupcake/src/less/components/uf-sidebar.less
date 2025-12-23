@@ -4,8 +4,8 @@
 * Set to `dark` to use light text on dark background for sidebar
 * Set to `light` to use dark text on light background for sidebar
 */
-@sidebar-aside-color-mode: dark;
-@sidebar-aside-mode: left; // left | right
+@sidebar-sidebar-color-mode: dark;
+@sidebar-sidebar-mode: left; // left | right
 
 @sidebar-width: 285px;
 @sidebar-item-padding-vertical: 4px;
@@ -46,8 +46,8 @@
 /* ========================================================================
    Component: Sidebar
  ========================================================================== */
-aside {
-    --uk-inverse: @sidebar-aside-color-mode;
+.uf-sidebar {
+    --uk-inverse: @sidebar-sidebar-color-mode;
     position: fixed;
     left: 0;
     top: @navbar-nav-item-height;
@@ -57,7 +57,7 @@ aside {
     background-color: @sidebar-background;
     width: @sidebar-width;
     z-index: 2;
-    transition: height 0.3s ease-out;
+    transition: left 0.3s ease-out;
 
     /* Set main content beside sidebar */
     ~ main,
@@ -127,17 +127,20 @@ aside {
     .uk-nav-sub .uk-nav-parent-icon {
         display: none;
     }
+
+    // Remove offcanvas-bar padding
+    &.uk-offcanvas-bar {
+        padding: 0px;
+    }
 }
 
 // uk-visible\@m --> @breakpoint-small-max
 // @media (max-width: @breakpoint-small-max) {}
 /* Phone landscape and smaller */
 @media (max-width: @breakpoint-small-max) {
-    aside:not(.open) {
-        display: none !important;
-    }
+    .uf-sidebar {
+        left: -@sidebar-width;
 
-    aside {
         ~ main,
         ~ footer {
             margin-left: inherit;
@@ -146,7 +149,7 @@ aside {
 }
 
 // Right side modifier
-aside when (@sidebar-aside-mode = right) {
+.uf-sidebar when (@sidebar-sidebar-mode = right) {
     left: auto;
     right: 0;
 
@@ -172,7 +175,7 @@ aside when (@sidebar-aside-mode = right) {
 /* ========================================================================
    Dark mode variant
  ========================================================================== */
-aside when (@sidebar-aside-color-mode = dark) {
+.uf-sidebar when (@sidebar-sidebar-color-mode = dark) {
     background-color: @inverse-sidebar-background;
 
     .uk-nav-default > li > a {

@@ -21,9 +21,8 @@ withDefaults(
                     <div class="uk-navbar-left" data-test="navbar-left">
                         <ul class="uk-navbar-nav uk-hidden@m">
                             <li>
-                                <a
-                                    class="uk-navbar-item uk-logo"
-                                    uk-toggle="target: aside; cls: open">
+                                <a href="#offcanvas-sidebar" uk-toggle
+                                    class="uk-navbar-item">
                                     <font-awesome-icon icon="bars" />
                                 </a>
                             </li>
