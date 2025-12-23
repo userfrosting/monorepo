@@ -37,9 +37,10 @@ final class ServeCommand extends Command
             'This is a simple way to test your application without having to configure a full web server.',
             'Hit `<info>ctrl+c</info>` to quit.',
         ];
+        $envPort = env('SERVE_PORT', 8080);
 
         $this->setName('serve')
-             ->addOption('port', 'p', InputOption::VALUE_REQUIRED, 'The port to serve the application on', '8080')
+             ->addOption('port', 'p', InputOption::VALUE_REQUIRED, 'The port to serve the application on', $envPort)
              ->setDescription('Alias for `php -S` command')
              ->setHelp(implode(' ', $help));
     }
