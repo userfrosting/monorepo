@@ -1,7 +1,7 @@
 <template>
     <div uk-grid>
         <div class="uk-width-1-4">
-            <UFCardBox :title="$t('ACCOUNT.MY')" class="uf-sidenav">
+            <UFCardBox :title="$t('ACCOUNT.MY')">
                 <ul class="uk-nav uk-nav-default">
                     <UFSideBarItem
                         :to="{ name: 'account.settings.profile' }"
