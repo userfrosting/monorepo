@@ -20,6 +20,7 @@ export default [
                 name: 'admin.permission',
                 component: () => import('../views/PagePermission.vue'),
                 meta: {
+                    title: 'PERMISSION',
                     description: 'PERMISSION.INFO_PAGE'
                 }
             }
