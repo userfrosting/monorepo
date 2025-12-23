@@ -1,3 +1,3 @@
-import SidebarMenuItems from './SidebarMenuItems.vue'
+import UFAdminSidebarMenuItems from './SidebarMenuItems.vue'
 
-export { SidebarMenuItems }
+export { UFAdminSidebarMenuItems }
