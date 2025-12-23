@@ -31,10 +31,10 @@ watch(
     </template>
     <template v-else>
         <div uk-grid>
-            <div class="uk-width-1-3">
+            <div class="uk-width-1-3@s">
                 <PermissionInfo :permission="permission" />
             </div>
-            <div class="uk-width-2-3">
+            <div class="uk-width-2-3@s">
                 <PermissionUsers :id="$route.params.id.toString()" />
             </div>
         </div>

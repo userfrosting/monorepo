@@ -50,11 +50,11 @@ watch(
         <UFErrorPage :errorCode="apiError.status" />
     </template>
     <template v-else>
-        <div class="uk-child-width-expand" uk-grid>
-            <div>
+        <div uk-grid>
+            <div class="uk-width-expand@s">
                 <GroupInfo :group="group" @groupUpdated="fetch()" />
             </div>
-            <div class="uk-width-2-3" v-if="$checkAccess('view_group_field')">
+            <div class="uk-width-2-3@s" v-if="$checkAccess('view_group_field')">
                 <GroupUsers :slug="$route.params.slug.toString()" />
             </div>
         </div>

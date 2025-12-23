@@ -23,7 +23,7 @@ const shouldShowBreadcrumbs = computed(() => {
 <template>
     <div class="uf-page-header" v-if="shouldShowHeader">
         <div uk-grid>
-            <div class="uk-width-expand">
+            <div class="uk-width-expand@s">
                 <h3 v-if="shouldShowTitle" class="uk-margin-remove">
                     {{ $t(page.title) }}
                 </h3>

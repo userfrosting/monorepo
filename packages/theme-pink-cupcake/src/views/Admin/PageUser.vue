@@ -59,16 +59,16 @@ watch(
         <UFErrorPage :errorCode="apiError.status" />
     </template>
     <template v-else>
-        <div class="uk-child-width-expand" uk-grid>
-            <div>
+        <div uk-grid>
+            <div class="uk-width-expand@s">
                 <UserInfo :user="user" @updated="fetch()" />
             </div>
-            <div class="uk-width-2-3" v-if="$checkAccess('view_user_roles')">
+            <div class="uk-width-2-3@s" v-if="$checkAccess('view_user_roles')">
                 <UserRoles :user="user" />
             </div>
         </div>
 
-        <div class="uk-child-width-1-1" uk-grid>
+        <div class="uk-child-width-1-1@s" uk-grid>
             <div v-if="$checkAccess('view_user_permissions')">
                 <UserPermissions :user_name="user.user_name" />
             </div>

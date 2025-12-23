@@ -8,7 +8,7 @@ dashboard.load()
 </script>
 
 <template>
-    <div class="uk-child-width-expand" uk-grid>
+    <div class="uk-child-width-expand@s" uk-grid>
         <UFInfoBox
             v-if="$checkAccess('uri_users')"
             :value="dashboard.data.counter.users"
@@ -28,7 +28,7 @@ dashboard.load()
             faIcon="users"
             :to="{ name: 'admin.groups' }" />
     </div>
-    <div class="uk-child-width-1-2" uk-grid>
+    <div class="uk-child-width-1-2@s" uk-grid>
         <div v-if="$checkAccess('uri_users')">
             <div class="uk-child-width-1-1" uk-grid>
                 <div>
