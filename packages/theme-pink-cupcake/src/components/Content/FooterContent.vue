@@ -1,13 +1,12 @@
 <template>
-    <footer class="uk-section uk-section-small uk-section-muted uk-text-center">
+    <footer class="uk-section uk-section-small uk-section-muted">
         <hr />
-        <p class="uk-text-small uk-text-center" data-test="slot">
+        <div class="uk-text-small uk-grid-divider uk-grid-small uk-child-width-auto uk-flex-center" uk-grid data-test="slot">
             <slot></slot>
             <slot name="userfrosting">
-                <span v-if="$slots.default"> | </span>
-                <span v-html="$t('BUILT_WITH_UF')"></span>
-                <span>
-                    | {{ $t('THEME_BY') }}
+                <div v-html="$t('BUILT_WITH_UF')"></div>
+                <div>
+                    {{ $t('THEME_BY') }} 
                     <a
                         href="http://getuikit.com"
                         title="Visit UIkit 3 site"
@@ -15,8 +14,8 @@
                         data-uk-tooltip>
                         <span data-uk-icon="uikit"></span>
                     </a>
-                </span>
+                </div>
             </slot>
-        </p>
+        </div>
     </footer>
 </template>

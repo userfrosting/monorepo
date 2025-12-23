@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Skeleton + Monorepo][Docker] Update tp PHP 8.4
 - [Core] Add `SERVE_PORT` env variable for the built-in PHP Server.
 - [Admin] Fix missing crumbs in Permission detail page
+- [Pink-Cupcake] Improved footer structure
 
 ## 6.0.0-beta.6 - 2025-11-23
 - Update Docker Readme
