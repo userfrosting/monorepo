@@ -66,7 +66,7 @@ class SystemInfoApiActionTest extends AdminTestCase
     {
         /** @var User */
         $user = User::factory()->create();
-        $this->actAsUser($user, permissions: ['uri_dashboard']);
+        $this->actAsUser($user, permissions: ['view_system_info']);
 
         // Create request with method and url and fetch response
         $request = $this->createRequest('GET', '/api/config/info');
