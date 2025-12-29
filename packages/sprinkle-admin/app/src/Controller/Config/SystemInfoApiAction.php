@@ -68,8 +68,7 @@ class SystemInfoApiAction
      */
     protected function validateAccess(): void
     {
-        // TODO : Create a dedicated permission for this
-        if (!$this->authenticator->checkAccess('uri_dashboard')) {
+        if (!$this->authenticator->checkAccess('view_system_info')) {
             throw new ForbiddenException();
         }
     }
