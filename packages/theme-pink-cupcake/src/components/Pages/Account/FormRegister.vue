@@ -109,7 +109,7 @@ onMounted(async () => {
                 <div class="uk-margin">
                     <label class="uk-form-label" for="first_name">{{ $t('NAME_AND_EMAIL') }}</label>
                     <div class="uk-form-controls uk-grid-small" uk-grid>
-                        <div class="uk-width-1-2">
+                        <div class="uk-width-1-2@s">
                             <input
                                 class="uk-input"
                                 :class="{ 'uk-form-danger': r$.first_name.$error }"
@@ -122,7 +122,7 @@ onMounted(async () => {
                                 v-model="formData.first_name" />
                             <UFFormValidationError :errors="r$.$errors.first_name" />
                         </div>
-                        <div class="uk-width-1-2">
+                        <div class="uk-width-1-2@s">
                             <input
                                 class="uk-input"
                                 :class="{ 'uk-form-danger': r$.last_name.$error }"
@@ -156,7 +156,7 @@ onMounted(async () => {
                         $t('USERNAME')
                     }}</label>
                     <div class="uk-form-controls uk-grid-small" uk-grid>
-                        <div class="uk-width-2-3">
+                        <div class="uk-width-2-3@s">
                             <input
                                 class="uk-input"
                                 :class="{
@@ -171,7 +171,7 @@ onMounted(async () => {
                             <UFFormValidationError :errors="r$.$errors.user_name" />
                             <UFFormValidationError :errors="r$username.$errors.user_name" />
                         </div>
-                        <div class="uk-width-1-3">
+                        <div class="uk-width-expand">
                             <a class="uk-button uk-button-default" @click="suggestUsername()">{{
                                 $t('SUGGEST')
                             }}</a>
@@ -192,7 +192,7 @@ onMounted(async () => {
                         }}
                     </span>
                     <div class="uk-form-controls uk-grid-small" uk-grid>
-                        <div class="uk-width-1-2">
+                        <div class="uk-width-1-2@s">
                             <input
                                 class="uk-input"
                                 :class="{ 'uk-form-danger': r$.password.$error }"
@@ -204,7 +204,7 @@ onMounted(async () => {
                                 v-model="formData.password" />
                             <UFFormValidationError :errors="r$.$errors.password" />
                         </div>
-                        <div class="uk-width-1-2">
+                        <div class="uk-width-1-2@s">
                             <input
                                 class="uk-input"
                                 :class="{ 'uk-form-danger': r$.passwordc.$error }"
@@ -239,7 +239,7 @@ onMounted(async () => {
                 <div class="uk-margin">
                     <label class="uk-form-label" for="r-form-captcha">{{ $t('CAPTCHA') }}</label>
                     <div class="uk-form-controls uk-grid-small" uk-grid>
-                        <div class="uk-width-2-3">
+                        <div class="uk-width-2-3@s">
                             <input
                                 class="uk-input"
                                 :class="{ 'uk-form-danger': r$.captcha.$error }"
@@ -252,7 +252,7 @@ onMounted(async () => {
                                 v-model="formData.captcha" />
                             <UFFormValidationError :errors="r$.captcha.$errors" />
                         </div>
-                        <div class="uk-width-1-3">
+                        <div class="uk-width-1-3@s">
                             <img :src="captchaUrl()" id="captcha" data-target="#r-form-captcha" />
                         </div>
                     </div>
@@ -262,10 +262,16 @@ onMounted(async () => {
                 <!-- TOS modal -->
                 <div class="uk-margin uk-text-center">
                     <p v-html="tos"></p>
-                    <a href="#show-tos" class="uk-button uk-button-default" uk-toggle>
+                    <a
+                        href="#show-tos"
+                        class="uk-button uk-button-default uk-width-1-3@s"
+                        uk-toggle>
                         {{ $t('TOS') }}
                     </a>
-                    <a href="#show-privacy" class="uk-button uk-button-default" uk-toggle>
+                    <a
+                        href="#show-privacy"
+                        class="uk-button uk-button-default uk-width-1-3@s"
+                        uk-toggle>
                         {{ $t('PRIVACY_POLICY') }}
                     </a>
                     <UFModal class="uk-modal-container" id="show-tos" closable>
@@ -294,7 +300,7 @@ onMounted(async () => {
 
                 <div class="uk-text-center">
                     <button
-                        class="uk-button uk-button-primary"
+                        class="uk-button uk-button-primary uk-width-1-3@s"
                         :disabled="apiLoading ? true : false"
                         data-test="submit">
                         {{ $t('REGISTER_ME') }}
@@ -320,14 +326,14 @@ onMounted(async () => {
             <FaCode data-test="faCode" v-model="code" />
             <div class="uk-text-center">
                 <button
-                    class="uk-button uk-button-primary"
+                    class="uk-button uk-button-primary uk-width-1-3@s"
                     :disabled="verificationApiLoading ? true : false"
                     data-test="submitVerification"
                     @click="sendVerification()">
                     {{ $t('ACCOUNT.VERIFICATION.CODE.VERIFY') }}
                 </button>
                 <button
-                    class="uk-button uk-button-default"
+                    class="uk-button uk-button-default uk-width-1-3@s"
                     :disabled="verificationApiLoading ? true : false"
                     data-test="tryAgain"
                     @click="router.push({ name: 'account.verification' })">

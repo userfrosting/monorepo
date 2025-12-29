@@ -42,7 +42,7 @@ const email = defineModel()
             </div>
             <div class="uk-text-center">
                 <button
-                    class="uk-button uk-button-primary"
+                    class="uk-button uk-button-primary uk-width-1-3@s"
                     type="submit"
                     :disabled="props.loading"
                     data-test="submit">

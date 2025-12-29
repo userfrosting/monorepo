@@ -28,14 +28,14 @@ const code = defineModel()
             <FaCode data-test="faCode" v-model="code" />
             <div class="uk-text-center">
                 <button
-                    class="uk-button uk-button-primary"
+                    class="uk-button uk-button-primary uk-width-1-3@s"
                     :disabled="props.loading"
                     type="submit"
                     data-test="submitVerification">
                     {{ $t('ACCOUNT.VERIFICATION.CODE.VERIFY') }}
                 </button>
                 <button
-                    class="uk-button uk-button-default"
+                    class="uk-button uk-button-default uk-width-1-3@s"
                     :disabled="props.loading"
                     data-test="tryAgain"
                     @click="$emit('reset')">

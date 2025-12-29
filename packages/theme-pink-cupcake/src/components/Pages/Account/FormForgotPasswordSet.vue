@@ -63,7 +63,7 @@ const passwordc = defineModel('passwordc')
 
             <div class="uk-text-center">
                 <button
-                    class="uk-button uk-button-primary"
+                    class="uk-button uk-button-primary uk-width-1-3@s"
                     :disabled="props.loading"
                     type="submit"
                     data-test="submitNewPassword">

@@ -122,7 +122,7 @@ if (useConfigStore().get('site.registration.require_email_verification') === fal
         <div class="uk-text-center">
             <p>{{ $t('ACCOUNT.HAVE_ONE') }}</p>
             <router-link
-                class="uk-button uk-button-default"
+                class="uk-button uk-button-default uk-width-1-3@s"
                 :to="{ name: 'account.login' }"
                 data-test="gotoLogin">
                 <font-awesome-icon :icon="['fas', 'right-to-bracket']" /> {{ $t('LOGIN') }}

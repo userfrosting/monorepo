@@ -63,7 +63,7 @@ const sendLogin = async () => {
             </div>
             <div class="uk-text-center">
                 <button
-                    class="uk-button uk-button-primary uk-width-1-3"
+                    class="uk-button uk-button-primary uk-width-1-3@s"
                     :disabled="apiLoading ? true : false"
                     data-test="submit">
                     {{ $t('LOGIN') }}

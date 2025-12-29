@@ -125,7 +125,7 @@ function reset() {
             <p>{{ $t('PASSWORD.RESET.SUCCESS') }}</p>
             <div class="uk-text-center">
                 <router-link
-                    class="uk-button uk-button-primary"
+                    class="uk-button uk-button-primary uk-width-1-3@s"
                     :to="{ name: 'account.login' }"
                     data-test="gotoLogin">
                     <font-awesome-icon :icon="['fas', 'right-to-bracket']" /> {{ $t('LOGIN') }}
@@ -139,7 +139,7 @@ function reset() {
         <div class="uk-text-center">
             <p>{{ $t('ACCOUNT.HAVE_ONE') }}</p>
             <router-link
-                class="uk-button uk-button-default"
+                class="uk-button uk-button-default uk-width-1-3@s"
                 :to="{ name: 'account.login' }"
                 data-test="gotoLogin">
                 <font-awesome-icon :icon="['fas', 'right-to-bracket']" /> {{ $t('LOGIN') }}

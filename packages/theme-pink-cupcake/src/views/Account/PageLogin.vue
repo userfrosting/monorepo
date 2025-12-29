@@ -24,7 +24,9 @@ usePageMeta().hideTitle = true
     <UFCardBoxHalf v-if="useConfigStore().get('site.registration.enabled')">
         <div class="uk-text-center">
             <p>{{ $t('REGISTRATION.QUESTION') }}</p>
-            <router-link class="uk-button uk-button-default" :to="{ name: 'account.register' }">
+            <router-link
+                class="uk-button uk-button-default uk-width-1-3@s"
+                :to="{ name: 'account.register' }">
                 <font-awesome-icon :icon="['fas', 'user-plus']" /> {{ $t('REGISTER') }}
             </router-link>
         </div>
