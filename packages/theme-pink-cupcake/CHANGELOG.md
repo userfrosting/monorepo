@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Renamed sidebar class
 - CSS: Add webkit-font-smoothing
 - Improved footer structure
+- Add mobile navigation
+- Renamed components : FooterContent -> UFFooter
+- Added `SideBarUserCard` component
 
 ## [6.0.0-beta.6](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.5...6.0.0-beta.6)
 - Fix fontsource resources not being found when importing the main Less file in skeleton

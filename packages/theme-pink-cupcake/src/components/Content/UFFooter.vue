@@ -1,12 +1,15 @@
 <template>
     <footer class="uk-section uk-section-small uk-section-muted">
         <hr />
-        <div class="uk-text-small uk-grid-divider uk-grid-small uk-child-width-auto uk-flex-center" uk-grid data-test="slot">
+        <div
+            class="uk-text-small uk-grid-divider uk-grid-small uk-child-width-auto uk-flex-center"
+            uk-grid
+            data-test="slot">
             <slot></slot>
             <slot name="userfrosting">
                 <div v-html="$t('BUILT_WITH_UF')"></div>
                 <div>
-                    {{ $t('THEME_BY') }} 
+                    {{ $t('THEME_BY') }}
                     <a
                         href="http://getuikit.com"
                         title="Visit UIkit 3 site"

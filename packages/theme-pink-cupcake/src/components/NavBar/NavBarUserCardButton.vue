@@ -19,7 +19,7 @@ const isExternalLink = computed(() => {
 </script>
 
 <template>
-    <li v-if="isExternalLink">
+    <li v-if="isExternalLink" v-bind="$attrs">
         <a
             class="uk-button uk-button-default uk-button-small uk-text-center"
             :href="to.toString()"

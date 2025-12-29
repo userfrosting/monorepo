@@ -1,10 +1,10 @@
 import { expect, test } from 'vitest'
 import { mount } from '@vue/test-utils'
-import FooterContent from '../../../components/Content/FooterContent.vue'
+import UFFooter from '../../../components/Content/UFFooter.vue'
 
 test('Basic test', () => {
     // Arrange
-    const wrapper = mount(FooterContent, {
+    const wrapper = mount(UFFooter, {
         slots: {
             default: 'This is the slot content'
         }

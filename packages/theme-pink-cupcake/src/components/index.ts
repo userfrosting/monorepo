@@ -3,7 +3,7 @@ import AppLink from './Content/AppLink.vue'
 import CardBox from './Content/CardBox.vue'
 import CardBoxHalf from './Content/CardBoxHalf.vue'
 import CardBoxLarge from './Content/CardBoxLarge.vue'
-import FooterContent from './Content/FooterContent.vue'
+import UFFooter from './Content/UFFooter.vue'
 import HeaderPage from './Content/HeaderPage.vue'
 import InfoBox from './Content/InfoBox.vue'
 import MainContent from './Content/MainContent.vue'
@@ -23,6 +23,7 @@ import SideBar from './SideBar/SideBar.vue'
 import SideBarDropdown from './SideBar/SideBarDropdown.vue'
 import SideBarItem from './SideBar/SideBarItem.vue'
 import SideBarLabel from './SideBar/SideBarLabel.vue'
+import SideBarUserCard from './SideBar/SideBarUserCard.vue'
 import SprunjeColumn from './Sprunjer/SprunjeColumn.vue'
 import SprunjeFilters from './Sprunjer/SprunjeFilters.vue'
 import SprunjeHeader from './Sprunjer/SprunjeHeader.vue'
@@ -38,7 +39,7 @@ export {
     CardBox,
     CardBoxHalf,
     CardBoxLarge,
-    FooterContent,
+    UFFooter,
     HeaderPage,
     InfoBox,
     MainContent,
@@ -58,6 +59,7 @@ export {
     SideBarDropdown,
     SideBarItem,
     SideBarLabel,
+    SideBarUserCard,
     SprunjeColumn,
     SprunjeFilters,
     SprunjeHeader,

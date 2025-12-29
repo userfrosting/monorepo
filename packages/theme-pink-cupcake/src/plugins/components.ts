@@ -5,7 +5,7 @@ import {
     CardBox,
     CardBoxHalf,
     CardBoxLarge,
-    FooterContent,
+    UFFooter,
     HeaderPage,
     InfoBox,
     MainContent,
@@ -25,6 +25,7 @@ import {
     SideBarDropdown,
     SideBarItem,
     SideBarLabel,
+    SideBarUserCard,
     SprunjeColumn,
     SprunjeFilters,
     SprunjeHeader,
@@ -46,7 +47,7 @@ export default {
             .component('UFCardBox', CardBox)
             .component('UFCardBoxHalf', CardBoxHalf)
             .component('UFCardBoxLarge', CardBoxLarge)
-            .component('UFFooterContent', FooterContent)
+            .component('UFFooter', UFFooter)
             .component('UFHeaderPage', HeaderPage)
             .component('UFInfoBox', InfoBox)
             .component('UFMainContent', MainContent)
@@ -66,6 +67,7 @@ export default {
             .component('UFSideBarDropdown', SideBarDropdown)
             .component('UFSideBarItem', SideBarItem)
             .component('UFSideBarLabel', SideBarLabel)
+            .component('UFSideBarUserCard', SideBarUserCard)
             .component('UFSprunjeColumn', SprunjeColumn)
             .component('UFSprunjeFilters', SprunjeFilters)
             .component('UFSprunjeHeader', SprunjeHeader)
@@ -84,7 +86,7 @@ declare module 'vue' {
         UFCardBox: typeof CardBox
         UFCardBoxHalf: typeof CardBoxHalf
         UFCardBoxLarge: typeof CardBoxLarge
-        UFFooterContent: typeof FooterContent
+        UFFooter: typeof UFFooter
         UFHeaderPage: typeof HeaderPage
         UFInfoBox: typeof InfoBox
         UFMainContent: typeof MainContent
@@ -104,6 +106,7 @@ declare module 'vue' {
         UFSideBarDropdown: typeof SideBarDropdown
         UFSideBarItem: typeof SideBarItem
         UFSideBarLabel: typeof SideBarLabel
+        UFSideBarUserCard: typeof SideBarUserCard
         UFSprunjeColumn: typeof SprunjeColumn
         UFSprunjeFilters: typeof SprunjeFilters
         UFSprunjeHeader: typeof SprunjeHeader

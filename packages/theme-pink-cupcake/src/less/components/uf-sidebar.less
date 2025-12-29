@@ -60,8 +60,10 @@
     transition: left 0.3s ease-out;
 
     /* Set main content beside sidebar */
-    ~ main,
-    ~ footer {
+    &:not(.uk-hidden):not(.uk-hidden\@s):not(.uk-hidden\@m):not(.uk-hidden\@l):not(.uk-hidden\@xl)
+        ~ main,
+    &:not(.uk-hidden):not(.uk-hidden\@s):not(.uk-hidden\@m):not(.uk-hidden\@l):not(.uk-hidden\@xl)
+        ~ footer {
         margin-left: @sidebar-width;
     }
 
@@ -141,8 +143,14 @@
     .uf-sidebar {
         left: -@sidebar-width;
 
-        ~ main,
-        ~ footer {
+        &:not(.uk-hidden):not(.uk-hidden\@s):not(.uk-hidden\@m):not(.uk-hidden\@l):not(
+                .uk-hidden\@xl
+            )
+            ~ main,
+        &:not(.uk-hidden):not(.uk-hidden\@s):not(.uk-hidden\@m):not(.uk-hidden\@l):not(
+                .uk-hidden\@xl
+            )
+            ~ footer {
             margin-left: inherit;
         }
     }

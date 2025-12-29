@@ -21,8 +21,7 @@ withDefaults(
                     <div class="uk-navbar-left" data-test="navbar-left">
                         <ul class="uk-navbar-nav uk-hidden@m">
                             <li>
-                                <a href="#offcanvas-sidebar" uk-toggle
-                                    class="uk-navbar-item">
+                                <a href="#offcanvas-sidebar" uk-toggle class="uk-navbar-item">
                                     <font-awesome-icon icon="bars" />
                                 </a>
                             </li>
@@ -31,7 +30,7 @@ withDefaults(
                             <slot name="title">{{ title }}</slot>
                         </AppLink>
                     </div>
-                    <div class="uk-navbar-right uk-visible@s" data-test="navbar-right">
+                    <div class="uk-navbar-right uk-visible@m" data-test="navbar-right">
                         <ul class="uk-navbar-nav">
                             <slot></slot>
                         </ul>
