@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.0.0-beta.7 - 2025-12-30
 - [Core] Add markdown parser extension system via MarkdownExtensionRecipe. Sprinkles can now register custom markdown extensions through the new MarkdownRepositoryInterface.
 - [Pink-Cupcake] Add scroll-padding-top to prevent content from being hidden behind fixed headers when using anchor links
 - [Pink-Cupcake] Minor UI tweaks to sidebar components
