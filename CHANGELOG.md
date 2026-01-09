@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - Specify node engine version in each packages
+- [Skeleton] Convert workflow files to templates
 
 ## 6.0.0-beta.7 - 2025-12-30
 - [Core] Add markdown parser extension system via MarkdownExtensionRecipe. Sprinkles can now register custom markdown extensions through the new MarkdownRepositoryInterface.
