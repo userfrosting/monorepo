@@ -1,18 +1,87 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite'
+import { resolve } from 'path'
 import vue from '@vitejs/plugin-vue'
 import ViteYaml from '@modyfi/vite-plugin-yaml'
+import dts from 'vite-plugin-dts'
 
 // https://vitejs.dev/config/
 // https://stackoverflow.com/a/74397545/445757
 export default defineConfig({
-    plugins: [vue(), ViteYaml()],
+    plugins: [
+        vue(),
+        ViteYaml(),
+        dts({
+            include: ['src/**/*.ts', 'src/**/*.vue'],
+            exclude: ['src/tests/**/*'],
+            outDir: 'dist',
+            copyDtsFiles: true,
+            rollupTypes: false
+        })
+    ],
     // Add UIKit alias : https://stackoverflow.com/a/75264118/445757
     resolve: {
         alias: {
             '../../images/backgrounds': 'uikit/src/images/backgrounds',
             '../../images/components': 'uikit/src/images/components',
             '../../images/icons': 'uikit/src/images/icons'
+        }
+    },
+    build: {
+        lib: {
+            entry: {
+                index: resolve(__dirname, 'src/index.ts'),
+                'components/pages/account': resolve(__dirname, 'src/components/Pages/Account/index.ts'),
+                'components/pages/admin': resolve(__dirname, 'src/components/Pages/Admin/index.ts'),
+                components: resolve(__dirname, 'src/components/index.ts'),
+                plugins: resolve(__dirname, 'src/plugins/index.ts'),
+                views: resolve(__dirname, 'src/views/index.ts')
+            },
+            formats: ['es']
+        },
+        rollupOptions: {
+            external: [
+                'vue',
+                'vue-router',
+                'axios',
+                'pinia',
+                'pinia-plugin-persistedstate',
+                'uikit',
+                'uikit/dist/js/uikit-icons',
+                '@fontsource/montserrat',
+                '@fontsource/mulish',
+                '@fortawesome/fontawesome-free',
+                '@fortawesome/fontawesome-svg-core',
+                '@fortawesome/free-brands-svg-icons',
+                '@fortawesome/free-regular-svg-icons',
+                '@fortawesome/free-solid-svg-icons',
+                '@fortawesome/vue-fontawesome',
+                '@userfrosting/sprinkle-core',
+                '@userfrosting/sprinkle-core/composables',
+                '@userfrosting/sprinkle-core/interfaces',
+                '@userfrosting/sprinkle-core/stores',
+                '@userfrosting/sprinkle-account',
+                '@userfrosting/sprinkle-account/composables',
+                '@userfrosting/sprinkle-account/guards',
+                '@userfrosting/sprinkle-account/interfaces',
+                '@userfrosting/sprinkle-account/stores',
+                '@userfrosting/sprinkle-admin',
+                '@userfrosting/sprinkle-admin/components',
+                '@userfrosting/sprinkle-admin/composables',
+                '@userfrosting/sprinkle-admin/interfaces'
+            ],
+            output: {
+                preserveModules: true,
+                preserveModulesRoot: 'src',
+                entryFileNames: '[name].js',
+                assetFileNames: (assetInfo) => {
+                    // Keep LESS files in their original location
+                    if (assetInfo.name?.endsWith('.less')) {
+                        return 'less/[name][extname]'
+                    }
+                    return 'assets/[name][extname]'
+                }
+            }
         }
     },
     test: {

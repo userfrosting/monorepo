@@ -24,14 +24,15 @@
         "url": "https://github.com/userfrosting/UserFrosting/issues"
     },
     "exports": {
-        ".": "./app/assets/index.ts",
-        "./interfaces": "./app/assets/interfaces/index.ts",
-        "./stores": "./app/assets/stores/index.ts",
-        "./composables": "./app/assets/composables/index.ts",
-        "./routes": "./app/assets/routes/index.ts"
+        ".": "./dist/index.js",
+        "./interfaces": "./dist/interfaces/index.js",
+        "./stores": "./dist/stores/index.js",
+        "./composables": "./dist/composables/index.js",
+        "./routes": "./dist/routes/index.js"
     },
+    "types": "./dist/index.d.ts",
     "files": [
-        "app/assets/"
+        "dist/"
     ],
     "engines": {
         "node": ">= 18"
@@ -47,5 +48,8 @@
         "pinia": "^2.1.6",
         "pinia-plugin-persistedstate": "^3.2.0",
         "vue": "^3.4.21"
+    },
+    "scripts": {
+        "build": "vite build"
     }
 }

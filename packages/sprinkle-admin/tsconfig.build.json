@@ -1,0 +1,18 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "declaration": true,
+        "declarationMap": true,
+        "emitDeclarationOnly": false,
+        "outDir": "dist",
+        "rootDir": "app/assets"
+    },
+    "include": [
+        "app/assets/**/*.ts",
+        "app/assets/**/*.d.ts",
+        "app/assets/**/*.vue"
+    ],
+    "exclude": [
+        "app/assets/tests/**/*"
+    ]
+}

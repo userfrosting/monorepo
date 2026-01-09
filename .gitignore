@@ -13,6 +13,9 @@ vendor/
 # Ignore node modules
 node_modules/
 
+# Ignore build output
+packages/*/dist/
+
 # Ignore compiled assets
 public/assets/
 
