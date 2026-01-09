@@ -46,8 +46,7 @@ export default defineConfig({
                 '@userfrosting/sprinkle-core/stores'
             ],
             output: {
-                preserveModules: true,
-                preserveModulesRoot: 'app/assets',
+                preserveModules: false,
                 entryFileNames: '[name].js'
             }
         }

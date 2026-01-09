@@ -24,16 +24,45 @@
         "url": "https://github.com/userfrosting/UserFrosting/issues"
     },
     "exports": {
-        ".": "./dist/index.js",
-        "./composables": "./dist/composables/index.js",
-        "./guards": "./dist/guards/index.js",
-        "./interfaces": "./dist/interfaces/index.js",
-        "./routes": "./dist/routes/index.js",
-        "./stores": "./dist/stores/index.js",
-        "./views": "./dist/views/index.js"
+        ".": {
+            "development": "./app/assets/index.ts",
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./composables": {
+            "development": "./app/assets/composables/index.ts",
+            "import": "./dist/composables/index.js",
+            "types": "./dist/composables/index.d.ts"
+        },
+        "./guards": {
+            "development": "./app/assets/guards/index.ts",
+            "import": "./dist/guards/index.js",
+            "types": "./dist/guards/index.d.ts"
+        },
+        "./interfaces": {
+            "development": "./app/assets/interfaces/index.ts",
+            "import": "./dist/interfaces/index.js",
+            "types": "./dist/interfaces/index.d.ts"
+        },
+        "./routes": {
+            "development": "./app/assets/routes/index.ts",
+            "import": "./dist/routes/index.js",
+            "types": "./dist/routes/index.d.ts"
+        },
+        "./stores": {
+            "development": "./app/assets/stores/index.ts",
+            "import": "./dist/stores/index.js",
+            "types": "./dist/stores/index.d.ts"
+        },
+        "./views": {
+            "development": "./app/assets/views/index.ts",
+            "import": "./dist/views/index.js",
+            "types": "./dist/views/index.d.ts"
+        }
     },
     "types": "./dist/index.d.ts",
     "files": [
+        "app/assets/",
         "dist/",
         "app/schema/"
     ],

@@ -71,8 +71,7 @@ export default defineConfig({
                 '@userfrosting/sprinkle-admin/interfaces'
             ],
             output: {
-                preserveModules: true,
-                preserveModulesRoot: 'src',
+                preserveModules: false,
                 entryFileNames: '[name].js',
                 assetFileNames: (assetInfo) => {
                     // Keep LESS files in their original location

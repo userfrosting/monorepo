@@ -24,16 +24,41 @@
         "url": "https://github.com/userfrosting/UserFrosting/issues"
     },
     "exports": {
-        ".": "./dist/index.js",
-        "./components/pages/account": "./dist/components/pages/account.js",
-        "./components/pages/admin": "./dist/components/pages/admin.js",
-        "./components": "./dist/components.js",
-        "./plugins": "./dist/plugins.js",
-        "./views": "./dist/views.js",
-        "./less/*": "./dist/less/*"
+        ".": {
+            "development": "./src/index.ts",
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./components/pages/account": {
+            "development": "./src/components/Pages/Account/index.ts",
+            "import": "./dist/components/pages/account.js",
+            "types": "./dist/components/Pages/Account/index.d.ts"
+        },
+        "./components/pages/admin": {
+            "development": "./src/components/Pages/Admin/index.ts",
+            "import": "./dist/components/pages/admin.js",
+            "types": "./dist/components/Pages/Admin/index.d.ts"
+        },
+        "./components": {
+            "development": "./src/components/index.ts",
+            "import": "./dist/components.js",
+            "types": "./dist/components/index.d.ts"
+        },
+        "./plugins": {
+            "development": "./src/plugins/index.ts",
+            "import": "./dist/plugins.js",
+            "types": "./dist/plugins/index.d.ts"
+        },
+        "./views": {
+            "development": "./src/views/index.ts",
+            "import": "./dist/views.js",
+            "types": "./dist/views/index.d.ts"
+        },
+        "./less/*": "./src/less/*"
     },
     "types": "./dist/index.d.ts",
     "files": [
+        "src/",
         "dist/"
     ],
     "engines": {

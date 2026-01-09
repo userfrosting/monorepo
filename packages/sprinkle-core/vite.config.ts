@@ -41,8 +41,7 @@ export default defineConfig({
                 /^@userfrosting\/sprinkle-core/
             ],
             output: {
-                preserveModules: true,
-                preserveModulesRoot: 'app/assets',
+                preserveModules: false,
                 entryFileNames: '[name].js'
             }
         }
