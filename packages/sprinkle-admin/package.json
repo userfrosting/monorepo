@@ -36,6 +36,9 @@
         "app/assets",
         "app/schema/"
     ],
+    "engines": {
+        "node": ">= 18"
+    },
     "peerDependencies": {
         "@userfrosting/sprinkle-account": "^6.0.0-beta",
         "@userfrosting/sprinkle-core": "^6.0.0-beta",

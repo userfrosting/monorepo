@@ -33,6 +33,9 @@
     "files": [
         "app/assets/"
     ],
+    "engines": {
+        "node": ">= 18"
+    },
     "dependencies": {
         "@regle/core": "^1.6.0",
         "@regle/rules": "^1.6.0",
