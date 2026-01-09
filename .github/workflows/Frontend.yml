@@ -33,7 +33,7 @@ jobs:
             - name: Install Dependencies
               run: npm ci
 
-            - name: Test
+            - name: Build
               run: npm run build
 
     Coverage:
@@ -55,7 +55,7 @@ jobs:
             - name: Install Dependencies
               run: npm ci
 
-            - name: Test
+            - name: Test & Coverage
               run: npm run coverage
       
             - name: Upload coverage to Codecov
