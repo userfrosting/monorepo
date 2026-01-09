@@ -22,7 +22,8 @@
         "baseUrl": ".",
         "rootDir": "packages",
         "allowJs": true,
-        "types": ["@modyfi/vite-plugin-yaml/modules"]
+        "types": ["@modyfi/vite-plugin-yaml/modules"],
+        "customConditions": ["development"]
     },
     "references": [
         {
