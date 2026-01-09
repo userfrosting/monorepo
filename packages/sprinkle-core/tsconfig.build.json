@@ -4,10 +4,10 @@
         "declaration": true,
         "declarationMap": true,
         "emitDeclarationOnly": false,
-        "outDir": "dist",
-        "rootDir": "app/assets"
+        "outDir": "dist"
     },
     "include": [
+        "env.d.ts",
         "app/assets/**/*.ts",
         "app/assets/**/*.d.ts",
         "app/assets/**/*.vue"
