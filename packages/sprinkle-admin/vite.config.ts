@@ -13,11 +13,14 @@ export default defineConfig({
         vue(),
         ViteYaml(),
         dts({
-            include: ['app/assets/**/*.ts', 'app/assets/**/*.vue'],
+            include: ['env.d.ts', 'app/assets/**/*.ts', 'app/assets/**/*.vue'],
             exclude: ['app/assets/tests/**/*'],
             outDir: 'dist',
             copyDtsFiles: true,
-            rollupTypes: false
+            rollupTypes: false,
+            compilerOptions: {
+                customConditions: ['development']
+            }
         })
     ],
     build: {

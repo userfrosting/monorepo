@@ -12,11 +12,14 @@ export default defineConfig({
         vue(),
         ViteYaml(),
         dts({
-            include: ['src/**/*.ts', 'src/**/*.vue'],
+            include: ['env.d.ts', 'src/**/*.ts', 'src/**/*.vue'],
             exclude: ['src/tests/**/*'],
             outDir: 'dist',
             copyDtsFiles: true,
-            rollupTypes: false
+            rollupTypes: false,
+            compilerOptions: {
+                customConditions: ['development']
+            }
         })
     ],
     // Add UIKit alias : https://stackoverflow.com/a/75264118/445757
