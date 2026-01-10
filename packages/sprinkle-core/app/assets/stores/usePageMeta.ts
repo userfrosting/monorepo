@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useTranslator } from '@userfrosting/sprinkle-core/stores'
+import { useTranslator } from './useTranslator'
 import { useConfigStore } from '../stores'
 import { defineStore } from 'pinia'
 
