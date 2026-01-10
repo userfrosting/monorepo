@@ -31,32 +31,32 @@
         },
         "./composables": {
             "development": "./app/assets/composables/index.ts",
-            "import": "./dist/composables/index.js",
+            "import": "./dist/composables.js",
             "types": "./dist/composables/index.d.ts"
         },
         "./guards": {
             "development": "./app/assets/guards/index.ts",
-            "import": "./dist/guards/index.js",
+            "import": "./dist/guards.js",
             "types": "./dist/guards/index.d.ts"
         },
         "./interfaces": {
             "development": "./app/assets/interfaces/index.ts",
-            "import": "./dist/interfaces/index.js",
+            "import": "./dist/interfaces.js",
             "types": "./dist/interfaces/index.d.ts"
         },
         "./routes": {
             "development": "./app/assets/routes/index.ts",
-            "import": "./dist/routes/index.js",
+            "import": "./dist/routes.js",
             "types": "./dist/routes/index.d.ts"
         },
         "./stores": {
             "development": "./app/assets/stores/index.ts",
-            "import": "./dist/stores/index.js",
+            "import": "./dist/stores.js",
             "types": "./dist/stores/index.d.ts"
         },
         "./views": {
             "development": "./app/assets/views/index.ts",
-            "import": "./dist/views/index.js",
+            "import": "./dist/views.js",
             "types": "./dist/views/index.d.ts"
         }
     },
