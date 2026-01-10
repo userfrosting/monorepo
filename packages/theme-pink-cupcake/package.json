@@ -58,7 +58,7 @@
     },
     "types": "./dist/index.d.ts",
     "files": [
-        "src/",
+        "src/less/",
         "dist/"
     ],
     "engines": {

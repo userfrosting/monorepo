@@ -52,7 +52,6 @@
     },
     "types": "./dist/index.d.ts",
     "files": [
-        "app/assets/",
         "dist/"
     ],
     "engines": {
