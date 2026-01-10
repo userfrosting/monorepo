@@ -1,4 +1,5 @@
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test, vi, beforeEach } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
 import axios from 'axios'
 import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import { useLoginApi } from '../../composables'
@@ -46,6 +47,9 @@ vi.mock('@userfrosting/sprinkle-core/stores', () => ({
 }))
 
 describe('useLoginApi', () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
+    })
     test('should initialize formData with default values', () => {
         const { formData } = useLoginApi()
         expect(formData.value).toEqual({

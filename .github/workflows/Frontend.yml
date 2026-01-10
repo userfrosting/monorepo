@@ -18,10 +18,10 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                node_versions: [18, 20]
+                node_versions: [18, 22, 24]
 
         runs-on: ubuntu-latest
-        name: Skeleton Build - Node ${{ matrix.node_versions }}
+        name: Build - Node ${{ matrix.node_versions }}
 
         steps:
             - uses: actions/checkout@v4
@@ -33,14 +33,17 @@ jobs:
             - name: Install Dependencies
               run: npm ci
 
-            - name: Test
+            - name: Build Packages
+              run: npm run build
+
+            - name: Build Skeleton
               run: npm run --workspace=userfrosting vite:build
 
     Coverage:
         strategy:
             fail-fast: false
             matrix:
-                node_versions: [18, 20]
+                node_versions: [18, 22, 24]
 
         runs-on: ubuntu-latest
         name: Test & Coverage - Node ${{ matrix.node_versions }}
@@ -55,7 +58,7 @@ jobs:
             - name: Install Dependencies
               run: npm ci
 
-            - name: Test
+            - name: Test & Coverage
               run: npm run coverage
       
             - name: Upload coverage to Codecov
@@ -82,7 +85,7 @@ jobs:
 
             - uses: actions/setup-node@v4
               with:
-                  node-version: 20
+                  node-version: 24
 
             - name: Install Dependencies
               run: npm ci

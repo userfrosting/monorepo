@@ -1,12 +1,12 @@
-import { afterEach, describe, expect, test, vi } from 'vitest'
-// import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
 // import axios from 'axios'
 // import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 // import type { RegisterRequest } from '../../interfaces'
 import { useRegisterApi } from '../../composables'
 
-const { defaultRegistrationForm } = useRegisterApi()
-// const { defaultRegistrationForm, availableLocales, captchaUrl } = useRegisterApi()
+let defaultRegistrationForm: any
+// let defaultRegistrationForm: any, availableLocales: any, captchaUrl: any
 
 /*const form: RegisterRequest = {
     first_name: 'John',
@@ -43,6 +43,14 @@ vi.mock('@userfrosting/sprinkle-core/stores', () => ({
 }))
 
 describe('register', () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
+        const result = useRegisterApi()
+        defaultRegistrationForm = result.defaultRegistrationForm
+        // availableLocales = result.availableLocales
+        // captchaUrl = result.captchaUrl
+    })
+
     afterEach(() => {
         vi.clearAllMocks()
         vi.resetAllMocks()

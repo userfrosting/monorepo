@@ -24,16 +24,42 @@
         "url": "https://github.com/userfrosting/UserFrosting/issues"
     },
     "exports": {
-        ".": "./src/index.ts",
-        "./components/pages/account": "./src/components/Pages/Account/index.ts",
-        "./components/pages/admin": "./src/components/Pages/Admin/index.ts",
-        "./components": "./src/components/index.ts",
-        "./plugins": "./src/plugins/index.ts",
-        "./views": "./src/views/index.ts",
+        ".": {
+            "userfrosting:monorepo": "./src/index.ts",
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./components/pages/account": {
+            "userfrosting:monorepo": "./src/components/Pages/Account/index.ts",
+            "import": "./dist/components/pages/account.js",
+            "types": "./dist/components/Pages/Account/index.d.ts"
+        },
+        "./components/pages/admin": {
+            "userfrosting:monorepo": "./src/components/Pages/Admin/index.ts",
+            "import": "./dist/components/pages/admin.js",
+            "types": "./dist/components/Pages/Admin/index.d.ts"
+        },
+        "./components": {
+            "userfrosting:monorepo": "./src/components/index.ts",
+            "import": "./dist/components.js",
+            "types": "./dist/components/index.d.ts"
+        },
+        "./plugins": {
+            "userfrosting:monorepo": "./src/plugins/index.ts",
+            "import": "./dist/plugins.js",
+            "types": "./dist/plugins/index.d.ts"
+        },
+        "./views": {
+            "userfrosting:monorepo": "./src/views/index.ts",
+            "import": "./dist/views.js",
+            "types": "./dist/views/index.d.ts"
+        },
         "./less/*": "./src/less/*"
     },
+    "types": "./dist/index.d.ts",
     "files": [
-        "src/"
+        "src/less/",
+        "dist/"
     ],
     "engines": {
         "node": ">= 18"
@@ -58,5 +84,8 @@
         "pinia-plugin-persistedstate": "^3.2.0",
         "vue": "^3.4.21",
         "vue-router": "^4.2.4"
+    },
+    "scripts": {
+        "build": "vite build"
     }
 }

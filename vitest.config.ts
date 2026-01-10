@@ -2,6 +2,9 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
+    resolve: {
+        conditions: ['userfrosting:monorepo', 'import']
+    },
     test: {
         coverage: {
             enabled: true,

@@ -7,30 +7,35 @@ import ViteYaml from '@modyfi/vite-plugin-yaml'
 const vitePort = parseInt(process.env.VITE_PORT || '5173', 10)
 
 // https://vitejs.dev/config/
+// Monorepo-specific Vite configuration for development
 export default defineConfig({
     plugins: [
         vue(),
         ViteYaml(),
         vueDevTools({
-            appendTo: 'app/assets/main.ts'
+            appendTo: 'packages/skeleton/app/assets/main.ts'
         })
     ],
+    // Use 'userfrosting:monorepo' condition to resolve to source TS files for HMR in monorepo
+    resolve: {
+        conditions: ['userfrosting:monorepo', 'import']
+    },
     server: {
         host: true, // Allows external access (needed for Docker)
         strictPort: true,
         port: vitePort,
         origin: `http://localhost:${vitePort}`,
     },
-    root: 'app/assets/',
+    root: 'packages/skeleton/app/assets/',
     base: '/assets/',
     build: {
-        outDir: '../../public/assets',
+        outDir: 'public/assets',
         assetsDir: '',
         emptyOutDir: true,
         manifest: true,
         rollupOptions: {
             input: {
-                main: 'app/assets/main.ts'
+                main: 'packages/skeleton/app/assets/main.ts'
             }
         }
     },
@@ -46,7 +51,14 @@ export default defineConfig({
     // Force optimization of UiKit (not module packages) in dev mode 
     // to avoid the error:
     // "importing binding name 'default' cannot be resolved by star export entries"
+    // Treat all sprinkles as source code (not prebuilt) for HMR
     optimizeDeps: {
-        include: ['uikit', 'uikit/dist/js/uikit-icons']
+        include: ['uikit', 'uikit/dist/js/uikit-icons'],
+        exclude: [
+            '@userfrosting/sprinkle-core',
+            '@userfrosting/sprinkle-account',
+            '@userfrosting/sprinkle-admin',
+            '@userfrosting/theme-pink-cupcake'
+        ]
     }
 })

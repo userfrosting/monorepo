@@ -24,14 +24,35 @@
         "url": "https://github.com/userfrosting/UserFrosting/issues"
     },
     "exports": {
-        ".": "./app/assets/index.ts",
-        "./interfaces": "./app/assets/interfaces/index.ts",
-        "./stores": "./app/assets/stores/index.ts",
-        "./composables": "./app/assets/composables/index.ts",
-        "./routes": "./app/assets/routes/index.ts"
+        ".": {
+            "userfrosting:monorepo": "./app/assets/index.ts",
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./interfaces": {
+            "userfrosting:monorepo": "./app/assets/interfaces/index.ts",
+            "import": "./dist/interfaces.js",
+            "types": "./dist/interfaces/index.d.ts"
+        },
+        "./stores": {
+            "userfrosting:monorepo": "./app/assets/stores/index.ts",
+            "import": "./dist/stores.js",
+            "types": "./dist/stores/index.d.ts"
+        },
+        "./composables": {
+            "userfrosting:monorepo": "./app/assets/composables/index.ts",
+            "import": "./dist/composables.js",
+            "types": "./dist/composables/index.d.ts"
+        },
+        "./routes": {
+            "userfrosting:monorepo": "./app/assets/routes/index.ts",
+            "import": "./dist/routes.js",
+            "types": "./dist/routes/index.d.ts"
+        }
     },
+    "types": "./dist/index.d.ts",
     "files": [
-        "app/assets/"
+        "dist/"
     ],
     "engines": {
         "node": ">= 18"
@@ -46,6 +67,10 @@
         "axios": "^1.12.0",
         "pinia": "^2.1.6",
         "pinia-plugin-persistedstate": "^3.2.0",
-        "vue": "^3.4.21"
+        "vue": "^3.4.21",
+        "vue-router": "^4.2.4"
+    },
+    "scripts": {
+        "build": "vite build"
     }
 }

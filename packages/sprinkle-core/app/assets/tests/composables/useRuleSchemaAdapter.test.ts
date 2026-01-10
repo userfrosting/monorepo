@@ -1,16 +1,21 @@
-import { describe, test, expect, vi, afterEach } from 'vitest'
+import { describe, test, expect, vi, afterEach, beforeEach } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
 import { useRuleSchemaAdapter } from '../../composables/useRuleSchemaAdapter'
 import { useRegle } from '@regle/core'
 
 // Mock the translator store
 const translateMock = vi.fn((key: string) => key || '')
-vi.mock('@userfrosting/sprinkle-core/stores', () => ({
+vi.mock('../../stores', () => ({
     useTranslator: () => ({
         translate: translateMock
     })
 }))
 
 describe('useRuleSchemaAdapter', () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
+    })
+
     afterEach(() => {
         vi.clearAllMocks()
     })
