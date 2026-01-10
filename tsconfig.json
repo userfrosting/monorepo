@@ -23,7 +23,7 @@
         "rootDir": "packages",
         "allowJs": true,
         "types": ["@modyfi/vite-plugin-yaml/modules"],
-        "customConditions": ["development"]
+        "customConditions": ["userfrosting:monorepo"]
     },
     "references": [
         {

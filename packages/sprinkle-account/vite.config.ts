@@ -19,7 +19,7 @@ export default defineConfig({
             copyDtsFiles: true,
             rollupTypes: false,
             compilerOptions: {
-                customConditions: ['development']
+                customConditions: ['userfrosting:monorepo']
             }
         })
     ],

@@ -26,32 +26,32 @@
     },
     "exports": {
         ".": {
-            "development": "./app/assets/index.ts",
+            "userfrosting:monorepo": "./app/assets/index.ts",
             "import": "./dist/index.js",
             "types": "./dist/index.d.ts"
         },
         "./components": {
-            "development": "./app/assets/components/index.ts",
+            "userfrosting:monorepo": "./app/assets/components/index.ts",
             "import": "./dist/components.js",
             "types": "./dist/components/index.d.ts"
         },
         "./composables": {
-            "development": "./app/assets/composables/index.ts",
+            "userfrosting:monorepo": "./app/assets/composables/index.ts",
             "import": "./dist/composables.js",
             "types": "./dist/composables/index.d.ts"
         },
         "./interfaces": {
-            "development": "./app/assets/interfaces/index.ts",
+            "userfrosting:monorepo": "./app/assets/interfaces/index.ts",
             "import": "./dist/interfaces.js",
             "types": "./dist/interfaces/index.d.ts"
         },
         "./routes": {
-            "development": "./app/assets/routes/index.ts",
+            "userfrosting:monorepo": "./app/assets/routes/index.ts",
             "import": "./dist/routes.js",
             "types": "./dist/routes/index.d.ts"
         },
         "./views": {
-            "development": "./app/assets/views/index.ts",
+            "userfrosting:monorepo": "./app/assets/views/index.ts",
             "import": "./dist/views.js",
             "types": "./dist/views/index.d.ts"
         }

@@ -25,27 +25,27 @@
     },
     "exports": {
         ".": {
-            "development": "./app/assets/index.ts",
+            "userfrosting:monorepo": "./app/assets/index.ts",
             "import": "./dist/index.js",
             "types": "./dist/index.d.ts"
         },
         "./interfaces": {
-            "development": "./app/assets/interfaces/index.ts",
+            "userfrosting:monorepo": "./app/assets/interfaces/index.ts",
             "import": "./dist/interfaces.js",
             "types": "./dist/interfaces/index.d.ts"
         },
         "./stores": {
-            "development": "./app/assets/stores/index.ts",
+            "userfrosting:monorepo": "./app/assets/stores/index.ts",
             "import": "./dist/stores.js",
             "types": "./dist/stores/index.d.ts"
         },
         "./composables": {
-            "development": "./app/assets/composables/index.ts",
+            "userfrosting:monorepo": "./app/assets/composables/index.ts",
             "import": "./dist/composables.js",
             "types": "./dist/composables/index.d.ts"
         },
         "./routes": {
-            "development": "./app/assets/routes/index.ts",
+            "userfrosting:monorepo": "./app/assets/routes/index.ts",
             "import": "./dist/routes.js",
             "types": "./dist/routes/index.d.ts"
         }

@@ -25,32 +25,32 @@
     },
     "exports": {
         ".": {
-            "development": "./src/index.ts",
+            "userfrosting:monorepo": "./src/index.ts",
             "import": "./dist/index.js",
             "types": "./dist/index.d.ts"
         },
         "./components/pages/account": {
-            "development": "./src/components/Pages/Account/index.ts",
+            "userfrosting:monorepo": "./src/components/Pages/Account/index.ts",
             "import": "./dist/components/pages/account.js",
             "types": "./dist/components/Pages/Account/index.d.ts"
         },
         "./components/pages/admin": {
-            "development": "./src/components/Pages/Admin/index.ts",
+            "userfrosting:monorepo": "./src/components/Pages/Admin/index.ts",
             "import": "./dist/components/pages/admin.js",
             "types": "./dist/components/Pages/Admin/index.d.ts"
         },
         "./components": {
-            "development": "./src/components/index.ts",
+            "userfrosting:monorepo": "./src/components/index.ts",
             "import": "./dist/components.js",
             "types": "./dist/components/index.d.ts"
         },
         "./plugins": {
-            "development": "./src/plugins/index.ts",
+            "userfrosting:monorepo": "./src/plugins/index.ts",
             "import": "./dist/plugins.js",
             "types": "./dist/plugins/index.d.ts"
         },
         "./views": {
-            "development": "./src/views/index.ts",
+            "userfrosting:monorepo": "./src/views/index.ts",
             "import": "./dist/views.js",
             "types": "./dist/views/index.d.ts"
         },
