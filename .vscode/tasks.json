@@ -9,8 +9,8 @@
         {
             "label": "==> Serve",
             "dependsOn": [
-                "Workspace - Bakery Serve",
-                "Skeleton - Vite Dev"
+                "Bakery Serve",
+                "Vite Dev"
             ],
             "problemMatcher": []
         },
@@ -19,67 +19,83 @@
          * Workspace NPM Tasks
          */
         {
-            "label": "Workspace - npm install",
+            "label": "npm install",
             "type": "shell",
             "command": "npm install"
         },
         {
-            "label": "Workspace - npm update",
+            "label": "npm update",
             "type": "shell",
             "command": "npm update"
         },
         {
-            "label": "Workspace - Format",
+            "label": "Format",
             "type": "shell",
             "command": "npm run format"
         },
         {
-            "label": "Workspace - Type Check",
+            "label": "Type Check",
             "type": "shell",
             "command": "npm run typecheck"
         },
         {
-            "label": "Workspace - Eslint",
+            "label": "Eslint",
             "type": "shell",
             "command": "npm run lint"
         },
         {
-            "label": "Workspace - Tests",
+            "label": "Tests",
             "type": "shell",
             "command": "npm run test"
         },
         {
-            "label": "Workspace - Coverage",
+            "label": "Coverage",
             "type": "shell",
             "command": "npm run coverage"
+        },
+        {
+            "label": "Vite Dev",
+            "type": "shell",
+            "command": "npm run dev",
+            "isBackground": true
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "npm run build"
+        },
+        {
+            "label": "Build - Skeleton",
+            "type": "shell",
+            "command": "npm run --workspace=userfrosting vite:build"
         },
 
         /**
          * Workspace PHP Tasks
          */
         {
-            "label": "Workspace - Bakery Serve",
+            "label": "Bakery Serve",
             "type": "shell",
             "command": "php bakery serve",
             "isBackground": true
         },
         {
-            "label": "Workspace - Composer Update",
+            "label": "Composer Update",
             "type": "shell",
             "command": "composer update"
         },
         {
-            "label": "Workspace - Merge composer.json",
+            "label": "Merge composer.json",
             "type": "shell",
             "command": "vendor/bin/monorepo-builder merge"
         },
         {
-            "label": "Workspace - Composer Validate",
+            "label": "Composer Validate",
             "type": "shell",
             "command": "vendor/bin/monorepo-builder validate"
         },
         {
-            "label": "Workspace - PHPUnit",
+            "label": "PHPUnit",
             "type": "shell",
             "options": {
                 "env": {
@@ -93,17 +109,17 @@
             }
         },
         {
-            "label": "Workspace - PHP CS Fixer",
+            "label": "PHP CS Fixer",
             "type": "shell",
             "command": "vendor/bin/php-cs-fixer fix"
         },
         {
-            "label": "Workspace - PHPStan",
+            "label": "PHPStan",
             "type": "shell",
             "command": "vendor/bin/phpstan analyse"
         },
         {
-            "label": "Workspace - Update PHP Headers",
+            "label": "Update PHP Headers",
             "type": "shell",
             "command": [
                 "vendor/bin/php-cs-fixer fix --config packages/framework/.php-cs-fixer.php &&",
@@ -112,112 +128,6 @@
                 "vendor/bin/php-cs-fixer fix --config packages/sprinkle-core/.php-cs-fixer.php &&",
                 "vendor/bin/php-cs-fixer fix --config packages/skeleton/.php-cs-fixer.headers.php"
             ],
-        },
-        
-        /**
-         * UserFrosting (skeleton) Tasks
-         */
-        {
-            "label": "Skeleton - Vite Dev",
-            "type": "shell",
-            "command": "npm run --workspace=userfrosting vite:dev",
-            "isBackground": true
-        },
-        {
-            "label": "Skeleton - Vite Build",
-            "type": "shell",
-            "command": "npm run --workspace=userfrosting vite:build"
-        },
-        {
-            "label": "Skeleton - PHPUnit",
-            "type": "shell",
-            "options": {
-                "env": {
-                    "XDEBUG_CONFIG": "idekey=VSCODE"
-                }
-            },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Skeleton'"
-        },
-        {
-            "label": "Skeleton - PHPStan",
-            "type": "shell",
-            "command": "vendor/bin/phpstan analyse packages/skeleton"
-        },
-
-        /**
-         * Sprinkle Core Tasks
-         */ 
-        {
-            "label": "Core - PHPUnit",
-            "type": "shell",
-            "options": {
-                "env": {
-                    "XDEBUG_CONFIG": "idekey=VSCODE"
-                }
-            },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Core Sprinkle'"
-        },
-        {
-            "label": "Core - PHPStan",
-            "type": "shell",
-            "command": "vendor/bin/phpstan analyse packages/sprinkle-core"
-        },
-
-        /**
-         * Sprinkle Account Tasks
-         */
-        {
-            "label": "Account - PHPUnit",
-            "type": "shell",
-            "options": {
-                "env": {
-                    "XDEBUG_CONFIG": "idekey=VSCODE"
-                }
-            },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Account Sprinkle'"
-        },
-        {
-            "label": "Account - PHPStan",
-            "type": "shell",
-            "command": "vendor/bin/phpstan analyse packages/sprinkle-account"
-        },
-
-        /**
-         * Sprinkle Admin Tasks
-         */ 
-        {
-            "label": "Admin - PHPUnit",
-            "type": "shell",
-            "options": {
-                "env": {
-                    "XDEBUG_CONFIG": "idekey=VSCODE"
-                }
-            },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Admin Sprinkle'"
-        },
-        {
-            "label": "Admin - PHPStan",
-            "type": "shell",
-            "command": "vendor/bin/phpstan analyse packages/sprinkle-admin"
-        },
-
-        /**
-         * Framework Tasks
-         */ 
-        {
-            "label": "Framework - PHPUnit",
-            "type": "shell",
-            "options": {
-                "env": {
-                    "XDEBUG_CONFIG": "idekey=VSCODE"
-                }
-            },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --testsuite 'Framework'"
-        },
-        {
-            "label": "Framework - PHPStan",
-            "type": "shell",
-            "command": "vendor/bin/phpstan analyse packages/framework"
         },
 
         /**

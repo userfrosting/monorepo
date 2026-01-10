@@ -16,9 +16,9 @@ export default defineConfig({
             appendTo: 'packages/skeleton/app/assets/main.ts'
         })
     ],
-    // Use 'development' condition to resolve to source TS files for HMR in monorepo
+    // Use 'userfrosting:monorepo' condition to resolve to source TS files for HMR in monorepo
     resolve: {
-        conditions: ['development', 'import']
+        conditions: ['userfrosting:monorepo', 'import']
     },
     server: {
         host: true, // Allows external access (needed for Docker)
