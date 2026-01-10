@@ -37,3 +37,9 @@ export default {
         app.config.globalProperties.$checkAccess = auth.checkAccess
     }
 }
+
+declare module 'vue' {
+    interface ComponentCustomProperties {
+        $checkAccess: (slug: string) => boolean
+    }
+}
