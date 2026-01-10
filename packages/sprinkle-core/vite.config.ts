@@ -7,6 +7,9 @@ import dts from 'vite-plugin-dts'
 // https://vitejs.dev/config/
 // https://stackoverflow.com/a/74397545/445757
 export default defineConfig({
+    resolve: {
+        conditions: ['userfrosting:monorepo', 'import']
+    },
     plugins: [
         vue(),
         dts({

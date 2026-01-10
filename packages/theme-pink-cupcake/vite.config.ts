@@ -24,6 +24,7 @@ export default defineConfig({
     ],
     // Add UIKit alias : https://stackoverflow.com/a/75264118/445757
     resolve: {
+        conditions: ['userfrosting:monorepo', 'import'],
         alias: {
             '../../images/backgrounds': 'uikit/src/images/backgrounds',
             '../../images/components': 'uikit/src/images/components',
