@@ -34,6 +34,7 @@ export default defineConfig({
         rollupOptions: {
             external: [
                 'vue',
+                'vue-router',
                 'axios',
                 'pinia',
                 'pinia-plugin-persistedstate',
