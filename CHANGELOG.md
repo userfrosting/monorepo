@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Monorepo] Add `.github/copilot-instructions.md` 
 - [Monorepo] Update Workflows and Tasks
 - [Skeleton] Convert GitHub Actions workflow files to reusable templates
+- [Skeleton] Docker - Suppress PHP warnings in custom PHP ini
 
 ## 6.0.0-beta.7 - 2025-12-30
 - [Core] Add markdown parser extension system via MarkdownExtensionRecipe. Sprinkles can now register custom markdown extensions through the new MarkdownRepositoryInterface.
