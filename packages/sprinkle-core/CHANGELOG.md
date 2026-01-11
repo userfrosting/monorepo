@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-beta.8](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.7...6.0.0-beta.8)
+- Now ship built modules instead of source code
+- Specify node engine version
+
 ## [6.0.0-beta.7](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.6...6.0.0-beta.7)
 - [Markdown] Add markdown parser extension system via MarkdownExtensionRecipe. Sprinkles can now register custom markdown extensions through the new MarkdownRepositoryInterface.
 - [Markdown] MarkdownService now uses configuration from the config service to customize markdown parser behavior. New `markdown` config section added with `html_input`, `allow_unsafe_links`, and `max_nesting_level` options.

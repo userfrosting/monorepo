@@ -193,6 +193,12 @@ const router = createRouter({
 
 ## Release Process
 
+**Before Releasing**:
+1. Ensure all tests pass (PHPUnit + Vitest)
+2. Build all packages: `npm run build`
+3. Merge composer.json changes: `vendor/bin/monorepo-builder merge`
+4. Make sure all changelogs are updated in `packages/*/CHANGELOG.md` + root `CHANGELOG.md`
+
 **Creating a new version** (handled by monorepo-builder):
 ```bash
 vendor/bin/monorepo-builder release 6.0.1   # Specific version

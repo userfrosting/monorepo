@@ -6,8 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- Packages now ship built modules instead of source code. All `package.json`, Vite configs and scripts have been updated accordingly.
 - Specify node engine version in each packages
-- [Skeleton] Convert workflow files to templates
+- [Skeleton] Updated `vite.config.ts` : Other packages removed from `optimizeDeps`
+- [Monorepo] Add `.github/copilot-instructions.md` 
+- [Monorepo] Update Workflows and Tasks
+- [Skeleton] Convert GitHub Actions workflow files to reusable templates
 
 ## 6.0.0-beta.7 - 2025-12-30
 - [Core] Add markdown parser extension system via MarkdownExtensionRecipe. Sprinkles can now register custom markdown extensions through the new MarkdownRepositoryInterface.

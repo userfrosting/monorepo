@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.0.0-beta.8](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.7...6.0.0-beta.8)
+- Now ship built modules instead of source code
+- Specify node engine version
+
 ## [6.0.0-beta.7](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-beta.6...6.0.0-beta.7)
 - Add scroll-padding-top to prevent content from being hidden behind fixed headers when using anchor links
 - Minor UI tweaks to sidebar components
