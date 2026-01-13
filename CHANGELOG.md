@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.0.0-beta.8 - 2026-01-13
 - Packages now ship built modules instead of source code. All `package.json`, Vite configs and scripts have been updated accordingly.
 - Specify node engine version in each packages
 - [Skeleton] Updated `vite.config.ts` : Other packages removed from `optimizeDeps`
