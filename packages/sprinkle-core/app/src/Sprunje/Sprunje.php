@@ -20,7 +20,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use League\Csv\Writer;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Exception\HttpBadRequestException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Support\Message\UserMessage;
 use Valitron\Validator;
@@ -173,7 +172,7 @@ abstract class Sprunje
      *
      * @param mixed[] $options
      *
-     * @throws HttpBadRequestException
+     * @throws ValidationException
      */
     protected function validateOptions(array $options): void
     {
