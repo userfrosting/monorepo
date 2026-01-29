@@ -1,26 +1,40 @@
-# UserFrosting 5.2 Admin Sprinkle
+# UserFrosting 6.0 - Admin Sprinkle
 
-[![Version](https://img.shields.io/github/v/release/userfrosting/sprinkle-admin?include_prereleases)](https://github.com/userfrosting/sprinkle-admin/releases)
-[![NPM Version](https://img.shields.io/npm/v/%40userfrosting%2Fsprinkle-admin)](https://www.npmjs.com/package/@userfrosting/sprinkle-admin)
-![PHP Version](https://img.shields.io/badge/php-%5E8.1-brightgreen)
-[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
-[![Build](https://img.shields.io/github/actions/workflow/status/userfrosting/sprinkle-admin/Build.yml?branch=5.2&logo=github)](https://github.com/userfrosting/sprinkle-admin/actions)
-[![Codecov](https://codecov.io/gh/userfrosting/sprinkle-admin/branch/5.2/graph/badge.svg)](https://app.codecov.io/gh/userfrosting/sprinkle-admin/branch/5.2)
-[![StyleCI](https://github.styleci.io/repos/487673317/shield?branch=5.2&style=flat)](https://github.styleci.io/repos/487673317)
-[![PHPStan](https://img.shields.io/github/actions/workflow/status/userfrosting/sprinkle-admin/PHPStan.yml?branch=5.2&label=PHPStan)](https://github.com/userfrosting/sprinkle-admin/actions/workflows/PHPStan.yml)
-[![Join the chat](https://img.shields.io/badge/Chat-UserFrosting-brightgreen?logo=Rocket.Chat)](https://chat.userfrosting.com)
-[![Donate](https://img.shields.io/badge/Open_Collective-Donate-blue?logo=Open%20Collective)](https://opencollective.com/userfrosting#backer)
-[![Donate](https://img.shields.io/badge/Ko--fi-Donate-blue?logo=ko-fi&logoColor=white)](https://ko-fi.com/lcharette)
+[![][UF6-AD-VER-I]][UF6-AD-VER-L]
+[![][UF6-AD-NPM-I]][UF6-AD-NPM-L]
+[![][UF6-LIS-I]][UF6-LIS-L]
+[![][UF6-CHA-I]][UF6-CHA-L]
+[![][UF6-COL-I]][UF6-COL-L]
+[![][UF6-KOF-I]][UF6-KOF-L]
+
+<!-- Links -->
+[UF6-AD-VER-I]: https://img.shields.io/github/v/release/userfrosting/sprinkle-admin?include_prereleases
+[UF6-AD-VER-L]: https://github.com/userfrosting/sprinkle-admin/releases
+[UF6-AD-NPM-I]: https://img.shields.io/npm/v/%40userfrosting%2Fsprinkle-admin
+[UF6-AD-NPM-L]: https://www.npmjs.com/package/@userfrosting/sprinkle-admin
+[UF6-LIS-I]: https://img.shields.io/badge/license-MIT-brightgreen.svg
+[UF6-LIS-L]: LICENSE
+[UF6-CHA-I]: https://img.shields.io/badge/Chat-UserFrosting-brightgreen?logo=Rocket.Chat
+[UF6-CHA-L]: https://chat.userfrosting.com
+[UF6-COL-I]: https://img.shields.io/badge/Open_Collective-Donate-blue?logo=Open%20Collective
+[UF6-COL-L]: https://opencollective.com/userfrosting#backer
+[UF6-KOF-I]: https://img.shields.io/badge/Ko--fi-Donate-blue?logo=ko-fi&logoColor=white
+[UF6-KOF-L]: https://ko-fi.com/lcharette
+
+> [!WARNING]
+> Since 6.0, this is a read-only subtree split of the [UserFrosting Monorepo](https://github.com/userfrosting/monorepo). To contribute, all Pull Requests should be sent against the monorepo. Please see the [contributing guidelines](https://github.com/userfrosting/.github/blob/main/.github/CONTRIBUTING.md) for more information.
 
 ## By [Alex Weissman](https://alexanderweissman.com) and [Louis Charette](https://bbqsoftwares.com)
 
-Copyright (c) 2013-2024, free to use in personal and commercial software as per the [license](LICENSE.md).
+Copyright (c) 2013-2026, free to use in personal and commercial software as per the [MIT license](LICENSE.md).
 
-UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.8/eloquent#introduction) ORM.
+UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, [Eloquent](https://laravel.com/docs/10.x/eloquent#introduction) ORM, [Vite](https://vitejs.dev/), [Vue](https://vuejs.org/), and [UiKit](https://getuikit.com/).
 
 This **Admin sprinkle** contains the routes and controllers to implement the administrative user management interface, as well as the group, role, and permission management interfaces.
 
-## Installation
+## Installation in your UserFrosting project
+To use this sprinkle in your UserFrosting project, follow theses instructions (*N.B.: This sprinkle is enabled by default when using the base app template*).
+
 1. Require in your [UserFrosting](https://github.com/userfrosting/UserFrosting) project : 
     ``` 
     composer require userfrosting/sprinkle-admin
