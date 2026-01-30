@@ -86,8 +86,8 @@ class DotenvEditor
      *
      * @param bool $rebuildBuffer Whether to rebuild the buffer before saving (not used in this implementation)
      *
-     *
      * @throws RuntimeException If no file is loaded
+     *
      * @return $this
      */
     public function save(bool $rebuildBuffer = true): static
@@ -275,7 +275,8 @@ class DotenvEditor
     /**
      * Find the index of the buffer line that defines the given key.
      *
-     * @param  string   $key
+     * @param string $key
+     *
      * @return int|null The index in `$this->buffer` or null if not found
      */
     protected function findLineIndex(string $key): ?int
