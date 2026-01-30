@@ -54,7 +54,6 @@ class TaggableFileDriverTest extends TestCase
         $reflectionMethod = new \ReflectionMethod(TaggableFileStore::class, 'path');
 
         $store = new TaggableFileStore($this->file, $this->path);
-        $reflectionMethod->setAccessible(true);
         $path = $reflectionMethod->invoke($store, 'foobar');
 
         $this->assertTrue(Str::contains($path, $this->path));
@@ -66,7 +65,6 @@ class TaggableFileDriverTest extends TestCase
         $reflectionMethod = new \ReflectionMethod(TaggableFileStore::class, 'path');
 
         $store = new TaggableFileStore($this->file, $this->path);
-        $reflectionMethod->setAccessible(true);
         $path = $reflectionMethod->invoke($store, 'boofar~#~foobar');
 
         $this->assertTrue(Str::contains($path, $this->path));
@@ -78,7 +76,6 @@ class TaggableFileDriverTest extends TestCase
         $reflectionMethod = new \ReflectionMethod(TaggableFileStore::class, 'path');
 
         $store = new TaggableFileStore($this->file, $this->path, '~|~');
-        $reflectionMethod->setAccessible(true);
         $path = $reflectionMethod->invoke($store, 'boofar~|~foobar');
 
         $this->assertTrue(Str::contains($path, $this->path));
