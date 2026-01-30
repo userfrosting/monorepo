@@ -62,8 +62,6 @@ class SetupMailCommand extends Command
         protected Config $config,
         protected DotenvEditor $dotenvEditor,
     ) {
-        $this->dotenvEditor->autoBackup(false);
-
         parent::__construct();
     }
 

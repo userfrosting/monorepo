@@ -37,7 +37,6 @@
         "illuminate/redis": "^10.0",
         "illuminate/session": "^10.0",
         "illuminate/support": "^10.0",
-        "jackiedo/dotenv-editor": "^2.1",
         "lcharette/webpack-encore-twig": "^1.1",
         "league/commonmark": "^2.7",
         "league/csv": "^9.2.1",

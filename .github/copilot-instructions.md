@@ -116,11 +116,19 @@ npm run build:theme     # @userfrosting/theme-pink-cupcake
 
 **PHP tests** (PHPUnit):
 ```bash
+# Run all tests
+vendor/bin/phpunit
+
 # Run specific suite
 vendor/bin/phpunit --testsuite="Core Sprinkle"
 vendor/bin/phpunit --testsuite="Framework"
 
 # Or use VS Code task "PHPUnit"
+```
+
+Running all tests can be time consuming. During development, run tests for specific files or suites as needed first, then run the full suite before committing.
+```bash
+vendor/bin/phpunit tests/src/SomeClassTest.php
 ```
 
 **Frontend tests** (Vitest):
@@ -131,7 +139,11 @@ npm run coverage       # With coverage report
 
 - Root [vitest.config.ts](vitest.config.ts) runs tests from all workspace packages
 - Uses `happy-dom` environment
-- Coverage: `_meta/_coverage/`
+- Coverage: 
+  - PHP : `_meta/coverage/` 
+  - JS : `_meta/_coverage/`
+
+All changes should be covered by tests. New features require new tests. 100% code coverage is the goal.
 
 ### Database Setup
 
@@ -191,6 +203,22 @@ const router = createRouter({
 })
 ```
 
+## Linting and Code Style
+Before any commit, make sure to run the linters. These **must** be run before committing code from the root of the monorepo.
+
+```bash
+# PHP code style
+vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php
+
+# PHPStan static analysis
+vendor/bin/phpstan analyse -c phpstan.neon
+
+# TypeScript code style
+npm run lint
+npm run format
+npm run typecheck
+```
+
 ## Release Process
 
 **Before Releasing**:
@@ -235,5 +263,5 @@ npm publish --access public --workspaces
 
 ## Resources
 
-- [Official Docs](https://learn.userfrosting.com)
+- [Official Docs](https://learn6.userfrosting.com)
 - [Chat](https://chat.userfrosting.com)

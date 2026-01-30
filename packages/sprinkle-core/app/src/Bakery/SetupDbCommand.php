@@ -49,8 +49,6 @@ class SetupDbCommand extends Command
         protected Capsule $capsule,
         protected ContainerInterface $ci,
     ) {
-        $this->dotenvEditor->autoBackup(false);
-
         parent::__construct();
     }
 

@@ -61,8 +61,6 @@ class SetupEnvCommand extends Command
         protected ResourceLocatorInterface $locator,
         protected DotenvEditor $dotenvEditor,
     ) {
-        $this->dotenvEditor->autoBackup(false);
-
         parent::__construct();
     }
 

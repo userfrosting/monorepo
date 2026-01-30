@@ -26,54 +26,277 @@ class DotenvEditorTest extends TestCase
         $this->assertEquals('dbpass', $editor->getValue('DB_PASSWORD'));
     }
 
-    /**
-     * @depends testLoad
-     */
-    public function testBackup(): void
-    {
-        $editor = new DotenvEditor();
-        $editor->setBackupPath($this->basePath . '.env-backups/');
-        $editor->load($this->basePath . '.env');
-
-        $backups_before = $editor->getBackups();
-        $editor->backup();
-        $backups_after = $editor->getBackups();
-        $this->assertEquals(1, count($backups_after) - count($backups_before));
-
-        $editor->deleteBackups();
-        $this->assertCount(0, $editor->getBackups());
-
-        // Reset our test dir
-        touch($this->basePath . '.env-backups/.gitkeep');
-    }
-
     public function testLoadPathNotExist(): void
     {
-        $editor = new DotenvEditor($this->basePath . '.env-backups/');
+        $editor = new DotenvEditor();
         $result = $editor->load($this->basePath . '.fakeEnv');
         $this->assertEquals($editor, $result);
     }
 
-    public function testLoadPathIsNull(): void
-    {
-        $editor = new DotenvEditor($this->basePath . '.env-backups/');
-        $this->expectException(\InvalidArgumentException::class);
-        $editor->load();
-    }
-
     public function testLoadPathNotExistAndRestore(): void
     {
-        // Create a backup
-        $editor = new DotenvEditor($this->basePath . '.env-backups/');
+        $editor = new DotenvEditor();
         $editor->load($this->basePath . '.env');
-        $editor->backup();
 
-        $result = $editor->load($this->basePath . '.fakeEnv', true);
+        $result = $editor->load($this->basePath . '.fakeEnv');
         $this->assertEquals($editor, $result);
 
-        // Reset our test dir
-        unlink($this->basePath . '.fakeEnv');
-        $editor->deleteBackups();
-        touch($this->basePath . '.env-backups/.gitkeep');
+        // Cleanup if test created a file
+        if (file_exists($this->basePath . '.fakeEnv')) {
+            unlink($this->basePath . '.fakeEnv');
+        }
+    }
+
+    public function testSaveWithoutLoadThrows(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $editor = new DotenvEditor();
+        $editor->save();
+    }
+
+    public function testSetNewKeyUpdateAndSave(): void
+    {
+        // Use temp file to avoid modifying provided .env
+        $src = $this->basePath . '.env';
+        $tmp = sys_get_temp_dir() . '/uf_env_' . uniqid();
+        copy($src, $tmp);
+
+        $editor = new DotenvEditor();
+        $editor->load($tmp);
+
+        $this->assertFalse($editor->keyExists('NEW_KEY'));
+        $this->assertTrue($editor->keyExists('DB_PASSWORD'));
+
+        $editor->setKey('NEW_KEY', 'some value', 'a comment');
+        $this->assertTrue($editor->keyExists('NEW_KEY'));
+        $this->assertSame('some value', $editor->getValue('NEW_KEY'));
+        $this->assertTrue($editor->hasChanged());
+
+        $editor->save();
+
+        $content = file_get_contents($tmp);
+        $this->assertStringContainsString('NEW_KEY="some value" # a comment', $content); // @phpstan-ignore-line
+
+        // Update existing key
+        $editor->setKey('DB_PASSWORD', 'newpass');
+        $this->assertSame('newpass', $editor->getValue('DB_PASSWORD'));
+        $editor->save();
+
+        $editor2 = new DotenvEditor();
+        $editor2->load($tmp);
+        $this->assertSame('newpass', $editor2->getValue('DB_PASSWORD'));
+
+        unlink($tmp);
+    }
+
+    public function testDeleteKeysAndGetters(): void
+    {
+        // Use temp file to avoid modifying provided .env
+        $src = $this->basePath . '.env';
+        $tmp = sys_get_temp_dir() . '/uf_env_' . uniqid();
+        copy($src, $tmp);
+
+        $editor = new DotenvEditor();
+        $editor->load($tmp);
+
+        $this->assertTrue($editor->keyExists('DB_PASSWORD'));
+        $editor->deleteKey('DB_PASSWORD');
+        $this->assertFalse($editor->keyExists('DB_PASSWORD'));
+
+        // delete multiple
+        $editor->setKey('A', '1');
+        $editor->setKey('B', '2');
+        $this->assertTrue($editor->keyExists('A'));
+        $this->assertTrue($editor->keyExists('B'));
+        $editor->deleteKeys(['A', 'B']);
+        $this->assertFalse($editor->keyExists('A'));
+        $this->assertFalse($editor->keyExists('B'));
+
+        $entries = $editor->getEntries();
+        $this->assertStringContainsString('SMTP_HOST', implode("\n", $entries));
+        $this->assertStringContainsString('SMTP_HOST', $editor->getContent());
+
+        unlink($tmp);
+    }
+
+    public function testQuotedValueRoundtrip(): void
+    {
+        // Use temp file to avoid modifying provided .env
+        $src = $this->basePath . '.env';
+        $tmp = sys_get_temp_dir() . '/uf_env_' . uniqid();
+        copy($src, $tmp);
+
+        $editor = new DotenvEditor();
+        $editor->load($tmp);
+
+        $value = 'say "hello" world';
+        $editor->setKey('QUOTED', $value);
+        $this->assertSame('say "hello" world', $editor->getValue('QUOTED'));
+        $editor->save();
+
+        $raw = file_get_contents($tmp);
+        $this->assertStringContainsString('QUOTED="say \\"hello\\" world"', $raw); // @phpstan-ignore-line
+
+        $editor2 = new DotenvEditor();
+        $editor2->load($tmp);
+        $this->assertSame('say "hello" world', $editor2->getValue('QUOTED'));
+
+        unlink($tmp);
+    }
+
+    public function testSaveTempFileFailureThrows(): void
+    {
+        // Use temp file to avoid modifying provided .env
+        $src = $this->basePath . '.env';
+        $tmp = sys_get_temp_dir() . '/uf_env_' . uniqid();
+        copy($src, $tmp);
+
+        // Create a small subclass to override temp dir to a non-writable dir
+        $badDir = sys_get_temp_dir() . '/uf_bad_' . uniqid();
+        mkdir($badDir);
+        chmod($badDir, 0444);
+
+        $editor = new class($badDir) extends DotenvEditor {
+            private string $dir;
+
+            public function __construct(string $dir)
+            {
+                $this->dir = $dir;
+            }
+
+            protected function getTempDir(): string
+            {
+                return $this->dir;
+            }
+        };
+
+        $editor->load($tmp);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to create temp file for atomic save');
+        try {
+            $editor->save();
+        } finally {
+            // Cleanup
+            chmod($badDir, 0755);
+            rmdir($badDir);
+            unlink($tmp);
+        }
+    }
+
+    public function testSaveTempnamFailureThrows(): void
+    {
+        // Use temp file to avoid modifying provided .env
+        $src = $this->basePath . '.env';
+        $tmp = sys_get_temp_dir() . '/uf_env_' . uniqid();
+        copy($src, $tmp);
+
+        $editor = new class() extends DotenvEditor {
+            protected function createTempFile(string $dir): string|false
+            {
+                return false;
+            }
+        };
+
+        $editor->load($tmp);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to create temp file for atomic save');
+        try {
+            $editor->save();
+        } finally {
+            unlink($tmp);
+        }
+    }
+
+    public function testProtectedHelpers(): void
+    {
+        $editor = new class() extends DotenvEditor {
+            public function callNormalize(?string $v): string
+            {
+                return $this->normalizeValueForWriting($v);
+            }
+
+            // @phpstan-ignore-next-line
+            public function callFind(array $buffer, string $key): ?int
+            {
+                $this->buffer = $buffer;
+
+                return $this->findLineIndex($key);
+            }
+
+            public function callGetTempDir(): string
+            {
+                return $this->getTempDir();
+            }
+        };
+
+        $this->assertSame('""', $editor->callNormalize(null));
+        $this->assertSame('simple', $editor->callNormalize('simple'));
+        $this->assertSame('"with space"', $editor->callNormalize('with space'));
+
+        $idx = $editor->callFind(['A=1', 'B=2'], 'B');
+        $this->assertSame(1, $idx);
+
+        $this->assertIsString($editor->callGetTempDir()); // @phpstan-ignore-line
+
+        // Leading-space key matching and exported prefix should not match (export removed)
+        $idx2 = $editor->callFind(['   KEY=1', 'export OTHER=2'], 'KEY');
+        $this->assertSame(0, $idx2);
+
+        $idx3 = $editor->callFind(['   KEY=1', 'export OTHER=2'], 'OTHER');
+        $this->assertNull($idx3);
+    }
+
+    public function testSaveCreatesFileWhenNotExist(): void
+    {
+        $tmp = sys_get_temp_dir() . '/uf_env_new_' . uniqid();
+
+        // Ensure file does not exist
+        if (file_exists($tmp)) {
+            unlink($tmp);
+        }
+
+        $editor = new DotenvEditor();
+        // Load sets filePath even if file missing
+        $editor->load($tmp);
+        $this->assertFalse(file_exists($tmp));
+
+        $editor->setKey('CREATED', 'yes');
+        $this->assertTrue($editor->hasChanged());
+        $editor->save();
+
+        $this->assertFileExists($tmp);
+        $this->assertStringContainsString('CREATED=yes', file_get_contents($tmp)); // @phpstan-ignore-line
+
+        unlink($tmp);
+    }
+
+    public function testGetValueMissingKeyReturnsNull(): void
+    {
+        $editor = new DotenvEditor();
+        // populate buffer with a different key
+        $editor->load($this->basePath . '.env');
+
+        $this->assertNull($editor->getValue('THIS_KEY_DOES_NOT_EXIST'));
+    }
+
+    public function testEmptyValueIsQuotedWhenWritten(): void
+    {
+        $tmp = sys_get_temp_dir() . '/uf_env_empty_' . uniqid();
+        if (file_exists($tmp)) {
+            unlink($tmp);
+        }
+
+        $editor = new DotenvEditor();
+        $editor->load($tmp);
+        $editor->setKey('EMPTYVAL', '');
+        $this->assertSame('', $editor->getValue('EMPTYVAL'));
+        $editor->save();
+
+        $raw = file_get_contents($tmp);
+        $this->assertStringContainsString('EMPTYVAL=""', $raw); // @phpstan-ignore-line
+
+        unlink($tmp);
     }
 }
