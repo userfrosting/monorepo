@@ -383,7 +383,6 @@ return [
         ],
         'author'    => 'Author', // Site author
         'debug'     => [
-            'ajax' => false,
             'info' => true,
         ],
         'locales' => [

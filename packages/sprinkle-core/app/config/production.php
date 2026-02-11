@@ -63,7 +63,6 @@ return [
             ],
         ],
         'debug' => [
-            'ajax' => false,
             'info' => false,
         ],
         'uri' => [

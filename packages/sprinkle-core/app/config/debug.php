@@ -28,7 +28,6 @@ return [
     ],
     'site' => [
         'debug' => [
-            'ajax' => true,
             'info' => true,
         ],
     ],
