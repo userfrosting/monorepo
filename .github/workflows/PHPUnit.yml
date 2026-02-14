@@ -46,7 +46,7 @@ jobs:
           node-version: 18
 
       - name: Setup Redis-server
-        uses: supercharge/redis-github-action@1.1.0
+        uses: supercharge/redis-github-action@1.8.1
         with:
           redis-version: 6
   
@@ -127,7 +127,7 @@ jobs:
         done
     
     - name: Setup Redis-server
-      uses: supercharge/redis-github-action@1.1.0
+      uses: supercharge/redis-github-action@1.8.1
       with:
         redis-version: 6
       
@@ -201,7 +201,7 @@ jobs:
         mysql password: 'password'
     
     - name: Setup Redis-server
-      uses: supercharge/redis-github-action@1.1.0
+      uses: supercharge/redis-github-action@1.8.1
       with:
         redis-version: 6
       
@@ -262,7 +262,7 @@ jobs:
           node-version: 18
     
       - name: Setup Redis-server
-        uses: supercharge/redis-github-action@1.1.0
+        uses: supercharge/redis-github-action@1.8.1
         with:
           redis-version: 6
       
@@ -335,7 +335,7 @@ jobs:
           node-version: 18
 
       - name: Setup Redis-server
-        uses: supercharge/redis-github-action@1.1.0
+        uses: supercharge/redis-github-action@1.8.1
         with:
           redis-version: 6
     
