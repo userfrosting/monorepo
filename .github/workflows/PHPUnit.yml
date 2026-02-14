@@ -31,50 +31,52 @@ jobs:
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Memory SQLite
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       
-      - name: Setup PHP, with composer and extensions
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php_versions }}
-          extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
-          coverage: xdebug
-          tools: pecl, composer
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+        coverage: xdebug
+        tools: pecl, composer
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+    - uses: actions/setup-node@v6
+      with:
+        node-version: 18
 
-      - name: Setup Redis-server
-        uses: supercharge/redis-github-action@1.8.1
-        with:
-          redis-version: 6
+    - name: Setup Redis-server
+      uses: supercharge/redis-github-action@1.8.1
+      with:
+        redis-version: 6
   
-      - name: Setup Memcached
-        uses: niden/actions-memcached@v7
-      
-      - name: Install Dependencies
-        run: composer update --prefer-dist --no-progress
+    - name: Setup Memcached
+      uses: niden/actions-memcached@v8
+    
+    - name: Install Dependencies
+      run: composer update --prefer-dist --no-progress
 
-      - name: Execute tests
-        run: | 
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-          vendor/bin/phpunit
+    - name: Execute tests
+      run: | 
+        echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+        vendor/bin/phpunit
       
-      - name: Upload coverage to Codecov
-        if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./_meta/coverage.xml
-          fail_ci_if_error: true
+    - name: Upload coverage to Codecov
+      if: github.event_name != 'schedule' && !cancelled()
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./_meta/coverage.xml
+        fail_ci_if_error: false
 
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          files: ./_meta/junit.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Upload test results to Codecov
+      if: github.event_name != 'schedule' && !cancelled()
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        report_type: 'test_results'
+        files: ./_meta/junit.xml
+        fail_ci_if_error: false
 
   PHPUnit-MySQL:
 
@@ -95,7 +97,7 @@ jobs:
       DB_NAME: userfrosting
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -105,7 +107,7 @@ jobs:
         coverage: xdebug
         tools: pecl, composer
 
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v6
       with:
         node-version: 18
     
@@ -132,7 +134,7 @@ jobs:
         redis-version: 6
       
     - name: Setup Memcached
-      uses: niden/actions-memcached@v7
+      uses: niden/actions-memcached@v8
             
     - name: Install Dependencies
       run: composer update --prefer-dist --no-progress
@@ -143,19 +145,21 @@ jobs:
         vendor/bin/phpunit
     
     - name: Upload coverage to Codecov
-      if: github.event_name != 'schedule'
+      if: github.event_name != 'schedule' && !cancelled()
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./_meta/coverage.xml
-        fail_ci_if_error: true
+        fail_ci_if_error: false
 
     - name: Upload test results to Codecov
-      if: ${{ !cancelled() }}
-      uses: codecov/test-results-action@v1
+      if: github.event_name != 'schedule' && !cancelled()
+      uses: codecov/codecov-action@v5
       with:
-        files: ./_meta/junit.xml
         token: ${{ secrets.CODECOV_TOKEN }}
+        report_type: 'test_results'
+        files: ./_meta/junit.xml
+        fail_ci_if_error: false
 
   PHPUnit-MariaDB:
 
@@ -176,7 +180,7 @@ jobs:
       DB_NAME: userfrosting
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -186,7 +190,7 @@ jobs:
         coverage: xdebug
         tools: pecl, composer
 
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v6
       with:
         node-version: 18
     
@@ -194,7 +198,7 @@ jobs:
       run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
 
     - name: Set up MariaDB
-      uses: getong/mariadb-action@v1.1
+      uses: getong/mariadb-action@v1.11
       with:
         mysql database: 'userfrosting'
         mysql user: 'userfrosting'
@@ -206,7 +210,7 @@ jobs:
         redis-version: 6
       
     - name: Setup Memcached
-      uses: niden/actions-memcached@v7
+      uses: niden/actions-memcached@v8
 
     - name: Install Dependencies
       run: composer update --prefer-dist --no-progress
@@ -217,153 +221,159 @@ jobs:
         vendor/bin/phpunit
     
     - name: Upload coverage to Codecov
-      if: github.event_name != 'schedule'
+      if: github.event_name != 'schedule' && !cancelled()
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./_meta/coverage.xml
-        fail_ci_if_error: true
+        fail_ci_if_error: false
 
     - name: Upload test results to Codecov
-      if: ${{ !cancelled() }}
-      uses: codecov/test-results-action@v1
+      if: github.event_name != 'schedule' && !cancelled()
+      uses: codecov/codecov-action@v5
       with:
-        files: ./_meta/junit.xml
         token: ${{ secrets.CODECOV_TOKEN }}
+        report_type: 'test_results'
+        files: ./_meta/junit.xml
+        fail_ci_if_error: false
 
   PHPUnit-SQLite:
 
-      strategy:
-        fail-fast: false
-        matrix:
-          php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
 
-      runs-on: ubuntu-latest
-      name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
-      needs: PHPUnit-Memory
+    runs-on: ubuntu-latest
+    name: PHPUnit - PHP ${{ matrix.php_versions }} - SQLite
+    needs: PHPUnit-Memory
 
-      env:
-        DB_TEST_CONNECTION: sqlite
-        DB_NAME: database.sqlite
+    env:
+      DB_TEST_CONNECTION: sqlite
+      DB_NAME: database.sqlite
 
-      steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup PHP, with composer and extensions
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php_versions }}
-          extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
-          coverage: xdebug
-          tools: pecl, composer
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+    steps:
+    - uses: actions/checkout@v6
     
-      - name: Setup Redis-server
-        uses: supercharge/redis-github-action@1.8.1
-        with:
-          redis-version: 6
-      
-      - name: Setup Memcached
-        uses: niden/actions-memcached@v7
-            
-      - name: Install Dependencies
-        run: composer update --prefer-dist --no-progress
-      
-      - name: Create SQLite Database
-        run: touch database.sqlite
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite
+        coverage: xdebug
+        tools: pecl, composer
 
-      - name: Execute tests
-        run: | 
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-          vendor/bin/phpunit
-      
-      - name: Upload coverage to Codecov
-        if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./_meta/coverage.xml
-          fail_ci_if_error: true
+    - uses: actions/setup-node@v6
+      with:
+        node-version: 18
+    
+    - name: Setup Redis-server
+      uses: supercharge/redis-github-action@1.8.1
+      with:
+        redis-version: 6
+    
+    - name: Setup Memcached
+      uses: niden/actions-memcached@v8
+          
+    - name: Install Dependencies
+      run: composer update --prefer-dist --no-progress
+    
+    - name: Create SQLite Database
+      run: touch database.sqlite
 
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          files: ./_meta/junit.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Execute tests
+      run: | 
+        echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+        vendor/bin/phpunit
+    
+    - name: Upload coverage to Codecov
+      if: github.event_name != 'schedule' && !cancelled()
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./_meta/coverage.xml
+        fail_ci_if_error: false
+
+    - name: Upload test results to Codecov
+      if: github.event_name != 'schedule' && !cancelled()
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        report_type: 'test_results'
+        files: ./_meta/junit.xml
+        fail_ci_if_error: false
   
   PHPUnit-Postgre:
 
-      strategy:
-        fail-fast: false
-        matrix:
-          php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
+    strategy:
+      fail-fast: false
+      matrix:
+        php_versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
 
-      runs-on: ubuntu-latest
-      name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
-      needs: PHPUnit-Memory
+    runs-on: ubuntu-latest
+    name: PHPUnit - PHP ${{ matrix.php_versions }} - PostgreSQL
+    needs: PHPUnit-Memory
 
-      env:
-        DB_TEST_CONNECTION: pgsql
-        DB_USER: userfrosting
-        DB_PASSWORD: password
-        DB_NAME: userfrosting
+    env:
+      DB_TEST_CONNECTION: pgsql
+      DB_USER: userfrosting
+      DB_PASSWORD: password
+      DB_NAME: userfrosting
 
-      steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup PHP, with composer and extensions
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php_versions }}
-          extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite, pdo_pgsql
-          coverage: xdebug
-          tools: pecl, composer
-      
-      - name: Setup PostgreSQL
-        uses: harmon758/postgresql-action@v1
-        with:
-          postgresql db: 'userfrosting'
-          postgresql user: 'userfrosting'
-          postgresql password: 'password'
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Setup Redis-server
-        uses: supercharge/redis-github-action@1.8.1
-        with:
-          redis-version: 6
+    steps:
+    - uses: actions/checkout@v6
     
-      - name: Setup Memcached
-        uses: niden/actions-memcached@v7
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php_versions }}
+        extensions: mbstring, dom, fileinfo, gd, memcached, redis, pdo_sqlite, pdo_pgsql
+        coverage: xdebug
+        tools: pecl, composer
+    
+    - name: Setup PostgreSQL
+      uses: harmon758/postgresql-action@v1
+      with:
+        postgresql db: 'userfrosting'
+        postgresql user: 'userfrosting'
+        postgresql password: 'password'
 
-      - name: Install Dependencies
-        run: composer update --prefer-dist --no-progress
+    - uses: actions/setup-node@v6
+      with:
+        node-version: 18
 
-      - name: Execute tests
-        run: | 
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-          vendor/bin/phpunit
-      
-      - name: Upload coverage to Codecov
-        if: github.event_name != 'schedule'
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./_meta/coverage.xml
-          fail_ci_if_error: true
+    - name: Setup Redis-server
+      uses: supercharge/redis-github-action@1.8.1
+      with:
+        redis-version: 6
+    
+    - name: Setup Memcached
+      uses: niden/actions-memcached@v8
 
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
-        with:
-          files: ./_meta/junit.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Install Dependencies
+      run: composer update --prefer-dist --no-progress
+
+    - name: Execute tests
+      run: | 
+        echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+        vendor/bin/phpunit
+    
+    - name: Upload coverage to Codecov
+      if: github.event_name != 'schedule' && !cancelled()
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./_meta/coverage.xml
+        fail_ci_if_error: false
+
+    - name: Upload test results to Codecov
+      if: github.event_name != 'schedule' && !cancelled()
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        report_type: 'test_results'
+        files: ./_meta/junit.xml
+        fail_ci_if_error: false
 
 #   PHPUnit-Windows:
 
