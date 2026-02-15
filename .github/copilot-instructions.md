@@ -219,6 +219,21 @@ npm run format
 npm run typecheck
 ```
 
+## Pull Request Guidelines
+
+**Every pull request must include changelog updates**:
+- Update the relevant `packages/*/CHANGELOG.md` file(s) for affected packages
+- Add entries under the `## [Unreleased]` section
+- Follow the existing format (Added, Changed, Deprecated, Removed, Fixed, Security)
+- If the change affects multiple packages, update all relevant changelogs
+- For significant changes, also update the root `CHANGELOG.md`
+
+**Before submitting a PR**:
+1. Run all linters (PHP CS Fixer, PHPStan, ESLint, Prettier)
+2. Ensure all tests pass (PHPUnit + Vitest)
+3. Update relevant changelog(s)
+4. Write clear, descriptive commit messages
+
 ## Release Process
 
 **Before Releasing**:
