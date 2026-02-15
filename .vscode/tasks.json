@@ -56,7 +56,7 @@
         {
             "label": "Vite Dev",
             "type": "shell",
-            "command": "npm run dev",
+            "command": "npm run vite:dev",
             "isBackground": true
         },
         {

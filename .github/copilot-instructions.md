@@ -86,7 +86,7 @@ packages/
 php bakery serve
 
 # Terminal 2: Vite dev server with HMR
-npm run dev
+npm run vite:dev
 ```
 
 App: http://localhost:8080 | Vite: http://localhost:5173

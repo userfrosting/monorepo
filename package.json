@@ -10,7 +10,7 @@
     "packages/skeleton"
   ],
   "scripts": {
-    "dev": "vite",
+    "vite:dev": "vite",
     "build": "npm run build --workspace=packages/sprinkle-core --workspace=packages/sprinkle-account --workspace=packages/sprinkle-admin --workspace=packages/theme-pink-cupcake",
     "build:core": "npm run build --workspace=packages/sprinkle-core",
     "build:account": "npm run build --workspace=packages/sprinkle-account",
