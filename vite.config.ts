@@ -1,10 +1,14 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import ViteYaml from '@modyfi/vite-plugin-yaml'
 
+// Load environment variables from the app directory where UserFrosting stores its .env file
+const envDir = 'packages/skeleton/app'
+const env = loadEnv('development', envDir, ['VITE_', 'UF_'])
+
 // Get vite port from env, default to 5173
-const vitePort = parseInt(process.env.VITE_PORT || '5173', 10)
+const vitePort = parseInt(env.VITE_PORT || process.env.VITE_PORT || '5173', 10)
 
 // https://vitejs.dev/config/
 // Monorepo-specific Vite configuration for development
@@ -20,6 +24,8 @@ export default defineConfig({
     resolve: {
         conditions: ['userfrosting:monorepo', 'import']
     },
+    // Load .env from app directory (where UserFrosting stores its .env file)
+    envDir: 'packages/skeleton/app',
     server: {
         host: true, // Allows external access (needed for Docker)
         strictPort: true,
