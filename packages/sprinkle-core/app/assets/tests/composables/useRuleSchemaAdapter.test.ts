@@ -224,8 +224,8 @@ describe('useRuleSchemaAdapter', () => {
         expect(translateMock).toHaveBeenNthCalledWith(1, 'VALIDATE.LENGTH_RANGE', { min: 5 })
         expect(translateMock).toHaveBeenNthCalledWith(2, 'VALIDATE.LENGTH_RANGE', { max: 2 })
 
-        expect(r$.tooShort.$silentErrors).toEqual(['The value length should be at least 5']) // Custom message
-        expect(r$.tooLong.$silentErrors).toEqual(['The value length should not exceed 2']) // Default message
+        expect(r$.tooShort.$silentErrors).toEqual(['The value must be at least 5 characters long']) // Custom message
+        expect(r$.tooLong.$silentErrors).toEqual(['The value must be at most 2 characters long']) // Default message
         expect(r$.tooShortWithMessage.$silentErrors).toEqual(['VALIDATE.LENGTH_RANGE']) // Custom message
         expect(r$.tooLongWithMessage.$silentErrors).toEqual(['VALIDATE.LENGTH_RANGE']) // Default message
     })
@@ -313,7 +313,7 @@ describe('useRuleSchemaAdapter', () => {
 
         expect(r$.genus.$silentErrors).toEqual(['Sorry, that is not one of the permitted genuses.']) // Custom message
         expect(r$.owls.$silentErrors).toEqual([
-            'The value should be one of those options: Foo, Bar.'
+            'The value must be one of the following: Foo, Bar'
         ]) // Default message
         expect(r$.valid.$silentErrors).toEqual([]) // Valid
     })
@@ -401,7 +401,7 @@ describe('useRuleSchemaAdapter', () => {
 
         expect(r$.withMessage.$silentErrors).toEqual(['VALIDATE.NO_LEAD_WS']) // Custom message
         expect(r$.defaultMessage.$silentErrors).toEqual([
-            'The value does not match the required pattern'
+            'The value must match the required pattern'
         ]) // Default message
         expect(r$.valid.$silentErrors).toEqual([]) // Valid
     })
@@ -444,7 +444,7 @@ describe('useRuleSchemaAdapter', () => {
 
         expect(r$.withMessage.$silentErrors).toEqual(['VALIDATE.NO_TRAIL_WS']) // Custom message
         expect(r$.defaultMessage.$silentErrors).toEqual([
-            'The value does not match the required pattern'
+            'The value must match the required pattern'
         ]) // Default message
         expect(r$.valid.$silentErrors).toEqual([]) // Valid
     })
@@ -578,7 +578,7 @@ describe('useRuleSchemaAdapter', () => {
         })
 
         expect(r$.withMessage.$errors).toEqual(['VALIDATE.INVALID_VALUE']) // Custom message
-        expect(r$.defaultMessage.$errors).toEqual(['The value does not match the required pattern']) // Default message
+        expect(r$.defaultMessage.$errors).toEqual(['The value must match the required pattern']) // Default message
         expect(r$.valid.$correct).toEqual(true) // Valid
     })
 
@@ -616,7 +616,7 @@ describe('useRuleSchemaAdapter', () => {
         expect(translateMock).toHaveBeenCalledExactlyOnceWith('VALIDATE.INVALID_URL', {})
 
         expect(r$.withMessage.$silentErrors).toEqual(['VALIDATE.INVALID_URL']) // Custom message
-        expect(r$.defaultMessage.$silentErrors).toEqual(['The value is not a valid URL address']) // Default message
+        expect(r$.defaultMessage.$silentErrors).toEqual(['The value must be a valid URL']) // Default message
         expect(r$.valid.$silentErrors).toEqual([]) // Valid
     })
 
@@ -655,7 +655,7 @@ describe('useRuleSchemaAdapter', () => {
 
         expect(r$.withMessage.$silentErrors).toEqual(['VALIDATE.INVALID_USERNAME']) // Custom message
         expect(r$.defaultMessage.$silentErrors).toEqual([
-            'The value does not match the required pattern'
+            'The value must match the required pattern'
         ]) // Default message
         expect(r$.valid.$silentErrors).toEqual([]) // Valid
     })
