@@ -312,9 +312,7 @@ describe('useRuleSchemaAdapter', () => {
         )
 
         expect(r$.genus.$silentErrors).toEqual(['Sorry, that is not one of the permitted genuses.']) // Custom message
-        expect(r$.owls.$silentErrors).toEqual([
-            'The value must be one of the following: Foo, Bar'
-        ]) // Default message
+        expect(r$.owls.$silentErrors).toEqual(['The value must be one of the following: Foo, Bar']) // Default message
         expect(r$.valid.$silentErrors).toEqual([]) // Valid
     })
 
