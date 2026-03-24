@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [6.0.0-beta.9](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.8...6.0.0-beta.9)
-- No changes
+- [Core] Remove `site.debug.ajax` config (legacy jQuery flag)
+- [Core] Change `PHP_RECOMMENDED_VERSION` to PHP 8.5
 
 ## [6.0.0-beta.8](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.7...6.0.0-beta.8)
 - Now ship built modules instead of source code
