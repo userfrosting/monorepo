@@ -1,18 +1,19 @@
+# GitHub Actions Workflow template for PHPStan Testing.
+# Uncomment the "on" section below to enable PHPStan testing on GitHub Actions on push.
+
 name: Frontend
 
 on:
-  push:
-    branches: [6.0]
-    paths:
-      - packages/skeleton/**
-      - packages/sprinkle-account/**
-      - packages/sprinkle-admin/**
-      - packages/sprinkle-core/**
-      - packages/theme-pink-cupcake/**
-  pull_request:
-    branches: [6.0]
+#   push:
+#     branches: ['*'] # Apply to all branches. List specific branches if needed.
+#   pull_request:
+#     branches: ['*'] # Apply to all branches. List specific branches if needed.
   workflow_dispatch:
 
+# Each jobs section defines a different action:
+# - Build: Builds the frontend packages to make sure there are no build errors.
+# - Coverage: Runs tests and collects coverage information.
+# - Prettier: Checks code style and runs type checks and linting.
 jobs:
   Build:
     strategy:
@@ -34,10 +35,7 @@ jobs:
         run: npm ci
 
       - name: Build Packages
-        run: npm run build
-
-      - name: Build Skeleton
-        run: npm run --workspace=userfrosting vite:build
+        run: npm run vite:build
 
   Coverage:
     strategy:
