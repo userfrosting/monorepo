@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 - [Skeleton] Remove `composer.lock` from `.gitignore`
 - [Skeleton] Load `.env` file in Vite config
+- [Skeleton] Add Vitest config
 - [Core] Remove `site.debug.ajax` config (legacy jQuery flag)
 - [Core] Change `PHP_RECOMMENDED_VERSION` to PHP 8.5
 - [Framework] Replace `jackiedo/dotenv-editor` with our own implementation to avoid dependency on an unmaintained package.
