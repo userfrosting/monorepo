@@ -7,13 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 - [Skeleton] Remove `composer.lock` from `.gitignore`
-- [Skeleton] Load `.env` file in Vite config
+- [Skeleton] Load `.env` file in Vite config, including the `VITE_PORT` variable
 - [Skeleton] Add Vitest config
-- [Skeleton] Add frontend action template to Skeleton
+- [Skeleton] Add Frontend Github Action template to Skeleton
+- [Skeleton] Add `format-dry-run` npm script
 - [Core] Remove `site.debug.ajax` config (legacy jQuery flag)
 - [Core] Change `PHP_RECOMMENDED_VERSION` to PHP 8.5
 - [Framework] Replace `jackiedo/dotenv-editor` with our own implementation to avoid dependency on an unmaintained package.
 - [Monorepo] Renamed `dev` npm script to `vite:dev` for consistency with Skeleton + Added `vite:build`
+- Update all READMEs
+- Update dependencies with Dependabot
 
 ## 6.0.0-beta.8 - 2026-01-13
 - Packages now ship built modules instead of source code. All `package.json`, Vite configs and scripts have been updated accordingly.
