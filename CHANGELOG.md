@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 6.0.0-rc.1 - 2026-05-12
 - [Skeleton] Remove `composer.lock` from `.gitignore`
 - [Skeleton] Load `.env` file in Vite config, including the `VITE_PORT` variable
 - [Skeleton] Add Vitest config
