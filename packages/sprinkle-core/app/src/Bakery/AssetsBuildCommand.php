@@ -19,7 +19,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\Bakery\WithSymfonyStyle;
 use UserFrosting\Sprinkle\Core\Bakery\Event\AssetsBuildCommandEvent;
-use UserFrosting\Sprinkle\Core\Bakery\Event\BakeCommandEvent;
 
 /**
  * Alias for common used assets building commands, for integration into `bake` command.
@@ -72,7 +71,7 @@ final class AssetsBuildCommand extends Command
     }
 
     /**
-     * Aggregate commands to run using BakeCommandEvent.
+     * Aggregate commands to run using AssetsBuildCommandEvent.
      *
      * @return string[]
      */
