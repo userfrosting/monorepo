@@ -35,8 +35,16 @@ class VersionsService implements ServicesProviderInterface
 
             // Installed version
             'PHP_VERSION'                  => phpversion(),
-            'NODE_VERSION'                 => exec('node -v'), // TODO : Required Try catch
-            'NPM_VERSION'                  => exec('npm -v'),
+            'NODE_VERSION'                 => function () {
+                $v = exec('node -v');
+
+                return $v !== false ? $v : '';
+            },
+            'NPM_VERSION'                  => function () {
+                $v = exec('npm -v');
+
+                return $v !== false ? $v : '';
+            },
 
             // Version validators
             PhpVersionValidator::class     => function (ContainerInterface $c) {

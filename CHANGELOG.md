@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - [Core] `FilePermissionMiddleware` now caches a successful permission check for a configurable TTL (`cache.file_permission.ttl`), skipping redundant `is_writable()` calls on subsequent requests.
+- [Core] `NODE_VERSION` and `NPM_VERSION` container entries in `VersionsService` are now lazily evaluated, avoiding `exec()` calls on every web request.
 
 ### Added
 - [Core] New config keys `cache.file_permission.key` and `cache.file_permission.ttl` to control permission-check caching. Production default is 3600 s.

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - `FilePermissionMiddleware` now accepts an `Illuminate\Cache\Repository` dependency and caches a successful permission check for a configurable TTL. On a cache hit the `is_writable()` loop is skipped entirely, eliminating redundant filesystem calls on every request.
+- `VersionsService`: `NODE_VERSION` and `NPM_VERSION` container entries are now lazy closures instead of eagerly-evaluated `exec()` calls, so the shell commands are only executed when the values are actually resolved (i.e. during Bakery CLI commands, not on every web request).
 
 ### Added
 - New config keys `cache.file_permission.key` (default `uf_file_permissions`) and `cache.file_permission.ttl` (default `0` — disabled) to control the permission-check cache.
