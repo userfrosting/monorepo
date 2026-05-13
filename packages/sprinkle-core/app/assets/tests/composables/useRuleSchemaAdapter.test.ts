@@ -575,7 +575,9 @@ describe('useRuleSchemaAdapter', () => {
         })
 
         expect(r$.withMessage.$silentErrors).toEqual(['VALIDATE.INVALID_VALUE']) // Custom message
-        expect(r$.defaultMessage.$silentErrors).toEqual(['The value must match the required pattern']) // Default message
+        expect(r$.defaultMessage.$silentErrors).toEqual([
+            'The value must match the required pattern'
+        ]) // Default message
         expect(r$.valid.$silentErrors).toEqual([]) // Valid
     })
 
