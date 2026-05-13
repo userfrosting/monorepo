@@ -123,7 +123,7 @@ const submitForm = async () => {
                     <font-awesome-icon class="fa-form-icon" icon="users" fixed-width />
                     <select
                         class="uk-input uk-select"
-                        :class="{ 'uk-form-danger': r$.group_id.$error }"
+                        :class="{ 'uk-form-danger': r$.group_id?.$error }"
                         aria-label="Group"
                         data-test="group"
                         tabindex="2"
