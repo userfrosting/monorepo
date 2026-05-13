@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Core\Tests\Unit\Middlewares;
 
+use Illuminate\Cache\Repository as Cache;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use phpmock\mockery\PHPMockery;
@@ -55,7 +56,10 @@ class FilePermissionMiddlewareTest extends TestCase
         $this->expectException(BadConfigException::class);
         $this->expectExceptionMessage("Stream foo:// doesn't exist and is not writeable. Make sure path `app/foo` exist and is writeable.");
 
-        $middleware = new FilePermissionMiddleware($locator, $config);
+        /** @var Cache */
+        $cache = Mockery::mock(Cache::class);
+
+        $middleware = new FilePermissionMiddleware($locator, $config, $cache);
         $middleware->process($request, $handler);
     }
 
@@ -88,7 +92,10 @@ class FilePermissionMiddlewareTest extends TestCase
             ->shouldReceive('findResource')->once()->with('foo://')->andReturn('app/foo')
             ->getMock();
 
-        $middleware = new FilePermissionMiddleware($locator, $config);
+        /** @var Cache */
+        $cache = Mockery::mock(Cache::class);
+
+        $middleware = new FilePermissionMiddleware($locator, $config, $cache);
         $middleware->process($request, $handler);
     }
 
@@ -123,7 +130,10 @@ class FilePermissionMiddlewareTest extends TestCase
         $this->expectException(BadConfigException::class);
         $this->expectExceptionMessage("Stream foo:// doesn't exist and is not writeable. Make sure path `app/foo` exist and is writeable.");
 
-        $middleware = new FilePermissionMiddleware($locator, $config);
+        /** @var Cache */
+        $cache = Mockery::mock(Cache::class);
+
+        $middleware = new FilePermissionMiddleware($locator, $config, $cache);
         $middleware->process($request, $handler);
     }
 
@@ -149,7 +159,91 @@ class FilePermissionMiddlewareTest extends TestCase
         /** @var ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class);
 
-        $middleware = new FilePermissionMiddleware($locator, $config);
+        /** @var Cache */
+        $cache = Mockery::mock(Cache::class);
+
+        $middleware = new FilePermissionMiddleware($locator, $config, $cache);
+        $middleware->process($request, $handler);
+    }
+
+    public function testWithCacheHit(): void
+    {
+        $config = new Config([
+            'cache' => [
+                'file_permission' => [
+                    'key' => 'uf_file_permissions',
+                    'ttl' => 3600,
+                ],
+            ],
+            'writable' => ['foo://' => true],
+        ]);
+
+        /** @var RequestHandlerInterface */
+        $handler = Mockery::mock(RequestHandlerInterface::class)
+            ->shouldReceive('handle')
+            ->once()
+            ->with(Mockery::type(ServerRequestInterface::class))
+            ->andReturn(Mockery::mock(ResponseInterface::class))
+            ->getMock();
+
+        /** @var ServerRequestInterface */
+        $request = Mockery::mock(ServerRequestInterface::class);
+
+        // Locator must never be called on a cache hit
+        /** @var ResourceLocatorInterface */
+        $locator = Mockery::mock(ResourceLocatorInterface::class)
+            ->shouldNotReceive('findResource')
+            ->getMock();
+
+        /** @var Cache */
+        $cache = Mockery::mock(Cache::class)
+            ->shouldReceive('has')->once()->with('uf_file_permissions')->andReturn(true)
+            ->getMock();
+
+        $middleware = new FilePermissionMiddleware($locator, $config, $cache);
+        $middleware->process($request, $handler);
+    }
+
+    public function testWithCacheMiss(): void
+    {
+        $config = new Config([
+            'cache' => [
+                'file_permission' => [
+                    'key' => 'uf_file_permissions',
+                    'ttl' => 3600,
+                ],
+            ],
+            'writable' => ['foo://' => true],
+        ]);
+
+        // Mock built-in is_writable
+        $reflection_class = new ReflectionClass(FilePermissionMiddleware::class);
+        $namespace = $reflection_class->getNamespaceName();
+        PHPMockery::mock($namespace, 'is_writable')->andReturn(true);
+
+        /** @var RequestHandlerInterface */
+        $handler = Mockery::mock(RequestHandlerInterface::class)
+            ->shouldReceive('handle')
+            ->once()
+            ->with(Mockery::type(ServerRequestInterface::class))
+            ->andReturn(Mockery::mock(ResponseInterface::class))
+            ->getMock();
+
+        /** @var ServerRequestInterface */
+        $request = Mockery::mock(ServerRequestInterface::class);
+
+        /** @var ResourceLocatorInterface */
+        $locator = Mockery::mock(ResourceLocatorInterface::class)
+            ->shouldReceive('findResource')->once()->with('foo://')->andReturn('app/foo')
+            ->getMock();
+
+        /** @var Cache */
+        $cache = Mockery::mock(Cache::class)
+            ->shouldReceive('has')->once()->with('uf_file_permissions')->andReturn(false)
+            ->shouldReceive('put')->once()->with('uf_file_permissions', true, 3600)
+            ->getMock();
+
+        $middleware = new FilePermissionMiddleware($locator, $config, $cache);
         $middleware->process($request, $handler);
     }
 }

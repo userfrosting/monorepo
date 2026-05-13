@@ -107,6 +107,11 @@ return [
         // Cache routes? And filename for route cache.
         'routerFile' => 'routes.cache',
         'route'      => false,
+        // Cache file permission check result. ttl in seconds; 0 = disabled (always check).
+        'file_permission' => [
+            'key' => 'uf_file_permissions',
+            'ttl' => 0,
+        ],
     ],
 
     /*
@@ -429,4 +434,5 @@ return [
         'cache://'    => true,
         'sessions://' => true,
     ],
+
 ];

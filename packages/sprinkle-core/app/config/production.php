@@ -38,6 +38,9 @@ return [
     'cache' => [
         'twig'  => true,
         'route' => true,
+        'file_permission' => [
+            'ttl' => 3600,
+        ],
     ],
     /*
      * Turn off debug logs

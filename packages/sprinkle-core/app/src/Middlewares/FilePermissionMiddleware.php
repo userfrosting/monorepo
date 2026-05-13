@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Core\Middlewares;
 
+use Illuminate\Cache\Repository as Cache;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -34,6 +35,7 @@ class FilePermissionMiddleware implements MiddlewareInterface
     public function __construct(
         protected ResourceLocatorInterface $locator,
         protected Config $config,
+        protected Cache $cache,
     ) {
     }
 
@@ -42,6 +44,13 @@ class FilePermissionMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $ttl = (int) $this->config->get('cache.file_permission.ttl', 0);
+        $key = (string) $this->config->get('cache.file_permission.key', 'uf_file_permissions');
+
+        if ($ttl > 0 && $this->cache->has($key)) {
+            return $handler->handle($request);
+        }
+
         foreach ($this->config->get('writable') as $stream => $assertWriteable) {
             // Since config can't be removed, we skip if the value is null
             if ($assertWriteable === null) {
@@ -58,6 +67,10 @@ class FilePermissionMiddleware implements MiddlewareInterface
 
                 throw new BadConfigException("Stream $stream doesn't exist and is not writeable. Make sure path `$expectedPath` exist and is writeable.");
             }
+        }
+
+        if ($ttl > 0) {
+            $this->cache->put($key, true, $ttl);
         }
 
         return $handler->handle($request);

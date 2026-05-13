@@ -383,7 +383,7 @@ class TranslatorTest extends TestCase
             //RAW : http://twig.sensiolabs.org/doc/2.x/filters/raw.html
             ['TWIG.ESCAPE', ['foo' => '<strong>bar</strong>'], 'Placeholder should be escaped : &lt;strong&gt;bar&lt;/strong&gt;'],
             ['TWIG.ESCAPE_DEFAULT', ['foo' => '<strong>bar</strong>'], 'Placeholder should be escaped : &lt;strong&gt;bar&lt;/strong&gt;'],
-            ['TWIG.ESCAPE_NOT', ['foo' => '<strong>bar</strong>'], 'Placeholder should NOT be escaped : <strong>bar</strong>'],
+            ['TWIG.ESCAPE_NOT', ['foo'     => '<strong>bar</strong>'], 'Placeholder should NOT be escaped : <strong>bar</strong>'],
 
             //DEFAULT: http://twig.sensiolabs.org/doc/2.x/filters/default.html
             ['TWIG.DEFAULT', [], 'Using default: bar'],
@@ -409,7 +409,7 @@ class TranslatorTest extends TestCase
             //UPPER: http://twig.sensiolabs.org/doc/2.x/filters/upper.html
             //CAPITALIZE: http://twig.sensiolabs.org/doc/2.x/filters/capitalize.html
             ['TWIG.LOWER', ['string' => 'WeLcOmE'], 'welcome'],
-            ['TWIG.UPPER', ['string' => 'WeLcOmE'], 'WELCOME'],
+            ['TWIG.UPPER', ['string'      => 'WeLcOmE'], 'WELCOME'],
             ['TWIG.CAPITALIZE', ['string' => 'WeLcOmE'], 'Welcome'],
         ];
     }

@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- `FilePermissionMiddleware` now accepts an `Illuminate\Cache\Repository` dependency and caches a successful permission check for a configurable TTL. On a cache hit the `is_writable()` loop is skipped entirely, eliminating redundant filesystem calls on every request.
+
+### Added
+- New config keys `cache.file_permission.key` (default `uf_file_permissions`) and `cache.file_permission.ttl` (default `0` — disabled) to control the permission-check cache.
+- Production config now sets `cache.file_permission.ttl` to `3600` seconds.
+
 ## [6.0.0-rc.1](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-beta.8...6.0.0-rc.1)
 - [Core] Remove `site.debug.ajax` config (legacy jQuery flag)
 - [Core] Change `PHP_RECOMMENDED_VERSION` to PHP 8.5

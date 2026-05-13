@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- [Core] `FilePermissionMiddleware` now caches a successful permission check for a configurable TTL (`cache.file_permission.ttl`), skipping redundant `is_writable()` calls on subsequent requests.
+
+### Added
+- [Core] New config keys `cache.file_permission.key` and `cache.file_permission.ttl` to control permission-check caching. Production default is 3600 s.
+
 ## 6.0.0-rc.2 - 2026-05-12
 - [Skeleton] Fix package dependency issue.
 
