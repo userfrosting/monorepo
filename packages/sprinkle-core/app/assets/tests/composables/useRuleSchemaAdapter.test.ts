@@ -568,16 +568,15 @@ describe('useRuleSchemaAdapter', () => {
             },
             useRuleSchemaAdapter().adapt(yamlInput)
         )
-        r$.$validate()
 
         // Set translator expectations
         expect(translateMock).toHaveBeenCalledExactlyOnceWith('VALIDATE.INVALID_VALUE', {
             regex: '^who(o*)$'
         })
 
-        expect(r$.withMessage.$errors).toEqual(['VALIDATE.INVALID_VALUE']) // Custom message
-        expect(r$.defaultMessage.$errors).toEqual(['The value must match the required pattern']) // Default message
-        expect(r$.valid.$correct).toEqual(true) // Valid
+        expect(r$.withMessage.$silentErrors).toEqual(['VALIDATE.INVALID_VALUE']) // Custom message
+        expect(r$.defaultMessage.$silentErrors).toEqual(['The value must match the required pattern']) // Default message
+        expect(r$.valid.$silentErrors).toEqual([]) // Valid
     })
 
     test('uri rule', () => {
