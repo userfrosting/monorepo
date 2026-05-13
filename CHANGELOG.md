@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- [Core] `Markdown::getFilePath()` now performs a case-insensitive fallback lookup when the exact-match locator call returns nothing, fixing 404s on case-sensitive filesystems when URL casing differs from the filename (e.g. `tos` → `Tos.md`).
+
 ### Changed
 - [Core] `FilePermissionMiddleware` now caches a successful permission check for a configurable TTL (`cache.file_permission.ttl`), skipping redundant `is_writable()` calls on subsequent requests.
 - [Core] `NODE_VERSION` and `NPM_VERSION` container entries in `VersionsService` are now lazily evaluated, avoiding `exec()` calls on every web request.

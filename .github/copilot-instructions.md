@@ -221,7 +221,7 @@ npm run typecheck
 
 ## Changelog Guidelines
 
-**Every changes must include changelog updates**:
+**Every change must include a changelog update** — do this automatically, without waiting to be asked:
 - Update the relevant `packages/*/CHANGELOG.md` file(s) for affected packages
 - Add entries under the `## [Unreleased]` section
 - Follow the existing format (Added, Changed, Deprecated, Removed, Fixed, Security)
@@ -231,8 +231,7 @@ npm run typecheck
 **Before committing changes**:
 1. Run all linters (PHP CS Fixer, PHPStan, ESLint, Prettier)
 2. Ensure all tests pass (PHPUnit + Vitest)
-3. Update relevant changelog(s)
-4. Write clear, descriptive commit messages
+3. Write clear, descriptive commit messages
 
 ## Release Process
 

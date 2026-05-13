@@ -69,18 +69,49 @@ class Markdown
     {
         $locale = $this->siteLocale->getLocaleIdentifier();
 
-        // Remove the ".md" extension if present
-        $file = rtrim($file, '.md');
+        // Normalize input to lowercase so URL paths are always case-insensitive.
+        $file = strtolower(rtrim($file, '.md'));
 
+        // Fast path: exact match (works when files are already stored in lowercase)
         $path = $this->locator->getResource("markdown://{$file}.{$locale}.md");
-        if ($path === null) {
-            $path = $this->locator->getResource("markdown://{$file}.md");
-            if ($path === null) {
-                throw new NotFoundException();
+        if ($path !== null) {
+            return $path->getAbsolutePath();
+        }
+
+        $path = $this->locator->getResource("markdown://{$file}.md");
+        if ($path !== null) {
+            return $path->getAbsolutePath();
+        }
+
+        // Fallback: case-insensitive scan so that files with uppercase names (e.g.
+        // "Tos.md") are still found when the normalized input is "tos".
+        $dir = dirname($file);
+        $basename = basename($file);
+        $uri = ($dir === '.') ? 'markdown://' : "markdown://{$dir}/";
+
+        // $file is already lowercase, so no strtolower needed on the target strings.
+        $localizedTarget = "{$basename}.{$locale}.md";
+        $defaultTarget = "{$basename}.md";
+        $localizedMatch = null;
+        $defaultMatch = null;
+
+        foreach ($this->locator->listResources($uri, true) as $resource) {
+            $resourceBasename = strtolower($resource->getBasename());
+            if ($localizedMatch === null && $resourceBasename === $localizedTarget) {
+                $localizedMatch = $resource->getAbsolutePath();
+            } elseif ($defaultMatch === null && $resourceBasename === $defaultTarget) {
+                $defaultMatch = $resource->getAbsolutePath();
             }
         }
 
-        return $path->getAbsolutePath();
+        if ($localizedMatch !== null) {
+            return $localizedMatch;
+        }
+        if ($defaultMatch !== null) {
+            return $defaultMatch;
+        }
+
+        throw new NotFoundException();
     }
 
     /**

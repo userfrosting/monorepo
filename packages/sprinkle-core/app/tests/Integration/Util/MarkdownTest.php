@@ -79,6 +79,107 @@ class MarkdownTest extends CoreTestCase
         $this->assertEquals($frontMatter, $result->frontMatter);
     }
 
+    public function testCaseInsensitivePath(): void
+    {
+        $file = 'about'; // lowercase filename on disk
+        $locale = 'en_US';
+        $markdownContent = '<p>Lorem <strong>ipsum</strong> dolor</p>' . PHP_EOL;
+        $config = ['name' => 'TestSite'];
+
+        /** @var ResourceInterface */
+        $mockResource = Mockery::mock(ResourceInterface::class)
+            ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . "/data/{$file}.md")
+            ->getMock();
+
+        // Input "About" is normalized to "about" before lookup, exact match succeeds.
+        /** @var ResourceLocatorInterface */
+        $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
+            ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
+            ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn($mockResource)
+            ->getMock();
+
+        /** @var Config */
+        $mockConfig = Mockery::mock(Config::class)
+            ->shouldReceive('get')->with('site', [])->once()->andReturn($config)
+            ->getMock();
+
+        /** @var Translator */
+        $mockTranslator = Mockery::mock(Translator::class)
+            ->shouldReceive('translate')->with($markdownContent, ['site' => $config])->once()->andReturn($markdownContent)
+            ->getMock();
+
+        /** @var SiteLocaleInterface */
+        $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
+            ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
+            ->getMock();
+
+        $converter = $this->ci->get(ConverterInterface::class);
+
+        $markdown = new Markdown(
+            $mockLocator,
+            $converter,
+            $mockConfig,
+            $mockTranslator,
+            $mockSiteLocale
+        );
+
+        // URL "About" normalizes to "about", finds "about.md" via exact match.
+        $result = $markdown->readFile('About');
+        $this->assertEquals($markdownContent, $result->content);
+    }
+
+    public function testCaseInsensitivePathUppercaseFile(): void
+    {
+        $file = 'tos'; // normalized input
+        $locale = 'en_US';
+        $markdownContent = '<p>Terms</p>' . PHP_EOL;
+        $config = ['name' => 'TestSite'];
+
+        /** @var ResourceInterface */
+        $mockResource = Mockery::mock(ResourceInterface::class)
+            ->shouldReceive('getBasename')->once()->andReturn('Tos.md') // file on disk has uppercase
+            ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . '/data/about.md') // reuse existing file
+            ->getMock();
+
+        // Exact match fails (file is "Tos.md" not "tos.md"), fallback via listResources.
+        /** @var ResourceLocatorInterface */
+        $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
+            ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
+            ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn(null)
+            ->shouldReceive('listResources')->with('markdown://', true)->once()->andReturn([$mockResource])
+            ->getMock();
+
+        /** @var Config */
+        $mockConfig = Mockery::mock(Config::class)
+            ->shouldReceive('get')->with('site', [])->once()->andReturn($config)
+            ->getMock();
+
+        /** @var Translator */
+        $mockTranslator = Mockery::mock(Translator::class)
+            ->shouldReceive('translate')->once()->andReturn($markdownContent)
+            ->getMock();
+
+        /** @var SiteLocaleInterface */
+        $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
+            ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
+            ->getMock();
+
+        $converter = $this->ci->get(ConverterInterface::class);
+
+        $markdown = new Markdown(
+            $mockLocator,
+            $converter,
+            $mockConfig,
+            $mockTranslator,
+            $mockSiteLocale
+        );
+
+        // URL "Tos" normalizes to "tos", exact match misses "Tos.md",
+        // case-insensitive fallback finds it.
+        $result = $markdown->readFile('Tos');
+        $this->assertEquals($markdownContent, $result->content);
+    }
+
     public function testLocalizedFileWithFrontMatter(): void
     {
         $file = 'test'; // case not matching + md extension (later)
@@ -141,6 +242,7 @@ class MarkdownTest extends CoreTestCase
         $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
             ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn(null)
+            ->shouldReceive('listResources')->with('markdown://', true)->once()->andReturn([])
             ->getMock();
 
         /** @var Config */
@@ -171,7 +273,7 @@ class MarkdownTest extends CoreTestCase
 
     public function testFileNotFoundException(): void
     {
-        $file = 'notExistingFile';
+        $file = 'notexistingfile';
         $locale = 'en_US';
 
         /** @var ResourceInterface */

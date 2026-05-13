@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- [Markdown] `ContentController` / `Markdown::getFilePath()` now performs a case-insensitive fallback lookup via `listResources()` when the exact-match locator call returns nothing. Fixes file-not-found errors on case-sensitive filesystems when the URL casing differs from the filename (e.g. URL `tos` → file `Tos.md`).
+
 ### Changed
 - `FilePermissionMiddleware` now accepts an `Illuminate\Cache\Repository` dependency and caches a successful permission check for a configurable TTL. On a cache hit the `is_writable()` loop is skipped entirely, eliminating redundant filesystem calls on every request.
 - `VersionsService`: `NODE_VERSION` and `NPM_VERSION` container entries are now lazy closures instead of eagerly-evaluated `exec()` calls, so the shell commands are only executed when the values are actually resolved (i.e. during Bakery CLI commands, not on every web request).
