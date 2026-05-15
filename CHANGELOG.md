@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Fixed
-- [Framework] `ConfigPathBuilder::buildPaths` now normalizes the environment name to lowercase, so `UF_MODE=Production` correctly loads `production.php` on case-sensitive filesystems (Linux).
 - [Core] `Markdown::getFilePath()` now performs a case-insensitive fallback lookup when the exact-match locator call returns nothing, fixing 404s on case-sensitive filesystems when URL casing differs from the filename (e.g. `tos` → `Tos.md`).
 
 ### Changed

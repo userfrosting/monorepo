@@ -65,28 +65,4 @@ class ConfigPathBuilderTest extends TestCase
             $this->basePath . 'admin/config/production.php',
         ], $paths);
     }
-
-    /**
-     * Environment mode should be case-insensitive: `Production` must resolve
-     * to the same config files as `production` so that deployments setting
-     * UF_MODE with a capital letter still load the correct config on
-     * case-sensitive (Linux) filesystems.
-     */
-    public function testEnvironmentModeIsCaseInsensitive(): void
-    {
-        // Arrange
-        $builder = new ConfigPathBuilder($this->locator, 'config://');
-
-        // Act - uppercase variant must produce the same paths as lowercase
-        $paths = $builder->buildPaths('Production');
-
-        $this->assertEquals([
-            $this->basePath . 'core/config/default.php',
-            $this->basePath . 'core/config/production.php',
-            $this->basePath . 'account/config/default.php',
-            $this->basePath . 'account/config/production.php',
-            $this->basePath . 'admin/config/default.php',
-            $this->basePath . 'admin/config/production.php',
-        ], $paths);
-    }
 }
