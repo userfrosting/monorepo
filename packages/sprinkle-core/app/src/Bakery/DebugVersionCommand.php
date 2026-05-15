@@ -35,13 +35,13 @@ class DebugVersionCommand extends Command
     /**
      * Inject dependencies.
      *
-     * @param EventDispatcherInterface            $eventDispatcher
-     * @param SprinkleManager                     $sprinkleManager
-     * @param PhpVersionValidator                 $phpVersionValidator
-     * @param PhpDeprecationValidator             $phpDeprecationValidator
-     * @param NodeVersionValidator                $nodeVersionValidator
-     * @param NpmVersionValidator                 $npmVersionValidator
-     * @param ResourceLocatorInterface            $locator
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param SprinkleManager          $sprinkleManager
+     * @param PhpVersionValidator      $phpVersionValidator
+     * @param PhpDeprecationValidator  $phpDeprecationValidator
+     * @param NodeVersionValidator     $nodeVersionValidator
+     * @param NpmVersionValidator      $npmVersionValidator
+     * @param ResourceLocatorInterface $locator
      */
     public function __construct(
         protected EventDispatcherInterface $eventDispatcher,
