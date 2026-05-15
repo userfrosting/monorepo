@@ -35,7 +35,7 @@ class DebugVersionCommand extends Command
     /**
      * Inject dependencies.
      *
-     * @param \UserFrosting\Event\EventDispatcher $eventDispatcher
+     * @param EventDispatcherInterface            $eventDispatcher
      * @param SprinkleManager                     $sprinkleManager
      * @param PhpVersionValidator                 $phpVersionValidator
      * @param PhpDeprecationValidator             $phpDeprecationValidator
