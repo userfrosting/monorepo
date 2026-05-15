@@ -91,6 +91,15 @@ class DebugVersionCommand extends Command
             $this->io->warning($e->getMessage());
         }
 
+        // Warn if .env file exists but cannot be read (e.g. wrong file permissions)
+        $envPath = $this->locator->getBasePath() . '/.env';
+        if (file_exists($envPath) && !is_readable($envPath)) {
+            $this->io->warning(sprintf(
+                'The .env file at "%s" exists but cannot be read. Check file permissions to ensure the web server process can read it.',
+                $envPath
+            ));
+        }
+
         // Display environment information
         $this->io->definitionList(
             ['Framework version'  => \Composer\InstalledVersions::getPrettyVersion('userfrosting/framework')],

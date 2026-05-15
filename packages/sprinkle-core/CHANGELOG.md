@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - [Markdown] `ContentController` / `Markdown::getFilePath()` now performs a case-insensitive fallback lookup via `listResources()` when the exact-match locator call returns nothing. Fixes file-not-found errors on case-sensitive filesystems when the URL casing differs from the filename (e.g. URL `tos` → file `Tos.md`).
+- `debug:version` (and the `debug` command that calls it) now warns when a `.env` file exists at the application base path but cannot be read by the current process. This helps diagnose deployment permission issues quickly.
 
 ### Changed
 - `FilePermissionMiddleware` now accepts an `Illuminate\Cache\Repository` dependency and caches a successful permission check for a configurable TTL. On a cache hit the `is_writable()` loop is skipped entirely, eliminating redundant filesystem calls on every request.
