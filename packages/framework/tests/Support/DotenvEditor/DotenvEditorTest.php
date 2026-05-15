@@ -299,4 +299,54 @@ class DotenvEditorTest extends TestCase
 
         unlink($tmp);
     }
+
+    public function testSavePreservesExistingPermissions(): void
+    {
+        if (posix_geteuid() === 0) {
+            $this->markTestSkipped('Cannot test file permissions as root.');
+        }
+
+        $tmp = sys_get_temp_dir() . '/uf_env_perms_' . uniqid();
+        file_put_contents($tmp, "FOO=bar\n");
+        chmod($tmp, 0640);
+
+        try {
+            $editor = new DotenvEditor();
+            $editor->load($tmp);
+            $editor->setKey('BAR', 'baz');
+            $editor->save();
+
+            $this->assertSame(0640, fileperms($tmp) & 0777);
+        } finally {
+            if (file_exists($tmp)) {
+                unlink($tmp);
+            }
+        }
+    }
+
+    public function testSaveNewFileHasDefaultPermissions(): void
+    {
+        if (posix_geteuid() === 0) {
+            $this->markTestSkipped('Cannot test file permissions as root.');
+        }
+
+        $tmp = sys_get_temp_dir() . '/uf_env_newperms_' . uniqid();
+        if (file_exists($tmp)) {
+            unlink($tmp);
+        }
+
+        try {
+            $editor = new DotenvEditor();
+            $editor->load($tmp);
+            $editor->setKey('NEW', 'value');
+            $editor->save();
+
+            $this->assertFileExists($tmp);
+            $this->assertSame(0644, fileperms($tmp) & 0777);
+        } finally {
+            if (file_exists($tmp)) {
+                unlink($tmp);
+            }
+        }
+    }
 }

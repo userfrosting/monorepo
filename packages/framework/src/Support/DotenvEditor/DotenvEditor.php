@@ -98,6 +98,11 @@ class DotenvEditor
 
         $content = $this->getContent();
 
+        // Preserve existing file permissions, or use 0644 for new files.
+        // tempnam() creates files with 0600; without this chmod, the web server
+        // process (e.g. www-data) would be unable to read a newly written .env.
+        $filePerms = file_exists($this->filePath) ? (fileperms($this->filePath) & 0777) : 0644;
+
         // Use atomic write to avoid file corruption
         // Create temp file in system temp dir
         $tmpDir = $this->getTempDir();
@@ -111,6 +116,7 @@ class DotenvEditor
         }
         file_put_contents($tmpFile, $content . PHP_EOL, LOCK_EX);
         rename($tmpFile, $this->filePath);
+        chmod($this->filePath, $filePerms);
 
         $this->originalContent = $content;
 

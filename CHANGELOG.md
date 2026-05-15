@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - [Core] `Markdown::getFilePath()` now performs a case-insensitive fallback lookup when the exact-match locator call returns nothing, fixing 404s on case-sensitive filesystems when URL casing differs from the filename (e.g. `tos` → `Tos.md`).
+- [Framework] `DotenvEditor::save()` now preserves existing file permissions and defaults to `0644` for new files, preventing the web server from being locked out of a `.env` file created via `php bakery setup:env`.
+- [Core] `debug:version` now warns when `.env` exists but cannot be read, helping diagnose deployment permission issues.
 
 ### Changed
 - [Core] `FilePermissionMiddleware` now caches a successful permission check for a configurable TTL (`cache.file_permission.ttl`), skipping redundant `is_writable()` calls on subsequent requests.
