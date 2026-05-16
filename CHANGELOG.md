@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - [Core] New config keys `cache.file_permission.key` and `cache.file_permission.ttl` to control permission-check caching. Production default is 3600 s.
 - [Core/Skeleton] Add `vite_css_preload()` Twig function via `userfrosting/vite-php-twig` 1.2.0, emitting `<link rel="preload" as="style">` hints for CSS files. `stylesheets_site.html.twig` now calls it before `vite_css()`.
+- [Skeleton + Monorepo][Docker] Upgrade Node.js from 22 to 24 in all Docker configurations.
 
 ## 6.0.0-rc.2 - 2026-05-12
 - [Skeleton] Fix package dependency issue.
