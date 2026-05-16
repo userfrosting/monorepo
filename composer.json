@@ -57,7 +57,7 @@
         "symfony/console": "^6.4",
         "symfony/yaml": ">=4.4",
         "twig/twig": "^3.3",
-        "userfrosting/vite-php-twig": "^1.0.2",
+        "userfrosting/vite-php-twig": "^1.2.0",
         "vlucas/phpdotenv": "^5.3",
         "vlucas/valitron": "^1.2.3"
     },
