@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - New config keys `cache.file_permission.key` (default `uf_file_permissions`) and `cache.file_permission.ttl` (default `0` — disabled) to control the permission-check cache.
 - Production config now sets `cache.file_permission.ttl` to `3600` seconds.
+- Add `vite_css_preload()` Twig function (from `userfrosting/vite-php-twig` 1.2.0) to emit `<link rel="preload" as="style">` hints for CSS files. Update `stylesheets_site.html.twig` to call it before `vite_css()`.
 
 ## [6.0.0-rc.2](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-rc.1...6.0.0-rc.2)
 - No changes
