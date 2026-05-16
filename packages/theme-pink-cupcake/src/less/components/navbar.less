@@ -57,3 +57,11 @@
         top: -16px;
     }
 }
+
+// Sticky navbar — applied directly in CSS to avoid the FOUC caused by
+// UIkit's uk-sticky JS inserting a placeholder div after DOM parse.
+.uf-navbar-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 980;
+}
