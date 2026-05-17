@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Core] `Markdown::getFilePath()` now performs a case-insensitive fallback lookup when the exact-match locator call returns nothing, fixing 404s on case-sensitive filesystems when URL casing differs from the filename (e.g. `tos` → `Tos.md`).
 - [Framework] `DotenvEditor::save()` now preserves existing file permissions and defaults to `0644` for new files, preventing the web server from being locked out of a `.env` file created via `php bakery setup:env`.
 - [Core] `debug:version` now warns when `.env` exists but cannot be read, helping diagnose deployment permission issues.
+- [Docker] Fix `docker/mysql/Dockerfile` not applying `mysql.conf` — `innodb_use_native_aio=0` was silently ignored because the file was never copied into the image.
+- [Docker] Fix duplicate `memory_limit` directive in `docker/app/php/custom.ini` (64M was immediately overridden by 512M).
+- [Skeleton][Docker] Fix `.env.docker` `SMTP_PORT` from 2025 to 1025 (Mailpit's actual SMTP port).
+- [Skeleton][Docker] Remove unused `DB_ROOT_PASSWORD` and `ROOT_PASSWORD` variables from `.env.docker`.
+- [Skeleton][Docker] Set `UF_MODE=debug` (was empty) in `.env.docker`.
 
 ### Changed
 - [Core] `FilePermissionMiddleware` now caches a successful permission check for a configurable TTL (`cache.file_permission.ttl`), skipping redundant `is_writable()` calls on subsequent requests.
