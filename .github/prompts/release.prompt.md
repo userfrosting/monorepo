@@ -83,6 +83,20 @@ Then publish:
 
 > **Note:** The `userfrosting` (skeleton) package is marked `private` and will be skipped with a warning — this is expected.
 
+### If `latest` was incorrectly set by a prerelease publish
+
+If a prerelease was accidentally published without `--tag`, npm will have set `latest` to that version. Fix it by re-pointing `latest` to the correct version for every affected package:
+
+```bash
+# Point `latest` to the current RC (replace VERSION as needed)
+npm dist-tag add @userfrosting/sprinkle-core@VERSION latest
+npm dist-tag add @userfrosting/sprinkle-account@VERSION latest
+npm dist-tag add @userfrosting/sprinkle-admin@VERSION latest
+npm dist-tag add @userfrosting/theme-pink-cupcake@VERSION latest
+```
+
+> Each command will prompt for browser-based npm authentication — open each URL and press ENTER to continue.
+
 ## Step 7: Create GitHub Releases
 
 **Package repos and changelog sources:**
@@ -158,7 +172,12 @@ Verify:
    ```
    Both SHAs must match for every repo.
 3. GitHub releases exist for all 7 repos (monorepo + 6 packages).
-4. NPM packages are published: `npm info @userfrosting/sprinkle-core version`
+4. NPM packages are published and dist-tags are correct:
+   ```bash
+   npm view @userfrosting/sprinkle-core dist-tags
+   ```
+   - **Stable release**: `latest` must point to VERSION.
+   - **Prerelease (alpha/beta/RC)**: `latest` must **not** point to VERSION; only the appropriate prerelease tag (`alpha`, `beta`, or `next`) should.
 
 Report a summary of all steps completed and confirm the release is done.
 
