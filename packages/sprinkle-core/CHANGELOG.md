@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [6.0.0-rc.3] - 2026-05-16
 
 ### Fixed
 - [Markdown] `ContentController` / `Markdown::getFilePath()` now performs a case-insensitive fallback lookup via `listResources()` when the exact-match locator call returns nothing. Fixes file-not-found errors on case-sensitive filesystems when the URL casing differs from the filename (e.g. URL `tos` → file `Tos.md`).
