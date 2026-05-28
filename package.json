@@ -26,5 +26,10 @@
   },
   "devDependencies": {
     "vite-plugin-dts": "^4.5.4"
+  },
+  "overrides": {
+    "@modyfi/vite-plugin-yaml": {
+      "js-yaml": "4.1.1"
+    }
   }
 }
