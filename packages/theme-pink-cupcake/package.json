@@ -62,7 +62,7 @@
         "dist/"
     ],
     "engines": {
-        "node": ">= 18"
+        "node": ">= 20"
     },
     "dependencies": {
         "@fontsource/montserrat": "^5.2.5",
