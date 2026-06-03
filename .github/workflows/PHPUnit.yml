@@ -43,7 +43,7 @@ jobs:
 
     - uses: actions/setup-node@v6
       with:
-        node-version: 18
+        node-version: 24
 
     - name: Setup Redis-server
       uses: supercharge/redis-github-action@1.8.1
@@ -109,7 +109,7 @@ jobs:
 
     - uses: actions/setup-node@v6
       with:
-        node-version: 18
+        node-version: 24
     
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
@@ -192,7 +192,7 @@ jobs:
 
     - uses: actions/setup-node@v6
       with:
-        node-version: 18
+        node-version: 24
     
     - name: Shutdown Ubuntu MySQL (SUDO)
       run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
@@ -265,7 +265,7 @@ jobs:
 
     - uses: actions/setup-node@v6
       with:
-        node-version: 18
+        node-version: 24
     
     - name: Setup Redis-server
       uses: supercharge/redis-github-action@1.8.1
@@ -340,7 +340,7 @@ jobs:
 
     - uses: actions/setup-node@v6
       with:
-        node-version: 18
+        node-version: 24
 
     - name: Setup Redis-server
       uses: supercharge/redis-github-action@1.8.1
@@ -403,7 +403,7 @@ jobs:
 
 #     - uses: actions/setup-node@v3
 #       with:
-#         node-version: 18
+#         node-version: 24
     
 #     - name: Install Dependencies
 #       run: composer update --prefer-dist --no-progress
