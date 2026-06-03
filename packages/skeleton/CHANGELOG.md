@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Bump minimum Node.js requirement from 18 to 20 (Vitest 4 requires `^20 || ^22 || >=24`).
+- Bump `@vitest/coverage-v8` from `^3.1.1` to `^4.1.0` to match Vitest 4.
+
 ## [6.0.0-rc.4] - 2026-05-28
 
 ### Security

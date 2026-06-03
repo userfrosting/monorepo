@@ -55,7 +55,7 @@
         "dist/"
     ],
     "engines": {
-        "node": ">= 18"
+        "node": ">= 20"
     },
     "dependencies": {
         "@regle/core": "^1.6.0",

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Bump minimum Node.js requirement from 18 to 20 (`NODE_MIN_VERSION` in `VersionsService`).
+
 ## [6.0.0-rc.4] - 2026-05-28
 - No changes.
 
