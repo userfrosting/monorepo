@@ -5,179 +5,156 @@ description: Guide through the UserFrosting 6 monorepo release process
 
 # UserFrosting 6 Release Process
 
-Execute a full release of the UserFrosting 6 monorepo autonomously. Follow each step in order. **Execute every step yourself — do not show commands and ask the user to run them.** If any step fails, abort immediately and report the full error output. Only stop to ask the user for input at Step 1 (version confirmation).
+Execute a full release of the UserFrosting 6 monorepo autonomously. Follow each step in order. **Execute every step yourself — do not show commands and ask the user to run them.** If any step fails, abort immediately and report the full error output. Only stop to ask the user for input at Step 2 (version confirmation) and Step 9 (NPM login verification).
 
-## Step 1: Confirm the Version
+## Step 1 : Confirm branch and clean working directory
 
-Ask the user which version to release. Accept either:
-- A specific version string (e.g., `6.0.1`, `6.1.0`)
-- A bump keyword: `patch`, `minor`, or `major`
+Verify the current branch is `6.0` by running `git branch --show-current`. If it is not `6.0`, abort immediately and report: 'Release must be run from the `6.0` branch. Currently on: BRANCH_NAME.'
 
-**Prerelease versions** must follow these formats:
-- Alpha: `6.x.x-alpha.N` (e.g., `6.1.0-alpha.1`)
-- Beta: `6.x.x-beta.N` (e.g., `6.1.0-beta.1`)
-- Release candidate: `6.x.x-rc.N` (e.g., `6.1.0-rc.1`)
+## Step 2: Confirm the Version
 
-If the provided version matches a prerelease format, note it as a prerelease and remind the user that:
-- Prerelease versions are **not** intended for production use.
-- The NPM publish step (Step 6) must use the `--tag` flag to avoid promoting the prerelease to `latest`:
-  - Alpha: `--tag alpha`
-  - Beta: `--tag beta`
-  - RC: `--tag next`
+Ask the user which version to release (e.g. `6.0.1`, `6.1.0-rc.1`).
 
-**Ask the user to confirm the version before continuing.** All remaining steps will be executed automatically.
+Validate that the version matches the pattern `^6\.\d+\.\d+(-(alpha|beta|rc)\.\d+)?$`. If it does not match, reject it and re-prompt before continuing.
 
-## Step 2: Pre-Release Checks
+Also verify the tag does not already exist by running `git ls-remote --tags origin refs/tags/VERSION`. If the tag exists, reject the version and re-prompt with: "Tag VERSION already exists on the remote. Please provide a different version."
 
-Run all of the following. If any command fails, stop immediately and show the full error output.
+**Ask the user to confirm the version before continuing.**
 
-**PHP:**
-- Run `vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php`
-- Run `vendor/bin/phpstan analyse -c phpstan.neon`
-- Run `vendor/bin/phpunit`
+## Step 3: Pre-Release Checks
 
-**TypeScript:**
-- Run `npm run lint`
-- Run `npm run format`
-- Run `npm run typecheck`
-- Run `npm run build`
+Run all of the following. If any fails, stop immediately and show the full error.
 
-## Step 3: Update Changelogs
+```bash
+vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php
+vendor/bin/phpstan analyse -c phpstan.neon
+vendor/bin/phpunit
+npm run lint && npm run format && npm run typecheck && npm run build
+```
 
-> **Critical:** The `AddTagToChangelogReleaseWorker` (Step 5) only matches `## Unreleased` (no brackets) and is a **no-op** for this project, which uses the `## [Unreleased]` format. All changelog updates must be done manually here.
+## Step 4: Update Changelogs
 
-For every `packages/*/CHANGELOG.md` and the root `CHANGELOG.md`:
+For every `packages/*/CHANGELOG.md` and the root `CHANGELOG.md`, insert the new version section at the top. If the `Unreleased` section contains content, move it under the new version. If the `Unreleased` section is empty, add a placeholder change: '- No changes.'. Use the locale date in `YYYY-MM-DD` format for the release date.
 
-- If the file has a `## [Unreleased]` section: replace it with `## [VERSION] - YYYY-MM-DD` using today's date.
-- If the file has **no** `## [Unreleased]` section (e.g. a package with no changes since last release): insert a new `## [VERSION] - YYYY-MM-DD\n- No changes.\n` block immediately above the previous release heading.
+Case A (has unreleased content):
+BEFORE:
+```
+## [Unreleased]
+- Fix foo
 
-Commit all changelog changes: `docs: update changelogs for VERSION`.
+## [6.0.0] - 2024-01-01
+```
+AFTER:
+```
+## [Unreleased]
 
-## Step 4: Merge Composer Configuration
+## [6.0.1] - 2024-06-01
+- Fix foo
 
-Run `vendor/bin/monorepo-builder merge`. If `composer.json` changed, commit the result before proceeding.
+## [6.0.0] - 2024-01-01
+```
 
-## Step 5: Run the Release
+Case B (no unreleased content):
+BEFORE:
+```
+## [Unreleased]
 
-Run `vendor/bin/monorepo-builder release VERSION`.
+## [6.0.0] - 2024-01-01
+```
+AFTER:
+```
+## [Unreleased]
 
-This command runs the following workers in order:
-1. `UpdateReplaceReleaseWorker` — updates `replace` entries in `composer.json`
-2. `SetCurrentMutualDependenciesReleaseWorker` — pins mutual package versions
-3. `AddTagToChangelogReleaseWorker` — **no-op** for this project (changelogs already updated in Step 3)
-4. `NpmVersionWorker` — bumps all `package.json` versions
-5. `TagVersionReleaseWorker` — creates the git tag locally
-6. `PushTagReleaseWorker` — pushes the tag and commits to `origin`
-7. `SetNextMutualDependenciesReleaseWorker` — sets `dev-main` versions
-8. `UpdateBranchAliasReleaseWorker` — updates the branch alias in `composer.json`
+## [6.0.1] - 2024-06-01
+- No changes.
 
-## Step 6: Publish to NPM
+## [6.0.0] - 2024-01-01
+```
 
-First run `npm login`. If it prompts for browser authentication, open the URL and complete the login flow before continuing.
+Commit: `git commit -m "docs: update changelogs for VERSION"`
 
-Then publish:
+## Step 5: Merge Composer Configuration
+
+```bash
+vendor/bin/monorepo-builder merge
+```
+
+Check for changes with `git diff --exit-code composer.json`; if the exit code is non-zero, stage and commit: `git add composer.json && git commit -m "chore: merge composer.json changes"`
+
+## Step 6: Run the Release
+
+```bash
+vendor/bin/monorepo-builder release VERSION
+```
+
+If this command fails after partially executing (e.g., some tags already pushed), do NOT retry automatically. Stop and report: "monorepo-builder release partially failed. Manually verify which tags were pushed with `git ls-remote --tags origin` before taking any further action."
+
+## Step 7: GitHub Releases (Monorepo)
+
+Create the GitHub release for the monorepo first, using the root `CHANGELOG.md` content. Write the extracted changelog section to `/tmp/uf_release_notes.md` using a heredoc or file-write tool call before running `gh release create`.
+
+This will trigger the monorepo split action that syncs commits to package repos. The tag is already pushed in Step 6, so create the release directly. Use the `--prerelease` flag if the version contains `-alpha.`, `-beta.`, or `-rc.`.
+
+```bash
+gh release create VERSION --repo userfrosting/monorepo --title "VERSION" --notes /tmp/uf_release_notes.md [--prerelease]
+```
+
+## Step 8: GitHub Releases (Package Repos)
+
+**Package repos:**
+
+| Package directory             | GitHub repo                         | Changelog source                           |
+| ----------------------------- | ----------------------------------- | ------------------------------------------ |
+| `packages/framework`          | `userfrosting/framework`            | `packages/framework/CHANGELOG.md`          |
+| `packages/sprinkle-core`      | `userfrosting/sprinkle-core`        | `packages/sprinkle-core/CHANGELOG.md`      |
+| `packages/sprinkle-account`   | `userfrosting/sprinkle-account`     | `packages/sprinkle-account/CHANGELOG.md`   |
+| `packages/sprinkle-admin`     | `userfrosting/sprinkle-admin`       | `packages/sprinkle-admin/CHANGELOG.md`     |
+| `packages/theme-pink-cupcake` | `userfrosting/theme-pink-cupcake`   | `packages/theme-pink-cupcake/CHANGELOG.md` |
+| `packages/skeleton`           | `userfrosting/UserFrosting`         | `packages/skeleton/CHANGELOG.md`           |
+
+> **Critical:** The monorepo split syncs **commits** but does **not** push tags. Tags must be created manually on each package repo. Always get the `6.0` branch HEAD SHA from the **individual repo** — never assume it matches the monorepo SHA.
+
+**1. Wait for the monorepo split to complete:**
+
+Poll `gh run list` up to 10 times with a 60-second wait between checks (total ~10 minutes). If the workflow has not completed with `✓` after 10 attempts, stop and report: 'Monorepo split workflow has not completed after 10 minutes. Check https://github.com/userfrosting/monorepo/actions before proceeding manually.'
+
+```bash
+gh run list --repo userfrosting/monorepo --workflow=Monorepo.yml --limit 3
+```
+
+To confirm the correct run, match the workflow run's trigger SHA against the release tag SHA obtained from `gh api repos/userfrosting/monorepo/git/refs/tags/VERSION --jq ".object.sha"`. Only proceed if they match and the run status is `✓`. If the run with the matching SHA has a failed status, stop and report: 'Monorepo split workflow run for this release has failed. Check https://github.com/userfrosting/monorepo/actions before proceeding manually.'
+
+**2. For each repo in the table above, sequentially, one after another without stopping between repos unless an error occurs:**
+
+Get the correct SHA:
+```bash
+gh api repos/userfrosting/REPO/branches/6.0 --jq '.commit.sha'
+```
+
+Create the tag:
+```bash
+gh api --method POST repos/userfrosting/REPO/git/refs \
+  -f ref="refs/tags/VERSION" -f sha="SHA"
+```
+
+Generate the release notes by extracting the new version section from the package's `CHANGELOG.md` (e.g. `packages/framework/CHANGELOG.md`) and write it to `/tmp/uf_release_notes.md`. You can use a heredoc or file-write tool call to create the file with the extracted content.
+
+Create the release:
+```bash
+gh release create VERSION --repo userfrosting/REPO --title "VERSION" --notes /tmp/uf_release_notes.md [--prerelease] --target 6.0
+```
+
+## Step 9: NPM Publish
+
+> **Requires manual login first.** `npm login` uses browser-based authentication and **cannot be completed by the agent**. Before running this step, ask the user to verify they are logged in with `npm whoami`. If not logged in, ask them to run `npm login` manually.
+
+Once logged in, publish all packages using the `-workspaces` option. Select the publish command based on the version suffix: if the version contains `-alpha.`, use the Alpha command; if it contains `-beta.`, use the Beta command; if it contains `-rc.`, use the RC command; if there is no suffix, use the Stable command.
+
 - **Stable**: `npm publish --access public --workspaces`
 - **Alpha**: `npm publish --access public --workspaces --tag alpha`
 - **Beta**: `npm publish --access public --workspaces --tag beta`
 - **RC**: `npm publish --access public --workspaces --tag next`
 
-> **Note:** The `userfrosting` (skeleton) package is marked `private` and will be skipped with a warning — this is expected.
+> The `userfrosting` (skeleton) package is `private` and will be skipped — this is expected.
 
-### If `latest` was incorrectly set by a prerelease publish
-
-If a prerelease was accidentally published without `--tag`, npm will have set `latest` to that version. Fix it by re-pointing `latest` to the correct version for every affected package:
-
-```bash
-# Point `latest` to the current RC (replace VERSION as needed)
-npm dist-tag add @userfrosting/sprinkle-core@VERSION latest
-npm dist-tag add @userfrosting/sprinkle-account@VERSION latest
-npm dist-tag add @userfrosting/sprinkle-admin@VERSION latest
-npm dist-tag add @userfrosting/theme-pink-cupcake@VERSION latest
-```
-
-> Each command will prompt for browser-based npm authentication — open each URL and press ENTER to continue.
-
-## Step 7: Create GitHub Releases
-
-**Package repos and changelog sources:**
-
-| Package directory             | GitHub repo                       | Changelog source                          |
-| ----------------------------- | --------------------------------- | ----------------------------------------- |
-| *(monorepo root)*             | `userfrosting/monorepo`           | root `CHANGELOG.md`                       |
-| `packages/framework`          | `userfrosting/framework`          | `packages/framework/CHANGELOG.md`         |
-| `packages/sprinkle-core`      | `userfrosting/sprinkle-core`      | `packages/sprinkle-core/CHANGELOG.md`     |
-| `packages/sprinkle-account`   | `userfrosting/sprinkle-account`   | `packages/sprinkle-account/CHANGELOG.md`  |
-| `packages/sprinkle-admin`     | `userfrosting/sprinkle-admin`     | `packages/sprinkle-admin/CHANGELOG.md`    |
-| `packages/theme-pink-cupcake` | `userfrosting/theme-pink-cupcake` | `packages/theme-pink-cupcake/CHANGELOG.md`|
-| `packages/skeleton`           | `userfrosting/userfrosting`       | `packages/skeleton/CHANGELOG.md`          |
-
-### 7a. Monorepo release
-
-The monorepo tag was already pushed in Step 5. Create the release directly — no tag creation needed:
-
-```bash
-gh release create VERSION --repo userfrosting/monorepo --title "VERSION" \
-  --notes-file /tmp/release-notes-monorepo.md [--prerelease]
-```
-
-### 7b. Package repo releases
-
-> **Critical:** The monorepo split workflow (`.github/workflows/Monorepo.yml`) syncs **commits** to individual package repos but does **not** push tags. Tags must be created manually. The split also runs **asynchronously** — if you create tags before it finishes, they will point to stale commits.
-
-**1. Wait for the monorepo split to complete:**
-
-Run `gh run list --repo userfrosting/monorepo --workflow=Monorepo.yml --limit 3` and confirm the most recent run triggered by the "prepare release" commit on the `6.0` branch shows `✓`.
-
-**2. For each package repo:**
-
-Get the `6.0` HEAD SHA (after the split has completed):
-```bash
-gh api repos/userfrosting/REPO/git/refs/heads/6.0 --jq '.object.sha'
-```
-
-Create the tag on that SHA:
-```bash
-gh api repos/userfrosting/REPO/git/refs -X POST \
-  -f ref="refs/tags/VERSION" -f sha="SHA"
-```
-
-Find the previous version (for the Full Changelog URL):
-```bash
-git describe --tags --abbrev=0 VERSION^
-```
-
-Build release notes:
-```markdown
-## What's Changed
-
-<entries from package CHANGELOG.md for VERSION>
-
-**Full Changelog**: https://github.com/userfrosting/REPO/compare/PREV_VERSION...VERSION
-```
-
-Create the release:
-```bash
-gh release create VERSION --repo userfrosting/REPO --title "VERSION" \
-  --notes-file /tmp/release-notes-REPO.md [--prerelease]
-```
-
-## Step 8: Post-Release Verification
-
-Verify:
-1. Local tag exists: `git tag --list | grep VERSION`
-2. Each package repo tag points to the correct commit (the `6.0` branch HEAD, not a stale commit):
-   ```bash
-   gh api repos/userfrosting/REPO/git/refs/tags/VERSION --jq '.object.sha'
-   gh api repos/userfrosting/REPO/git/refs/heads/6.0 --jq '.object.sha'
-   ```
-   Both SHAs must match for every repo.
-3. GitHub releases exist for all 7 repos (monorepo + 6 packages).
-4. NPM packages are published and dist-tags are correct:
-   ```bash
-   npm view @userfrosting/sprinkle-core dist-tags
-   ```
-   - **Stable release**: `latest` must point to VERSION.
-   - **Prerelease (alpha/beta/RC)**: `latest` must **not** point to VERSION; only the appropriate prerelease tag (`alpha`, `beta`, or `next`) should.
-
-Report a summary of all steps completed and confirm the release is done.
-
+If `npm publish` fails with an 'over existing version' error for a specific workspace package, skip that package and continue publishing remaining packages. Report all skipped packages at the end.
