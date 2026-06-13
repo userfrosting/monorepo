@@ -19,8 +19,6 @@ Validate that the version matches the pattern `^6\.\d+\.\d+(-(alpha|beta|rc)\.\d
 
 Also verify the tag does not already exist by running `git ls-remote --tags origin refs/tags/VERSION`. If the tag exists, reject the version and re-prompt with: "Tag VERSION already exists on the remote. Please provide a different version."
 
-**Ask the user to confirm the version before continuing.**
-
 ## Step 3: Pre-Release Checks
 
 Run all of the following. If any fails, stop immediately and show the full error.
@@ -34,7 +32,9 @@ npm run lint && npm run format && npm run typecheck && npm run build
 
 ## Step 4: Update Changelogs
 
-For every `packages/*/CHANGELOG.md` and the root `CHANGELOG.md`, insert the new version section at the top. If the `Unreleased` section contains content, move it under the new version. If the `Unreleased` section is empty, add a placeholder change: '- No changes.'. Use the locale date in `YYYY-MM-DD` format for the release date.
+For every `packages/*/CHANGELOG.md` and the root `CHANGELOG.md`, insert the new version section at the top. If the `Unreleased` section contains content, move it under the new version. If the `Unreleased` section is empty, add a placeholder change: '- No changes.'. 
+
+The version section header should be in the format: `## [VERSION](https://github.com/userfrosting/REPO/compare/PREVIOUS_VERSION...VERSION) - YYYY-MM-DD`. Use the locale date for the release date. The `PREVIOUS_VERSION` should be the latest released version in that changelog (e.g. `5.2.0`).
 
 Case A (has unreleased content):
 BEFORE:
@@ -42,16 +42,16 @@ BEFORE:
 ## [Unreleased]
 - Fix foo
 
-## [6.0.0] - 2024-01-01
+## [6.0.0](https://github.com/userfrosting/REPO/compare/5.2.0...6.0.0) - 2024-01-01
 ```
 AFTER:
 ```
 ## [Unreleased]
 
-## [6.0.1] - 2024-06-01
+## [6.0.1](https://github.com/userfrosting/REPO/compare/6.0.0...6.0.1) - 2024-06-01
 - Fix foo
 
-## [6.0.0] - 2024-01-01
+## [6.0.0](https://github.com/userfrosting/REPO/compare/5.2.0...6.0.0) - 2024-01-01
 ```
 
 Case B (no unreleased content):
@@ -59,19 +59,19 @@ BEFORE:
 ```
 ## [Unreleased]
 
-## [6.0.0] - 2024-01-01
+## [6.0.0](https://github.com/userfrosting/REPO/compare/5.2.0...6.0.0) - 2024-01-01
 ```
 AFTER:
 ```
 ## [Unreleased]
 
-## [6.0.1] - 2024-06-01
+## [6.0.1](https://github.com/userfrosting/REPO/compare/6.0.0...6.0.1) - 2024-06-01
 - No changes.
 
-## [6.0.0] - 2024-01-01
+## [6.0.0](https://github.com/userfrosting/REPO/compare/5.2.0...6.0.0) - 2024-01-01
 ```
 
-Commit: `git commit -m "docs: update changelogs for VERSION"`
+Commit: `git commit -m "docs: update changelogs for VERSION"` and push to the remote `6.0` branch before proceeding to the next step.
 
 ## Step 5: Merge Composer Configuration
 
@@ -79,7 +79,7 @@ Commit: `git commit -m "docs: update changelogs for VERSION"`
 vendor/bin/monorepo-builder merge
 ```
 
-Check for changes with `git diff --exit-code composer.json`; if the exit code is non-zero, stage and commit: `git add composer.json && git commit -m "chore: merge composer.json changes"`
+Check for changes with `git diff --exit-code composer.json`; if the exit code is non-zero, stage and commit: `git add composer.json && git commit -m "chore: merge composer.json changes"` and push to the remote `6.0` branch.
 
 ## Step 6: Run the Release
 
@@ -89,9 +89,13 @@ vendor/bin/monorepo-builder release VERSION
 
 If this command fails after partially executing (e.g., some tags already pushed), do NOT retry automatically. Stop and report: "monorepo-builder release partially failed. Manually verify which tags were pushed with `git ls-remote --tags origin` before taking any further action."
 
+Commit and push any remaining changes if necessary, but do NOT create any tags manually — the `release` command handles tag creation. If the command failed before pushing tags, you can retry after fixing the underlying issue. If it failed after pushing some tags, you must resolve the state manually before proceeding to Step 7.
+
 ## Step 7: GitHub Releases (Monorepo)
 
-Create the GitHub release for the monorepo first, using the root `CHANGELOG.md` content. Write the extracted changelog section to `/tmp/uf_release_notes.md` using a heredoc or file-write tool call before running `gh release create`.
+Create the GitHub release for the monorepo first. 
+
+Generate the release notes. Include a "## What's Changed" header followed by the new version section extracted from the root `CHANGELOG.md` (e.g. the section starting with `## [6.0.1]` and ending before the next `##` header). Add a `Full Changelog: [PREVIOUS_VERSION...VERSION](https://github.com/userfrosting/REPO/compare/PREVIOUS_VERSION...VERSION)` footer line. Write this content to `/tmp/uf_release_notes.md` using a heredoc or file-write tool call before running `gh release create`.
 
 This will trigger the monorepo split action that syncs commits to package repos. The tag is already pushed in Step 6, so create the release directly. Use the `--prerelease` flag if the version contains `-alpha.`, `-beta.`, or `-rc.`.
 
@@ -137,7 +141,7 @@ gh api --method POST repos/userfrosting/REPO/git/refs \
   -f ref="refs/tags/VERSION" -f sha="SHA"
 ```
 
-Generate the release notes by extracting the new version section from the package's `CHANGELOG.md` (e.g. `packages/framework/CHANGELOG.md`) and write it to `/tmp/uf_release_notes.md`. You can use a heredoc or file-write tool call to create the file with the extracted content.
+Generate the release notes. Include a "## What's Changed" header followed by the new version section extracted from the package's `CHANGELOG.md` (e.g. `packages/framework/CHANGELOG.md`). Add a `Full Changelog: [PREVIOUS_VERSION...VERSION](https://github.com/userfrosting/REPO/compare/PREVIOUS_VERSION...VERSION)` footer line. Write this content to `/tmp/uf_release_notes.md` using a heredoc or file-write tool call before running `gh release create`.
 
 Create the release:
 ```bash
@@ -146,9 +150,11 @@ gh release create VERSION --repo userfrosting/REPO --title "VERSION" --notes /tm
 
 ## Step 9: NPM Publish
 
-> **Requires manual login first.** `npm login` uses browser-based authentication and **cannot be completed by the agent**. Before running this step, ask the user to verify they are logged in with `npm whoami`. If not logged in, ask them to run `npm login` manually.
+> **Requires manual login first.** `npm login` uses browser-based authentication and **cannot be completed by the agent**. Before running this step, verify the user is logged in with `npm whoami`. If not logged in, ask them to run `npm login` manually in a terminal.
 
-Once logged in, publish all packages using the `-workspaces` option. Select the publish command based on the version suffix: if the version contains `-alpha.`, use the Alpha command; if it contains `-beta.`, use the Beta command; if it contains `-rc.`, use the RC command; if there is no suffix, use the Stable command.
+Once logged in, publish all packages using the `-workspaces` option. This command will ask the user to confirm in the browser for each package publish, so do not attempt to publish packages in parallel. Run the command in a terminal exposed to the user so he can click on the URL. Once he authenticate, the command will continue processing.
+
+Select the publish command based on the version suffix: if the version contains `-alpha.`, use the Alpha command; if it contains `-beta.`, use the Beta command; if it contains `-rc.`, use the RC command; if there is no suffix, use the Stable command.
 
 - **Stable**: `npm publish --access public --workspaces`
 - **Alpha**: `npm publish --access public --workspaces --tag alpha`
