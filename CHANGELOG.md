@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- [Core] Update Google Analytics tracking code to GA4 format in `analytics.html.twig`. Note: This is a breaking change for users who have customized this template with the old Universal Analytics code. You will need to update your custom template to use the new GA4 code format.
+
 ## 6.0.0 - 2026-06-12
 - No changes.
 
