@@ -7,22 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [6.0.0] - 2026-06-12
+## 6.0.0 - 2026-06-12
 - No changes.
 
-## [6.0.0-rc.5] - 2026-06-03
+## 6.0.0-rc.5 - 2026-06-03
 
 ### Changed
 - Bump minimum Node.js requirement from 18 to 20 across all packages (Vitest 4 requires `^20 || ^22 || >=24`).
 - Bump `@vitest/coverage-v8` from `^3.1.1` to `^4.1.0` to align with Vitest 4.
 - Update Frontend CI matrix: replace Node 18 with Node 20.
 
-## [6.0.0-rc.4] - 2026-05-28
+## 6.0.0-rc.4 - 2026-05-28
 
 ### Security
 - Force `js-yaml` to `4.1.1` via npm `overrides` to fix prototype pollution vulnerability in merge (`<<`) operator ([GHSA-mh29-5h37-fv8m](https://github.com/advisories/GHSA-mh29-5h37-fv8m)) introduced transitively via `@modyfi/vite-plugin-yaml`. Temp fix until `@modyfi/vite-plugin-yaml` is updated to use `js-yaml` 4.1.1 or later.
 
-## [6.0.0-rc.3] - 2026-05-16
+## 6.0.0-rc.3 - 2026-05-16
 
 ### Fixed
 - [Core] `Markdown::getFilePath()` now performs a case-insensitive fallback lookup when the exact-match locator call returns nothing, fixing 404s on case-sensitive filesystems when URL casing differs from the filename (e.g. `tos` → `Tos.md`).

@@ -6,16 +6,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
-## [6.0.0] - 2026-06-12
+## [6.0.0](https://github.com/userfrosting/framework/compare/6.0.0-rc.5...6.0.0) - 2026-06-12
 - No changes.
 
-## [6.0.0-rc.5] - 2026-06-03
+## [6.0.0-rc.5](https://github.com/userfrosting/framework/compare/6.0.0-rc.4...6.0.0-rc.5) - 2026-06-03
 - No changes.
 
-## [6.0.0-rc.4] - 2026-05-28
+## [6.0.0-rc.4](https://github.com/userfrosting/framework/compare/6.0.0-rc.3...6.0.0-rc.4) - 2026-05-28
 - No changes.
 
-## [6.0.0-rc.3] - 2026-05-16
+## [6.0.0-rc.3](https://github.com/userfrosting/framework/compare/6.0.0-rc.2...6.0.0-rc.3) - 2026-05-16
 
 ### Fixed
 - `DotenvEditor::save()` now preserves existing file permissions when overwriting a file, and creates new files with mode `0644` instead of the restrictive `0600` that `tempnam()` produces. This prevented the web server process (e.g. `www-data`) from reading a `.env` file created or updated via `php bakery setup:env`.

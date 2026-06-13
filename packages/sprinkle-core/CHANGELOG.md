@@ -7,18 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [6.0.0] - 2026-06-12
+## [6.0.0](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-rc.5...6.0.0) - 2026-06-12
 - No changes.
 
-## [6.0.0-rc.5] - 2026-06-03
+## [6.0.0-rc.5](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-rc.4...6.0.0-rc.5) - 2026-06-03
 
 ### Changed
 - Bump minimum Node.js requirement from 18 to 20 (`NODE_MIN_VERSION` in `VersionsService`).
 
-## [6.0.0-rc.4] - 2026-05-28
+## [6.0.0-rc.4](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-rc.3...6.0.0-rc.4) - 2026-05-28
 - No changes.
 
-## [6.0.0-rc.3] - 2026-05-16
+## [6.0.0-rc.3](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-rc.2...6.0.0-rc.3) - 2026-05-16
 
 ### Fixed
 - [Markdown] `ContentController` / `Markdown::getFilePath()` now performs a case-insensitive fallback lookup via `listResources()` when the exact-match locator call returns nothing. Fixes file-not-found errors on case-sensitive filesystems when the URL casing differs from the filename (e.g. URL `tos` → file `Tos.md`).

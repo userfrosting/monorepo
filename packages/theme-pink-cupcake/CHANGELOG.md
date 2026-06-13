@@ -7,18 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [6.0.0] - 2026-06-12
+## [6.0.0](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-rc.5...6.0.0) - 2026-06-12
 - No changes.
 
-## [6.0.0-rc.5] - 2026-06-03
+## [6.0.0-rc.5](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-rc.4...6.0.0-rc.5) - 2026-06-03
 
 ### Changed
 - Bump minimum Node.js engine requirement from `>= 18` to `>= 20`.
 
-## [6.0.0-rc.4] - 2026-05-28
+## [6.0.0-rc.4](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-rc.3...6.0.0-rc.4) - 2026-05-28
 - No changes.
 
-## [6.0.0-rc.3] - 2026-05-16
+## [6.0.0-rc.3](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-rc.2...6.0.0-rc.3) - 2026-05-16
 
 ### Changed
 - `NavBar`: replaced `uk-sticky` JS-driven wrapper with CSS `position: sticky` on the `<header>` element, eliminating the FOUC/layout reflow caused by UIkit's deferred placeholder insertion.
