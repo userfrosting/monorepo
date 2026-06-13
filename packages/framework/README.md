@@ -19,7 +19,7 @@
 [UF6-KOF-L]: https://ko-fi.com/lcharette
 
 > [!WARNING]
-> Since 6.0, this is a read-only subtree split of the [UserFrosting Monorepo](https://github.com/userfrosting/monorepo). To contribute, all Pull Requests should be sent against the monorepo. Please see the [contributing guidelines](https://github.com/userfrosting/.github/blob/main/.github/CONTRIBUTING.md) for more information.
+> Since 6.0, this is a **read-only** subtree split of the [UserFrosting Monorepo](https://github.com/userfrosting/monorepo). To contribute, all Issues and Pull Requests should be sent against the [monorepo](https://github.com/userfrosting/monorepo). Please see the [contributing guidelines](https://github.com/userfrosting/.github/blob/main/.github/CONTRIBUTING.md) for more information.
 
 ## Installation in your UserFrosting project
 To use this sprinkle in your UserFrosting project, follow theses instructions (*N.B.: This sprinkle is enabled by default when using the base app template*).
