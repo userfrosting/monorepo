@@ -51,7 +51,6 @@ final class BakeCommand extends Command
  \___/|___/\___|_|  \_| |_|  \___/|___/\__|_|_| |_|\__, | \_____/
                                                     __/ |        
                                                    |___/         ";
-                                                   
 
     /**
      * @param \UserFrosting\Event\EventDispatcher $eventDispatcher
