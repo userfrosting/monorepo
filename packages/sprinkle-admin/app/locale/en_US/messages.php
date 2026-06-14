@@ -20,6 +20,7 @@ return [
 
         'LAST'             => 'Last Activity',
         'LATEST'           => 'Latest Activities',
+        'NONE'             => 'No activities yet',
         'PAGE'             => 'Activities',
         'PAGE_DESCRIPTION' => 'A listing of user activities',
         'TIME'             => 'Activity Time',

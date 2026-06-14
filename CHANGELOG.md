@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - [Core] Update Google Analytics tracking code to GA4 format in `analytics.html.twig`. Note: This is a breaking change for users who have customized this template with the old Universal Analytics code. You will need to update your custom template to use the new GA4 code format.
 - [Core] Update Bake command title ASCII art.
+- [Account] Fix user not appearing in the user list if no activity has been recorded for the user yet (see [sprinkle-account#25](https://github.com/userfrosting/sprinkle-account/pull/25)).
 
 ## 6.0.0 - 2026-06-12
 - No changes.

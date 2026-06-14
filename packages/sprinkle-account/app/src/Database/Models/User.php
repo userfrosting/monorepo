@@ -422,7 +422,7 @@ class User extends Model implements UserInterface
     public function scopeJoinLastActivity(Builder $query): Builder|QueryBuilder
     {
         return $query->select('users.*', new Expression('MAX(activities.occurred_at) as last_activity'))
-                     ->join('activities', 'activities.user_id', '=', 'users.id')
+                     ->leftJoin('activities', 'activities.user_id', '=', 'users.id')
                      ->groupBy('users.id');
     }
 

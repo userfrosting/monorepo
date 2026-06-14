@@ -39,9 +39,12 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                     </strong>
                     <div class="uk-text-meta">{{ row.email }}</div>
                 </UFSprunjeColumn>
-                <UFSprunjeColumn>
+                <UFSprunjeColumn v-if="row.last_activity">
                     <div>{{ $tdate(row.last_activity.occurred_at) }}</div>
                     <i>{{ row.last_activity.description }}</i>
+                </UFSprunjeColumn>
+                <UFSprunjeColumn v-else>
+                    <i>{{ $t('ACTIVITY.NONE') }}</i>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
                     <UFLabel :severity="Severity.Danger" v-if="row.flag_enabled == false">
