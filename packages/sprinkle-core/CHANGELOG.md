@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Update Google Analytics tracking code to GA4 format in `analytics.html.twig`. Note: This is a breaking change for users who have customized this template with the old Universal Analytics code. You will need to update your custom template to use the new GA4 code format.
+- Removed `pages/partials/config.js.twig` and `pages/partials/page.js.twig` templates, as they were not being used anymore. This also removes the `site` JavaScript global variable, which is not used by Vue. If you were using `site` in your custom JavaScript, you will need to update your code to use a different method of passing configuration data to the frontend (e.g. implement back in your custom Twig templates).
 - Update Bake command title ASCII art.
 
 ## [6.0.0](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-rc.5...6.0.0) - 2026-06-12

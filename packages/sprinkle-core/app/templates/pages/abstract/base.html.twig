@@ -39,11 +39,6 @@
             {% block content %}{% endblock %}
 
             {% block scripts %}
-                {# Inject PHP Defined Configuration #}
-                <script>
-                {% include "pages/partials/config.js.twig" %}
-                </script>
-
                 {# Override this file in a child sprinkle to override site-level scripts. #}
                 {% include 'content/scripts_site.html.twig' %}
 
