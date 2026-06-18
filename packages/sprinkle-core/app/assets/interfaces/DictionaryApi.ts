@@ -21,5 +21,5 @@ export interface DictionaryConfig {
     regional: string
     authors: string[]
     plural_rule: number
-    dates: string
+    tag: string
 }

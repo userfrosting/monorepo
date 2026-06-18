@@ -10,7 +10,7 @@ const testDictionaryConfig: DictionaryConfig = {
     regional: 'English',
     authors: ['UserFrosting'],
     plural_rule: 1,
-    dates: 'en-US'
+    tag: 'en-US'
 }
 
 const testDictionaryConfigFr: DictionaryConfig = {
@@ -18,7 +18,7 @@ const testDictionaryConfigFr: DictionaryConfig = {
     regional: 'Français',
     authors: ['Malou'],
     plural_rule: 1,
-    dates: 'fr-FR'
+    tag: 'fr-FR'
 }
 
 const testDictionaryEntries: DictionaryEntries = {
@@ -88,7 +88,7 @@ describe('API Tests', async () => {
             regional: '',
             authors: [],
             plural_rule: 0,
-            dates: ''
+            tag: ''
         })
 
         // Act

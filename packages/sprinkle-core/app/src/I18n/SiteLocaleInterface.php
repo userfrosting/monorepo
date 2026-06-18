@@ -69,4 +69,18 @@ interface SiteLocaleInterface
      * @todo This should accept the request service as argument, or null, in which case the `getBrowserLocale` method would be skipped
      */
     public function getLocaleIdentifier(): string;
+
+    /**
+     * Returns the Locale instance for the current locale identifier.
+     *
+     * @return Locale
+     */
+    public function getLocale(): Locale;
+
+    /**
+     * Returns the locale configuration for the current locale identifier.
+     *
+     * @return mixed[]
+     */
+    public function getLocaleConfig(): array;
 }

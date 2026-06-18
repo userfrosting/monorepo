@@ -62,7 +62,7 @@ export const useTranslator = defineStore(
             regional: '',
             authors: [],
             plural_rule: 0,
-            dates: ''
+            tag: ''
         })
 
         /**
@@ -117,7 +117,7 @@ export const useTranslator = defineStore(
          * @param date The date to format, in ISO format
          */
         function getDateTime(date: string): DateTime {
-            return DateTime.fromISO(date).setLocale(config.value.dates)
+            return DateTime.fromISO(date).setLocale(config.value.tag)
         }
 
         // TODO : Add doc + make Placeholders a type

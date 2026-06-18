@@ -17,7 +17,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Slim\Views\Twig;
 use UserFrosting\I18n\Translator;
-use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
+use UserFrosting\Sprinkle\Core\I18n\SiteLocaleInterface;
 use UserFrosting\Sprinkle\Core\Twig\Extensions\I18nExtension;
 
 /**
@@ -38,9 +38,17 @@ class I18nExtensionTest extends TestCase
             ->andReturn('foobar')
             ->getMock();
 
-        /** @var SiteLocale */
-        $siteLocale = Mockery::mock(SiteLocale::class)
+        /** @var SiteLocaleInterface */
+        $siteLocale = Mockery::mock(SiteLocaleInterface::class)
             ->shouldReceive('getLocaleIdentifier')->andReturn('fr_FR')
+            ->shouldReceive('getLocaleConfig')->andReturn([
+                'name'        => 'French',
+                'regional'    => 'Français',
+                'authors'     => ['Me'],
+                'plural_rule' => 2,
+                'tag'         => 'fr-FR',
+                'parents'     => ['en_US'],
+            ])
             ->getMock();
 
         // Create and add to extensions.
@@ -55,5 +63,8 @@ class I18nExtensionTest extends TestCase
 
         $result = $view->fetchFromString('{{ currentLocale }}');
         $this->assertSame('fr_FR', $result);
+
+        $result = $view->fetchFromString('{{ currentLocaleConfig.tag }}');
+        $this->assertSame('fr-FR', $result);
     }
 }

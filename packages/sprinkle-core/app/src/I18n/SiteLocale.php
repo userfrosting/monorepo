@@ -139,6 +139,26 @@ class SiteLocale implements SiteLocaleInterface
     }
 
     /**
+     * Returns the Locale instance for the current locale identifier.
+     *
+     * @return Locale
+     */
+    public function getLocale(): Locale
+    {
+        return new Locale($this->getLocaleIdentifier());
+    }
+
+    /**
+     * Returns the locale configuration for the current locale identifier.
+     *
+     * @return mixed[]
+     */
+    public function getLocaleConfig(): array
+    {
+        return $this->getLocale()->getConfig();
+    }
+
+    /**
      * Return the browser locale.
      *
      * @return string|null Returns null if no valid locale can be found

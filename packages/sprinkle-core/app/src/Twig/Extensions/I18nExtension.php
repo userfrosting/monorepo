@@ -16,7 +16,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 use Twig\TwigFunction;
 use UserFrosting\I18n\Translator;
-use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
+use UserFrosting\Sprinkle\Core\I18n\SiteLocaleInterface;
 
 class I18nExtension extends AbstractExtension implements GlobalsInterface
 {
@@ -25,7 +25,7 @@ class I18nExtension extends AbstractExtension implements GlobalsInterface
      */
     public function __construct(
         protected Translator $translator,
-        protected SiteLocale $locale,
+        protected SiteLocaleInterface $locale,
     ) {
     }
 
@@ -49,7 +49,8 @@ class I18nExtension extends AbstractExtension implements GlobalsInterface
     public function getGlobals(): array
     {
         return [
-            'currentLocale' => $this->locale->getLocaleIdentifier(),
+            'currentLocale'       => $this->locale->getLocaleIdentifier(),
+            'currentLocaleConfig' => $this->locale->getLocaleConfig(),
         ];
     }
 }
