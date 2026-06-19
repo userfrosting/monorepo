@@ -25,6 +25,7 @@ import SideBarItem from './SideBar/SideBarItem.vue'
 import SideBarLabel from './SideBar/SideBarLabel.vue'
 import SideBarUserCard from './SideBar/SideBarUserCard.vue'
 import SprunjeColumn from './Sprunjer/SprunjeColumn.vue'
+import SprunjeDownload from './Sprunjer/SprunjeDownload.vue'
 import SprunjeFilters from './Sprunjer/SprunjeFilters.vue'
 import SprunjeHeader from './Sprunjer/SprunjeHeader.vue'
 import SprunjePaginator from './Sprunjer/SprunjePaginator.vue'
@@ -61,6 +62,7 @@ export {
     SideBarLabel,
     SideBarUserCard,
     SprunjeColumn,
+    SprunjeDownload,
     SprunjeFilters,
     SprunjeHeader,
     SprunjePaginator,

@@ -27,6 +27,7 @@ import {
     SideBarLabel,
     SideBarUserCard,
     SprunjeColumn,
+    SprunjeDownload,
     SprunjeFilters,
     SprunjeHeader,
     SprunjePaginator,
@@ -69,6 +70,7 @@ export default {
             .component('UFSideBarLabel', SideBarLabel)
             .component('UFSideBarUserCard', SideBarUserCard)
             .component('UFSprunjeColumn', SprunjeColumn)
+            .component('UFSprunjeDownload', SprunjeDownload)
             .component('UFSprunjeFilters', SprunjeFilters)
             .component('UFSprunjeHeader', SprunjeHeader)
             .component('UFSprunjePaginator', SprunjePaginator)
@@ -108,6 +110,7 @@ declare module 'vue' {
         UFSideBarLabel: typeof SideBarLabel
         UFSideBarUserCard: typeof SideBarUserCard
         UFSprunjeColumn: typeof SprunjeColumn
+        UFSprunjeDownload: typeof SprunjeDownload
         UFSprunjeFilters: typeof SprunjeFilters
         UFSprunjeHeader: typeof SprunjeHeader
         UFSprunjePaginator: typeof SprunjePaginator

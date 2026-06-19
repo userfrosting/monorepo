@@ -134,7 +134,38 @@ export const useSprunjer = (
      * Download the data as a CSV file
      */
     function downloadCsv() {
-        console.log('Not yet implemented')
+        loading.value = true
+        axios
+            .get<Blob>(toValue(dataUrl), {
+                params: {
+                    size: size.value,
+                    page: page.value,
+                    sorts: sorts.value,
+                    filters: filters.value,
+                    format: 'csv'
+                },
+                responseType: 'blob' // Required for file handling
+            })
+            .then((response) => {
+                // Create a hidden link element to force browser download
+                const blobUrl = window.URL.createObjectURL(new Blob([response.data]))
+                const link = document.createElement('a')
+                link.href = blobUrl
+                link.setAttribute('download', 'export.csv')
+
+                document.body.appendChild(link)
+                link.click()
+
+                // Clean up memory
+                link.remove()
+                window.URL.revokeObjectURL(blobUrl)
+            })
+            .catch((err) => {
+                error.value = err.response.data as ApiErrorResponse
+            })
+            .finally(() => {
+                loading.value = false
+            })
     }
 
     /**

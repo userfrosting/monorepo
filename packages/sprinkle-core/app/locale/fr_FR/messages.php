@@ -27,11 +27,10 @@ return [
     'COPYRIGHT'     => 'Copyright {{year}}',
     'CSRF_MISSING'  => 'Jeton CSRF manquant. Essayez de rafraîchir la page et de soumettre de nouveau?',
 
-    // TODO - Implement
-    // 'DOWNLOAD'     => [
-    //     '@TRANSLATION' => 'Télécharger',
-    //     'CSV'          => 'Télécharger CSV',
-    // ],
+    'DOWNLOAD'     => [
+        '@TRANSLATION' => 'Télécharger',
+        'CSV'          => 'Télécharger CSV',
+    ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'Courriel',

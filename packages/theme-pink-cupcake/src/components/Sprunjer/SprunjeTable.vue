@@ -4,6 +4,7 @@ import { useSprunjer } from '@userfrosting/sprinkle-core/composables'
 import SprunjePaginator from './SprunjePaginator.vue'
 import SprunjeSearch from './SprunjeSearch.vue'
 import SprunjeFilters from './SprunjeFilters.vue'
+import SprunjeDownload from './SprunjeDownload.vue'
 
 /**
  * Props
@@ -12,6 +13,7 @@ const {
     dataUrl,
     hidePagination = false,
     hideFilters = false,
+    hideDownload = false,
     defaultSorts = {},
     defaultFilters = {},
     defaultSize = 10,
@@ -21,6 +23,7 @@ const {
     dataUrl: string
     hidePagination?: boolean
     hideFilters?: boolean
+    hideDownload?: boolean
     defaultSorts?: { [key: string]: string }
     defaultFilters?: { [key: string]: string }
     defaultSize?: number
@@ -59,6 +62,7 @@ provide('sprunjer', sprunjer)
                 v-if="!hideFilters">
                 <font-awesome-icon icon="filter" />
             </a>
+            <SprunjeDownload v-if="!hideDownload" />
         </div>
     </div>
     <div uk-grid class="uk-grid-small uk-grid-divider">

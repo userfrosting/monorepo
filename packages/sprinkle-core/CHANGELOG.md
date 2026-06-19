@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Removed `pages/partials/config.js.twig` and `pages/partials/page.js.twig` templates, as they were not being used anymore. This also removes the `site` JavaScript global variable, which is not used by Vue. If you were using `site` in your custom JavaScript, you will need to update your code to use a different method of passing configuration data to the frontend (e.g. implement back in your custom Twig templates).
 - Update Bake command title ASCII art.
 - Fix [#33](https://github.com/userfrosting/monorepo/issues/33): UF's language codes do not always map to valid HTML lang codes.
+- Add CSV download functionality to the Sprunje tables UI.
 
 ## [6.0.0](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-rc.5...6.0.0) - 2026-06-12
 - No changes.

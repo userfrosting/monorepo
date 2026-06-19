@@ -27,11 +27,10 @@ return [
     'COPYRIGHT'     => 'Copyright {{year}}',
     'CSRF_MISSING'  => 'Missing CSRF token. Try refreshing the page and then submitting again?',
 
-    // TODO - Implement
-    // 'DOWNLOAD'      => [
-    //     '@TRANSLATION' => 'Download',
-    //     'CSV'          => 'Download CSV',
-    // ],
+    'DOWNLOAD'      => [
+        '@TRANSLATION' => 'Download',
+        'CSV'          => 'Download CSV',
+    ],
 
     'EMAIL' => [
         '@TRANSLATION' => 'Email',

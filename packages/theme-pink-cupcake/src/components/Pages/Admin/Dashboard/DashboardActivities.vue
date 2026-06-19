@@ -4,7 +4,8 @@
             dataUrl="/api/activities"
             :defaultSorts="{ occurred_at: 'desc' }"
             hidePagination
-            hideFilters>
+            hideFilters
+            hideDownload>
             <template #header>
                 <UFSprunjeHeader>{{ $t('ACTIVITY.TIME') }}</UFSprunjeHeader>
                 <UFSprunjeHeader>{{ $t('USER') }}</UFSprunjeHeader>

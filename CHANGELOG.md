@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Core] Update Bake command title ASCII art.
 - [Account] Fix user not appearing in the user list if no activity has been recorded for the user yet (see [sprinkle-account#25](https://github.com/userfrosting/sprinkle-account/pull/25)).
 - [Core] Fix [#33](https://github.com/userfrosting/monorepo/issues/33): UF's language codes do not always map to valid HTML lang codes.
+- [Core + Pink-Cupcake] Add CSV download functionality to the Sprunje tables UI.
 
 ## 6.0.0 - 2026-06-12
 - No changes.
