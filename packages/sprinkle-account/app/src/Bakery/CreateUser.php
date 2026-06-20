@@ -141,18 +141,28 @@ class CreateUser extends Command
 
         // Compile all the data.
         $this->io->writeln("Please answer the following questions to create the user:\n");
-        $data = $this->getUserData($input);
-
-        // Load the request schema, data transformer and validate data
         $schema = $this->getSchema();
-        $data = $this->transformer->transform($schema, $data);
-        $errors = $this->validator->validate($schema, $data);
-        if (count($errors) !== 0) {
+        $ignoreInputOptions = false;
+
+        while (true) {
+            $data = $this->getUserData($input, $ignoreInputOptions);
+
+            // Load the request schema, data transformer and validate data
+            $data = $this->transformer->transform($schema, $data);
+            $errors = $this->validator->validate($schema, $data);
+            if (count($errors) === 0) {
+                break;
+            }
+
             foreach ($errors as $error) {
                 $this->io->error($error);
             }
 
-            return self::FAILURE;
+            $this->io->note('Validation failed. Please try again.');
+
+            // If invalid data came from CLI options, prompt the user instead of
+            // looping forever with the same invalid values.
+            $ignoreInputOptions = true;
         }
 
         // Create model and validate.
@@ -225,12 +235,18 @@ class CreateUser extends Command
      * @param string         $field
      * @param string         $question
      * @param bool           $hidden
+     * @param bool           $ignoreInputOptions
      *
      * @return string
      */
-    protected function getField(InputInterface $input, string $field, string $question, bool $hidden = false): string
-    {
-        if (is_string($input->getOption($field)) && $input->getOption($field) !== '') {
+    protected function getField(
+        InputInterface $input,
+        string $field,
+        string $question,
+        bool $hidden = false,
+        bool $ignoreInputOptions = false,
+    ): string {
+        if (!$ignoreInputOptions && is_string($input->getOption($field)) && $input->getOption($field) !== '') {
             return $input->getOption($field);
         }
 
@@ -239,7 +255,7 @@ class CreateUser extends Command
         if (!is_string($value) || $value === '') {
             $this->io->error("You must enter a string value for $field");
 
-            return $this->getField($input, $field, $question, $hidden);
+            return $this->getField($input, $field, $question, $hidden, $ignoreInputOptions);
         }
 
         return $value;
@@ -265,18 +281,19 @@ class CreateUser extends Command
      * Get the user data from the input.
      *
      * @param InputInterface $input
+     * @param bool           $ignoreInputOptions
      *
      * @return array<string, string|bool>
      */
-    protected function getUserData(InputInterface $input): array
+    protected function getUserData(InputInterface $input, bool $ignoreInputOptions = false): array
     {
         return [
-            'user_name'     => $this->getField($input, 'username', 'Enter username'),
-            'password'      => $this->getField($input, 'password', 'Enter password', true),
-            'passwordc'     => $this->getField($input, 'password', 'Confirm password', true),
-            'email'         => $this->getField($input, 'email', 'Enter a valid email address'),
-            'first_name'    => $this->getField($input, 'firstName', 'Enter first name'),
-            'last_name'     => $this->getField($input, 'lastName', 'Enter last name'),
+            'user_name'     => $this->getField($input, 'username', 'Enter username', false, $ignoreInputOptions),
+            'password'      => $this->getField($input, 'password', 'Enter password', true, $ignoreInputOptions),
+            'passwordc'     => $this->getField($input, 'password', 'Confirm password', true, $ignoreInputOptions),
+            'email'         => $this->getField($input, 'email', 'Enter a valid email address', false, $ignoreInputOptions),
+            'first_name'    => $this->getField($input, 'firstName', 'Enter first name', false, $ignoreInputOptions),
+            'last_name'     => $this->getField($input, 'lastName', 'Enter last name', false, $ignoreInputOptions),
             'locale'        => $this->config->getString('site.registration.user_defaults.locale', 'en_US'),
             'flag_verified' => true,
             'flag_enabled'  => true,

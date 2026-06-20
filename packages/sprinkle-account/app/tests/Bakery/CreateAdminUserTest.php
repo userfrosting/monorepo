@@ -203,7 +203,7 @@ class CreateAdminUserTest extends AccountTestCase
      *
      * @group windows-skip
      */
-    public function testForFailedValidation(): void
+    public function testValidationRetriesAfterInvalidEmail(): void
     {
         /** @var CreateAdminUser */
         $command = $this->ci->get(CreateAdminUser::class);
@@ -214,8 +214,14 @@ class CreateAdminUserTest extends AccountTestCase
             'test', // email (invalid)
             'Test', // First name
             'ing', // Last name
+            'test', // username retry
+            'password123', // password retry
+            'password123', // confirmation retry
+            'test@test.com', // email retry
+            'Test', // First name retry
+            'ing', // Last name retry
         ]);
-        $this->assertSame(1, $result->getStatusCode());
+        $this->assertSame(0, $result->getStatusCode());
         $this->assertStringContainsString('Invalid email address.', $result->getDisplay());
     }
 
