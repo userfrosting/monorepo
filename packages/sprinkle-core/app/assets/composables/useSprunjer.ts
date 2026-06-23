@@ -11,7 +11,7 @@
  * @param {String} dataUrl - The URL of the Sprunjer API
  * @param {Object} defaultSorts - An object of default sorts
  * @param {Object} defaultFilters - An object of default filters
- * @param {Number} defaultSize - The default number of items per page
+ * @param {Number|'all'} defaultSize - The default number of items per page
  * @param {Number} defaultPage - The default page number
  *
  * Exports:
@@ -45,11 +45,11 @@ export const useSprunjer = (
     dataUrl: string | (() => string),
     defaultSorts: AssociativeArray = {},
     defaultFilters: AssociativeArray = {},
-    defaultSize: number = 10,
+    defaultSize: number | 'all' = 10,
     defaultPage: number = 0
 ): Sprunjer => {
     // Sprunje parameters
-    const size = ref<number>(defaultSize)
+    const size = ref<number | 'all'>(defaultSize)
     const page = ref<number>(defaultPage)
     const sorts = ref<AssociativeArray>(defaultSorts)
     const filters = ref<AssociativeArray>(defaultFilters)
@@ -107,7 +107,9 @@ export const useSprunjer = (
     const totalPages = computed(() => {
         // N.B.: Sprunjer page starts at 0, not 1
         // Make sure page is never negative
-        return Math.max(Math.ceil((data.value.count_filtered ?? 0) / size.value) - 1, 0)
+        return size.value === 'all'
+            ? 0
+            : Math.max(Math.ceil((data.value.count_filtered ?? 0) / size.value) - 1, 0)
     })
 
     const count = computed(() => {
@@ -115,11 +117,15 @@ export const useSprunjer = (
     })
 
     const first = computed(() => {
-        return Math.min(page.value * size.value + 1, data.value.count ?? 0)
+        return size.value === 'all'
+            ? 1
+            : Math.min(page.value * size.value + 1, data.value.count ?? 0)
     })
 
     const last = computed(() => {
-        return Math.min((page.value + 1) * size.value, data.value.count_filtered ?? 0)
+        return size.value === 'all'
+            ? (data.value.count_filtered ?? 0)
+            : Math.min((page.value + 1) * size.value, data.value.count_filtered ?? 0)
     })
 
     const countFiltered = computed(() => {

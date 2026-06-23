@@ -69,6 +69,15 @@ class SprunjeTest extends CoreTestCase
         'type',
     ];
 
+    /**
+     * @var mixed[]
+     */
+    protected array $expectedRows = [
+        ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
+        ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
+        ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
+    ];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -136,11 +145,7 @@ class SprunjeTest extends CoreTestCase
         $this->assertEquals([
             'count'          => 3,
             'count_filtered' => 3,
-            'rows'           => [
-                ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-                ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
-            ],
+            'rows'           => $this->expectedRows,
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
             'filterable'     => $this->filterable,
@@ -157,9 +162,41 @@ class SprunjeTest extends CoreTestCase
         $this->assertEquals([
             'count'          => 3,
             'count_filtered' => 3,
-            'rows'           => [
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-            ],
+            'rows'           => [$this->expectedRows[1]],
+            'listable'       => $this->listable,
+            'sortable'       => $this->sortable,
+            'filterable'     => $this->filterable,
+        ], $sprunje->getArray());
+    }
+
+    // Same as size > 3
+    public function testWithPaginationForNullSize(): void
+    {
+        $sprunje = new TestSprunje([
+            'size' => null
+        ]);
+
+        $this->assertEquals([
+            'count'          => 3,
+            'count_filtered' => 3,
+            'rows'           => $this->expectedRows,
+            'listable'       => $this->listable,
+            'sortable'       => $this->sortable,
+            'filterable'     => $this->filterable,
+        ], $sprunje->getArray());
+    }
+
+    // Same as size > 3
+    public function testWithPaginationForAllSize(): void
+    {
+        $sprunje = new TestSprunje([
+            'size' => 'all'
+        ]);
+
+        $this->assertEquals([
+            'count'          => 3,
+            'count_filtered' => 3,
+            'rows'           => $this->expectedRows,
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
             'filterable'     => $this->filterable,
@@ -181,9 +218,7 @@ class SprunjeTest extends CoreTestCase
         $this->assertEquals([
             'count'          => 3,
             'count_filtered' => 3,
-            'rows'           => [
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-            ],
+            'rows'           => [$this->expectedRows[1]],
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
             'filterable'     => $this->filterable,
@@ -201,9 +236,9 @@ class SprunjeTest extends CoreTestCase
             'count'          => 3,
             'count_filtered' => 3,
             'rows'           => [
-                ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-                ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
+                $this->expectedRows[2],
+                $this->expectedRows[1],
+                $this->expectedRows[0],
             ],
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
@@ -223,11 +258,7 @@ class SprunjeTest extends CoreTestCase
         $this->assertEquals([
             'count'          => 3,
             'count_filtered' => 3,
-            'rows'           => [
-                ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-                ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
-            ],
+            'rows'           => $this->expectedRows,
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
             'filterable'     => $this->filterable,
@@ -255,8 +286,8 @@ class SprunjeTest extends CoreTestCase
             'count'          => 3,
             'count_filtered' => 2,
             'rows'           => [
-                ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
-                ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
+                $this->expectedRows[0],
+                $this->expectedRows[2],
             ],
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
@@ -292,11 +323,7 @@ class SprunjeTest extends CoreTestCase
         $this->assertEquals([
             'count'          => 3,
             'count_filtered' => 3,
-            'rows'           => [
-                ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-                ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
-            ],
+            'rows'           => $this->expectedRows,
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
             'filterable'     => $this->filterable,
@@ -317,8 +344,8 @@ class SprunjeTest extends CoreTestCase
             'count'          => 3,
             'count_filtered' => 2,
             'rows'           => [
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-                ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
+                $this->expectedRows[1],
+                $this->expectedRows[2],
             ],
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
@@ -337,9 +364,9 @@ class SprunjeTest extends CoreTestCase
             'count'          => 3,
             'count_filtered' => 2,
             'rows'           => [
-                ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
-                // ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-                ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
+                $this->expectedRows[0],
+                // $this->expectedRows[1],
+                $this->expectedRows[2],
             ],
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
@@ -358,9 +385,9 @@ class SprunjeTest extends CoreTestCase
             'count'          => 3,
             'count_filtered' => 1,
             'rows'           => [
-                // ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-                // ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
+                // $this->expectedRows[0],
+                $this->expectedRows[1],
+                // $this->expectedRows[2],
             ],
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
@@ -503,11 +530,7 @@ class SprunjeTest extends CoreTestCase
         $this->assertJsonResponse([
             'count'          => 3,
             'count_filtered' => 3,
-            'rows'           => [
-                ['id' => 1, 'name' => 'The foo', 'description' => 'Le Foo', 'type' => 1, 'active' => true],
-                ['id' => 2, 'name' => 'The bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
-                ['id' => 3, 'name' => 'The foobar', 'description' => 'Le Foo et le Bar', 'type' => 1, 'active' => true],
-            ],
+            'rows'           => $this->expectedRows,
             'listable'       => $this->listable,
             'sortable'       => $this->sortable,
             'filterable'     => $this->filterable,
@@ -524,7 +547,7 @@ class SprunjeTest extends CoreTestCase
             'count'          => 1,
             'count_filtered' => 1,
             'rows'           => [
-                ['id' => 2, 'name' => 'bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false],
+                ['id' => 2, 'name' => 'bar', 'description' => 'Le Bar', 'type' => 2, 'active' => false], // N.B.: name is `bar` and not `The bar` because the transformation is not applied to relations.
             ],
             'listable'       => [],
             'sortable'       => [],

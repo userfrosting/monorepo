@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Update Bake command title ASCII art.
 - Fix [#33](https://github.com/userfrosting/monorepo/issues/33): UF's language codes do not always map to valid HTML lang codes.
 - Add CSV download functionality to the Sprunje tables UI.
+- Allow Sprunjer table to set the default page size to "all" to display all rows in a single page.
 
 ## [6.0.0](https://github.com/userfrosting/sprinkle-core/compare/6.0.0-rc.5...6.0.0) - 2026-06-12
 - No changes.

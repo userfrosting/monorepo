@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Core] Fix [#33](https://github.com/userfrosting/monorepo/issues/33): UF's language codes do not always map to valid HTML lang codes.
 - [Core + Pink-Cupcake] Add CSV download functionality to the Sprunje tables UI.
 - [Account] Make `create:user` retry interactive input after validation errors (including password mismatch) instead of aborting immediately.
+- [Core + Pink-Cupcake] Allow Sprunjer table to set the default page size to "all" to display all rows in a single page.
 
 ## 6.0.0 - 2026-06-12
 - No changes.

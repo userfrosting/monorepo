@@ -26,7 +26,7 @@ const {
     hideDownload?: boolean
     defaultSorts?: { [key: string]: string }
     defaultFilters?: { [key: string]: string }
-    defaultSize?: number
+    defaultSize?: number | 'all'
     defaultPage?: number
     searchColumn?: string
 }>()

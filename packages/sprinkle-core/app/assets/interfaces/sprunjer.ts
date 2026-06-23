@@ -8,7 +8,7 @@ import type { ApiErrorResponse, AssociativeArray } from '.'
 
 export interface Sprunjer {
     dataUrl: string | (() => string)
-    size: Ref<number>
+    size: Ref<number | 'all'>
     page: Ref<number>
     sorts: Ref<AssociativeArray>
     filters: Ref<AssociativeArray>
