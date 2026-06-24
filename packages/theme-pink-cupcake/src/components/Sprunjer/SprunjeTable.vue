@@ -66,7 +66,7 @@ provide('sprunjer', sprunjer)
         </div>
     </div>
     <div uk-grid class="uk-grid-small uk-grid-divider">
-        <div class="uk-width-expand">
+        <div class="uk-width-expand uk-overflow-auto">
             <table class="uk-table uk-table-striped uk-table-small">
                 <thead>
                     <tr>
