@@ -40,7 +40,7 @@ const filterPanelOpen = ref(false)
  * Sprunjer
  */
 const sprunjer = useSprunjer(() => dataUrl, defaultSorts, defaultFilters, defaultSize, defaultPage)
-const { rows } = sprunjer
+const { rows, loading } = sprunjer
 
 /**
  * Provide sprunjer to children components
@@ -66,7 +66,13 @@ provide('sprunjer', sprunjer)
         </div>
     </div>
     <div uk-grid class="uk-grid-small uk-grid-divider">
-        <div class="uk-width-expand uk-overflow-auto">
+        <div v-if="loading" class="uk-width-1-1 uk-text-center">
+            <span uk-spinner="ratio: 2"></span>
+        </div>
+        <div v-if="!loading && rows.length === 0" class="uk-width-1-1 uk-text-center">
+            <p class="uk-text-muted">{{ $t('SPRUNJE.NO_RESULTS') }}</p>
+        </div>
+        <div v-else class="uk-width-expand uk-overflow-auto">
             <table class="uk-table uk-table-striped uk-table-small">
                 <thead>
                     <tr>

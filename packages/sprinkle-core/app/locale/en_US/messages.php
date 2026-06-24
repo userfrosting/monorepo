@@ -65,7 +65,7 @@ return [
     'SPRUNJE'        => [
         'FILTERS'      => 'Filters',
         'FILTER_CLEAR' => 'Clear filters',
-        'NO_RESULTS'   => "Sorry, we've got nothing here.", // TODO : Use with Sprunje pagination -- Move to Sprune
+        'NO_RESULTS'   => "Sorry, we've got nothing here.",
         'SEARCH'       => 'Search {{term}}...',
     ],
     'STATUS'         => 'Status',
