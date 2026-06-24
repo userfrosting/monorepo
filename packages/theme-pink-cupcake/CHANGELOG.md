@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - Add CSV download functionality to the Sprunje tables UI.
 - Allow Sprunjer table to set the default page size to "all" to display all rows in a single page.
+- Replace `RoleManagePermissionModal` and `UserManageRolesModal` table with the Sprunje component.
 
 ## [6.0.0](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-rc.5...6.0.0) - 2026-06-12
 - No changes.

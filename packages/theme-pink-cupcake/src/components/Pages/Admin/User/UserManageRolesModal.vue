@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import UIkit from 'uikit'
 import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
+import type { Sprunjer } from '@userfrosting/sprinkle-core/interfaces'
 import { useUserRolesApi, useUserUpdateApi } from '@userfrosting/sprinkle-admin/composables'
 
 /**
@@ -20,7 +21,7 @@ const { user } = defineProps<{
 /**
  * Methods - Fetch roles, fetch user's roles and submit the form.
  */
-const { loading, selected, roles, fetch } = useUserRolesApi()
+const { loading, selected, fetch } = useUserRolesApi()
 const { submitUserUpdate } = useUserUpdateApi()
 const submitForm = () => {
     submitUserUpdate(user.user_name, 'roles', { roles: selected.value }).then(() => {
@@ -33,20 +34,25 @@ const submitForm = () => {
 }
 
 /**
- * Computed - Check if all roles are selected and handle change of the
- * selectAll checkbox.
+ * Helpers - Compute and toggle "select all" using the Sprunje state.
  */
-const allSelected = computed({
-    get: () => (roles.value ? selected.value.length == roles.value.length : false),
-    set: (allSelected: string) => {
+const allSelected = (sprunje: Sprunjer): boolean => {
+    const filteredRows = sprunje.rows.value
+
+    return filteredRows.length > 0 && filteredRows.every((role) => selected.value.includes(role.id))
+}
+
+const setAllSelected = (allSelected: boolean, sprunje: Sprunjer): void => {
+    // To unselect all
+    if (!allSelected) {
         selected.value.splice(0)
-        if (allSelected) {
-            roles.value.forEach(function (role) {
-                selected.value.push(role.id)
-            })
-        }
+
+        return
     }
-})
+
+    // To select all, based on currently loaded rows. Includes filters.
+    selected.value = sprunje.rows.value.map((role) => role.id)
+}
 
 const modalName = computed(() => 'modal-user-manage-roles-' + user.id)
 </script>
@@ -61,43 +67,42 @@ const modalName = computed(() => 'modal-user-manage-roles-' + user.id)
         <template #header>{{ $t('ROLE.MANAGE') }} - {{ user.full_name }}</template>
         <template #default>
             <p>{{ $t('ROLE.MANAGE_EXPLAIN') }}</p>
-            <div class="uk-text-center" v-if="loading">
-                <font-awesome-icon icon="spinner" spin size="2xl" />
-            </div>
-            <form
-                v-on:submit.prevent="submitForm()"
-                v-if="!loading"
-                class="uk-overflow-auto uk-height-max-large">
-                <fieldset class="uk-fieldset uk-form-stacked">
-                    <table class="uk-table uk-table-striped">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input
-                                        class="uk-checkbox"
-                                        type="checkbox"
-                                        v-model="allSelected" />
-                                </th>
-                                <th>{{ $t('ROLE') }}</th>
-                                <th>{{ $t('DESCRIPTION') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="role in roles" :key="role.id">
-                                <td>
-                                    <input
-                                        class="uk-checkbox"
-                                        type="checkbox"
-                                        :value="role.id"
-                                        v-model="selected" />
-                                </td>
-                                <td>{{ role.name }}</td>
-                                <td>{{ role.description }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </fieldset>
-            </form>
+
+            <UFSprunjeTable
+                dataUrl="/api/roles"
+                searchColumn="name"
+                defaultSize="all"
+                hideDownload
+                hidePagination>
+                <template #header="{ sprunjer }">
+                    <UFSprunjeHeader>
+                        <input
+                            class="uk-checkbox"
+                            type="checkbox"
+                            :checked="allSelected(sprunjer)"
+                            @change="
+                                setAllSelected(
+                                    ($event.target as HTMLInputElement).checked,
+                                    sprunjer
+                                )
+                            " />
+                    </UFSprunjeHeader>
+                    <UFSprunjeHeader sort="name">{{ $t('ROLE') }}</UFSprunjeHeader>
+                    <UFSprunjeHeader sort="description">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
+                </template>
+
+                <template #body="{ row }">
+                    <UFSprunjeColumn>
+                        <input
+                            class="uk-checkbox"
+                            type="checkbox"
+                            :value="row.id"
+                            v-model="selected" />
+                    </UFSprunjeColumn>
+                    <UFSprunjeColumn>{{ row.name }}</UFSprunjeColumn>
+                    <UFSprunjeColumn>{{ row.description }}</UFSprunjeColumn>
+                </template>
+            </UFSprunjeTable>
         </template>
         <template #footer>
             <button class="uk-button uk-button-default uk-modal-close" type="button">

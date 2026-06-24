@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import UIkit from 'uikit'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
+import type { Sprunjer } from '@userfrosting/sprinkle-core/interfaces'
 import { useRolePermissionsApi, useRoleUpdateApi } from '@userfrosting/sprinkle-admin/composables'
 
 /**
@@ -20,7 +21,7 @@ const { role } = defineProps<{
 /**
  * Methods - Fetch permissions, selected, fetch method and submit the form.
  */
-const { loading, selected, permissions, fetch } = useRolePermissionsApi()
+const { loading, selected, fetch } = useRolePermissionsApi()
 const { submitRoleUpdate } = useRoleUpdateApi()
 const submitForm = () => {
     submitRoleUpdate(role.slug, 'permissions', { permissions: selected.value })
@@ -35,20 +36,28 @@ const submitForm = () => {
 }
 
 /**
- * Computed - Check if all permissions are selected and handle change of the
- * selectAll checkbox.
+ * Helpers - Compute and toggle "select all" using the Sprunje state.
  */
-const allSelected = computed({
-    get: () => (permissions.value ? selected.value.length == permissions.value.length : false),
-    set: (allSelected: string) => {
+const allSelected = (sprunje: Sprunjer): boolean => {
+    const filteredRows = sprunje.rows.value
+
+    return (
+        filteredRows.length > 0 &&
+        filteredRows.every((permission) => selected.value.includes(permission.id))
+    )
+}
+
+const setAllSelected = (allSelected: boolean, sprunje: Sprunjer): void => {
+    // To unselect all
+    if (!allSelected) {
         selected.value.splice(0)
-        if (allSelected) {
-            permissions.value.forEach(function (permission) {
-                selected.value.push(permission.id)
-            })
-        }
+
+        return
     }
-})
+
+    // To select all, based on currently loaded rows. Includes filters.
+    selected.value = sprunje.rows.value.map((permission) => permission.id)
+}
 
 const modalName = computed(() => 'modal-role-manage-permission-' + role.id)
 </script>
@@ -63,54 +72,53 @@ const modalName = computed(() => 'modal-role-manage-permission-' + role.id)
         <template #header>{{ $t('PERMISSION.ASSIGN') }} - {{ role.name }}</template>
         <template #default>
             <p>{{ $t('PERMISSION.ASSIGN.EXPLAIN') }}</p>
-            <div class="uk-text-center" v-if="loading">
-                <font-awesome-icon icon="spinner" spin size="2xl" />
-            </div>
-            <form
-                v-on:submit.prevent="submitForm()"
-                v-if="!loading"
-                class="uk-overflow-auto uk-height-max-large">
-                <fieldset class="uk-fieldset uk-form-stacked">
-                    <table class="uk-table uk-table-striped">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input
-                                        class="uk-checkbox"
-                                        type="checkbox"
-                                        v-model="allSelected" />
-                                </th>
-                                <th>{{ $t('PERMISSION') }}</th>
-                                <th>{{ $t('DESCRIPTION') }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="permission in permissions" :key="permission.id">
-                                <td>
-                                    <input
-                                        class="uk-checkbox"
-                                        type="checkbox"
-                                        :value="permission.id"
-                                        v-model="selected" />
-                                </td>
-                                <td>{{ permission.name }}</td>
-                                <td>
-                                    {{ permission.description }}
-                                    <div>
-                                        <code>{{ permission.slug }}</code>
-                                    </div>
-                                    <div>
-                                        ↳
-                                        <code style="white-space: normal">{{
-                                            permission.conditions
-                                        }}</code>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </fieldset>
-            </form>
+
+            <UFSprunjeTable
+                dataUrl="/api/permissions"
+                searchColumn="name"
+                defaultSize="all"
+                hideDownload
+                hidePagination>
+                <template #header="{ sprunjer }">
+                    <UFSprunjeHeader>
+                        <input
+                            class="uk-checkbox"
+                            type="checkbox"
+                            :checked="allSelected(sprunjer)"
+                            @change="
+                                setAllSelected(
+                                    ($event.target as HTMLInputElement).checked,
+                                    sprunjer
+                                )
+                            " />
+                    </UFSprunjeHeader>
+                    <UFSprunjeHeader sort="name">{{ $t('PERMISSION') }}</UFSprunjeHeader>
+                    <UFSprunjeHeader sort="properties">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
+                </template>
+
+                <template #body="{ row }">
+                    <UFSprunjeColumn>
+                        <input
+                            class="uk-checkbox"
+                            type="checkbox"
+                            :value="row.id"
+                            v-model="selected" />
+                    </UFSprunjeColumn>
+                    <UFSprunjeColumn>{{ row.name }}</UFSprunjeColumn>
+                    <UFSprunjeColumn>
+                        {{ row.description }}
+                        <div>
+                            <code>{{ row.slug }}</code>
+                        </div>
+                        <div>
+                            ↳
+                            <code style="white-space: normal">
+                                {{ row.conditions }}
+                            </code>
+                        </div>
+                    </UFSprunjeColumn>
+                </template>
+            </UFSprunjeTable>
         </template>
         <template #footer>
             <button class="uk-button uk-button-default uk-modal-close" type="button">
