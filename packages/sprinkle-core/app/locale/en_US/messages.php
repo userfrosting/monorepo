@@ -46,17 +46,11 @@ return [
         '@TRANSLATION' => 'Locale',
     ],
 
-    // TODO - Implement
     'PAGINATION' => [
-        // 'GOTO' => 'Jump to Page',
-        // 'SHOW' => 'Show',
-        'OUTPUT'   => 'Showing {{first}} - {{last}} of {{count}}',
-        // 'NEXT'     => 'Next page',
+        'GOTO'        => 'Jump to Page',
+        'OUTPUT'      => 'Showing {{first}} - {{last}} of {{count}}',
         'PAGE_X_OF_Y' => 'Page {{current}} of {{last}}',
         'PER_PAGE'    => '{{count}} per page',
-        // 'PREVIOUS' => 'Previous page',
-        // 'FIRST'    => 'First page',
-        // 'LAST'     => 'Last page',
     ],
     'PRIVACY_POLICY' => 'Privacy Policy',
 

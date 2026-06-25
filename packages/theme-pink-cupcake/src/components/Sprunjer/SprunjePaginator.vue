@@ -29,7 +29,14 @@ function goToPage(goToPage: number) {
                 })
             }}</span>
         </div>
-        <div class="uk-text-center uk-width-expand">
+        <div class="uk-text-center uk-text-meta uk-width-expand">
+            {{ $t('PAGINATION.GOTO') }} :
+            <select
+                class="uk-select uk-form-small uk-form-width-xsmall"
+                aria-label="Select page"
+                v-model="page">
+                <option v-for="n in totalPages + 1" :key="n" :value="n - 1">{{ n }}</option>
+            </select>
             <select
                 class="uk-select uk-form-small uk-form-width-small"
                 aria-label="Select per page"

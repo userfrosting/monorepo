@@ -46,17 +46,11 @@ return [
         '@TRANSLATION' => 'Langue',
     ],
 
-    // TODO - Implement
     'PAGINATION' => [
-        // 'GOTO'     => 'Aller à la page',
-        // 'SHOW'     => 'Afficher',
-        'OUTPUT'   => 'Affichage de {{first}} à {{last}} sur {{count}}',
-        // 'NEXT'     => 'Prochaine page',
+        'GOTO'        => 'Aller à la page',
+        'OUTPUT'      => 'Affichage de {{first}} à {{last}} sur {{count}}',
         'PAGE_X_OF_Y' => 'Page {{current}} de {{last}}',
         'PER_PAGE'    => '{{count}} par page',
-        // 'PREVIOUS' => 'Page précédente',
-        // 'FIRST'    => 'Première page',
-        // 'LAST'     => 'Dernière page',
     ],
     'PRIVACY_POLICY' => 'Politique de confidentialité',
 

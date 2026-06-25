@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Core + Pink-Cupcake] Allow Sprunjer table to set the default page size to "all" to display all rows in a single page.
 - [Pink-Cupcake + Admin] Refactor role and user management modals to utilize Sprunje component for improved performance and maintainability.
 - [Pink Cupcake] Improve Sprunje table overflow handling for better UI responsiveness.
+- [Pink-Cupcake] Add pagination "Jump to Page" feature to Sprunje tables, allowing users to quickly navigate to a specific page number.
 
 ## 6.0.0 - 2026-06-12
 - No changes.
