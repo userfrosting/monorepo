@@ -28,15 +28,15 @@ dashboard.load()
             faIcon="users"
             :to="{ name: 'admin.groups' }" />
     </div>
-    <div class="uk-child-width-1-2@s" uk-grid>
-        <div v-if="$checkAccess('uri_users')">
+    <div uk-grid>
+        <div v-if="$checkAccess('uri_users')" class="uk-width-1-3@s">
             <div class="uk-child-width-1-1" uk-grid>
                 <div>
                     <DashboardRecentUsers :users="dashboard.data.users" />
                 </div>
             </div>
         </div>
-        <div v-if="$checkAccess('uri_activities')">
+        <div v-if="$checkAccess('uri_activities')" class="uk-width-2-3@s">
             <DashboardActivities />
         </div>
     </div>

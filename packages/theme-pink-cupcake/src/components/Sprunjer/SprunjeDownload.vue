@@ -7,7 +7,9 @@ const sprunjer = inject('sprunjer') as Sprunjer
 </script>
 
 <template>
-    <button class="uk-button uk-button-default uk-button-small" type="button">
+    <button
+        class="uk-button uk-button-default uk-button-small uk-width-1-1 uk-width-auto@s uk-margin-small-bottom"
+        type="button">
         <font-awesome-icon icon="ellipsis" />
     </button>
     <div uk-dropdown="pos: bottom-right">

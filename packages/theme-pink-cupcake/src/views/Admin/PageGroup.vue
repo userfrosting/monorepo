@@ -51,10 +51,10 @@ watch(
     </template>
     <template v-else>
         <div uk-grid>
-            <div class="uk-width-expand@s">
+            <div class="uk-width-1-3@l">
                 <GroupInfo :group="group" @groupUpdated="fetch()" />
             </div>
-            <div class="uk-width-2-3@s" v-if="$checkAccess('view_group_field')">
+            <div class="uk-width-2-3@l" v-if="$checkAccess('view_group_field')">
                 <GroupUsers :slug="$route.params.slug.toString()" />
             </div>
         </div>

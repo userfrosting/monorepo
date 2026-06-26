@@ -20,12 +20,8 @@ const { user_name } = defineProps<{
                     <div>{{ $tdate(row.occurred_at) }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <div>
-                        {{ row.ip_address }}
-                    </div>
-                    <div>
-                        <i>{{ row.description }}</i>
-                    </div>
+                    <div>{{ row.description }}</div>
+                    <div class="uk-text-meta">{{ row.ip_address }}</div>
                 </UFSprunjeColumn>
             </template>
         </UFSprunjeTable>

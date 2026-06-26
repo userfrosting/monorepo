@@ -14,7 +14,7 @@ const { role } = defineProps<{
                 <RoleManagePermissionModal
                     :role="role"
                     @saved="sprunjer.fetch()"
-                    class="uk-button uk-button-default" />
+                    class="uk-button uk-button-default uk-width-1-1 uk-width-auto@s" />
             </template>
 
             <template #header>

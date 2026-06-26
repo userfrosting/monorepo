@@ -51,16 +51,18 @@ watch(
     </template>
     <template v-else>
         <div uk-grid>
-            <div class="uk-width-expand@s">
+            <div class="uk-width-1-3@l">
                 <RoleInfo :role="role" @updated="fetch()" />
             </div>
-            <div class="uk-width-2-3@s" v-if="$checkAccess('view_role_field')">
-                <RoleUsers :slug="role.slug" />
-            </div>
-        </div>
-        <div class="uk-child-width-1-1" uk-grid v-if="$checkAccess('view_role_field')">
-            <div>
-                <RolePermissions :role="role" />
+            <div class="uk-width-2-3@l">
+                <div class="uk-child-width-1-1" uk-grid>
+                    <div v-if="$checkAccess('view_role_users')">
+                        <RoleUsers :slug="role.slug" />
+                    </div>
+                    <div v-if="$checkAccess('view_role_field')">
+                        <RolePermissions :role="role" />
+                    </div>
+                </div>
             </div>
         </div>
     </template>

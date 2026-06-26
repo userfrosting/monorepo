@@ -11,10 +11,10 @@
             </template>
 
             <template #body="{ row }">
-                <UFSprunjeColumn>
-                    <div>{{ $tdate(row.occurred_at) }}</div>
+                <UFSprunjeColumn class="uk-text-nowrap">
+                    {{ $tdate(row.occurred_at) }}
                 </UFSprunjeColumn>
-                <UFSprunjeColumn v-if="row.user">
+                <UFSprunjeColumn v-if="row.user" class="uk-text-nowrap">
                     <strong>
                         <RouterLink
                             :to="{
@@ -30,12 +30,8 @@
                     <i>{{ $t('USER.DELETED') }}</i>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <div>
-                        {{ row.ip_address }}
-                    </div>
-                    <div>
-                        <i>{{ row.description }}</i>
-                    </div>
+                    <div>{{ row.description }}</div>
+                    <div class="uk-text-meta">{{ row.ip_address }}</div>
                 </UFSprunjeColumn>
             </template>
         </UFSprunjeTable>

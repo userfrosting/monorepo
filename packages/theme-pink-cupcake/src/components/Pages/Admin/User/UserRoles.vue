@@ -19,7 +19,7 @@ const { user } = defineProps<{
                     :user="user"
                     @saved="sprunjer.fetch()"
                     v-if="$checkAccess('update_user_role')"
-                    class="uk-button uk-button-default" />
+                    class="uk-button uk-button-default uk-width-1-1 uk-width-auto@s" />
             </template>
 
             <template #header>
@@ -28,7 +28,7 @@ const { user } = defineProps<{
             </template>
 
             <template #body="{ row }">
-                <UFSprunjeColumn>
+                <UFSprunjeColumn class="uk-text-nowrap">
                     <strong>
                         <RouterLink
                             :to="{

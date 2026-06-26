@@ -7,16 +7,12 @@
             hideFilters
             hideDownload>
             <template #header>
-                <UFSprunjeHeader>{{ $t('ACTIVITY.TIME') }}</UFSprunjeHeader>
                 <UFSprunjeHeader>{{ $t('USER') }}</UFSprunjeHeader>
                 <UFSprunjeHeader>{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
             <template #body="{ row }">
-                <UFSprunjeColumn>
-                    <div>{{ $tdate(row.occurred_at) }}</div>
-                </UFSprunjeColumn>
-                <UFSprunjeColumn v-if="row.user">
+                <UFSprunjeColumn v-if="row.user" class="uk-text-nowrap">
                     <strong>
                         <RouterLink
                             :to="{
@@ -32,12 +28,9 @@
                     <i>{{ $t('USER.DELETED') }}</i>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <div>
-                        <i>{{ row.description }}</i>
-                    </div>
-                    <div class="uk-text-meta">
-                        {{ row.ip_address }}
-                    </div>
+                    <div>{{ row.description }}</div>
+                    <div class="uk-text-meta">{{ $tdate(row.occurred_at) }}</div>
+                    <div class="uk-text-meta">{{ row.ip_address }}</div>
                 </UFSprunjeColumn>
             </template>
         </UFSprunjeTable>

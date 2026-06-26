@@ -60,20 +60,21 @@ watch(
     </template>
     <template v-else>
         <div uk-grid>
-            <div class="uk-width-expand@s">
+            <div class="uk-width-1-3@l">
                 <UserInfo :user="user" @updated="fetch()" />
             </div>
-            <div class="uk-width-2-3@s" v-if="$checkAccess('view_user_roles')">
-                <UserRoles :user="user" />
-            </div>
-        </div>
-
-        <div class="uk-child-width-1-1@s" uk-grid>
-            <div v-if="$checkAccess('view_user_permissions')">
-                <UserPermissions :user_name="user.user_name" />
-            </div>
-            <div v-if="$checkAccess('view_user_activities')">
-                <UserActivities :user_name="user.user_name" />
+            <div class="uk-width-2-3@l">
+                <div class="uk-child-width-1-1" uk-grid>
+                    <div v-if="$checkAccess('view_user_roles')">
+                        <UserRoles :user="user" />
+                    </div>
+                    <div v-if="$checkAccess('view_user_permissions')">
+                        <UserPermissions :user_name="user.user_name" />
+                    </div>
+                    <div v-if="$checkAccess('view_user_activities')">
+                        <UserActivities :user_name="user.user_name" />
+                    </div>
+                </div>
             </div>
         </div>
     </template>

@@ -23,7 +23,9 @@ const searchLabel = computed(() => {
 </script>
 
 <template>
-    <div class="uk-search uk-search-default" v-if="column">
+    <div
+        class="uk-search uk-search-default uk-width-1-1 uk-width-auto@s uk-margin-small-bottom"
+        v-if="column">
         <input
             class="uk-search-input uk-form-small"
             type="search"

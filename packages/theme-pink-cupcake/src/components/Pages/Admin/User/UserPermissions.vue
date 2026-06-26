@@ -17,7 +17,7 @@ const { user_name } = defineProps<{
             </template>
 
             <template #body="{ row }">
-                <UFSprunjeColumn>
+                <UFSprunjeColumn class="uk-text-nowrap">
                     <strong>
                         <RouterLink
                             :to="{

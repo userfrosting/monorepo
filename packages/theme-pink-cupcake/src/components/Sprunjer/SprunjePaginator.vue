@@ -19,8 +19,8 @@ function goToPage(goToPage: number) {
 </script>
 
 <template>
-    <div class="uk-child-width-auto" uk-grid>
-        <div class="uk-text-left uk-text-meta">
+    <div class="uk-grid-medium uk-flex uk-flex-middle" uk-grid>
+        <div class="uk-width-auto@s uk-text-center uk-text-meta">
             <span>{{
                 $t('PAGINATION.OUTPUT', {
                     first: first,
@@ -29,7 +29,7 @@ function goToPage(goToPage: number) {
                 })
             }}</span>
         </div>
-        <div class="uk-text-center uk-text-meta uk-width-expand">
+        <div class="uk-width-expand@s uk-text-center uk-text-meta">
             {{ $t('PAGINATION.GOTO') }} :
             <select
                 class="uk-select uk-form-small uk-form-width-xsmall"
@@ -46,9 +46,9 @@ function goToPage(goToPage: number) {
                 </option>
             </select>
         </div>
-        <div class="uk-text-right">
+        <div class="uk-width-auto@s">
             <nav aria-label="Pagination">
-                <ul class="uk-pagination uk-flex-right" uk-margin>
+                <ul class="uk-pagination uk-flex-center uk-margin-remove" uk-margin>
                     <li>
                         <a
                             @click="goToPage(0)"

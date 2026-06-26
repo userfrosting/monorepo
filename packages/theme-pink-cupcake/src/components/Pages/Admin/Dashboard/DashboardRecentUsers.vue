@@ -25,7 +25,7 @@ defineProps<{
             </div>
         </div>
         <template #footer>
-            <RouterLink :to="{ name: 'admin.users' }" class="uk-text-center">
+            <RouterLink :to="{ name: 'admin.users' }" class="uk-flex uk-flex-center">
                 {{ $t('USER.VIEW_ALL') }}
             </RouterLink>
         </template>

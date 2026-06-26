@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Replace `RoleManagePermissionModal` and `UserManageRolesModal` table with the Sprunje component.
 - Improve Sprunje table overflow handling for better UI responsiveness.
 - Add pagination "Jump to Page" feature to Sprunje tables, allowing users to quickly navigate to a specific page number.
+- Improved Sprunje UI components for improved layout and responsiveness, especially on smaller screens.
 
 ## [6.0.0](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0-rc.5...6.0.0) - 2026-06-12
 - No changes.

@@ -11,7 +11,7 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
             <template #actions="{ sprunjer }">
                 <RoleCreateModal
                     @saved="sprunjer.fetch()"
-                    class="uk-button uk-button-primary"
+                    class="uk-button uk-button-primary uk-width-1-1 uk-width-auto@s"
                     v-if="$checkAccess('create_role')" />
             </template>
 
@@ -22,7 +22,7 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
             </template>
 
             <template #body="{ row, sprunjer }">
-                <UFSprunjeColumn>
+                <UFSprunjeColumn class="uk-text-nowrap">
                     <strong>
                         <RouterLink
                             :to="{
@@ -34,8 +34,10 @@ import RoleManagePermissionModal from '../../components/Pages/Admin/Role/RoleMan
                     </strong>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>{{ row.description }}</UFSprunjeColumn>
-                <UFSprunjeColumn>
-                    <button class="uk-button uk-button-primary uk-text-nowrap" type="button">
+                <UFSprunjeColumn class="uk-text-center uk-table-shrink uk-text-nowrap">
+                    <button
+                        class="uk-button uk-button-primary uk-width-1-1 uk-width-auto@s"
+                        type="button">
                         {{ $t('ACTIONS') }} <span uk-drop-parent-icon></span>
                     </button>
                     <div

@@ -10,7 +10,7 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
             <template #actions="{ sprunjer }">
                 <GroupCreateModal
                     @saved="sprunjer.fetch()"
-                    class="uk-button uk-button-primary"
+                    class="uk-button uk-button-primary uk-width-1-1 uk-width-auto@s"
                     v-if="$checkAccess('create_group')" />
             </template>
 
@@ -24,7 +24,7 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
             </template>
 
             <template #body="{ row, sprunjer }">
-                <UFSprunjeColumn class="uk-width-1-6">
+                <UFSprunjeColumn class="uk-text-nowrap">
                     <strong>
                         <RouterLink
                             :to="{
@@ -36,11 +36,13 @@ import GroupDeleteModal from '../../components/Pages/Admin/Group/GroupDeleteModa
                     </strong>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>{{ row.description }}</UFSprunjeColumn>
-                <UFSprunjeColumn class="uk-text-center">
+                <UFSprunjeColumn class="uk-text-center uk-table-shrink uk-text-nowrap">
                     <span class="uk-badge">{{ row.users_count }}</span>
                 </UFSprunjeColumn>
-                <UFSprunjeColumn>
-                    <button class="uk-button uk-button-primary uk-text-nowrap" type="button">
+                <UFSprunjeColumn class="uk-text-center uk-table-shrink uk-text-nowrap">
+                    <button
+                        class="uk-button uk-button-primary uk-width-1-1 uk-width-auto@s"
+                        type="button">
                         {{ $t('ACTIONS') }} <span uk-drop-parent-icon></span>
                     </button>
                     <div
