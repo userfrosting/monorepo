@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Pink Cupcake] Improve Sprunje table overflow handling for better UI responsiveness.
 - [Pink-Cupcake] Add pagination "Jump to Page" feature to Sprunje tables, allowing users to quickly navigate to a specific page number.
 - [Pink-Cupcake] Improved Sprunje UI components for improved layout and responsiveness, especially on smaller screens.
+- [Skeleton] Update npm dependencies (no functional changes).
 
 ## 6.0.0 - 2026-06-12
 - No changes.
