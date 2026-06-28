@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Fix
+## [6.0.1](https://github.com/userfrosting/sprinkle-account/compare/6.0.0...6.0.1) - 2026-06-28
+
+### Fixed
 - Fix user not appearing in the user list if no activity has been recorded for the user yet (see [sprinkle-account#25](https://github.com/userfrosting/sprinkle-account/pull/25)).
 - Make `create:user` retry interactive input after validation errors (including password mismatch) instead of aborting immediately.
 
