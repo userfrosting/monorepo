@@ -4,11 +4,11 @@ import type { UserPasswordRequest } from '@userfrosting/sprinkle-admin/interface
 /**
  * Form Model
  */
-const formData = defineModel<UserPasswordRequest>({
-    default: {
+const formData = defineModel<UserPasswordRequest>('modelValue', {
+    default: () => ({
         password: '',
         passwordc: ''
-    }
+    })
 })
 
 /**
