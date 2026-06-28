@@ -31,9 +31,9 @@
     ],
     "require": {
         "php": "^8.1",
-        "userfrosting/framework": "^6.0",
-        "userfrosting/sprinkle-core": "^6.0",
-        "userfrosting/sprinkle-account": "^6.0"
+        "userfrosting/framework": "^6.0.1",
+        "userfrosting/sprinkle-core": "^6.0.1",
+        "userfrosting/sprinkle-account": "^6.0.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
