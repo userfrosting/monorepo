@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Register font-awesome-icon component
 library.add(fas)
-config.global.stubs['FontAwesomeIcon'] = FontAwesomeIcon
+config.global.stubs['FontAwesomeIcon'] = FontAwesomeIcon as any
 
 // Mock router
 const router = createRouter({
