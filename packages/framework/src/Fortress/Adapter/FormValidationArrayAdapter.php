@@ -48,6 +48,7 @@ final class FormValidationArrayAdapter implements ValidationAdapterInterface
             // If field has validators, loop through them
             if (isset($field['validators'])) {
                 foreach ($field['validators'] as $validatorName => $validator) {
+                    $validator = $validator ?? [];
                     $rules[$fieldName]['validators'] = array_merge($rules[$fieldName]['validators'], $this->transformValidator($fieldName, $validatorName, $validator));
                 }
             }

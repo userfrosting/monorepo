@@ -99,6 +99,26 @@ class FormValidationHtml5AdapterTest extends TestCase
         $this->assertEquals($expectedResult, $result);
     }
 
+    public function testValidateRequiredWithNullValidatorDefinition(): void
+    {
+        // Arrange: This mirrors YAML `required:` where no nested attributes are defined.
+        $schema = new RequestSchema([
+            'species' => [
+                'validators' => [
+                    'required' => null,
+                ],
+            ],
+        ]);
+
+        // Act
+        $adapter = new FormValidationHtml5Adapter();
+        $result = $adapter->rules($schema);
+
+        // Assert
+        $expectedResult = ['species' => 'data-fv-notempty=true '];
+        $this->assertEquals($expectedResult, $result);
+    }
+
     public function testValidateLengthBetween(): void
     {
         // Arrange

@@ -46,6 +46,8 @@ final class FormValidationHtml5Adapter implements ValidationAdapterInterface
             // If field has validators, loop through them
             if (isset($field['validators'])) {
                 foreach ($field['validators'] as $validatorName => $validator) {
+                    $validator = $validator ?? [];
+
                     // Skip messages that are for server-side use only
                     if (isset($validator['domain']) && $validator['domain'] == 'server') {
                         continue;

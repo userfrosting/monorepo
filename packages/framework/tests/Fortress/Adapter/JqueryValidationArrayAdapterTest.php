@@ -721,6 +721,32 @@ class JqueryValidationArrayAdapterTest extends TestCase
         ], $result);
     }
 
+    public function testValidateRequiredWithNullValidatorDefinition(): void
+    {
+        // Arrange: This mirrors YAML `required:` where no nested attributes are defined.
+        $schema = new RequestSchema([
+            'species' => [
+                'validators' => [
+                    'required' => null,
+                ],
+            ],
+        ]);
+
+        // Act
+        $adapter = new JqueryValidationArrayAdapter($this->translator);
+        $result = $adapter->rules($schema);
+
+        // Assert
+        $this->assertEquals([
+            'rules' => [
+                'species' => [
+                    'required' => true,
+                ],
+            ],
+            'messages' => [],
+        ], $result);
+    }
+
     public function testValidateTelephone(): void
     {
         // Arrange

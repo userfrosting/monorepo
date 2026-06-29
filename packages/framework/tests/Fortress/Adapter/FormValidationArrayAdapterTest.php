@@ -122,6 +122,33 @@ class FormValidationArrayAdapterTest extends TestCase
         $this->assertEquals($expectedResult, $result);
     }
 
+    public function testValidateRequiredWithNullValidatorDefinition(): void
+    {
+        // Arrange: This mirrors YAML `required:` where no nested attributes are defined.
+        $schema = new RequestSchema([
+            'species' => [
+                'validators' => [
+                    'required' => null,
+                ],
+            ],
+        ]);
+
+        $expectedResult = [
+            'species' => [
+                'validators' => [
+                    'notEmpty' => [],
+                ],
+            ],
+        ];
+
+        // Act
+        $adapter = new FormValidationArrayAdapter($this->translator);
+        $result = $adapter->rules($schema);
+
+        // Assert
+        $this->assertEquals($expectedResult, $result);
+    }
+
     public function testValidateLengthBetween(): void
     {
         // Arrange
