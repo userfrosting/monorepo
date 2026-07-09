@@ -9,7 +9,7 @@ export default defineConfig({
         coverage: {
             enabled: true,
             reportsDirectory: './_meta/_coverage',
-            include: ['packages/**/app/assets/**/*.*', 'packages/**/src/**/*.*']
+            include: ['packages/**/app/assets/**/*.*', 'packages/theme-pink-cupcake/src/**/*.*']
         },
         reporters: ['default', 'junit'],
         outputFile: './_meta/junit_frontend.xml',
