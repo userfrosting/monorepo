@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Tests\Database\Models;
 
+use Carbon\Carbon;
 use Illuminate\Cache\Repository as Cache;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -86,11 +87,6 @@ class UserTest extends AccountTestCase
         $this->assertSame(1, User::withTrashed()->count());
     }
 
-    // public function testValidateArguments(): void
-    // {
-    // TODO Test password is not null, user_name & email are unique, etc.
-    // }
-
     public function testUserIsMaster(): void
     {
         /** @var User */
@@ -106,6 +102,77 @@ class UserTest extends AccountTestCase
 
         $this->assertTrue($masterUser->isMaster());
         $this->assertFalse($normalUser->isMaster());
+    }
+
+    public function testIsPasswordExpired(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+
+        // Assert default state
+        $this->assertFalse($user->isPasswordExpired());
+    }
+
+    public function testIsPasswordExpiredForEmptyPassword(): void
+    {
+        /** @var User */
+        $user = User::factory()->create(
+            [
+                'password' => '',
+            ]
+        );
+
+        // Assert default state
+        $this->assertTrue($user->isPasswordExpired());
+    }
+
+    public function testIsPasswordExpiredForExpiredPassword(): void
+    {
+        // Get current config and set password expiration to 90 days
+        /** @var Config */
+        $config = $this->ci->get(Config::class);
+        $config->set('user.password.expiration.timeout', 90);
+
+        /** @var User */
+        $user = User::factory()->create(
+            [
+                'password_last_set' => Carbon::now()->subDays(91),
+            ]
+        );
+
+        // Assert default state
+        $this->assertTrue($user->isPasswordExpired());
+    }
+
+    public function testIsPasswordExpiredForNotExpiredPassword(): void
+    {
+        // Get current config and set password expiration to 90 days
+        /** @var Config */
+        $config = $this->ci->get(Config::class);
+        $config->set('user.password.expiration.timeout', 90);
+
+        /** @var User */
+        $user = User::factory()->create(
+            [
+                'password_last_set' => Carbon::now()->subDays(89),
+            ]
+        );
+
+        // Assert default state
+        $this->assertFalse($user->isPasswordExpired());
+    }
+
+    public function testIsPasswordExpiredForNeverSetPassword(): void
+    {
+        /** @var User */
+        $user = User::factory()->create(
+            [
+                'password_last_set' => null,
+            ]
+        );
+
+        // Assert default state
+        $this->assertTrue($user->isPasswordExpired());
     }
 
     public function testUserAvatar(): void

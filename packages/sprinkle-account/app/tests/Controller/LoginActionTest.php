@@ -265,6 +265,33 @@ class LoginActionTest extends AccountTestCase
         ], $response);
         $this->assertResponseStatus(403, $response);
     }
+
+    public function testLoginForLoginException(): void
+    {
+        /** @var User */
+        $user = User::factory([
+            'password'     => 'test',
+            'first_name'   => 'James',
+            'last_name'    => 'Bond',
+            'flag_enabled' => false // Disabled account, will throw AccountDisabledException
+        ])->create();
+        $user->refresh();
+
+        // Create request with method and url and fetch response
+        $request = $this->createJsonRequest('POST', '/account/login', [
+            'user_name' => $user->user_name,
+            'password'  => 'test',
+        ]);
+        $response = $this->handleRequest($request);
+
+        // Assert response status & body
+        $this->assertJsonResponse([
+            'title'       => 'Account Disabled',
+            'description' => 'This account has been disabled. Please contact us for more information.',
+            'status'      => 400,
+        ], $response);
+        $this->assertResponseStatus(400, $response);
+    }
 }
 
 class LoginActionSprinkle extends Account

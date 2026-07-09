@@ -580,4 +580,22 @@ class AuthenticatorTest extends AccountTestCase
         $this->assertNull($user);
         $session->destroy();
     }
+
+    public function testAuthenticateWithExpiredPasswordAfterValidCredentials(): void
+    {
+        /** @var User */
+        $user = User::factory()->state([
+            'password'          => 'hashed-password',
+            'password_last_set' => null,
+        ])->create();
+
+        /** @var Authenticator */
+        $authenticator = $this->ci->get(Authenticator::class);
+
+        $this->expectException(PasswordExpiredException::class);
+        $authenticator->authenticate('id', $user->id, 'hashed-password');
+
+        // Must logout to avoid test issue
+        $authenticator->logout();
+    }
 }

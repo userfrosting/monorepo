@@ -81,16 +81,6 @@ class UserVerification extends Model implements UserVerificationInterface
     }
 
     /**
-     * Uncompleted verifications Scope.
-     *
-     * @param Builder $query
-     */
-    protected function scopeUncompleted(Builder $query): void
-    {
-        $query->where('completed_at', null);
-    }
-
-    /**
      * Expired verifications Scope.
      *
      * @param Builder $query
