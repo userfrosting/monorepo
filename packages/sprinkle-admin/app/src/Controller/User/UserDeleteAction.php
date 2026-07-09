@@ -87,15 +87,6 @@ class UserDeleteAction
         // Access-controlled page based on the user.
         $this->validateAccess($user);
 
-        // Check that we are not deleting the master account
-        // Need to use loose comparison for now, because some DBs return `id` as a string
-        if ($user->id === $this->config->getInt('reserved_user_ids.master')) {
-            $e = new AccountException();
-            $e->setTitle('DELETE_MASTER');
-
-            throw $e;
-        }
-
         // Backup username for logging
         $username = $user->user_name;
 
@@ -126,7 +117,7 @@ class UserDeleteAction
             throw new ForbiddenException();
         }
 
-        // Make sure the user is not a master user
+        // Check that we are not deleting the master account
         if ($user->id === $this->config->getInt('reserved_user_ids.master')) {
             $e = new AccountException();
             $e->setTitle('DELETE_MASTER');
