@@ -8,12 +8,7 @@ export default defineConfig({
     test: {
         coverage: {
             enabled: true,
-            reportsDirectory: './_meta/_coverage',
-            include: [
-                'packages/**/app/assets/**/*.{js,jsx,ts,tsx,vue}',
-                'packages/theme-pink-cupcake/src/**/*.{js,jsx,ts,tsx,vue}'
-            ],
-            exclude: ['**/.*', '**/*.md']
+            reportsDirectory: './_meta/_coverage'
         },
         reporters: ['default', 'junit'],
         outputFile: './_meta/junit_frontend.xml',
