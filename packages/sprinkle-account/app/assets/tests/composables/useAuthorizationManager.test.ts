@@ -23,7 +23,8 @@ const mockUser: UserDataInterface = {
     permissions: {
         'test.permission': ['always()'],
         'unsupported.permission': ['unsupportedCondition()'],
-        'multiple.conditions': ['always()', 'unsupportedCondition()']
+        'multiple.conditions': ['always()', 'unsupportedCondition()'],
+        'empty.conditions': []
     }
 }
 
@@ -95,6 +96,11 @@ describe('useAuthorizationManager', () => {
     test('should deny access if no conditions are met', () => {
         const { checkAccess } = useAuthorizationManager(mockUser)
         expect(checkAccess('exist.not')).toBe(false)
+    })
+
+    test('should deny access when matched permission has empty conditions', () => {
+        const { checkAccess } = useAuthorizationManager(mockUser)
+        expect(checkAccess('empty.conditions')).toBe(false)
     })
 
     test('should not send debug to console if config disabled', () => {

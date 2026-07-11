@@ -64,6 +64,15 @@ describe('useEmailVerificationApi', () => {
         expect(apiError.value).toEqual(expectedError)
     })
 
+    test('should set fallback error when resending verification email fails without response', async () => {
+        const { requestVerificationCode, apiError } = useEmailVerificationApi()
+        vi.spyOn(axios, 'post').mockRejectedValueOnce(new Error('Network Error'))
+
+        await requestVerificationCode('test@example.com')
+
+        expect(apiError.value).toEqual({ description: 'Network Error' })
+    })
+
     test('should successfully submit verification code', async () => {
         const { submitVerificationCode, apiLoading, apiError } = useEmailVerificationApi()
         const email = 'test@example.com'
@@ -107,6 +116,15 @@ describe('useEmailVerificationApi', () => {
             style: Severity.Danger,
             closeBtn: true
         })
+    })
+
+    test('should set fallback error when submitting verification code fails without response', async () => {
+        const { submitVerificationCode, apiError } = useEmailVerificationApi()
+        vi.spyOn(axios, 'post').mockRejectedValueOnce(new Error('Network Error'))
+
+        await submitVerificationCode('test@example.com', '123456')
+
+        expect(apiError.value).toEqual({ description: 'Network Error' })
     })
 
     test('should set loading state to true', async () => {

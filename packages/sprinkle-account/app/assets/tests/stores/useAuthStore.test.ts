@@ -93,4 +93,15 @@ describe('useAuthStore', () => {
         expect(authStore.checkAccess('test.permission')).toBe(true)
         expect(authStore.checkAccess('nonexistent.permission')).toBe(false)
     })
+
+    test('should return undefined and keep user null when auth check fails', async () => {
+        const authStore = useAuthStore()
+        vi.spyOn(axios, 'get').mockRejectedValue(new Error('Unauthorized'))
+
+        const result = await authStore.check()
+
+        expect(axios.get).toHaveBeenCalledWith('/account/auth')
+        expect(result).toBeUndefined()
+        expect(authStore.user).toBeNull()
+    })
 })

@@ -5,6 +5,10 @@ import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import { useLoginApi } from '../../composables'
 import type { LoginRequest } from '../../interfaces'
 
+vi.mock('@regle/core', () => ({
+    useRegle: () => ({ r$: {} })
+}))
+
 const form: LoginRequest = {
     user_name: '',
     password: '',
@@ -29,6 +33,9 @@ vi.mock('@userfrosting/sprinkle-core/composables', async () => {
         ...actualModule, // Keep all original exports
         useCsrf: () => ({
             updateFromHeaders: mockUseCsrfUpdateFromHeaders
+        }),
+        useRuleSchemaAdapter: () => ({
+            adapt: vi.fn().mockReturnValue({})
         })
     }
 })

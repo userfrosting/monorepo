@@ -1,14 +1,82 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
-// import axios from 'axios'
-// import { Severity } from '@userfrosting/sprinkle-core/interfaces'
-// import type { RegisterRequest } from '../../interfaces'
+import { createPinia, setActivePinia } from 'pinia'
+import axios from 'axios'
+import { Severity } from '@userfrosting/sprinkle-core/interfaces'
+import type { RegisterRequest } from '../../interfaces'
 import { useRegisterApi } from '../../composables'
 
-let defaultRegistrationForm: any
-// let defaultRegistrationForm: any, availableLocales: any, captchaUrl: any
+vi.mock('@regle/core', () => ({
+    createRule: (rule: unknown) => rule,
+    useRegle: (formData: { value: { user_name: string } }, rules: any) => {
+        if (rules?.user_name?.usernameRule) {
+            const usernameRule = rules.user_name.usernameRule
+            const usernameState: {
+                $invalid: boolean
+                $errors: Array<{ $message?: string }>
+                $validate: () => Promise<boolean>
+            } = {
+                $invalid: false,
+                $errors: [],
+                async $validate() {
+                    const result = await usernameRule.validator(formData.value.user_name)
+                    usernameState.$invalid = !result.$valid
+                    usernameState.$errors = usernameState.$invalid
+                        ? [{ $message: usernameRule.message(result) }]
+                        : []
 
-/*const form: RegisterRequest = {
+                    return !usernameState.$invalid
+                }
+            }
+
+            return {
+                r$: {
+                    user_name: usernameState
+                }
+            }
+        }
+
+        return { r$: {} }
+    }
+}))
+
+const mockUseAlertsStorePush = vi.fn()
+
+vi.mock('@userfrosting/sprinkle-core/stores', () => ({
+    useConfigStore: () => ({
+        get: vi.fn().mockImplementation((key: string, fallback?: unknown) => {
+            if (key === 'locales.available') {
+                return {
+                    en_US: 'English',
+                    fr_CA: 'French (Canada)'
+                }
+            }
+            if (key === 'site.password.length.min') return 8
+            if (key === 'site.password.length.max') return 32
+            if (key === 'site.registration.user_defaults.locale') return 'fr_CA'
+
+            return fallback
+        })
+    }),
+    useTranslator: () => ({
+        translate: vi.fn((key: string) => key)
+    }),
+    useAlertsStore: () => ({
+        push: mockUseAlertsStorePush
+    })
+}))
+
+vi.mock('@userfrosting/sprinkle-core/composables', async () => {
+    const actualModule = await vi.importActual('@userfrosting/sprinkle-core/composables')
+
+    return {
+        ...actualModule,
+        useRuleSchemaAdapter: () => ({
+            adapt: vi.fn().mockReturnValue({})
+        })
+    }
+})
+
+const form: RegisterRequest = {
     first_name: 'John',
     last_name: 'Doe',
     email: 'john.doe@example.com',
@@ -18,37 +86,11 @@ let defaultRegistrationForm: any
     locale: 'en_US',
     captcha: 'captcha',
     spiderbro: 'http://'
-}*/
+}
 
-// Mock composables
-const mockUseAlertsStorePush = vi.fn()
-vi.mock('@userfrosting/sprinkle-core/stores', () => ({
-    useConfigStore: () => ({
-        get: vi.fn().mockImplementation((key: string) => {
-            if (key === 'locales.available') return ['en_US', 'fr_FR', 'es_ES']
-            if (key === 'site.password.length.min') return 8
-            if (key === 'site.password.length.max') return 32
-            if (key === 'site.registration.user_defaults.locale') return 'fr_CA'
-            return undefined
-        })
-    }),
-    useTranslator: () => ({
-        translate: vi.fn().mockImplementation((key) => {
-            return key
-        })
-    }),
-    useAlertsStore: () => ({
-        push: mockUseAlertsStorePush
-    })
-}))
-
-describe('register', () => {
+describe('useRegisterApi', () => {
     beforeEach(() => {
         setActivePinia(createPinia())
-        const result = useRegisterApi()
-        defaultRegistrationForm = result.defaultRegistrationForm
-        // availableLocales = result.availableLocales
-        // captchaUrl = result.captchaUrl
     })
 
     afterEach(() => {
@@ -56,17 +98,9 @@ describe('register', () => {
         vi.resetAllMocks()
     })
 
-    /*beforeEach(() => {
-        vi.spyOn(axios, 'get').mockImplementation((url) => {
-            if (url === '/account/check-username') {
-                return Promise.resolve({ data: { available: true, message: 'Available' } })
-            }
-            // fallback to default behavior for other endpoints
-            return Promise.resolve({ data: {} })
-        })
-    })*/
+    test('returns the default form', () => {
+        const { defaultRegistrationForm } = useRegisterApi()
 
-    test('should return default form', () => {
         expect(defaultRegistrationForm()).toEqual({
             first_name: '',
             last_name: '',
@@ -80,26 +114,32 @@ describe('register', () => {
         })
     })
 
-    /*test('should return available locales', () => {
-        expect(availableLocales()).toEqual(['en_US', 'fr_FR', 'es_ES'])
-    })
+    test('returns available locales and captcha URL', () => {
+        const { availableLocales, captchaUrl } = useRegisterApi()
 
-    test('should return captcha URL', () => {
+        expect(availableLocales()).toEqual({
+            en_US: 'English',
+            fr_CA: 'French (Canada)'
+        })
         expect(captchaUrl()).toBe('/account/captcha')
     })
 
-    test('should register successfully', async () => {
-        // Arrange
-        const { submitRegistration } = useRegisterApi()
-        const response = { data: { title: 'Registration successful', description: 'Welcome!' } }
-        vi.spyOn(axios, 'post').mockResolvedValue(response)
+    test('submits registration successfully', async () => {
+        const { submitRegistration, apiLoading, apiError } = useRegisterApi()
+        const response = {
+            data: {
+                title: 'Registration successful',
+                description: 'Welcome!'
+            }
+        }
+        vi.spyOn(axios, 'post').mockResolvedValue(response as any)
 
-        // Act
+        expect(apiLoading.value).toBe(false)
         await submitRegistration(form)
 
-        // Assert
+        expect(apiLoading.value).toBe(false)
+        expect(apiError.value).toBeNull()
         expect(axios.post).toHaveBeenCalledWith('/account/register', form)
-
         expect(mockUseAlertsStorePush).toHaveBeenCalledWith({
             title: 'Registration successful',
             description: 'Welcome!',
@@ -107,91 +147,121 @@ describe('register', () => {
         })
     })
 
-    test('should throw an error when registration fails', async () => {
-        // Arrange
+    test('throws and sets apiError when registration fails with API data', async () => {
         const { submitRegistration, apiError } = useRegisterApi()
-        const error = { response: { data: { description: 'Registration failed' } } }
-        vi.spyOn(axios, 'post').mockRejectedValue(error)
+        vi.spyOn(axios, 'post').mockRejectedValue({
+            response: {
+                data: {
+                    description: 'Registration failed'
+                }
+            }
+        })
 
-        // Act & Assert
         await expect(submitRegistration(form)).rejects.toEqual({
             description: 'Registration failed',
             style: Severity.Danger
         })
-        expect(axios.post).toHaveBeenCalledWith('/account/register', form)
+
         expect(apiError.value).toEqual({
             description: 'Registration failed',
             style: Severity.Danger
         })
     })
 
-    test('should set loading state to true during registration', async () => {
-        // Arrange
-        const { submitRegistration, apiLoading } = useRegisterApi()
-        const response = { data: { title: 'Registration successful', description: 'Welcome!' } }
-        vi.spyOn(axios, 'post').mockResolvedValue(response)
+    test('throws and sets apiError when registration fails without response', async () => {
+        const { submitRegistration, apiError } = useRegisterApi()
+        vi.spyOn(axios, 'post').mockRejectedValue(new Error('Network Error'))
 
-        // Act
-        expect(apiLoading.value).toBe(false)
-        const submitPromise = submitRegistration(form)
-        expect(apiLoading.value).toBe(true)
-        await submitPromise
-        expect(apiLoading.value).toBe(false)
+        await expect(submitRegistration(form)).rejects.toEqual({
+            description: 'Network Error',
+            style: Severity.Danger
+        })
+
+        expect(apiError.value).toEqual({
+            description: 'Network Error',
+            style: Severity.Danger
+        })
     })
 
-    test('should suggest a username successfully', async () => {
-        // Arrange
+    test('suggests username successfully', async () => {
         const { suggestUsername } = useRegisterApi()
-        const mockUsername = 'SuggestedUser'
-        vi.spyOn(axios, 'get').mockResolvedValue({ data: { user_name: mockUsername } })
+        vi.spyOn(axios, 'get').mockResolvedValue({
+            data: { user_name: 'SuggestedUser' }
+        } as any)
 
-        // Act
-        const result = await suggestUsername()
-
-        // Assert
+        await expect(suggestUsername()).resolves.toBe('SuggestedUser')
         expect(axios.get).toHaveBeenCalledWith('/account/suggest-username')
-        expect(result).toBe(mockUsername)
     })
 
-    test('should handle error when suggesting username', async () => {
-        // Arrange
+    test('throws and sets apiError when suggesting username fails with API data', async () => {
         const { suggestUsername, apiError } = useRegisterApi()
-        const error = { response: { data: { description: 'Suggest failed' } } }
-        vi.spyOn(axios, 'get').mockRejectedValue(error)
+        vi.spyOn(axios, 'get').mockRejectedValue({
+            response: {
+                data: {
+                    description: 'Suggest failed'
+                }
+            }
+        })
 
-        // Act & Assert
         await expect(suggestUsername()).rejects.toEqual({
             description: 'Suggest failed',
             style: Severity.Danger
         })
+
         expect(apiError.value).toEqual({
             description: 'Suggest failed',
             style: Severity.Danger
         })
     })
 
-    test('should validate username successfully', async () => {
-        // Arrange
-        const { validateUsername } = useRegisterApi()
-        const username = 'JohnDoe'
-        const validationResponse = { available: true, message: 'Available' }
-        vi.spyOn(axios, 'get').mockResolvedValue({ data: validationResponse })
+    test('throws and sets apiError when suggesting username fails without response', async () => {
+        const { suggestUsername, apiError } = useRegisterApi()
+        vi.spyOn(axios, 'get').mockRejectedValue(new Error('Network Error'))
 
-        // Act
-        const result = await validateUsername(username)
-
-        // Assert
-        expect(axios.get).toHaveBeenCalledWith('/account/check-username', {
-            params: { user_name: username }
+        await expect(suggestUsername()).rejects.toEqual({
+            description: 'Network Error',
+            style: Severity.Danger
         })
-        expect(result).toEqual(validationResponse)
-    })*/
 
-    test('should set password min and max length from config', () => {
-        // Act
+        expect(apiError.value).toEqual({
+            description: 'Network Error',
+            style: Severity.Danger
+        })
+    })
+
+    test('validates username successfully', async () => {
+        const { validateUsername } = useRegisterApi()
+        const validationResponse = { available: true, message: 'Available' }
+        vi.spyOn(axios, 'get').mockResolvedValue({ data: validationResponse } as any)
+
+        await expect(validateUsername('JohnDoe')).resolves.toEqual(validationResponse)
+        expect(axios.get).toHaveBeenCalledWith('/account/check-username', {
+            params: { user_name: 'JohnDoe' }
+        })
+    })
+
+    test('executes username rule through r$username validation', async () => {
+        const { r$username, formData } = useRegisterApi()
+        const ruleModel = r$username as any
+        vi.spyOn(axios, 'get').mockResolvedValue({
+            data: {
+                available: false,
+                message: 'Username already used'
+            }
+        } as any)
+
+        formData.value.user_name = 'TakenName'
+        await ruleModel.user_name.$validate()
+
+        expect(ruleModel.user_name.$invalid).toBe(true)
+        expect(axios.get).toHaveBeenCalledWith('/account/check-username', {
+            params: { user_name: 'TakenName' }
+        })
+    })
+
+    test('sets password min and max length from config', () => {
         const { passwordMinLength, passwordMaxLength } = useRegisterApi()
 
-        // Assert
         expect(passwordMinLength.value).toBe(8)
         expect(passwordMaxLength.value).toBe(32)
     })
