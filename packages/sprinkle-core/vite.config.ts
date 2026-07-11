@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import { resolve } from 'path'
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts'
@@ -56,8 +56,13 @@ export default defineConfig({
     test: {
         coverage: {
             reportsDirectory: './_meta/_coverage',
-            include: ['app/assets/**/*.*'],
-            // exclude: ['app/assets/tests/**/*.*', 'app/assets/interfaces/routes.ts']
+            include: ['app/assets/**/*.{js,jsx,ts,tsx,vue}'],
+            exclude: [
+                'app/assets/**/.*',
+                'app/assets/**/*.md',
+                'app/assets/tests/**/*.*',
+                'app/assets/interfaces/routes.ts'
+            ]
         },
         environment: 'happy-dom'
     }

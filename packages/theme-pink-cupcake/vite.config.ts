@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import { resolve } from 'path'
 import vue from '@vitejs/plugin-vue'
 import ViteYaml from '@modyfi/vite-plugin-yaml'
@@ -35,7 +35,10 @@ export default defineConfig({
         lib: {
             entry: {
                 index: resolve(__dirname, 'src/index.ts'),
-                'components/pages/account': resolve(__dirname, 'src/components/Pages/Account/index.ts'),
+                'components/pages/account': resolve(
+                    __dirname,
+                    'src/components/Pages/Account/index.ts'
+                ),
                 'components/pages/admin': resolve(__dirname, 'src/components/Pages/Admin/index.ts'),
                 components: resolve(__dirname, 'src/components/index.ts'),
                 plugins: resolve(__dirname, 'src/plugins/index.ts'),
@@ -90,7 +93,8 @@ export default defineConfig({
     test: {
         coverage: {
             reportsDirectory: './_meta/_coverage',
-            include: ['src/**/*.*'],
+            include: ['src/**/*.{js,jsx,ts,tsx,vue}'],
+            exclude: ['src/**/.*', 'src/**/*.md', 'src/tests/**/*.*']
         },
         setupFiles: ['src/tests/translator.setup.ts'],
         environment: 'happy-dom'

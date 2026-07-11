@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 import { configDefaults } from 'vitest/config'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import { resolve } from 'path'
 import vue from '@vitejs/plugin-vue'
 import ViteYaml from '@modyfi/vite-plugin-yaml'
@@ -65,13 +65,10 @@ export default defineConfig({
     test: {
         coverage: {
             reportsDirectory: './_meta/_coverage',
-            include: ['app/assets/**/*.*'],
-            exclude: ['app/assets/tests/**/*.*']
+            include: ['app/assets/**/*.{js,jsx,ts,tsx,vue}'],
+            exclude: ['app/assets/**/.*', 'app/assets/**/*.md', 'app/assets/tests/**/*.*']
         },
         environment: 'happy-dom',
-        exclude: [
-            ...configDefaults.exclude,
-            './vendor/**/*.*',
-        ],
+        exclude: [...configDefaults.exclude, './vendor/**/*.*']
     }
 })

@@ -1,5 +1,7 @@
 import { describe, test, expect, vi, afterEach, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
+import { defineComponent } from 'vue'
+import { mount } from '@vue/test-utils'
 import { useRuleSchemaAdapter } from '../../composables/useRuleSchemaAdapter'
 import { useRegle } from '@regle/core'
 
@@ -10,6 +12,25 @@ vi.mock('../../stores', () => ({
         translate: translateMock
     })
 }))
+
+const createRegle = (formData: Record<string, any>, schema: Record<string, any>) => {
+    let regle: any = null
+
+    const TestHarness = defineComponent({
+        setup() {
+            regle = useRegle(formData, schema)
+            return () => null
+        }
+    })
+
+    mount(TestHarness)
+
+    if (regle === null) {
+        throw new Error('Failed to initialize Regle test harness')
+    }
+
+    return regle
+}
 
 describe('useRuleSchemaAdapter', () => {
     beforeEach(() => {
@@ -33,7 +54,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 foo: ''
             },
@@ -68,7 +89,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 name: '',
                 email: ''
@@ -98,7 +119,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 foo: ''
             },
@@ -128,7 +149,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 first_name: '',
                 last_name: ''
@@ -161,7 +182,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 email: '',
                 email2: ''
@@ -210,7 +231,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 tooShort: '1',
                 tooLong: '123',
@@ -251,7 +272,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 foo: 'one',
                 bar: 'two',
@@ -294,7 +315,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 genus: 'Foo',
                 owls: 'Hedwig',
@@ -342,7 +363,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 genus: 'Megascops',
                 owls: 'Foo',
@@ -383,7 +404,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 withMessage: ' Foo',
                 defaultMessage: ' Foo',
@@ -426,7 +447,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 withMessage: 'Foo ',
                 defaultMessage: 'Foo ',
@@ -468,7 +489,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 withMessage: 'Foo',
                 defaultMessage: 'Foo',
@@ -514,7 +535,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 withMessage: 92,
                 defaultMessage: 92,
@@ -560,7 +581,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 withMessage: 'hum',
                 defaultMessage: 'hello',
@@ -602,7 +623,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 withMessage: 'foo',
                 defaultMessage: 'bar@example.com',
@@ -640,7 +661,7 @@ describe('useRuleSchemaAdapter', () => {
             }
         }
 
-        const { r$ } = useRegle(
+        const { r$ } = createRegle(
             {
                 withMessage: 'My Name',
                 defaultMessage: 'bar@example.com',
@@ -657,5 +678,68 @@ describe('useRuleSchemaAdapter', () => {
             'The value must match the required pattern'
         ]) // Default message
         expect(r$.valid.$silentErrors).toEqual([]) // Valid
+    })
+
+    test('returns empty string when translateMessage has no message key', () => {
+        const adapter = useRuleSchemaAdapter()
+        expect(adapter.translateMessage({ label: '&USERNAME' })).toBe('')
+    })
+
+    test('warns for unimplemented rules', () => {
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+        const yamlInput = {
+            field: {
+                validators: {
+                    matches: true,
+                    equals: true,
+                    not_equals: true,
+                    not_matches: true,
+                    telephone: true
+                }
+            }
+        }
+
+        const adapted = useRuleSchemaAdapter().adapt(yamlInput)
+
+        expect(adapted).toEqual({ field: {} })
+        expect(warnSpy).toHaveBeenCalledTimes(5)
+        expect(warnSpy).toHaveBeenNthCalledWith(1, 'Validation rule "matches" not implemented yet')
+        expect(warnSpy).toHaveBeenNthCalledWith(2, 'Validation rule "equals" not implemented yet')
+        expect(warnSpy).toHaveBeenNthCalledWith(
+            3,
+            'Validation rule "not_equals" not implemented yet'
+        )
+        expect(warnSpy).toHaveBeenNthCalledWith(
+            4,
+            'Validation rule "not_matches" not implemented yet'
+        )
+        expect(warnSpy).toHaveBeenNthCalledWith(
+            5,
+            'Validation rule "telephone" not implemented yet'
+        )
+    })
+
+    test('ignores inherited schema fields', () => {
+        const inheritedSchema = {
+            inherited: {
+                validators: {
+                    required: true
+                }
+            }
+        }
+
+        const sourceSchema = Object.create(inheritedSchema)
+        sourceSchema.own = {
+            validators: {
+                required: true
+            }
+        }
+
+        const adapted = useRuleSchemaAdapter().adapt(sourceSchema)
+
+        expect(adapted.inherited).toBeUndefined()
+        expect(adapted.own).toBeDefined()
+        expect(adapted.own.required).toBeDefined()
     })
 })

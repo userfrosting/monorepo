@@ -10,7 +10,7 @@ const mockUseConfigStore = {
     get: vi.fn()
 }
 
-describe('Csrf Composable', () => {
+describe('useCsrf', () => {
     afterEach(() => {
         vi.clearAllMocks()
         vi.resetAllMocks()
@@ -208,5 +208,58 @@ describe('Csrf Composable', () => {
         )
         expect(axios.defaults.headers.post['csrf_name']).toBe('123456')
         expect(axios.defaults.headers.post['csrf_value']).toBe('abcdef')
+    })
+
+    test('fetches CSRF token from api and updates state from headers', async () => {
+        vi.spyOn(axios, 'get').mockResolvedValue({
+            headers: {
+                'csrf-name': 'api_name',
+                'csrf-value': 'api_value'
+            }
+        } as any)
+
+        const csrf = useCsrf()
+
+        await csrf.fetchCsrfToken()
+        await nextTick()
+
+        expect(axios.get).toHaveBeenCalledWith('/api/csrf')
+        expect(csrf.name.value).toBe('api_name')
+        expect(csrf.token.value).toBe('api_value')
+        expect(axios.defaults.headers.post['csrf_name']).toBe('api_name')
+        expect(axios.defaults.headers.post['csrf_value']).toBe('api_value')
+    })
+
+    test('creates missing meta tags when token values are updated', async () => {
+        const csrf = useCsrf()
+
+        expect(document.querySelector("meta[name='csrf_name']")).toBeNull()
+        expect(document.querySelector("meta[name='csrf_value']")).toBeNull()
+
+        csrf.name.value = 'generated_name'
+        csrf.token.value = 'generated_value'
+
+        await nextTick()
+
+        expect(document.querySelector("meta[name='csrf_name']")?.getAttribute('content')).toBe(
+            'generated_name'
+        )
+        expect(document.querySelector("meta[name='csrf_value']")?.getAttribute('content')).toBe(
+            'generated_value'
+        )
+    })
+
+    test('does not write headers or meta tags until both token values are present', async () => {
+        const csrf = useCsrf()
+
+        csrf.name.value = 'partial_name'
+        await nextTick()
+
+        expect(document.querySelector("meta[name='csrf_name']")).toBeNull()
+        expect(document.querySelector("meta[name='csrf_value']")).toBeNull()
+        expect(axios.defaults.headers.post).toEqual({})
+        expect(axios.defaults.headers.put).toEqual({})
+        expect(axios.defaults.headers.delete).toEqual({})
+        expect(axios.defaults.headers.patch).toEqual({})
     })
 })

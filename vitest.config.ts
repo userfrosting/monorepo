@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
     resolve: {
@@ -9,7 +9,11 @@ export default defineConfig({
         coverage: {
             enabled: true,
             reportsDirectory: './_meta/_coverage',
-            include: ['packages/**/app/assets/**/*.*', 'packages/theme-pink-cupcake/src/**/*.*']
+            include: [
+                'packages/**/app/assets/**/*.{js,jsx,ts,tsx,vue}',
+                'packages/theme-pink-cupcake/src/**/*.{js,jsx,ts,tsx,vue}'
+            ],
+            exclude: ['**/.*', '**/*.md']
         },
         reporters: ['default', 'junit'],
         outputFile: './_meta/junit_frontend.xml',
