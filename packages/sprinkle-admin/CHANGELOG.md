@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Expanded frontend Vitest and backend PHPUnit coverage to 100%.
+
 ## [6.0.1](https://github.com/userfrosting/sprinkle-admin/compare/6.0.0...6.0.1) - 2026-06-28
 
 ### Changed
