@@ -41,5 +41,26 @@ describe('NavBarLogin.vue', () => {
         })
         expect(wrapper.exists()).toBe(true)
         expect(wrapper.find('[data-test="gotoRegister"]').exists()).toBe(false)
+        expect(wrapper.find('[data-test="gotoLogin"]').exists()).toBe(true)
+    })
+
+    test('renders default slot content inside dropdown', () => {
+        mockUseConfigStore.get.mockReturnValue(true)
+        vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
+
+        const wrapper = mount(NavBarLogin, {
+            slots: {
+                default: '<div data-test="slot-content">Slot Content</div>'
+            },
+            global: {
+                stubs: {
+                    'router-link': { template: '<a v-bind="$attrs"><slot /></a>' },
+                    FormLogin: true,
+                    NavBarDropdown: { template: '<div><slot /></div>' }
+                }
+            }
+        })
+
+        expect(wrapper.find('[data-test="slot-content"]').exists()).toBe(true)
     })
 })

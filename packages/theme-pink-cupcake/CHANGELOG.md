@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Expanded frontend Vitest coverage toward 100%.
+
 ## [6.0.1](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.0...6.0.1) - 2026-06-28
 
 ### Changed

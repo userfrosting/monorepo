@@ -224,4 +224,73 @@ describe('PageForgotPassword.vue', () => {
         expect(wrapperVm.passwordc).toBe('')
         expect(wrapperVm.currentStep).toBe(1)
     })
+
+    test('stays on request step when requestCode fails', async () => {
+        vi.mocked(useForgotPasswordApi).mockReturnValue({
+            requestCode: vi.fn().mockRejectedValue(new Error('failed')),
+            setPassword: vi.fn(),
+            apiLoading: ref(false),
+            apiError: ref({ title: 'Error', description: 'Request failed', style: 'Danger' })
+        })
+
+        const wrapper = mount(PageForgotPassword, wrapperGlobals)
+        const wrapperVm: any = wrapper.vm
+        wrapperVm.email = email
+        const emailForm = wrapper.findComponent({ name: 'FormEmailVerificationRequest' })
+        await emailForm.vm.$emit('submit')
+        await wrapperVm.$nextTick()
+
+        expect(wrapperVm.currentStep).toBe(1)
+        expect(wrapper.text()).toContain('Request failed')
+    })
+
+    test('shows done-step login CTA and hides secondary card once completed', async () => {
+        const wrapper = mount(PageForgotPassword, wrapperGlobals)
+        const wrapperVm: any = wrapper.vm
+        wrapperVm.currentStep = 4
+        await wrapperVm.$nextTick()
+
+        expect(wrapper.find('[data-test="gotoLogin"]').exists()).toBe(true)
+        expect(wrapper.text()).toContain('PASSWORD.RESET.SUCCESS')
+    })
+
+    test('exposes and executes internal methods directly', async () => {
+        const requestCode = vi.fn().mockResolvedValue('ok')
+        const setPassword = vi.fn().mockResolvedValue('ok')
+        const apiError = ref<any>({ title: 'Oops', description: 'Err', style: 'Danger' })
+
+        vi.mocked(useForgotPasswordApi).mockReturnValue({
+            requestCode,
+            setPassword,
+            apiLoading: ref(false),
+            apiError
+        })
+
+        const wrapper = mount(PageForgotPassword, wrapperGlobals)
+        const wrapperVm: any = wrapper.vm
+
+        wrapperVm.email = email
+        await wrapperVm.sendRequestCode()
+        expect(requestCode).toHaveBeenCalledWith(email)
+        expect(wrapperVm.currentStep).toBe(2)
+
+        wrapperVm.code = code
+        wrapperVm.password = password
+        wrapperVm.passwordc = passwordConfirm
+        wrapperVm.validateCode()
+        expect(wrapperVm.currentStep).toBe(3)
+
+        await wrapperVm.sendSetPassword()
+        expect(setPassword).toHaveBeenCalledWith({
+            email,
+            code,
+            password,
+            passwordc: passwordConfirm
+        })
+        expect(wrapperVm.currentStep).toBe(4)
+
+        wrapperVm.reset()
+        expect(wrapperVm.currentStep).toBe(1)
+        expect(apiError.value).toBeNull()
+    })
 })

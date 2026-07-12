@@ -59,4 +59,29 @@ describe('PageLogin.vue', () => {
         })
         expect(wrapper.find('[data-test="gotoVerification"]').exists()).toBe(false)
     })
+
+    test('shows verification link and hides register card when registration is disabled', () => {
+        mockUseConfigStore.get.mockImplementation((key: string) => {
+            if (key === 'site.registration.require_email_verification') return true
+            if (key === 'site.registration.enabled') return false
+            return false
+        })
+        vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
+
+        const wrapper = mount(PageLogin, {
+            global: {
+                stubs: {
+                    'router-link': { template: '<a v-bind="$attrs"><slot /></a>' },
+                    UFCardBoxHalf: { template: '<div><slot /></div>' },
+                    UFCardBox: { template: '<div><slot /></div>' },
+                    UFAlert: true,
+                    FormLogin: true,
+                    FontAwesomeIcon: true
+                }
+            }
+        })
+
+        expect(wrapper.find('[data-test="gotoVerification"]').exists()).toBe(true)
+        expect(wrapper.text()).not.toContain('REGISTRATION.QUESTION')
+    })
 })

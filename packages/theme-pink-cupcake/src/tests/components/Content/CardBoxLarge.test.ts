@@ -30,4 +30,17 @@ describe('CardBoxLarge.vue', () => {
         expect(wrapper.find('[data-test="title"]').exists()).toBe(false)
         expect(wrapper.get('[data-test="slot"]').text()).toMatch('')
     })
+
+    test('renders header and footer named slots when provided', () => {
+        const wrapper = mount(CardBoxLarge, {
+            slots: {
+                header: '<div data-test="header-slot">Header</div>',
+                default: '<div>Body</div>',
+                footer: '<div data-test="footer-slot">Footer</div>'
+            }
+        })
+
+        expect(wrapper.find('[data-test="header-slot"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="footer-slot"]').exists()).toBe(true)
+    })
 })

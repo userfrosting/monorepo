@@ -5,6 +5,25 @@ import FormRegister from '../../../../components/Pages/Account/FormRegister.vue'
 import UFAlert from '../../../../components/UFAlert.vue'
 import UFModal from '../../../../components/Modals/UFModal.vue'
 
+const { mockAxiosGet, mockedRouterPush } = vi.hoisted(() => ({
+    mockAxiosGet: vi.fn((url: string) => {
+        if (url === '/c/tos') {
+            return Promise.resolve({ data: 'TOS...' })
+        }
+        if (url === '/c/privacy') {
+            return Promise.resolve({ data: 'PRIVACY...' })
+        }
+        return Promise.resolve({ data: {} })
+    }),
+    mockedRouterPush: vi.fn()
+}))
+
+vi.mock('axios', () => ({
+    default: {
+        get: mockAxiosGet
+    }
+}))
+
 // Mock composables and dependencies
 vi.mock('@userfrosting/sprinkle-account/composables', () => ({
     useRegisterApi: () => ({
@@ -75,7 +94,7 @@ vi.mock('@userfrosting/sprinkle-core/stores', () => ({
 // Mock the router
 vi.mock('vue-router', () => ({
     useRouter: () => ({
-        push: vi.fn()
+        push: mockedRouterPush
     })
 }))
 
@@ -83,6 +102,17 @@ describe('FormRegister.vue', () => {
     let wrapper: any
 
     beforeEach(() => {
+        mockedRouterPush.mockReset()
+        mockAxiosGet.mockImplementation((url: string) => {
+            if (url === '/c/tos') {
+                return Promise.resolve({ data: 'TOS...' })
+            }
+            if (url === '/c/privacy') {
+                return Promise.resolve({ data: 'PRIVACY...' })
+            }
+            return Promise.resolve({ data: {} })
+        })
+
         wrapper = mount(FormRegister, {
             global: {
                 stubs: {
@@ -93,21 +123,6 @@ describe('FormRegister.vue', () => {
                 }
             }
         })
-
-        // Mock axios for TOS and Privacy fetch
-        vi.mock('axios', () => ({
-            default: {
-                get: vi.fn((url: string) => {
-                    if (url === '/c/tos') {
-                        return Promise.resolve({ data: 'TOS...' })
-                    }
-                    if (url === '/c/privacy') {
-                        return Promise.resolve({ data: 'PRIVACY...' })
-                    }
-                    return Promise.resolve({ data: {} })
-                })
-            }
-        }))
     })
 
     test('renders correctly', () => {
@@ -180,7 +195,48 @@ describe('FormRegister.vue', () => {
         await wrapper.vm.$nextTick()
         await wrapper.find('form[data-test="verificationForm"]').trigger('submit.prevent')
         await flushPromises()
-        // The router.push is mocked, so we just check that the form submits without error
         expect(wrapper.find('form[data-test="verificationForm"]').exists()).toBe(true)
+        expect(mockedRouterPush).toHaveBeenCalledWith({ name: 'account.login' })
+    })
+
+    test('does not switch to verification form when validation is invalid', async () => {
+        wrapper.vm.r$.$validate.mockResolvedValueOnce({ valid: false })
+        await wrapper.find('form').trigger('submit.prevent')
+        await flushPromises()
+        expect(wrapper.find('form[data-test="verificationForm"]').exists()).toBe(false)
+    })
+
+    test('shows verification error and supports try-again navigation', async () => {
+        wrapper.vm.displayVerification = true
+        wrapper.vm.verificationApiError = {
+            title: 'Verification error',
+            description: 'Invalid code',
+            style: 'Danger',
+            closeBtn: true
+        }
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.find('[data-test="verificationError"]').exists()).toBe(true)
+        await wrapper.find('[data-test="tryAgain"]').trigger('click')
+        expect(mockedRouterPush).toHaveBeenCalledWith({ name: 'account.verification' })
+    })
+
+    test('handles tos/privacy fetch failures gracefully on mount', async () => {
+        mockAxiosGet.mockRejectedValue(new Error('content fetch failed'))
+        const failedWrapper = mount(FormRegister, {
+            global: {
+                stubs: {
+                    UFAlert: UFAlert,
+                    UFModal: UFModal,
+                    UFFormValidationError: { template: '<span></span>' },
+                    FontAwesomeIcon: { template: '<span></span>' }
+                }
+            }
+        })
+        await flushPromises()
+
+        expect(failedWrapper.exists()).toBe(true)
+        expect(failedWrapper.find('#show-tos').exists()).toBe(true)
+        expect(failedWrapper.find('#show-privacy').exists()).toBe(true)
     })
 })

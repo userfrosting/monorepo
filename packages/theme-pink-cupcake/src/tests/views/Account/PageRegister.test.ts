@@ -71,4 +71,25 @@ describe('PageRegister.vue', () => {
         expect(mockedPush).toHaveBeenCalledTimes(1)
         expect(mockedPush).toHaveBeenCalledWith({ name: 'account.login' })
     })
+
+    test('does not redirect if registration is enabled and renders login CTA', () => {
+        mockUseConfigStore.get.mockReturnValue(true)
+        vi.mocked(useConfigStore).mockReturnValue(mockUseConfigStore as any)
+
+        const wrapper = mount(PageRegister, {
+            global: {
+                stubs: {
+                    'router-link': { template: '<a v-bind="$attrs"><slot /></a>' },
+                    UFCardBoxLarge: { template: '<div><slot /></div>' },
+                    UFCardBox: { template: '<div><slot /></div>' },
+                    UFAlert: true,
+                    FormRegister: true,
+                    FontAwesomeIcon: true
+                }
+            }
+        })
+
+        expect(mockedPush).not.toHaveBeenCalled()
+        expect(wrapper.find('[data-test="gotoLogin"]').exists()).toBe(true)
+    })
 })

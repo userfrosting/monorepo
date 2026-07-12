@@ -188,6 +188,32 @@ describe('UFAlert', () => {
         expect(wrapper.get('.uk-icon').classes('fa-circle-info')).toBe(true)
     })
 
+    test('renders correctly with style Info, Secondary and Muted', () => {
+        const infoWrapper = mount(UFAlert, {
+            props: {
+                alert: { title: 'Info', style: Severity.Info }
+            }
+        })
+        expect(infoWrapper.get('.uk-alert').classes('uk-alert-info')).toBe(true)
+        expect(infoWrapper.get('.uk-icon').classes('fa-circle-info')).toBe(true)
+
+        const secondaryWrapper = mount(UFAlert, {
+            props: {
+                alert: { title: 'Secondary', style: Severity.Secondary }
+            }
+        })
+        expect(secondaryWrapper.get('.uk-alert').classes('uk-alert-secondary')).toBe(true)
+        expect(secondaryWrapper.get('.uk-icon').classes('fa-circle-info')).toBe(true)
+
+        const mutedWrapper = mount(UFAlert, {
+            props: {
+                alert: { title: 'Muted', style: Severity.Muted }
+            }
+        })
+        expect(mutedWrapper.get('.uk-alert').classes('uk-alert-muted')).toBe(true)
+        expect(mutedWrapper.get('.uk-icon').classes('fa-circle-info')).toBe(true)
+    })
+
     // Test click close button
     test('click close button', async () => {
         // Arrange
@@ -214,5 +240,30 @@ describe('UFAlert', () => {
         // TODO : Fix closing alert deleting the DOM
         // expect(wrapper.find('[data-test="title"]').exists()).toBe(false)
         // expect(wrapper.find('.uk-alert').exists()).toBe(false)
+    })
+
+    test('becomes visible again when alert prop changes', async () => {
+        const wrapper = mount(UFAlert, {
+            props: {
+                alert: {
+                    title: 'Alert',
+                    closeBtn: true
+                }
+            }
+        })
+
+        await wrapper.get('[data-test="closeBtn"]').trigger('click')
+        expect(wrapper.find('.uk-alert').exists()).toBe(false)
+
+        await wrapper.setProps({
+            alert: {
+                title: 'Updated Alert',
+                closeBtn: true,
+                description: 'Changed'
+            }
+        })
+
+        expect(wrapper.find('.uk-alert').exists()).toBe(true)
+        expect(wrapper.text()).toContain('Updated Alert')
     })
 })

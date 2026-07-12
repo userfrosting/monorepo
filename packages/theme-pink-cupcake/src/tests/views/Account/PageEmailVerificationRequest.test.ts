@@ -206,4 +206,55 @@ describe('PageEmailVerificationRequest.vue', () => {
         mount(PageEmailVerificationRequest, wrapperGlobals)
         expect(mockedPush).toHaveBeenCalledWith({ name: 'account.login' })
     })
+
+    test('stays on request step when requestVerificationCode rejects', async () => {
+        const requestVerificationCode = vi.fn().mockRejectedValue(new Error('failed'))
+
+        vi.mocked(useEmailVerificationApi).mockReturnValue({
+            requestVerificationCode,
+            submitVerificationCode: vi.fn(),
+            apiLoading: ref(false),
+            apiError: ref({ title: 'Error', description: 'Request failed', style: 'Danger' })
+        })
+
+        const wrapper = mount(PageEmailVerificationRequest, wrapperGlobals)
+        const wrapperVm: any = wrapper.vm
+        wrapperVm.email = email
+
+        await expect(wrapperVm.sendRequestCode()).rejects.toThrow('failed')
+        expect(requestVerificationCode).toHaveBeenCalledWith(email)
+
+        expect(wrapperVm.currentStep).toBe(1)
+        expect(wrapper.text()).toContain('Request failed')
+    })
+
+    test('exposes and executes internal methods directly', async () => {
+        const requestVerificationCode = vi.fn().mockResolvedValue('ok')
+        const submitVerificationCode = vi.fn().mockResolvedValue('ok')
+        const apiError = ref<any>({ title: 'Oops', description: 'Err', style: 'Danger' })
+
+        vi.mocked(useEmailVerificationApi).mockReturnValue({
+            requestVerificationCode,
+            submitVerificationCode,
+            apiLoading: ref(false),
+            apiError
+        })
+
+        const wrapper = mount(PageEmailVerificationRequest, wrapperGlobals)
+        const wrapperVm: any = wrapper.vm
+
+        wrapperVm.email = email
+        await wrapperVm.sendRequestCode()
+        expect(requestVerificationCode).toHaveBeenCalledWith(email)
+        expect(wrapperVm.currentStep).toBe(2)
+
+        wrapperVm.code = code
+        await wrapperVm.sendVerification()
+        expect(submitVerificationCode).toHaveBeenCalledWith(email, code)
+        expect(wrapperVm.currentStep).toBe(3)
+
+        wrapperVm.reset()
+        expect(wrapperVm.currentStep).toBe(1)
+        expect(apiError.value).toBeNull()
+    })
 })
