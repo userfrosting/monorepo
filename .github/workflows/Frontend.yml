@@ -3,12 +3,6 @@ name: Frontend
 on:
   push:
     branches: [6.0]
-    paths:
-      - packages/skeleton/**
-      - packages/sprinkle-account/**
-      - packages/sprinkle-admin/**
-      - packages/sprinkle-core/**
-      - packages/theme-pink-cupcake/**
   pull_request:
     branches: [6.0]
   workflow_dispatch:
