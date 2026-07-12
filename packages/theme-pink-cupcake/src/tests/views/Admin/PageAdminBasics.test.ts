@@ -80,7 +80,8 @@ describe('Admin basic views', () => {
                 stubs: {
                     UFInfoBox: {
                         props: ['value', 'label', 'to'],
-                        template: '<div class="info-box" :data-route="to.name" :data-value="value" />'
+                        template:
+                            '<div class="info-box" :data-route="to.name" :data-value="value" />'
                     },
                     DashboardRecentUsers: { template: '<div data-test="recent-users" />' },
                     DashboardActivities: { template: '<div data-test="activities" />' }
@@ -414,12 +415,25 @@ describe('Admin basic views', () => {
 
         const groups = mount(PageGroups, {
             global: {
-                mocks: { $checkAccess: () => true, $t: (key: string) => key, $tdate: (v: string) => v },
+                mocks: {
+                    $checkAccess: () => true,
+                    $t: (key: string) => key,
+                    $tdate: (v: string) => v
+                },
                 stubs: {
                     ...commonStubs,
-                    GroupCreateModal: { emits: ['saved'], template: '<button data-test="group-create" @click="$emit(\'saved\')" />' },
-                    GroupEditModal: { emits: ['saved'], template: '<button data-test="group-edit" @click="$emit(\'saved\')" />' },
-                    GroupDeleteModal: { emits: ['deleted'], template: '<button data-test="group-delete" @click="$emit(\'deleted\')" />' }
+                    GroupCreateModal: {
+                        emits: ['saved'],
+                        template: '<button data-test="group-create" @click="$emit(\'saved\')" />'
+                    },
+                    GroupEditModal: {
+                        emits: ['saved'],
+                        template: '<button data-test="group-edit" @click="$emit(\'saved\')" />'
+                    },
+                    GroupDeleteModal: {
+                        emits: ['deleted'],
+                        template: '<button data-test="group-delete" @click="$emit(\'deleted\')" />'
+                    }
                 }
             }
         })
@@ -429,12 +443,25 @@ describe('Admin basic views', () => {
 
         const roles = mount(PageRoles, {
             global: {
-                mocks: { $checkAccess: () => true, $t: (key: string) => key, $tdate: (v: string) => v },
+                mocks: {
+                    $checkAccess: () => true,
+                    $t: (key: string) => key,
+                    $tdate: (v: string) => v
+                },
                 stubs: {
                     ...commonStubs,
-                    RoleCreateModal: { emits: ['saved'], template: '<button data-test="role-create" @click="$emit(\'saved\')" />' },
-                    RoleEditModal: { emits: ['saved'], template: '<button data-test="role-edit" @click="$emit(\'saved\')" />' },
-                    RoleDeleteModal: { emits: ['deleted'], template: '<button data-test="role-delete" @click="$emit(\'deleted\')" />' },
+                    RoleCreateModal: {
+                        emits: ['saved'],
+                        template: '<button data-test="role-create" @click="$emit(\'saved\')" />'
+                    },
+                    RoleEditModal: {
+                        emits: ['saved'],
+                        template: '<button data-test="role-edit" @click="$emit(\'saved\')" />'
+                    },
+                    RoleDeleteModal: {
+                        emits: ['deleted'],
+                        template: '<button data-test="role-delete" @click="$emit(\'deleted\')" />'
+                    },
                     RoleManagePermissionModal: { template: '<div />' }
                 }
             }
@@ -445,13 +472,29 @@ describe('Admin basic views', () => {
 
         const users = mount(PageUsers, {
             global: {
-                mocks: { $checkAccess: () => true, $t: (key: string) => key, $tdate: (v: string) => v },
+                mocks: {
+                    $checkAccess: () => true,
+                    $t: (key: string) => key,
+                    $tdate: (v: string) => v
+                },
                 stubs: {
                     ...commonStubs,
-                    UserCreateModal: { emits: ['saved'], template: '<button data-test="user-create" @click="$emit(\'saved\')" />' },
-                    UserEditModal: { emits: ['saved'], template: '<button data-test="user-edit" @click="$emit(\'saved\')" />' },
-                    UserDeleteModal: { emits: ['deleted'], template: '<button data-test="user-delete" @click="$emit(\'deleted\')" />' },
-                    UserActivateModal: { emits: ['saved'], template: '<button data-test="user-activate" @click="$emit(\'saved\')" />' },
+                    UserCreateModal: {
+                        emits: ['saved'],
+                        template: '<button data-test="user-create" @click="$emit(\'saved\')" />'
+                    },
+                    UserEditModal: {
+                        emits: ['saved'],
+                        template: '<button data-test="user-edit" @click="$emit(\'saved\')" />'
+                    },
+                    UserDeleteModal: {
+                        emits: ['deleted'],
+                        template: '<button data-test="user-delete" @click="$emit(\'deleted\')" />'
+                    },
+                    UserActivateModal: {
+                        emits: ['saved'],
+                        template: '<button data-test="user-activate" @click="$emit(\'saved\')" />'
+                    },
                     UserPasswordModal: { template: '<div />' },
                     UserPasswordResetModal: { template: '<div />' }
                 }

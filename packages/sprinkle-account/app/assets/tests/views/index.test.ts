@@ -1,11 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { mount } from '@vue/test-utils'
-import {
-    ForgotPassword,
-    LoginView,
-    RegisterView,
-    ResendVerificationView
-} from '../../views'
+import { ForgotPassword, LoginView, RegisterView, ResendVerificationView } from '../../views'
 import PageUserSettings from '../../views/PageUserSettings.vue'
 import PageUserSettingsProfile from '../../views/PageUserSettingsProfile.vue'
 import PageUserSettingsPassword from '../../views/PageUserSettingsPassword.vue'

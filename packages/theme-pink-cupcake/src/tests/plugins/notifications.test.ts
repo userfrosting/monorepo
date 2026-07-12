@@ -74,7 +74,10 @@ describe('notifications plugin', () => {
         alerts.value = [{}, {}]
         await nextTick()
 
-        expect(notification).toHaveBeenNthCalledWith(1, expect.objectContaining({ status: 'primary' }))
+        expect(notification).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({ status: 'primary' })
+        )
         expect(notification).toHaveBeenNthCalledWith(2, expect.objectContaining({ status: 'info' }))
     })
 })

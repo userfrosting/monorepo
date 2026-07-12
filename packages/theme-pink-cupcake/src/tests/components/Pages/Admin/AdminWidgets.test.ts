@@ -118,17 +118,44 @@ const global = {
         RouterLink: { template: '<a><slot /></a>' },
         UFLabel: { template: '<span><slot /></span>' },
         'font-awesome-icon': { template: '<span />' },
-        GroupEditModal: { emits: ['saved'], template: '<button data-test="group-edit" @click="$emit(\'saved\')" />' },
-        GroupDeleteModal: { emits: ['deleted'], template: '<button data-test="group-delete" @click="$emit(\'deleted\')" />' },
-        RoleEditModal: { emits: ['saved'], template: '<button data-test="role-edit" @click="$emit(\'saved\')" />' },
-        RoleDeleteModal: { emits: ['deleted'], template: '<button data-test="role-delete" @click="$emit(\'deleted\')" />' },
-        RoleManagePermissionModal: { emits: ['saved'], template: '<button data-test="role-manage" @click="$emit(\'saved\')" />' },
-        UserEditModal: { emits: ['saved'], template: '<button data-test="user-edit" @click="$emit(\'saved\')" />' },
-        UserDeleteModal: { emits: ['deleted'], template: '<button data-test="user-delete" @click="$emit(\'deleted\')" />' },
-        UserActivateModal: { emits: ['saved'], template: '<button data-test="user-activate" @click="$emit(\'saved\')" />' },
+        GroupEditModal: {
+            emits: ['saved'],
+            template: '<button data-test="group-edit" @click="$emit(\'saved\')" />'
+        },
+        GroupDeleteModal: {
+            emits: ['deleted'],
+            template: '<button data-test="group-delete" @click="$emit(\'deleted\')" />'
+        },
+        RoleEditModal: {
+            emits: ['saved'],
+            template: '<button data-test="role-edit" @click="$emit(\'saved\')" />'
+        },
+        RoleDeleteModal: {
+            emits: ['deleted'],
+            template: '<button data-test="role-delete" @click="$emit(\'deleted\')" />'
+        },
+        RoleManagePermissionModal: {
+            emits: ['saved'],
+            template: '<button data-test="role-manage" @click="$emit(\'saved\')" />'
+        },
+        UserEditModal: {
+            emits: ['saved'],
+            template: '<button data-test="user-edit" @click="$emit(\'saved\')" />'
+        },
+        UserDeleteModal: {
+            emits: ['deleted'],
+            template: '<button data-test="user-delete" @click="$emit(\'deleted\')" />'
+        },
+        UserActivateModal: {
+            emits: ['saved'],
+            template: '<button data-test="user-activate" @click="$emit(\'saved\')" />'
+        },
         UserPasswordModal: { template: '<div data-test="user-password" />' },
         UserPasswordResetModal: { template: '<div data-test="user-password-reset" />' },
-        UserManageRolesModal: { emits: ['saved'], template: '<button data-test="user-manage-roles" @click="$emit(\'saved\')" />' }
+        UserManageRolesModal: {
+            emits: ['saved'],
+            template: '<button data-test="user-manage-roles" @click="$emit(\'saved\')" />'
+        }
     }
 }
 
@@ -141,9 +168,7 @@ describe('admin widget components', () => {
         const activities = mount(DashboardActivities, { global })
         const recentUsers = mount(DashboardRecentUsers, {
             props: {
-                users: [
-                    baseUser
-                ]
+                users: [baseUser]
             },
             global: {
                 ...global,
@@ -178,7 +203,16 @@ describe('admin widget components', () => {
 
         const permissionInfo = mount(PermissionInfo, {
             props: {
-                permission: { id: 1, slug: 'perm.slug', name: 'Permission', conditions: 'always()', description: 'Desc', created_at: '', updated_at: '', deleted_at: null }
+                permission: {
+                    id: 1,
+                    slug: 'perm.slug',
+                    name: 'Permission',
+                    conditions: 'always()',
+                    description: 'Desc',
+                    created_at: '',
+                    updated_at: '',
+                    deleted_at: null
+                }
             },
             global
         })
@@ -193,7 +227,16 @@ describe('admin widget components', () => {
     test('renders role and user widgets', async () => {
         const roleInfo = mount(RoleInfo, {
             props: {
-                role: { id: 1, name: 'Admins', slug: 'admins', description: 'Desc', created_at: '', updated_at: '', deleted_at: null, users_count: 2 }
+                role: {
+                    id: 1,
+                    name: 'Admins',
+                    slug: 'admins',
+                    description: 'Desc',
+                    created_at: '',
+                    updated_at: '',
+                    deleted_at: null,
+                    users_count: 2
+                }
             },
             global
         })
@@ -204,7 +247,18 @@ describe('admin widget components', () => {
 
         const roleUsers = mount(RoleUsers, { props: { slug: 'admins' }, global })
         const rolePermissions = mount(RolePermissions, {
-            props: { role: { id: 1, slug: 'admins', name: 'Admins', description: '', created_at: '', updated_at: '', deleted_at: null, users_count: 2 } },
+            props: {
+                role: {
+                    id: 1,
+                    slug: 'admins',
+                    name: 'Admins',
+                    description: '',
+                    created_at: '',
+                    updated_at: '',
+                    deleted_at: null,
+                    users_count: 2
+                }
+            },
             global
         })
         expect(roleUsers.find('[data-test="sprunje-table"]').exists()).toBe(true)

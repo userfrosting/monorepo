@@ -17,7 +17,8 @@ describe('components/index.ts', () => {
                 stubs: {
                     UFSideBarItem: {
                         props: ['to', 'label'],
-                        template: '<div class="sidebar-item" :data-route="to.name" :data-label="label" />'
+                        template:
+                            '<div class="sidebar-item" :data-route="to.name" :data-label="label" />'
                     }
                 }
             }

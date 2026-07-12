@@ -100,15 +100,21 @@ describe('CRUD admin composables', () => {
             icon: 'users'
         })
 
-        vi.spyOn(axios, 'get').mockRejectedValueOnce({ response: { data: { title: 'Fetch error' } } })
+        vi.spyOn(axios, 'get').mockRejectedValueOnce({
+            response: { data: { title: 'Fetch error' } }
+        })
         await expect(api.fetchGroup('admins')).rejects.toEqual({ title: 'Fetch error' })
 
-        vi.spyOn(axios, 'post').mockRejectedValueOnce({ response: { data: { title: 'Create error' } } })
+        vi.spyOn(axios, 'post').mockRejectedValueOnce({
+            response: { data: { title: 'Create error' } }
+        })
         await expect(
             api.createGroup({ slug: 'x', name: 'x', description: '', icon: 'users' })
         ).rejects.toEqual({ title: 'Create error' })
 
-        vi.spyOn(axios, 'put').mockRejectedValueOnce({ response: { data: { title: 'Update error' } } })
+        vi.spyOn(axios, 'put').mockRejectedValueOnce({
+            response: { data: { title: 'Update error' } }
+        })
         await expect(
             api.updateGroup('admins', {
                 slug: 'admins',
@@ -187,16 +193,24 @@ describe('CRUD admin composables', () => {
             description: ''
         })
 
-        vi.spyOn(axios, 'get').mockRejectedValueOnce({ response: { data: { title: 'Fetch error' } } })
+        vi.spyOn(axios, 'get').mockRejectedValueOnce({
+            response: { data: { title: 'Fetch error' } }
+        })
         await expect(api.fetchRole('admin')).rejects.toEqual({ title: 'Fetch error' })
 
-        vi.spyOn(axios, 'post').mockRejectedValueOnce({ response: { data: { title: 'Create error' } } })
-        await expect(
-            api.createRole({ name: 'x', slug: 'x', description: '' })
-        ).rejects.toEqual({ title: 'Create error' })
+        vi.spyOn(axios, 'post').mockRejectedValueOnce({
+            response: { data: { title: 'Create error' } }
+        })
+        await expect(api.createRole({ name: 'x', slug: 'x', description: '' })).rejects.toEqual({
+            title: 'Create error'
+        })
 
-        vi.spyOn(axios, 'put').mockRejectedValueOnce({ response: { data: { title: 'Update error' } } })
-        await expect(api.updateRole('admin', { name: 'x', slug: 'admin', description: '' })).rejects.toEqual({
+        vi.spyOn(axios, 'put').mockRejectedValueOnce({
+            response: { data: { title: 'Update error' } }
+        })
+        await expect(
+            api.updateRole('admin', { name: 'x', slug: 'admin', description: '' })
+        ).rejects.toEqual({
             title: 'Update error'
         })
 
@@ -280,10 +294,14 @@ describe('CRUD admin composables', () => {
             locale: 'users'
         })
 
-        vi.spyOn(axios, 'get').mockRejectedValueOnce({ response: { data: { title: 'Fetch error' } } })
+        vi.spyOn(axios, 'get').mockRejectedValueOnce({
+            response: { data: { title: 'Fetch error' } }
+        })
         await expect(api.fetchUser('alice')).rejects.toEqual({ title: 'Fetch error' })
 
-        vi.spyOn(axios, 'post').mockRejectedValueOnce({ response: { data: { title: 'Create error' } } })
+        vi.spyOn(axios, 'post').mockRejectedValueOnce({
+            response: { data: { title: 'Create error' } }
+        })
         await expect(
             api.createUser({
                 user_name: 'x',
@@ -295,7 +313,9 @@ describe('CRUD admin composables', () => {
             })
         ).rejects.toEqual({ title: 'Create error' })
 
-        vi.spyOn(axios, 'put').mockRejectedValueOnce({ response: { data: { title: 'Update error' } } })
+        vi.spyOn(axios, 'put').mockRejectedValueOnce({
+            response: { data: { title: 'Update error' } }
+        })
         await expect(
             api.updateUser('alice', {
                 user_name: 'alice',

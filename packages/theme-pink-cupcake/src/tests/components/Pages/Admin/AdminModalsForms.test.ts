@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ref, type Ref } from 'vue'
-import type { GroupInterface, RoleInterface, UserInterface } from '@userfrosting/sprinkle-account/interfaces'
+import type {
+    GroupInterface,
+    RoleInterface,
+    UserInterface
+} from '@userfrosting/sprinkle-account/interfaces'
 import GroupCreateModal from '../../../../components/Pages/Admin/Group/GroupCreateModal.vue'
 import GroupEditModal from '../../../../components/Pages/Admin/Group/GroupEditModal.vue'
 import GroupDeleteModal from '../../../../components/Pages/Admin/Group/GroupDeleteModal.vue'
@@ -775,7 +779,9 @@ describe('admin form components', () => {
 
         expect(editWrapper.get('input[data-test="user_name"]').attributes('disabled')).toBeDefined()
         await editWrapper.get('button.uk-form-button').trigger('click')
-        expect(editWrapper.get('input[data-test="user_name"]').attributes('disabled')).toBeUndefined()
+        expect(
+            editWrapper.get('input[data-test="user_name"]').attributes('disabled')
+        ).toBeUndefined()
 
         await editWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
