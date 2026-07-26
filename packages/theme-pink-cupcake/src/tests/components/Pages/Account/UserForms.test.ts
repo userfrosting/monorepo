@@ -1,5 +1,5 @@
 import { describe, expect, test, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
 import FormUserEmail from '../../../../components/Pages/Account/FormUserEmail.vue'
 import FormUserPassword from '../../../../components/Pages/Account/FormUserPassword.vue'
@@ -13,16 +13,18 @@ const emailFormData = ref({ email: '', passwordcheck: '' })
 const passwordFormData = ref({ passwordcheck: '', password: '', passwordc: '' })
 const profileFormData = ref({ first_name: '', last_name: '', locale: '' })
 
+const mockUseAuthStore = vi.fn().mockReturnValue({
+    user: {
+        email: 'jane@example.com',
+        first_name: 'Jane',
+        last_name: 'Doe',
+        locale: 'en_US'
+    },
+    check
+})
+
 vi.mock('@userfrosting/sprinkle-account/stores', () => ({
-    useAuthStore: () => ({
-        user: {
-            email: 'jane@example.com',
-            first_name: 'Jane',
-            last_name: 'Doe',
-            locale: 'en_US'
-        },
-        check
-    })
+    useAuthStore: () => mockUseAuthStore()
 }))
 
 vi.mock('@userfrosting/sprinkle-core/stores', () => ({
@@ -86,15 +88,62 @@ describe('account user forms', () => {
             }
         })
 
+        // Assert initial model state
         expect(emailFormData.value.email).toBe('jane@example.com')
+        expect(emailFormData.value.passwordcheck).toBe('')
+
+        // Change input
+        await wrapper.get('input[data-test="email"]').setValue('john@example.com')
         await wrapper.get('input[data-test="passwordcheck"]').setValue('secret')
+
+        // Assert that the model has been updated
+        expect(emailFormData.value.email).toBe('john@example.com')
+        expect(emailFormData.value.passwordcheck).toBe('secret')
+
+        // Post the form
         await wrapper.get('form').trigger('submit.prevent')
 
         expect(submitEmailEdit).toHaveBeenCalled()
         await vi.waitFor(() => {
+            expect(emailFormData.value.email).toBe('john@example.com') // Not resetting email, only passwordcheck is reset
             expect(emailFormData.value.passwordcheck).toBe('')
             expect(check).toHaveBeenCalled()
         })
+    })
+
+    test('FormUserEmail throws error when user is null', async () => {
+        mockUseAuthStore.mockReturnValueOnce({
+            user: null,
+            check
+        })
+
+        // Catch the error thrown by the component when user is null
+        const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+        expect(() => {
+            mount(FormUserEmail, {
+                global: {
+                    mocks: { $t: (key: string) => key },
+                    stubs: ['UFFormValidationError', 'font-awesome-icon']
+                }
+            })
+        }).toThrow('User is null')
+        consoleErrorSpy.mockRestore()
+    })
+
+    test('catch error on submitPasswordEdit error', async () => {
+        const wrapper = mount(FormUserPassword, {
+            global: {
+                mocks: { $t: (key: string, params?: any) => (params ? `${key}` : key) },
+                stubs: ['UFFormValidationError', 'font-awesome-icon']
+            }
+        })
+
+        submitPasswordEdit.mockRejectedValueOnce(new Error('edit failed'))
+        await wrapper.find('form').trigger('submit.prevent')
+        await flushPromises()
+
+        expect(wrapper.find('form').exists()).toBe(true)
+        expect(submitPasswordEdit).toHaveBeenCalled()
     })
 
     test('FormUserPassword submits and resets fields on success', async () => {
@@ -105,9 +154,22 @@ describe('account user forms', () => {
             }
         })
 
+        // Assert initial model state
+        expect(passwordFormData.value.password).toBe('')
+        expect(passwordFormData.value.passwordc).toBe('')
+        expect(passwordFormData.value.passwordcheck).toBe('')
+
+        // Change input
         await wrapper.get('input[data-test="password"]').setValue('new-secret')
         await wrapper.get('input[data-test="passwordc"]').setValue('new-secret')
         await wrapper.get('input[data-test="passwordcheck"]').setValue('old-secret')
+
+        // Assert that the model has been updated
+        expect(passwordFormData.value.password).toBe('new-secret')
+        expect(passwordFormData.value.passwordc).toBe('new-secret')
+        expect(passwordFormData.value.passwordcheck).toBe('old-secret')
+
+        // Post the form
         await wrapper.get('form').trigger('submit.prevent')
 
         expect(submitPasswordEdit).toHaveBeenCalledWith({
@@ -141,15 +203,44 @@ describe('account user forms', () => {
         expect(wrapper.findAll('option')).toHaveLength(2)
 
         await wrapper.get('input[data-test="first_name"]').setValue('Janet')
+        await wrapper.get('input[data-test="last_name"]').setValue('Doette')
+        await wrapper.get('select[data-test="locale"]').setValue('fr_CA')
+
+        // Model was updated
+        expect(profileFormData.value).toEqual({
+            first_name: 'Janet',
+            last_name: 'Doette',
+            locale: 'fr_CA'
+        })
+
         await wrapper.get('form').trigger('submit.prevent')
 
         expect(submitProfileEdit).toHaveBeenCalledWith({
             first_name: 'Janet',
-            last_name: 'Doe',
-            locale: 'en_US'
+            last_name: 'Doette',
+            locale: 'fr_CA'
         })
         await vi.waitFor(() => {
             expect(check).toHaveBeenCalled()
         })
+    })
+
+    test('FormUserProfile throws error when user is null', async () => {
+        mockUseAuthStore.mockReturnValueOnce({
+            user: null,
+            check
+        })
+
+        // Catch the error thrown by the component when user is null
+        const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+        expect(() => {
+            mount(FormUserProfile, {
+                global: {
+                    mocks: { $t: (key: string) => key },
+                    stubs: ['UFFormValidationError', 'font-awesome-icon']
+                }
+            })
+        }).toThrow('User is null')
+        consoleErrorSpy.mockRestore()
     })
 })

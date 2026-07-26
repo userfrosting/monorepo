@@ -5,9 +5,11 @@ import FormLogin from '../../../../components/Pages/Account/FormLogin.vue'
 import UFAlert from '../../../../components/UFAlert.vue'
 
 // Mock composables and dependencies
+const mockedValidateResult = vi.fn().mockReturnValue({ valid: true })
+const mockedSubmitLogin = vi.fn().mockResolvedValue(undefined)
 vi.mock('@userfrosting/sprinkle-account/composables', () => ({
     useLoginApi: () => ({
-        submitLogin: vi.fn().mockResolvedValue(undefined),
+        submitLogin: mockedSubmitLogin,
         formData: ref({
             user_name: '',
             password: '',
@@ -16,7 +18,7 @@ vi.mock('@userfrosting/sprinkle-account/composables', () => ({
         apiLoading: ref(false),
         apiError: ref(null),
         r$: {
-            $validate: vi.fn().mockResolvedValue({ valid: true }),
+            $validate: mockedValidateResult,
             $errors: {
                 user_name: [],
                 password: [],
@@ -42,6 +44,7 @@ describe('FormLogin.vue', () => {
                 }
             }
         })
+        vi.clearAllMocks()
     })
 
     test('renders correctly', () => {
@@ -58,6 +61,11 @@ describe('FormLogin.vue', () => {
         await wrapper.find('form').trigger('submit.prevent')
         await flushPromises()
         expect(wrapper.vm.formData).toEqual({
+            user_name: 'johndoe',
+            password: 'password123',
+            rememberme: true
+        })
+        expect(mockedSubmitLogin).toHaveBeenCalledWith({
             user_name: 'johndoe',
             password: 'password123',
             rememberme: true
@@ -84,5 +92,22 @@ describe('FormLogin.vue', () => {
         await wrapper.vm.$nextTick()
         expect(wrapper.find('[data-test="error"]').exists()).toBe(true)
         expect(wrapper.get('[data-test="error"]').text()).toMatch('Invalid credentials')
+    })
+
+    test('validates error', async () => {
+        mockedValidateResult.mockReturnValueOnce({ valid: false })
+
+        await wrapper.find('form').trigger('submit.prevent')
+        await flushPromises()
+        expect(mockedSubmitLogin).not.toHaveBeenCalled()
+    })
+
+    test('catch error on submitLogin error', async () => {
+        mockedSubmitLogin.mockRejectedValueOnce(new Error('login failed'))
+        await wrapper.find('form').trigger('submit.prevent')
+        await flushPromises()
+
+        expect(wrapper.find('form').exists()).toBe(true)
+        expect(mockedSubmitLogin).toHaveBeenCalled()
     })
 })

@@ -14,7 +14,7 @@ defineProps({
         <div class="uk-card-body uk-card-small" data-test="slot">
             <slot></slot>
         </div>
-        <div v-if="$slots.footer" class="uk-card-footer">
+        <div v-if="$slots.footer" class="uk-card-footer" data-test="footer">
             <slot name="footer"></slot>
         </div>
     </div>

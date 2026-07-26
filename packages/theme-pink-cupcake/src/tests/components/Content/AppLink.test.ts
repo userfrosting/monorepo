@@ -37,6 +37,35 @@ describe('AppLink.vue', () => {
         )
     })
 
+    test('Empty, with slot overwrite', () => {
+        // Arrange
+        const wrapper = mount(AppLink, {
+            props: {
+                label: 'Hello world',
+                to: ''
+            },
+            slots: {
+                default: 'This is the slot content'
+            }
+        })
+
+        // Assert
+        expect(wrapper.html()).toMatch('<div>This is the slot content</div>')
+    })
+
+    test('Empty, with label', () => {
+        // Arrange
+        const wrapper = mount(AppLink, {
+            props: {
+                label: 'Hello world',
+                to: ''
+            }
+        })
+
+        // Assert
+        expect(wrapper.html()).toMatch('<div>Hello world</div>')
+    })
+
     // Mock router
     const router = createRouter({
         history: createWebHistory(),

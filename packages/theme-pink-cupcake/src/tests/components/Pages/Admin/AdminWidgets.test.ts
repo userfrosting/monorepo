@@ -57,6 +57,27 @@ const adminUserResponse: UserResponse = {
     group: baseGroup
 }
 
+const mockTableRow = {
+    id: 1,
+    slug: 'admins',
+    name: 'Admins',
+    description: 'Admin role',
+    user_name: 'jane',
+    full_name: 'Jane Doe',
+    email: 'jane@example.com',
+    users_count: 3,
+    occurred_at: '2024-01-01',
+    ip_address: '127.0.0.1',
+    flag_enabled: true,
+    flag_verified: false,
+    user: {
+        user_name: 'jane',
+        full_name: 'Jane Doe',
+        email: 'jane@example.com'
+    },
+    roles_via: [{ id: 10, slug: 'admins', name: 'Admins' }]
+}
+
 vi.mock('@userfrosting/sprinkle-core/stores', () => ({
     useTranslator: () => ({
         getDateTime: () => ({
@@ -80,26 +101,7 @@ const SprunjeTableStub = {
     data() {
         return {
             sprunjer: { fetch: vi.fn() },
-            row: {
-                id: 1,
-                slug: 'admins',
-                name: 'Admins',
-                description: 'Admin role',
-                user_name: 'jane',
-                full_name: 'Jane Doe',
-                email: 'jane@example.com',
-                users_count: 3,
-                occurred_at: '2024-01-01',
-                ip_address: '127.0.0.1',
-                flag_enabled: true,
-                flag_verified: false,
-                user: {
-                    user_name: 'jane',
-                    full_name: 'Jane Doe',
-                    email: 'jane@example.com'
-                },
-                roles_via: [{ id: 10, slug: 'admins', name: 'Admins' }]
-            }
+            row: mockTableRow
         }
     }
 }
@@ -185,6 +187,36 @@ describe('admin widget components', () => {
         expect(recentUsers.text()).toContain('USER.VIEW_ALL')
     })
 
+    test('renders dashboard activity with empty list', () => {
+        // Empty the activities list to test the empty state
+        const emptyActivities = mount(DashboardActivities, {
+            global: {
+                ...global,
+                stubs: {
+                    ...global.stubs,
+                    UFSprunjeTable: {
+                        template: `
+                            <div data-test="sprunje-table">
+                                <slot name="actions" :sprunjer="sprunjer" />
+                                <slot name="header" />
+                                <slot name="body" :row="row" :sprunjer="sprunjer" />
+                            </div>
+                        `,
+                        data() {
+                            return {
+                                sprunjer: { fetch: vi.fn() },
+                                row: {} // No rows to display
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        expect(emptyActivities.find('[data-test="sprunje-table"]').exists()).toBe(true)
+        expect(emptyActivities.find('[data-test="sprunje-table"]').text()).toContain('USER.DELETED')
+    })
+
     test('renders group and permission widgets', async () => {
         const groupInfo = mount(GroupInfo, {
             props: {
@@ -192,6 +224,7 @@ describe('admin widget components', () => {
             },
             global
         })
+        expect(groupInfo.find('[data-test="group-description-list"]').exists()).toBe(true)
         await groupInfo.get('[data-test="group-edit"]').trigger('click')
         await groupInfo.get('[data-test="group-delete"]').trigger('click')
         expect(groupInfo.emitted('groupUpdated')).toHaveLength(1)
@@ -200,6 +233,12 @@ describe('admin widget components', () => {
         const groupUsers = mount(GroupUsers, { props: { slug: 'admins' }, global })
         expect(groupUsers.find('[data-test="sprunje-table"]').exists()).toBe(true)
         expect(groupUsers.text()).toContain('ENABLED')
+
+        // With disabled users
+        mockTableRow.flag_enabled = false
+        const groupUsersDisabled = mount(GroupUsers, { props: { slug: 'admins' }, global })
+        expect(groupUsersDisabled.find('[data-test="sprunje-table"]').exists()).toBe(true)
+        expect(groupUsersDisabled.text()).toContain('DISABLED')
 
         const permissionInfo = mount(PermissionInfo, {
             props: {
@@ -222,6 +261,24 @@ describe('admin widget components', () => {
         const permissionUsers = mount(PermissionUsers, { props: { id: 1 }, global })
         expect(permissionUsers.find('[data-test="sprunje-table"]').exists()).toBe(true)
         expect(permissionUsers.text()).toContain('Admins')
+    })
+
+    test('renders group info without permission', async () => {
+        const restrictedGlobal = {
+            ...global,
+            mocks: {
+                ...global.mocks,
+                $checkAccess: (permission: string) => permission !== 'view_group_field'
+            }
+        }
+
+        const groupInfo = mount(GroupInfo, {
+            props: {
+                group: adminGroupResponse
+            },
+            global: restrictedGlobal
+        })
+        expect(groupInfo.find('[data-test="group-description-list"]').exists()).toBe(false)
     })
 
     test('renders role and user widgets', async () => {

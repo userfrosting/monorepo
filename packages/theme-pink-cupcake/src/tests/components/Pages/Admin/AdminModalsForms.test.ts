@@ -185,7 +185,8 @@ const globalStubs = {
     },
     UFModalConfirmation: {
         emits: ['confirmed'],
-        template: '<button data-test="confirm" @click="$emit(\'confirmed\')" />'
+        template:
+            '<button data-test="confirm" @click="$emit(\'confirmed\')"><slot name="prompt" /></button>'
     },
     UFFormValidationError: { template: '<div data-test="validation" />' },
     UFSprunjeHeader: { template: '<div><slot /></div>' },
@@ -367,6 +368,8 @@ describe('admin modal components', () => {
                 mocks: { $t: (key: string) => key }
             }
         })
+        expect(deleteWrapper.find('[data-test="confirm"]').exists()).toBe(true)
+        expect(deleteWrapper.find('[data-test="confirm"]').text()).toBe('GROUP.DELETE_CONFIRM')
         await deleteWrapper.get('[data-test="confirm"]').trigger('click')
         await flushPromises()
         expect(deleteGroup).toHaveBeenCalledWith('admins')
@@ -414,6 +417,8 @@ describe('admin modal components', () => {
                 mocks: { $t: (key: string) => key }
             }
         })
+        expect(deleteWrapper.find('[data-test="confirm"]').exists()).toBe(true)
+        expect(deleteWrapper.find('[data-test="confirm"]').text()).toBe('ROLE.DELETE_CONFIRM')
         await deleteWrapper.get('[data-test="confirm"]').trigger('click')
         await flushPromises()
         expect(deleteRole).toHaveBeenCalledWith('managers')
@@ -712,6 +717,19 @@ describe('admin form components', () => {
         await validWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
         expect(updateRole).toHaveBeenCalledWith('managers', roleFormData.value)
+    })
+
+    test('role slug lock toggle', async () => {
+        const wrapper = mount(RoleForm, {
+            props: { role: baseRole },
+            global: {
+                stubs: globalStubs,
+                mocks: { $t: (key: string) => key }
+            }
+        })
+        expect(roleSlugLocked.value).toBe(true)
+        await wrapper.get('button.uk-form-button').trigger('click')
+        expect(roleSlugLocked.value).toBe(false)
     })
 
     test('swallows role form create/update API failures', async () => {

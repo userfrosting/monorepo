@@ -35,6 +35,30 @@ describe('UFModalConfirmation.vue', () => {
         expect(wrapper.emitted('confirmed')).toHaveLength(1)
     })
 
+    test('fallback with empty header slot and no title', async () => {
+        const wrapper = mount(UFModalConfirmation, {
+            props: {
+                title: ''
+            },
+            slots: {
+                header: () => []
+            },
+            global: {
+                mocks: { $t: (key: string) => key },
+                stubs: {
+                    mocks: { $t: (key: string) => key },
+                    UFModal: {
+                        template:
+                            '<div><div data-test="header"><slot name="header" /></div><div data-test="body"><slot /></div><div data-test="footer"><slot name="footer" /></div></div>'
+                    },
+                    'font-awesome-icon': { template: '<span data-test="icon" />' }
+                }
+            }
+        })
+
+        expect(wrapper.get('[data-test="header"]').text()).toContain('')
+    })
+
     test('supports custom slots and hidden cancel button', () => {
         const wrapper = mount(UFModalConfirmation, {
             props: {
@@ -64,6 +88,29 @@ describe('UFModalConfirmation.vue', () => {
         expect(wrapper.get('[data-test="body"]').text()).toContain('Prompt')
         expect(wrapper.get('[data-test="footer"]').text()).toContain('Footer')
         expect(wrapper.findAll('button')).toHaveLength(0)
+    })
+
+    test('supports no button icon', () => {
+        const wrapper = mount(UFModalConfirmation, {
+            props: {
+                rejectIcon: null,
+                acceptIcon: null
+            },
+            global: {
+                mocks: { $t: (key: string) => key },
+                stubs: {
+                    UFModal: {
+                        template:
+                            '<div><div data-test="header"><slot name="header" /></div><div data-test="body"><slot /></div><div data-test="footer"><slot name="footer" /></div></div>'
+                    },
+                    'font-awesome-icon': { template: '<span />' }
+                }
+            }
+        })
+
+        const buttons = wrapper.findAll('button')
+        expect(buttons[0].html()).not.toContain('span icon=')
+        expect(buttons[1].html()).not.toContain('span icon=')
     })
 
     test('maps all severity variants to button classes', () => {

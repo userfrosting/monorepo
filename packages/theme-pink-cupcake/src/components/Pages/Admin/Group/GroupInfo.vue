@@ -24,7 +24,10 @@ const emits = defineEmits(['groupUpdated'])
             </div>
             <div>
                 <!-- TODO : Find a way to slot the description list -->
-                <dl class="uk-description-list" v-if="$checkAccess('view_group_field')">
+                <dl
+                    class="uk-description-list"
+                    data-test="group-description-list"
+                    v-if="$checkAccess('view_group_field')">
                     <dt><font-awesome-icon icon="users" /> {{ $t('USER', group.users_count) }}</dt>
                     <dd>
                         <span class="uk-badge">{{ group.users_count }}</span>

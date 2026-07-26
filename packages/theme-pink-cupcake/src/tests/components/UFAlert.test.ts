@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(fas)
 config.global.stubs['FontAwesomeIcon'] = FontAwesomeIcon as any
 
-describe('UFAlert', () => {
+describe('UFAlert.vue', () => {
     test('renders correctly with empty alert', () => {
         // Arrange
         const myAlert: AlertInterface = {}

@@ -4,6 +4,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import FormRegister from '../../../../components/Pages/Account/FormRegister.vue'
 import UFAlert from '../../../../components/UFAlert.vue'
 import UFModal from '../../../../components/Modals/UFModal.vue'
+import FaCode from '../../../../components/Content/2FaCode.vue'
 
 const { mockAxiosGet, mockedRouterPush } = vi.hoisted(() => ({
     mockAxiosGet: vi.fn((url: string) => {
@@ -18,6 +19,14 @@ const { mockAxiosGet, mockedRouterPush } = vi.hoisted(() => ({
     mockedRouterPush: vi.fn()
 }))
 
+const { mockSubmitRegistration, mockSubmitVerificationCode, mockSuggestUsername } = vi.hoisted(
+    () => ({
+        mockSubmitRegistration: vi.fn().mockResolvedValue(undefined),
+        mockSubmitVerificationCode: vi.fn().mockResolvedValue(undefined),
+        mockSuggestUsername: vi.fn().mockResolvedValue('suggestedUser')
+    })
+)
+
 vi.mock('axios', () => ({
     default: {
         get: mockAxiosGet
@@ -27,7 +36,7 @@ vi.mock('axios', () => ({
 // Mock composables and dependencies
 vi.mock('@userfrosting/sprinkle-account/composables', () => ({
     useRegisterApi: () => ({
-        submitRegistration: vi.fn().mockResolvedValue(undefined),
+        submitRegistration: mockSubmitRegistration,
         availableLocales: () => ({ en: 'English', fr: 'Français' }),
         captchaUrl: () => 'captcha.png',
         formData: ref({
@@ -69,12 +78,12 @@ vi.mock('@userfrosting/sprinkle-account/composables', () => ({
         },
         passwordMinLength: 8,
         passwordMaxLength: 32,
-        suggestUsername: vi.fn().mockResolvedValue('suggestedUser')
+        suggestUsername: mockSuggestUsername
     }),
     useEmailVerificationApi: () => ({
         apiLoading: ref(false),
         apiError: ref(null),
-        submitVerificationCode: vi.fn().mockResolvedValue(undefined)
+        submitVerificationCode: mockSubmitVerificationCode
     })
 }))
 
@@ -103,6 +112,9 @@ describe('FormRegister.vue', () => {
 
     beforeEach(() => {
         mockedRouterPush.mockReset()
+        mockSubmitRegistration.mockReset().mockResolvedValue(undefined)
+        mockSubmitVerificationCode.mockReset().mockResolvedValue(undefined)
+        mockSuggestUsername.mockReset().mockResolvedValue('suggestedUser')
         mockAxiosGet.mockImplementation((url: string) => {
             if (url === '/c/tos') {
                 return Promise.resolve({ data: 'TOS...' })
@@ -152,15 +164,25 @@ describe('FormRegister.vue', () => {
     })
 
     test('submits registration and shows verification form', async () => {
+        // Assert initial model values
+        expect(wrapper.vm.formData.locale).toBe('en')
+        expect(wrapper.vm.formData.captcha).toBe('')
+
         await wrapper.find('input[data-test="first_name"]').setValue('John')
         await wrapper.find('input[data-test="last_name"]').setValue('Doe')
         await wrapper.find('input[data-test="email"]').setValue('john@example.com')
         await wrapper.find('input[data-test="username"]').setValue('johndoe')
         await wrapper.find('input[data-test="password"]').setValue('password123')
         await wrapper.find('input[data-test="passwordc"]').setValue('password123')
+        await wrapper.find('select[data-test="locale"]').setValue('fr')
+        await wrapper.find('input[data-test="captcha"]').setValue('captchaCode')
         await wrapper.find('form').trigger('submit.prevent')
         await flushPromises()
         expect(wrapper.find('form[data-test="verificationForm"]').exists()).toBe(true)
+
+        // Assert final model values after submission
+        expect(wrapper.vm.formData.locale).toBe('fr')
+        expect(wrapper.vm.formData.captcha).toBe('captchaCode')
     })
 
     test('disables submit button when loading', async () => {
@@ -169,6 +191,31 @@ describe('FormRegister.vue', () => {
         expect(wrapper.find('[data-test="submit"]').exists()).toBe(true)
         expect(wrapper.find('[data-test="submit"]').text()).toBe('REGISTER_ME')
         expect(wrapper.find('[data-test="submit"]').attributes().disabled).toBeDefined()
+    })
+
+    test('disables buttons in verification when loading', async () => {
+        wrapper.vm.displayVerification = true
+        wrapper.vm.verificationApiLoading = true
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.find('[data-test="submitVerification"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="submitVerification"]').attributes().disabled).toBeDefined()
+        expect(wrapper.find('[data-test="tryAgain"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="tryAgain"]').attributes().disabled).toBeDefined()
+    })
+
+    test('updates the verification code through FaCode v-model', async () => {
+        wrapper.vm.displayVerification = true
+        await wrapper.vm.$nextTick()
+
+        expect(wrapper.vm.code).toBe('')
+
+        const childWrapper = wrapper.findComponent(FaCode)
+        expect(childWrapper.exists()).toBe(true)
+        await childWrapper.get('input').setValue('123456')
+        await flushPromises()
+
+        expect(wrapper.vm.code).toBe('123456')
     })
 
     test('handles registration failure', async () => {
@@ -199,11 +246,30 @@ describe('FormRegister.vue', () => {
         expect(mockedRouterPush).toHaveBeenCalledWith({ name: 'account.login' })
     })
 
+    test('submits verification code (on submit click) and redirects', async () => {
+        // Show verification form
+        wrapper.vm.displayVerification = true
+        await wrapper.vm.$nextTick()
+        await wrapper.find('button[data-test="submitVerification"]').trigger('click')
+        await flushPromises()
+        expect(wrapper.find('form[data-test="verificationForm"]').exists()).toBe(true)
+        expect(mockedRouterPush).toHaveBeenCalledWith({ name: 'account.login' })
+    })
+
     test('does not switch to verification form when validation is invalid', async () => {
         wrapper.vm.r$.$validate.mockResolvedValueOnce({ valid: false })
         await wrapper.find('form').trigger('submit.prevent')
         await flushPromises()
         expect(wrapper.find('form[data-test="verificationForm"]').exists()).toBe(false)
+    })
+
+    test('does not switch to verification form when registration fails', async () => {
+        mockSubmitRegistration.mockRejectedValueOnce(new Error('registration failed'))
+        await wrapper.find('form').trigger('submit.prevent')
+        await flushPromises()
+
+        expect(wrapper.find('form[data-test="verificationForm"]').exists()).toBe(false)
+        expect(mockSubmitRegistration).toHaveBeenCalled()
     })
 
     test('shows verification error and supports try-again navigation', async () => {
