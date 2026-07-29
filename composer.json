@@ -44,7 +44,7 @@
         "mober/rememberme": "^5.1",
         "monolog/monolog": "^3.5",
         "nikic/php-parser": "^4.2.2",
-        "php": "^8.1",
+        "php": "^8.3",
         "php-di/php-di": "^7.0",
         "php-di/slim-bridge": "^3.2",
         "phpmailer/phpmailer": "^6.0.7",
@@ -78,6 +78,15 @@
         "slam/phpstan-extensions": "^6.0",
         "symplify/monorepo-builder": "^11.2"
     },
+    "replace": {
+        "userfrosting/framework": "6.0.1",
+        "userfrosting/sprinkle-account": "6.0.1",
+        "userfrosting/sprinkle-admin": "6.0.1",
+        "userfrosting/sprinkle-core": "6.0.1",
+        "userfrosting/userfrosting": "6.0.1"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "UserFrosting\\": "packages/framework/src",
@@ -96,14 +105,5 @@
             "UserFrosting\\Tests\\App\\": "packages/skeleton/app/tests/",
             "Workers\\MonoRepo\\": "utils/"
         }
-    },
-    "replace": {
-        "userfrosting/framework": "6.0.1",
-        "userfrosting/sprinkle-account": "6.0.1",
-        "userfrosting/sprinkle-admin": "6.0.1",
-        "userfrosting/sprinkle-core": "6.0.1",
-        "userfrosting/userfrosting": "6.0.1"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
