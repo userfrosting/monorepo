@@ -2,7 +2,7 @@ name: PHPStan
 
 on:
   push:
-    branches: [6.0]
+    branches: [6.0, 6.1]
     paths:
         - packages/framework/**
         - packages/skeleton/**
@@ -10,7 +10,7 @@ on:
         - packages/sprinkle-admin/**
         - packages/sprinkle-core/**
   pull_request:
-    branches: [6.0]
+    branches: [6.0, 6.1]
     paths:
         - packages/framework/**
         - packages/skeleton/**

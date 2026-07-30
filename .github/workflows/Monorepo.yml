@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - "6.0"
+            - "6.1"
         tags:
             - "*"
 
@@ -37,7 +38,7 @@ jobs:
             # Sync commits and tags for the configured subtree splits
             - uses: frankdejonge/use-subsplit-publish@1.1.0
               with:
-                  source-branch: "6.0"
+                  source-branch: "6.1"
                   config-path: ".github/subtree-splitter-config.json"
                   splitsh-path: "./.splitsh/splitsh-lite"
                   splitsh-version: "v1.0.1"
