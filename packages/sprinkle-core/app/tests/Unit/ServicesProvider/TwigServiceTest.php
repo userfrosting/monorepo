@@ -22,14 +22,11 @@ use Slim\Interfaces\RouteCollectorInterface;
 use Slim\Interfaces\RouteParserInterface;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
-use UserFrosting\Alert\AlertStream;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Core\ServicesProvider\TwigService;
-use UserFrosting\Sprinkle\Core\Twig\Extensions\AlertsExtension;
 use UserFrosting\Sprinkle\Core\Twig\TwigRepositoryInterface;
 use UserFrosting\Testing\ContainerStub;
 use UserFrosting\UniformResourceLocator\ResourceInterface;
-use UserFrosting\UniformResourceLocator\ResourceLocationInterface;
 use UserFrosting\UniformResourceLocator\ResourceLocatorInterface;
 
 /**
@@ -70,62 +67,6 @@ class TwigServiceTest extends TestCase
         $this->ci->get(TwigMiddleware::class);
     }
 
-    public function testService(): void
-    {
-        // Set Config Mock
-        $config = Mockery::mock(Config::class)
-            ->shouldReceive('get')->with('cache.twig')->once()->andReturn(false)
-            ->shouldReceive('get')->with('debug.twig')->once()->andReturn(false)
-            ->getMock();
-        $this->ci->set(Config::class, $config);
-
-        // Set Locator Mock
-        // TODO : templatePaths are mocked here, but an integration test with a Stub template would be best.
-        $location = Mockery::mock(ResourceLocationInterface::class)
-                ->shouldReceive('getName')->once()->andReturn('foobar')
-                ->getMock();
-        $resource = Mockery::mock(ResourceInterface::class)
-                ->shouldReceive('getAbsolutePath')->times(2)->andReturn(__DIR__)
-                ->shouldReceive('getLocation')->once()->andReturn($location)
-                ->getMock();
-        $locator = Mockery::mock(ResourceLocatorInterface::class)
-                ->shouldReceive('getResources')->with('templates://')->once()->andReturn([$resource])
-                ->getMock();
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
-
-        // Define mock AlertStream
-        $results = [
-            ['message' => 'foo'],
-            ['message' => 'bar'],
-        ];
-
-        /** @var AlertStream */
-        $alertStream = Mockery::mock(AlertStream::class)
-                ->shouldReceive('getAndClearMessages')
-                ->once()
-                ->andReturn($results)
-                ->getMock();
-
-        // Init TwigAlertsExtension
-        $extension = new AlertsExtension($alertStream);
-
-        /** @var TwigRepositoryInterface */
-        $repository = Mockery::mock(TwigRepositoryInterface::class)
-            ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([$extension]))
-            ->getMock();
-        $this->ci->set(TwigRepositoryInterface::class, $repository);
-
-        // Assert Service is returned.
-        $view = $this->ci->get(Twig::class);
-
-        // Assert
-        $result = $view->fetchFromString('{% for alert in getAlerts() %}{{alert.message}}{% endfor %}');
-        $this->assertSame('foobar', $result);
-    }
-
-    /**
-     * @depends testService
-     */
     public function testServiceWithCacheAndDebug(): void
     {
         // Set Config Mock

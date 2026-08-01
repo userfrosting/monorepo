@@ -25,8 +25,8 @@ class RoutesExtensionTest extends CoreTestCase
         /** @var Twig */
         $view = $this->ci->get(Twig::class);
 
-        $result = $view->fetchFromString("{{ urlFor('alerts') }}");
-        $this->assertSame('/alerts', $result);
+        $result = $view->fetchFromString("{{ urlFor('api.config') }}");
+        $this->assertSame('/api/config', $result);
 
         // Test with fallback
         $result = $view->fetchFromString("{{ urlFor('index', [], [], '/foo') }}");

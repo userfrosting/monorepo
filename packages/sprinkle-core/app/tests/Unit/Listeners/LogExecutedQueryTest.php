@@ -21,8 +21,7 @@ use UserFrosting\Sprinkle\Core\Listeners\LogExecutedQuery;
 use UserFrosting\Sprinkle\Core\Log\QueryLoggerInterface;
 
 /**
- * Integration tests for `alerts` service.
- * Check to see if service returns what it's supposed to return
+ * Tests LogExecutedQuery listener.
  */
 class LogExecutedQueryTest extends TestCase
 {

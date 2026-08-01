@@ -47,7 +47,7 @@ class RouteParserTest extends CoreTestCase
     public function testRelativeUrlFor(): void
     {
         // Valid
-        $this->assertSame('/alerts', $this->parser->relativeUrlFor('alerts'));
+        $this->assertSame('/api/config', $this->parser->relativeUrlFor('api.config'));
 
         // Invalid, with fallback
         $this->assertSame('/fallback', $this->parser->relativeUrlFor('invalid', fallbackRoute: '/fallback'));
@@ -60,7 +60,7 @@ class RouteParserTest extends CoreTestCase
     public function testUrlFor(): void
     {
         // Valid
-        $this->assertSame('/Myfoo/alerts', $this->parser->urlFor('alerts'));
+        $this->assertSame('/Myfoo/api/config', $this->parser->urlFor('api.config'));
 
         // Invalid, with fallback
         $this->assertSame('/Myfoo/fallback', $this->parser->urlFor('invalid', fallbackRoute: '/fallback'));
@@ -79,7 +79,7 @@ class RouteParserTest extends CoreTestCase
             ->getMock();
 
         // Valid
-        $this->assertSame('http://localhost/Myfoo/alerts', $this->parser->fullUrlFor($uri, 'alerts'));
+        $this->assertSame('http://localhost/Myfoo/api/config', $this->parser->fullUrlFor($uri, 'api.config'));
 
         // Invalid, with fallback
         $this->assertSame('http://localhost/Myfoo/fallback', $this->parser->fullUrlFor($uri, 'invalid', fallbackRoute: '/fallback'));
@@ -94,7 +94,7 @@ class RouteParserTest extends CoreTestCase
         /** @var RouteParserInterface */
         $parser = $this->ci->get(RouteParserInterface::class);
 
-        $this->assertSame('/alerts', $parser->relativeUrlFor('alerts'));
+        $this->assertSame('/api/config', $parser->relativeUrlFor('api.config'));
         $this->assertSame('/fallback', $parser->relativeUrlFor('invalid', fallbackRoute: '/fallback'));
         $this->expectExceptionMessage('Named route does not exist for name: invalid');
         $parser->relativeUrlFor('invalid');

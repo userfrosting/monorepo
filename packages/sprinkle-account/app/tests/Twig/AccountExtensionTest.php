@@ -19,7 +19,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 
 /**
- * Tests Alerts twig extensions
+ * Tests twig extensions
  */
 class AccountExtensionTest extends TestCase
 {

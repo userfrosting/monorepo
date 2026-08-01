@@ -31,7 +31,7 @@ class UserMessageExceptionHandlerTest extends TestCase
     {
         parent::setUp();
 
-        // Register the AlertStreamExceptionHandler
+        // Register the UserMessageExceptionHandler
         $handler = $this->ci->get(ExceptionHandlerMiddleware::class);
         $handler->registerHandler(UserFacingException::class, UserMessageExceptionHandler::class, true);
     }

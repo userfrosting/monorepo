@@ -32,7 +32,7 @@ class AccountExtension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * Adds Twig functions `getAlerts`.
+     * Adds Twig functions.
      *
      * @return TwigFunction[]
      */

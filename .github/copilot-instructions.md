@@ -29,7 +29,7 @@ The core architectural pattern is **Sprinkles** - composable modules that extend
 ```
 packages/
   framework/         # Core abstractions (Sprinkle system, UniformResourceLocator, PHP-DI bridges)
-  sprinkle-core/     # Essential services (config, DB, Twig, sessions, i18n, alerts, throttling)
+  sprinkle-core/     # Essential services (config, DB, Twig, sessions, i18n, throttling)
   sprinkle-account/  # Authentication, users, roles, permissions
   sprinkle-admin/    # Admin UI (users, roles, permissions management)
   theme-pink-cupcake/# UIKit-based theme (optional)

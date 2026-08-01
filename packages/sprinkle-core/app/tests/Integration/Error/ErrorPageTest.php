@@ -39,11 +39,11 @@ class ErrorPageTest extends TestCase
     }
 
     /**
-     * This assume /alerts exist.
+     * This assume /api/config exist.
      */
     public function testBadMethod(): void
     {
-        $request = $this->createJsonRequest('POST', '/alerts');
+        $request = $this->createJsonRequest('POST', '/api/config');
         $response = $this->handleRequest($request);
 
         $this->assertJsonResponse('Method Not Allowed', $response, 'title');

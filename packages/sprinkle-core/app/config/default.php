@@ -34,18 +34,6 @@ return [
 
     /*
     * ----------------------------------------------------------------------
-    * Alert Service Config
-    * ----------------------------------------------------------------------
-    * Alerts can be stored in the session, or cache system. Switch to the
-    * cache system if you experience issue with persistent alerts.
-    */
-    'alert' => [
-        'storage'   => 'session',       // Supported storage : `session`, `cache`
-        'key'       => 'site.alerts',   // the key to use to store flash messages
-    ],
-
-    /*
-    * ----------------------------------------------------------------------
     * Asset bundler Config
     * ----------------------------------------------------------------------
     * Frontend assets can be handle either by Vite or Webpack. This section

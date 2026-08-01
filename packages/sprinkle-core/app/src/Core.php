@@ -71,10 +71,8 @@ use UserFrosting\Sprinkle\Core\Middlewares\FilePermissionMiddleware;
 use UserFrosting\Sprinkle\Core\Middlewares\ServerRequestMiddleware;
 use UserFrosting\Sprinkle\Core\Middlewares\SessionMiddleware;
 use UserFrosting\Sprinkle\Core\Middlewares\URIMiddleware;
-use UserFrosting\Sprinkle\Core\Routes\AlertsRoutes;
 use UserFrosting\Sprinkle\Core\Routes\ApiRoutes;
 use UserFrosting\Sprinkle\Core\Routes\ContentRoutes;
-use UserFrosting\Sprinkle\Core\ServicesProvider\AlertStreamService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\CacheService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\ConfigService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\DatabaseService;
@@ -96,7 +94,6 @@ use UserFrosting\Sprinkle\Core\ServicesProvider\WebpackService;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MarkdownExtensionRecipe;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MigrationRecipe;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\TwigExtensionRecipe;
-use UserFrosting\Sprinkle\Core\Twig\Extensions\AlertsExtension;
 use UserFrosting\Sprinkle\Core\Twig\Extensions\ConfigExtension;
 use UserFrosting\Sprinkle\Core\Twig\Extensions\CoreExtension;
 use UserFrosting\Sprinkle\Core\Twig\Extensions\CsrfExtension;
@@ -202,7 +199,6 @@ class Core implements
     public function getRoutes(): array
     {
         return [
-            AlertsRoutes::class,
             ApiRoutes::class,
             ContentRoutes::class,
         ];
@@ -216,7 +212,6 @@ class Core implements
     public function getServices(): array
     {
         return [
-            AlertStreamService::class,
             CacheService::class,
             ConfigService::class,
             DatabaseService::class,
@@ -267,7 +262,6 @@ class Core implements
             ConfigExtension::class,
             CsrfExtension::class,
             I18nExtension::class,
-            AlertsExtension::class,
             RoutesExtension::class,
             EntrypointsTwigExtension::class,
             UserAgentExtension::class,
