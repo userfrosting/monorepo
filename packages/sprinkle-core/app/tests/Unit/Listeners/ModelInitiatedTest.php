@@ -21,6 +21,14 @@ use UserFrosting\Testing\ContainerStub;
 
 class ModelInitiatedTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Reset $ci to default for next test
+        Session::$ci = null;
+    }
+
     public function testModelInitiatedWithApp(): void
     {
         $ci = ContainerStub::create();

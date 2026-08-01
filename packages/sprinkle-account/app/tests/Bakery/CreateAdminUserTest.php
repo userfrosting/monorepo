@@ -164,7 +164,12 @@ class CreateAdminUserTest extends AccountTestCase
         $command = $this->ci->get(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(1, $result->getStatusCode());
-        $this->assertStringContainsString("Migrations doesn't appear to have been run!", $result->getDisplay());
+
+        // Format the output to remove new lines and extra spaces added by the 
+        // console wrapping, so we can assert on it.
+        $display = preg_replace('/\\s+/', ' ', $result->getDisplay());
+        $this->assertIsString($display);
+        $this->assertStringContainsString("Migrations doesn't appear to have been run!", $display);
     }
 
     public function testForMissingDependencies(): void

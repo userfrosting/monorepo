@@ -15,6 +15,7 @@ namespace UserFrosting\Sprinkle\Core\Tests\Integration\ServicesProvider;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use phpmock\mockery\PHPMockery;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
@@ -247,6 +248,7 @@ class ShutdownHandlerTest extends TestCase
         $handler->handle();
     }
 
+    #[RunInSeparateProcess]
     public function testRegister(): void
     {
         // Get namespace of ShutdownHandler class for mock
