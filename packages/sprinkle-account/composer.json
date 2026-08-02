@@ -31,8 +31,8 @@
         "php": "^8.3",
         "mober/rememberme": "^5.1",
         "nikic/php-parser": "^4.2.2",
-        "userfrosting/framework": "^6.0.1",
-        "userfrosting/sprinkle-core": "^6.0.1"
+        "userfrosting/framework": "^6.0.2",
+        "userfrosting/sprinkle-core": "^6.0.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",

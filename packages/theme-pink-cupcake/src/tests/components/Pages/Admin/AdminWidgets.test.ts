@@ -302,6 +302,28 @@ describe('admin widget components', () => {
         expect(roleInfo.emitted('updated')).toHaveLength(1)
         expect(push).toHaveBeenCalledWith({ name: 'admin.roles' })
 
+        const restrictedRoleInfo = mount(RoleInfo, {
+            props: {
+                role: {
+                    id: 1,
+                    name: 'Admins',
+                    slug: 'admins',
+                    description: 'Desc',
+                    created_at: '',
+                    updated_at: '',
+                    deleted_at: null,
+                    users_count: 2
+                }
+            },
+            global: {
+                ...global,
+                mocks: { ...global.mocks, $checkAccess: () => false }
+            }
+        })
+        expect(restrictedRoleInfo.find('[data-test="role-edit"]').exists()).toBe(false)
+        expect(restrictedRoleInfo.find('[data-test="role-delete"]').exists()).toBe(false)
+        expect(restrictedRoleInfo.find('.uk-description-list').exists()).toBe(false)
+
         const roleUsers = mount(RoleUsers, { props: { slug: 'admins' }, global })
         const rolePermissions = mount(RolePermissions, {
             props: {
@@ -320,6 +342,7 @@ describe('admin widget components', () => {
         })
         expect(roleUsers.find('[data-test="sprunje-table"]').exists()).toBe(true)
         expect(rolePermissions.find('[data-test="sprunje-table"]').exists()).toBe(true)
+        await rolePermissions.get('[data-test="role-manage"]').trigger('click')
 
         const userInfo = mount(UserInfo, {
             props: {
@@ -348,6 +371,7 @@ describe('admin widget components', () => {
         expect(userActivities.find('[data-test="sprunje-table"]').exists()).toBe(true)
         expect(userPermissions.find('[data-test="sprunje-table"]').exists()).toBe(true)
         expect(userRoles.find('[data-test="sprunje-table"]').exists()).toBe(true)
+        await userRoles.get('[data-test="user-manage-roles"]').trigger('click')
     })
 
     test('renders user info fallback branches and access gating', () => {

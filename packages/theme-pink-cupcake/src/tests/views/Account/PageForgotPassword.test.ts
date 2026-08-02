@@ -49,7 +49,10 @@ config.global.stubs['UFCardBox'] = CardBox
 config.global.stubs['UFAlert'] = UFAlert
 const wrapperGlobals = {
     global: {
-        stubs: ['FontAwesomeIcon', 'router-link']
+        stubs: {
+            FontAwesomeIcon: { template: '<i />' },
+            'router-link': { template: '<a><slot /></a>' }
+        }
     }
 }
 
@@ -86,6 +89,7 @@ describe('PageForgotPassword.vue', () => {
         wrapperVm.email = email
         const emailForm = wrapper.findComponent({ name: 'FormEmailVerificationRequest' })
         expect(emailForm.exists()).toBe(true)
+        await emailForm.vm.$emit('update:modelValue', email)
         await emailForm.vm.$emit('submit')
         await wrapperVm.$nextTick()
 
@@ -126,6 +130,7 @@ describe('PageForgotPassword.vue', () => {
         wrapperVm.code = code
         const validationForm = wrapper.findComponent({ name: 'FormEmailVerificationValidation' })
         expect(validationForm.exists()).toBe(true)
+        await validationForm.vm.$emit('update:modelValue', code)
         await validationForm.vm.$emit('submit')
         await wrapperVm.$nextTick()
 
@@ -155,6 +160,8 @@ describe('PageForgotPassword.vue', () => {
         wrapperVm.passwordc = passwordConfirm
         const forgotPasswordForm = wrapper.findComponent({ name: 'FormForgotPasswordSet' })
         expect(forgotPasswordForm.exists()).toBe(true)
+        await forgotPasswordForm.vm.$emit('update:password', password)
+        await forgotPasswordForm.vm.$emit('update:passwordc', passwordConfirm)
         await forgotPasswordForm.vm.$emit('submit')
         await wrapperVm.$nextTick()
 

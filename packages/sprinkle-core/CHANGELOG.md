@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.0.2](https://github.com/userfrosting/sprinkle-core/compare/6.0.1...6.0.2) - 2026-08-02
+
+### Fixed
+- Updated the Vite library config to use `import.meta.dirname`.
+
 ### Changed
 - Expanded frontend Vitest and backend PHPUnit coverage to 100%.
+- Fixed wrong PHP version requirement in `VersionsService` (`PHP_MIN_VERSION` should be `^8.1`, not `^8.0`).
 
 ## [6.0.1](https://github.com/userfrosting/sprinkle-core/compare/6.0.0...6.0.1) - 2026-06-28
 

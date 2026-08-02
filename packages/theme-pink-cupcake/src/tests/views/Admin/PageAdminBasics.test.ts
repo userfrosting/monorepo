@@ -118,6 +118,28 @@ describe('Admin basic views', () => {
         expect(items[0].attributes('data-route')).toBe('admin.config.info')
     })
 
+    test('renders the cache navigation item when permitted', () => {
+        const wrapper = mount(PageConfig, {
+            global: {
+                mocks: {
+                    $checkAccess: () => true,
+                    $t: (key: string) => key
+                },
+                stubs: {
+                    UFCardBox: { template: '<div><slot /></div>' },
+                    UFSideBarItem: {
+                        props: ['to'],
+                        template: '<div class="sidebar-item" :data-route="to.name" />'
+                    },
+                    RouterView: true
+                }
+            }
+        })
+
+        expect(wrapper.findAll('.sidebar-item')).toHaveLength(2)
+        expect(wrapper.find('[data-route="admin.config.cache"]').exists()).toBe(true)
+    })
+
     test('renders config info and triggers load', () => {
         const wrapper = mount(PageConfigInfo, {
             global: {
@@ -134,6 +156,26 @@ describe('Admin basic views', () => {
         expect(wrapper.text()).toContain('localhost')
         expect(wrapper.text()).toContain('/app')
         expect(wrapper.text()).toContain('core')
+    })
+
+    test('hides dashboard sections without URI access', () => {
+        const wrapper = mount(PageDashboard, {
+            global: {
+                mocks: {
+                    $checkAccess: () => false,
+                    $t: (key: string) => key
+                },
+                stubs: {
+                    UFInfoBox: true,
+                    DashboardRecentUsers: true,
+                    DashboardActivities: true
+                }
+            }
+        })
+
+        expect(wrapper.findComponent({ name: 'UFInfoBox' }).exists()).toBe(false)
+        expect(wrapper.findComponent({ name: 'DashboardRecentUsers' }).exists()).toBe(false)
+        expect(wrapper.findComponent({ name: 'DashboardActivities' }).exists()).toBe(false)
     })
 
     test('renders config cache button and confirms clear cache', async () => {

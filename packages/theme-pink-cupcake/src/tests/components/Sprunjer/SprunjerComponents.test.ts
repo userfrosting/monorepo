@@ -1,6 +1,6 @@
 import { describe, expect, test, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import SprunjeColumn from '../../../components/Sprunjer/SprunjeColumn.vue'
 import SprunjeDownload from '../../../components/Sprunjer/SprunjeDownload.vue'
 import SprunjeFilters from '../../../components/Sprunjer/SprunjeFilters.vue'
@@ -67,6 +67,28 @@ describe('sprunjer components', () => {
         sorts.value.name = 'desc'
         await wrapper.vm.$nextTick()
         expect(wrapper.text()).toContain('Name')
+    })
+
+    test('renders the default sort icon for an unsorted column', () => {
+        const wrapper = mount(SprunjeHeader, {
+            props: { sort: 'name' },
+            global: {
+                provide: {
+                    sprunjer: {
+                        sorts: ref({}),
+                        toggleSort: vi.fn()
+                    }
+                },
+                stubs: {
+                    'font-awesome-icon': {
+                        props: ['icon'],
+                        template: '<i :data-icon="icon[1]" />'
+                    }
+                }
+            }
+        })
+
+        expect(wrapper.find('[data-icon="sort"]').exists()).toBe(true)
     })
 
     test('renders unsortable header when sort prop is absent', () => {
@@ -158,8 +180,34 @@ describe('sprunjer components', () => {
         expect(wrapper.find('select').exists()).toBe(true)
         expect(wrapper.find('input[type="text"]').exists()).toBe(true)
 
+        await wrapper.get('input[type="text"]').setValue('Smith')
+        expect(filters.value.name).toBe('Smith')
+
         await wrapper.get('button').trigger('click')
         expect(filters.value).toEqual({})
+    })
+
+    test('updates a listable filter selection', async () => {
+        const filters = ref<Record<string, string>>({ status: '' })
+        const data = ref({
+            filterable: ['status'],
+            listable: {
+                status: [{ value: 'enabled', text: 'Enabled' }]
+            }
+        })
+
+        const wrapper = mount(SprunjeFilters, {
+            global: {
+                mocks: { $t: (key: string) => key },
+                provide: { sprunjer: { filters, data } },
+                stubs: fontAwesomeStub
+            }
+        })
+
+        expect(wrapper.findAll('option').map((option) => option.text())).toEqual(['', 'Enabled'])
+        await wrapper.get('select').setValue('enabled')
+
+        expect(filters.value.status).toBe('enabled')
     })
 
     test('updates page and page size from paginator controls', async () => {
@@ -202,6 +250,35 @@ describe('sprunjer components', () => {
         const selects = wrapper.findAll('select')
         await selects[1].setValue('5')
         expect(sprunjer.size.value).toBe(5)
+    })
+
+    test('uses default paginator options and supports previous-page navigation', async () => {
+        const sprunjer = {
+            size: ref<number | string>(10),
+            page: ref(1),
+            totalPages: ref(2),
+            countFiltered: ref(8),
+            first: ref(6),
+            last: ref(8)
+        }
+
+        const wrapper = mount(SprunjePaginator, {
+            global: {
+                mocks: { $t: (key: string) => key },
+                provide: { sprunjer },
+                stubs: fontAwesomeStub
+            }
+        })
+
+        expect(wrapper.findAll('select')[1].findAll('option')).toHaveLength(4)
+
+        await wrapper.findAll('a.uk-icon-link')[1].trigger('click')
+
+        expect(sprunjer.page.value).toBe(0)
+
+        await wrapper.findAll('select')[0].setValue('2')
+
+        expect(sprunjer.page.value).toBe(2)
     })
 
     test('invokes csv download from dropdown action', async () => {
@@ -251,6 +328,11 @@ describe('sprunjer components', () => {
             },
             slots: {
                 actions: '<button data-test="action">Action</button>',
+                filters: ({ sprunjer }) =>
+                    h('div', {
+                        'data-test': 'named-filters',
+                        'data-has-rows': String(sprunjer.rows.value.length > 0)
+                    }),
                 header: '<th data-test="header">Header</th>',
                 body: '<td data-test="cell">Row</td>',
                 filterPanel: '<div data-test="extra-filter">Extra</div>',
@@ -272,6 +354,7 @@ describe('sprunjer components', () => {
         expect(wrapper.find('[data-test="header"]').exists()).toBe(true)
         expect(wrapper.find('[data-test="cell"]').exists()).toBe(true)
         expect(wrapper.find('[data-test="search"]').exists()).toBe(true)
+        expect(wrapper.find('[data-test="named-filters"]').exists()).toBe(true)
 
         await wrapper.get('a.uk-button').trigger('click')
         expect(wrapper.find('[data-test="filters"]').exists()).toBe(true)
@@ -337,5 +420,52 @@ describe('sprunjer components', () => {
         })
 
         expect(emptyWrapper.text()).toContain('SPRUNJE.NO_RESULTS')
+    })
+
+    test('hides optional table controls and forwards defaults', () => {
+        const sprunjer = {
+            rows: ref([{ id: 1 }]),
+            loading: ref(false),
+            data: ref({ filterable: [], listable: {} })
+        }
+        useSprunjerMock.mockReturnValue(sprunjer)
+
+        const wrapper = mount(SprunjeTable, {
+            props: {
+                dataUrl: '/api/users',
+                hidePagination: true,
+                hideFilters: true,
+                hideDownload: true,
+                defaultSorts: { name: 'asc' },
+                defaultFilters: { active: '1' },
+                defaultSize: 'all',
+                defaultPage: 2
+            },
+            global: {
+                mocks: { $t: (key: string) => key },
+                stubs: {
+                    ...fontAwesomeStub,
+                    SprunjeSearch: true,
+                    SprunjeFilters: true,
+                    SprunjeDownload: true,
+                    SprunjePaginator: true
+                }
+            }
+        })
+
+        expect(wrapper.find('a.uk-button').exists()).toBe(false)
+        expect(wrapper.findComponent({ name: 'SprunjeDownload' }).exists()).toBe(false)
+        expect(wrapper.findComponent({ name: 'SprunjePaginator' }).exists()).toBe(false)
+        const useSprunjerArgs = useSprunjerMock.mock.calls[
+            useSprunjerMock.mock.calls.length - 1
+        ] as [() => string, ...unknown[]]
+        expect(useSprunjerArgs[0]()).toBe('/api/users')
+        expect(useSprunjerMock).toHaveBeenCalledWith(
+            expect.any(Function),
+            { name: 'asc' },
+            { active: '1' },
+            'all',
+            2
+        )
     })
 })

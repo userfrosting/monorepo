@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [6.0.2](https://github.com/userfrosting/framework/compare/6.0.1...6.0.2) - 2026-08-02
+
 ### Fixed
 - Fortress validation adapters now treat validator entries defined without attributes (for example YAML `required:` resolving to `null`) as empty validator configurations instead of throwing a `TypeError` during client-side rule generation. Fix [#30](https://github.com/userfrosting/monorepo/issues/30).
 

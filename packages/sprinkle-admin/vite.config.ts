@@ -29,12 +29,12 @@ export default defineConfig({
     build: {
         lib: {
             entry: {
-                index: resolve(__dirname, 'app/assets/index.ts'),
-                components: resolve(__dirname, 'app/assets/components/index.ts'),
-                composables: resolve(__dirname, 'app/assets/composables/index.ts'),
-                interfaces: resolve(__dirname, 'app/assets/interfaces/index.ts'),
-                routes: resolve(__dirname, 'app/assets/routes/index.ts'),
-                views: resolve(__dirname, 'app/assets/views/index.ts')
+                index: resolve(import.meta.dirname, 'app/assets/index.ts'),
+                components: resolve(import.meta.dirname, 'app/assets/components/index.ts'),
+                composables: resolve(import.meta.dirname, 'app/assets/composables/index.ts'),
+                interfaces: resolve(import.meta.dirname, 'app/assets/interfaces/index.ts'),
+                routes: resolve(import.meta.dirname, 'app/assets/routes/index.ts'),
+                views: resolve(import.meta.dirname, 'app/assets/views/index.ts')
             },
             formats: ['es']
         },

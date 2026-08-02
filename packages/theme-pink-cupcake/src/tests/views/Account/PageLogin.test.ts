@@ -84,4 +84,24 @@ describe('PageLogin.vue', () => {
         expect(wrapper.find('[data-test="gotoVerification"]').exists()).toBe(true)
         expect(wrapper.text()).not.toContain('REGISTRATION.QUESTION')
     })
+
+    test('shows the registration card when registration is enabled', () => {
+        mockUseConfigStore.get.mockReturnValue(true)
+
+        const wrapper = mount(PageLogin, {
+            global: {
+                stubs: {
+                    'router-link': { template: '<a v-bind="$attrs"><slot /></a>' },
+                    UFCardBoxHalf: { template: '<div><slot /></div>' },
+                    UFCardBox: { template: '<div><slot /></div>' },
+                    UFAlert: true,
+                    FormLogin: true,
+                    FontAwesomeIcon: { template: '<i />' }
+                }
+            }
+        })
+
+        expect(wrapper.text()).toContain('REGISTRATION.QUESTION')
+        expect(wrapper.text()).toContain('REGISTER')
+    })
 })

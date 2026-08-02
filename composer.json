@@ -79,11 +79,11 @@
         "symplify/monorepo-builder": "^11.2"
     },
     "replace": {
-        "userfrosting/framework": "6.0.1",
-        "userfrosting/sprinkle-account": "6.0.1",
-        "userfrosting/sprinkle-admin": "6.0.1",
-        "userfrosting/sprinkle-core": "6.0.1",
-        "userfrosting/userfrosting": "6.0.1"
+        "userfrosting/framework": "6.0.2",
+        "userfrosting/sprinkle-account": "6.0.2",
+        "userfrosting/sprinkle-admin": "6.0.2",
+        "userfrosting/sprinkle-core": "6.0.2",
+        "userfrosting/userfrosting": "6.0.2"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

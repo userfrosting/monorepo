@@ -48,7 +48,10 @@ config.global.stubs['UFCardBox'] = CardBox
 config.global.stubs['UFAlert'] = UFAlert
 const wrapperGlobals = {
     global: {
-        stubs: ['FontAwesomeIcon', 'router-link']
+        stubs: {
+            FontAwesomeIcon: { template: '<i />' },
+            'router-link': { template: '<a><slot /></a>' }
+        }
     }
 }
 
@@ -85,6 +88,7 @@ describe('PageEmailVerificationRequest.vue', () => {
         wrapperVm.email = email
         const emailForm = wrapper.findComponent({ name: 'FormEmailVerificationRequest' })
         expect(emailForm.exists()).toBe(true)
+        await emailForm.vm.$emit('update:modelValue', email)
         await emailForm.vm.$emit('submit')
         await wrapperVm.$nextTick()
 
@@ -135,6 +139,7 @@ describe('PageEmailVerificationRequest.vue', () => {
         wrapperVm.code = code
         const validationForm = wrapper.findComponent({ name: 'FormEmailVerificationValidation' })
         expect(validationForm.exists()).toBe(true)
+        await validationForm.vm.$emit('update:modelValue', code)
         await validationForm.vm.$emit('submit')
         await wrapperVm.$nextTick()
 

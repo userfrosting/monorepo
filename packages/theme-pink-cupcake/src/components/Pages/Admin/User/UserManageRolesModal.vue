@@ -96,7 +96,7 @@ const modalName = computed(() => 'modal-user-manage-roles-' + user.id)
                         <input
                             class="uk-checkbox"
                             type="checkbox"
-                            :value="row.id"
+                            :value="Number(row.id)"
                             v-model="selected" />
                     </UFSprunjeColumn>
                     <UFSprunjeColumn>{{ row.name }}</UFSprunjeColumn>
