@@ -497,6 +497,33 @@ describe('admin modal components', () => {
         })
         expect(modalMock).toHaveBeenCalledWith('#modal-user-password-10')
 
+        await passwordWrapper.setProps({ user: { ...baseUser, user_name: 'john' } })
+
+        const realPasswordWrapper = mount(UserPasswordModal, {
+            props: { user: baseUser },
+            global: {
+                stubs: {
+                    ...globalStubs,
+                    UFModal: { template: '<div><slot name="default" /></div>' }
+                },
+                mocks: { $t: (key: string) => key }
+            }
+        })
+        const realPasswordForm = realPasswordWrapper.findComponent(UserPasswordForm)
+        expect(realPasswordForm.exists()).toBe(true)
+        await realPasswordForm.get('input[data-test="password"]').setValue('new-password')
+        await realPasswordForm.get('input[data-test="passwordc"]').setValue('new-password')
+        realPasswordForm.vm.$emit('update:modelValue', {
+            password: 'new-password',
+            passwordc: 'new-password'
+        })
+        realPasswordForm.vm.$emit('submit')
+        await flushPromises()
+        expect(submitUserUpdate).toHaveBeenCalledWith('jane', 'password', {
+            password: 'new-password',
+            passwordc: 'new-password'
+        })
+
         const passwordResetWrapper = mount(UserPasswordResetModal, {
             props: { user: baseUser },
             global: {
@@ -588,6 +615,8 @@ describe('admin modal components', () => {
         expect(selectedPermissions.value).toEqual([1, 2])
         await roleCheckboxes[0].setValue(false)
         expect(selectedPermissions.value).toEqual([])
+        await roleCheckboxes[1].setValue(true)
+        await roleCheckboxes[1].setValue(false)
 
         await rolePermissionWrapper.get('button.uk-button-primary').trigger('click')
         await flushPromises()
@@ -621,6 +650,48 @@ describe('admin modal components', () => {
         expect(userRolesWrapper.emitted('saved')).toHaveLength(1)
     })
 
+    test('normalizes string role IDs in the user roles v-model', async () => {
+        selectedRoles.value = []
+
+        const wrapper = mount(UserManageRolesModal, {
+            props: { user: baseUser },
+            global: {
+                stubs: {
+                    ...globalStubs,
+                    UFSprunjeTable: {
+                        template:
+                            '<div><slot name="header" :sprunjer="sprunjer" /><slot name="body" :row="row" /></div>',
+                        data: () => ({
+                            sprunjer: { rows: { value: [{ id: '2' }] } },
+                            row: { id: '2', name: 'Role', description: 'Description' }
+                        })
+                    }
+                },
+                mocks: { $t: (key: string) => key }
+            }
+        })
+
+        await wrapper.findAll('input[type="checkbox"]')[1].setValue(true)
+
+        expect(selectedRoles.value).toEqual([2])
+    })
+
+    test('swallows role permission update failures', async () => {
+        submitRoleUpdate.mockRejectedValueOnce(new Error('Permission update failed'))
+
+        const wrapper = mount(RoleManagePermissionModal, {
+            props: { role: baseRole },
+            global: {
+                stubs: globalStubs,
+                mocks: { $t: (key: string) => key }
+            }
+        })
+        await wrapper.get('button.uk-button-primary').trigger('click')
+        await flushPromises()
+
+        expect(wrapper.emitted('saved')).toBeFalsy()
+    })
+
     test('swallows group and role delete errors without emitting events', async () => {
         deleteGroup.mockRejectedValueOnce(new Error('Delete group failed'))
         deleteRole.mockRejectedValueOnce(new Error('Delete role failed'))
@@ -647,6 +718,22 @@ describe('admin modal components', () => {
         await flushPromises()
         expect(roleWrapper.emitted('deleted')).toBeFalsy()
     })
+
+    test('swallows user delete errors without emitting an event', async () => {
+        deleteUser.mockRejectedValueOnce(new Error('Delete user failed'))
+
+        const wrapper = mount(UserDeleteModal, {
+            props: { user: baseUser },
+            global: {
+                stubs: globalStubs,
+                mocks: { $t: (key: string) => key }
+            }
+        })
+        await wrapper.get('[data-test="confirm"]').trigger('click')
+        await flushPromises()
+
+        expect(wrapper.emitted('deleted')).toBeFalsy()
+    })
 })
 
 describe('admin form components', () => {
@@ -659,7 +746,9 @@ describe('admin form components', () => {
         })
 
         await createWrapper.get('input[data-test="name"]').setValue('New Group')
+        await createWrapper.get('button.uk-form-button').trigger('click')
         await createWrapper.get('input[data-test="slug"]').setValue('new-group')
+        await createWrapper.get('input[data-test="icon"]').setValue('')
         await createWrapper.get('textarea[data-test="description"]').setValue('Description')
         await createWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
@@ -668,7 +757,6 @@ describe('admin form components', () => {
         expect(createWrapper.emitted('success')).toHaveLength(1)
         expect(resetGroupForm).toHaveBeenCalledTimes(1)
 
-        await createWrapper.get('button.uk-form-button').trigger('click')
         expect(groupSlugLocked.value).toBe(false)
 
         const editWrapper = mount(GroupForm, {
@@ -730,6 +818,8 @@ describe('admin form components', () => {
         expect(roleSlugLocked.value).toBe(true)
         await wrapper.get('button.uk-form-button').trigger('click')
         expect(roleSlugLocked.value).toBe(false)
+        await wrapper.get('input[data-test="slug"]').setValue('updated-role')
+        await wrapper.get('textarea[data-test="description"]').setValue('Updated description')
     })
 
     test('swallows role form create/update API failures', async () => {
@@ -758,6 +848,33 @@ describe('admin form components', () => {
         expect(updateWrapper.emitted('success')).toBeFalsy()
     })
 
+    test('swallows group form API failures and prevents invalid submission', async () => {
+        const invalidValidation = makeValidation(false)
+        apiMocks.useGroupApi.mockReturnValueOnce({
+            createGroup,
+            updateGroup,
+            r$: invalidValidation,
+            formData: groupFormData,
+            apiLoading: ref(false),
+            resetForm: resetGroupForm,
+            slugLocked: groupSlugLocked
+        })
+
+        const invalidWrapper = mount(GroupForm, {
+            global: { stubs: globalStubs, mocks: { $t: (key: string) => key } }
+        })
+        await invalidWrapper.get('form').trigger('submit.prevent')
+        expect(createGroup).not.toHaveBeenCalled()
+
+        createGroup.mockRejectedValueOnce(new Error('create failed'))
+        const failedWrapper = mount(GroupForm, {
+            global: { stubs: globalStubs, mocks: { $t: (key: string) => key } }
+        })
+        await failedWrapper.get('form').trigger('submit.prevent')
+        await flushPromises()
+        expect(failedWrapper.emitted('success')).toBeFalsy()
+    })
+
     test('submits user form create and edit and applies default locale for create', async () => {
         const wrapper = mount(UserForm, {
             props: { groups: [baseGroup] },
@@ -773,6 +890,8 @@ describe('admin form components', () => {
         await wrapper.get('input[data-test="first_name"]').setValue('New')
         await wrapper.get('input[data-test="last_name"]').setValue('User')
         await wrapper.get('input[data-test="email"]').setValue('new@example.com')
+        await wrapper.get('select[data-test="group"]').setValue('1')
+        await wrapper.get('select[data-test="locale"]').setValue('en_US')
         await wrapper.get('form').trigger('submit.prevent')
         await flushPromises()
         expect(createUser).toHaveBeenCalledWith(userFormData.value)
@@ -804,6 +923,34 @@ describe('admin form components', () => {
         await editWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
         expect(updateUser).toHaveBeenCalledWith('jane', userFormData.value)
+    })
+
+    test('prevents invalid user submission and swallows create failures', async () => {
+        const invalidValidation = makeValidation(false)
+        apiMocks.useUserApi.mockReturnValueOnce({
+            createUser,
+            updateUser,
+            r$: invalidValidation,
+            formData: userFormData,
+            apiLoading: ref(false),
+            resetForm: resetUserForm
+        })
+
+        const invalidWrapper = mount(UserForm, {
+            props: { groups: [baseGroup] },
+            global: { stubs: globalStubs, mocks: { $t: (key: string) => key } }
+        })
+        await invalidWrapper.get('form').trigger('submit.prevent')
+        expect(createUser).not.toHaveBeenCalled()
+
+        createUser.mockRejectedValueOnce(new Error('create failed'))
+        const failedWrapper = mount(UserForm, {
+            props: { groups: [baseGroup] },
+            global: { stubs: globalStubs, mocks: { $t: (key: string) => key } }
+        })
+        await failedWrapper.get('form').trigger('submit.prevent')
+        await flushPromises()
+        expect(failedWrapper.emitted('success')).toBeFalsy()
     })
 
     test('binds and submits user password form model', async () => {

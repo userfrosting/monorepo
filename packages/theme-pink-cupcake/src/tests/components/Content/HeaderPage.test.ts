@@ -39,6 +39,7 @@ describe('HeaderPage.vue', () => {
         page.hideBreadcrumbs = false
         page.breadcrumbs = [
             { label: 'HOME', to: '/' },
+            { label: 'SECTION', to: '/section' },
             { label: 'PAGE.TITLE', to: '/page' }
         ]
 
@@ -56,6 +57,9 @@ describe('HeaderPage.vue', () => {
         expect(wrapper.text()).toContain('PAGE.DESCRIPTION')
         expect(wrapper.find('[data-test="home-icon"]').exists()).toBe(true)
         expect(wrapper.find('nav[aria-label="Breadcrumb"]').exists()).toBe(true)
+        expect(wrapper.get('span[aria-current="page"]').text()).toBe('PAGE.TITLE')
+        expect(wrapper.findAll('router-link')).toHaveLength(0)
+        expect(wrapper.text()).toContain('SECTION')
     })
 
     test('suppresses title/description and breadcrumbs when hidden', () => {

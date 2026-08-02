@@ -80,4 +80,38 @@ describe('notifications plugin', () => {
         )
         expect(notification).toHaveBeenNthCalledWith(2, expect.objectContaining({ status: 'info' }))
     })
+
+    test('maps danger, secondary, and unknown severities', async () => {
+        shift.mockReset()
+        notification.mockReset()
+        alerts.value = []
+
+        shift
+            .mockReturnValueOnce({ style: Severity.Danger })
+            .mockReturnValueOnce({ title: 'Secondary', style: Severity.Secondary })
+            .mockReturnValueOnce({ title: 'Missing style' })
+            .mockReturnValueOnce({ description: 'Unknown severity', style: 'Unexpected' })
+            .mockReturnValueOnce(undefined)
+
+        NotificationsPlugin.install()
+        alerts.value = [{}, {}, {}, {}]
+        await nextTick()
+
+        expect(notification).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({ message: '', status: 'danger' })
+        )
+        expect(notification).toHaveBeenNthCalledWith(
+            2,
+            expect.objectContaining({ message: 'Secondary', status: undefined })
+        )
+        expect(notification).toHaveBeenNthCalledWith(
+            3,
+            expect.objectContaining({ message: 'Missing style', status: 'primary' })
+        )
+        expect(notification).toHaveBeenNthCalledWith(
+            4,
+            expect.objectContaining({ message: 'Unknown severity', status: 'primary' })
+        )
+    })
 })

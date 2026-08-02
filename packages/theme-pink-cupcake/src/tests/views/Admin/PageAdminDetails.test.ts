@@ -6,6 +6,10 @@ import PagePermission from '../../../views/Admin/PagePermission.vue'
 import PageRole from '../../../views/Admin/PageRole.vue'
 import PageUser from '../../../views/Admin/PageUser.vue'
 
+const { permissionApiMock } = vi.hoisted(() => ({
+    permissionApiMock: vi.fn()
+}))
+
 const route = {
     params: {
         slug: 'admins',
@@ -33,7 +37,10 @@ vi.mock('@userfrosting/sprinkle-core/stores', () => ({
 
 vi.mock('@userfrosting/sprinkle-admin/composables', () => ({
     useGroupApi: () => ({ fetchGroup, apiError: groupError }),
-    usePermissionApi: () => ({ permission, error: permissionError }),
+    usePermissionApi: (getId: () => unknown) => {
+        permissionApiMock(getId)
+        return { permission, error: permissionError }
+    },
     useRoleApi: () => ({ fetchRole, apiError: roleError }),
     useUserApi: () => ({ fetchUser, apiError: userError })
 }))
@@ -56,7 +63,11 @@ describe('Admin detail views', () => {
             global: {
                 mocks: { $checkAccess: () => true, $route: route },
                 stubs: {
-                    GroupInfo: { template: '<div data-test="group-info" />' },
+                    GroupInfo: {
+                        emits: ['groupUpdated'],
+                        template:
+                            '<button data-test="group-info" @click="$emit(\'groupUpdated\')" />'
+                    },
                     GroupUsers: { template: '<div data-test="group-users" />' },
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
@@ -70,6 +81,21 @@ describe('Admin detail views', () => {
 
         expect(wrapper.find('[data-test="group-info"]').exists()).toBe(true)
         expect(wrapper.find('[data-test="group-users"]').exists()).toBe(true)
+        await wrapper.get('[data-test="group-info"]').trigger('click')
+        expect(fetchGroup).toHaveBeenCalledTimes(2)
+
+        groupError.value = { status: 404 }
+        const errorWrapper = mount(PageGroup, {
+            global: {
+                mocks: { $checkAccess: () => true, $route: route },
+                stubs: {
+                    GroupInfo: true,
+                    GroupUsers: true,
+                    UFErrorPage: { template: '<div data-test="error-page" />' }
+                }
+            }
+        })
+        expect(errorWrapper.find('[data-test="error-page"]').exists()).toBe(true)
     })
 
     test('PagePermission updates title from permission and renders error branch', async () => {
@@ -88,6 +114,13 @@ describe('Admin detail views', () => {
             expect(pageMeta.title).toBe('Permission Name')
         })
         expect(okWrapper.find('[data-test="permission-info"]').exists()).toBe(true)
+        const permissionApiArgs = permissionApiMock.mock.calls[
+            permissionApiMock.mock.calls.length - 1
+        ] as [() => string]
+        expect(permissionApiArgs[0]()).toBe('12')
+
+        permission.value = { id: 13, name: 'Updated Permission' }
+        await vi.waitFor(() => expect(pageMeta.title).toBe('Updated Permission'))
 
         permissionError.value = { status: 404 }
         const errorWrapper = mount(PagePermission, {
@@ -108,7 +141,10 @@ describe('Admin detail views', () => {
             global: {
                 mocks: { $checkAccess: () => true },
                 stubs: {
-                    RoleInfo: { template: '<div data-test="role-info" />' },
+                    RoleInfo: {
+                        emits: ['updated'],
+                        template: '<button data-test="role-info" @click="$emit(\'updated\')" />'
+                    },
                     RoleUsers: { template: '<div data-test="role-users" />' },
                     RolePermissions: { template: '<div data-test="role-permissions" />' },
                     UFErrorPage: { template: '<div data-test="error-page" />' }
@@ -121,6 +157,8 @@ describe('Admin detail views', () => {
             expect(pageMeta.title).toBe('Administrators')
         })
         expect(wrapper.find('[data-test="role-info"]').exists()).toBe(true)
+        await wrapper.get('[data-test="role-info"]').trigger('click')
+        expect(fetchRole).toHaveBeenCalledTimes(2)
 
         roleError.value = { status: 500 }
         const errorWrapper = mount(PageRole, {
@@ -142,7 +180,10 @@ describe('Admin detail views', () => {
             global: {
                 mocks: { $checkAccess: () => true },
                 stubs: {
-                    UserInfo: { template: '<div data-test="user-info" />' },
+                    UserInfo: {
+                        emits: ['updated'],
+                        template: '<button data-test="user-info" @click="$emit(\'updated\')" />'
+                    },
                     UserRoles: { template: '<div data-test="user-roles" />' },
                     UserPermissions: { template: '<div data-test="user-permissions" />' },
                     UserActivities: { template: '<div data-test="user-activities" />' },
@@ -156,6 +197,8 @@ describe('Admin detail views', () => {
             expect(pageMeta.title).toBe('Jane Doe')
         })
         expect(wrapper.find('[data-test="user-info"]').exists()).toBe(true)
+        await wrapper.get('[data-test="user-info"]').trigger('click')
+        expect(fetchUser).toHaveBeenCalledTimes(2)
 
         userError.value = { status: 403 }
         const errorWrapper = mount(PageUser, {
@@ -207,6 +250,22 @@ describe('Admin detail views', () => {
         expect(rolePartial.find('[data-test="role-users"]').exists()).toBe(false)
         expect(rolePartial.find('[data-test="role-permissions"]').exists()).toBe(true)
 
+        const roleNoPermissions = mount(PageRole, {
+            global: {
+                mocks: {
+                    $checkAccess: (permission: string) => permission === 'view_role_users'
+                },
+                stubs: {
+                    RoleInfo: true,
+                    RoleUsers: true,
+                    RolePermissions: { template: '<div data-test="role-permissions" />' },
+                    UFErrorPage: true
+                }
+            }
+        })
+        await vi.waitFor(() => expect(fetchRole).toHaveBeenCalled())
+        expect(roleNoPermissions.find('[data-test="role-permissions"]').exists()).toBe(false)
+
         const userPartial = mount(PageUser, {
             global: {
                 mocks: {
@@ -225,5 +284,22 @@ describe('Admin detail views', () => {
         expect(userPartial.find('[data-test="user-roles"]').exists()).toBe(false)
         expect(userPartial.find('[data-test="user-permissions"]').exists()).toBe(true)
         expect(userPartial.find('[data-test="user-activities"]').exists()).toBe(false)
+
+        const userNoPermissions = mount(PageUser, {
+            global: {
+                mocks: {
+                    $checkAccess: (permission: string) => permission === 'view_user_roles'
+                },
+                stubs: {
+                    UserInfo: true,
+                    UserRoles: true,
+                    UserPermissions: { template: '<div data-test="user-permissions" />' },
+                    UserActivities: true,
+                    UFErrorPage: true
+                }
+            }
+        })
+        await vi.waitFor(() => expect(fetchUser).toHaveBeenCalled())
+        expect(userNoPermissions.find('[data-test="user-permissions"]').exists()).toBe(false)
     })
 })

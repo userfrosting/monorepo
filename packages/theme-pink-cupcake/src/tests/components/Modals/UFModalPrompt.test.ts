@@ -54,6 +54,56 @@ describe('UFModalPrompt.vue', () => {
         expect(wrapper.get('[data-test="footer"]').text()).toContain('Custom Footer')
     })
 
+    test('uses the translated title when the header slot is not provided', () => {
+        const wrapper = mount(UFModalPrompt, {
+            props: { title: 'Prompt title' },
+            global: {
+                mocks: { $t: (key: string) => `translated:${key}` },
+                stubs: {
+                    UFModal: {
+                        template: '<div><slot name="header" /></div>'
+                    }
+                }
+            }
+        })
+
+        expect(wrapper.text()).toContain('translated:Prompt title')
+    })
+
+    test('submits safely when a custom footer does not provide an OK button', async () => {
+        const wrapper = mount(UFModalPrompt, {
+            slots: { footer: 'Custom footer' },
+            global: {
+                mocks: { $t: (key: string) => key },
+                stubs: {
+                    UFModal: {
+                        template: '<div><slot name="header" /><slot /><slot name="footer" /></div>'
+                    }
+                }
+            }
+        })
+
+        await wrapper.get('form').trigger('submit')
+        expect(wrapper.text()).toContain('Custom footer')
+    })
+
+    test('supports a null title with an empty header slot', () => {
+        const wrapper = mount(UFModalPrompt, {
+            props: { title: null },
+            slots: { header: () => [] },
+            global: {
+                mocks: { $t: (key: string) => `translated:${key}` },
+                stubs: {
+                    UFModal: {
+                        template: '<div><slot name="header" /></div>'
+                    }
+                }
+            }
+        })
+
+        expect(wrapper.text()).toContain('translated:')
+    })
+
     test('submits prompt form by triggering click on ok button ref', async () => {
         const wrapper = mount(UFModalPrompt, {
             global: {

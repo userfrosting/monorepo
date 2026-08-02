@@ -59,6 +59,24 @@ describe('UFModalConfirmation.vue', () => {
         expect(wrapper.get('[data-test="header"]').text()).toContain('')
     })
 
+    test('supports a null title with an empty header slot', () => {
+        const wrapper = mount(UFModalConfirmation, {
+            props: { title: null },
+            slots: { header: () => [] },
+            global: {
+                mocks: { $t: (key: string) => `translated:${key}` },
+                stubs: {
+                    UFModal: {
+                        template: '<div><slot name="header" /></div>'
+                    },
+                    'font-awesome-icon': { template: '<span data-test="icon" />' }
+                }
+            }
+        })
+
+        expect(wrapper.text()).toContain('translated:')
+    })
+
     test('supports custom slots and hidden cancel button', () => {
         const wrapper = mount(UFModalConfirmation, {
             props: {
@@ -90,6 +108,23 @@ describe('UFModalConfirmation.vue', () => {
         expect(wrapper.findAll('button')).toHaveLength(0)
     })
 
+    test('hides only the reject button when cancel is disabled', () => {
+        const wrapper = mount(UFModalConfirmation, {
+            props: { cancelBtn: false },
+            global: {
+                mocks: { $t: (key: string) => key },
+                stubs: {
+                    UFModal: {
+                        template: '<div><slot name="header" /><slot /><slot name="footer" /></div>'
+                    },
+                    'font-awesome-icon': { template: '<span />' }
+                }
+            }
+        })
+
+        expect(wrapper.findAll('button')).toHaveLength(1)
+    })
+
     test('supports no button icon', () => {
         const wrapper = mount(UFModalConfirmation, {
             props: {
@@ -111,6 +146,23 @@ describe('UFModalConfirmation.vue', () => {
         const buttons = wrapper.findAll('button')
         expect(buttons[0].html()).not.toContain('span icon=')
         expect(buttons[1].html()).not.toContain('span icon=')
+    })
+
+    test('renders the accept icon when configured', () => {
+        const wrapper = mount(UFModalConfirmation, {
+            props: { acceptIcon: 'check' },
+            global: {
+                mocks: { $t: (key: string) => key },
+                stubs: {
+                    UFModal: {
+                        template: '<div><slot name="header" /><slot /><slot name="footer" /></div>'
+                    },
+                    'font-awesome-icon': { template: '<span data-test="icon" />' }
+                }
+            }
+        })
+
+        expect(wrapper.findAll('[data-test="icon"]')).toHaveLength(3)
     })
 
     test('maps all severity variants to button classes', () => {
