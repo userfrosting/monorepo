@@ -34,15 +34,15 @@ export default defineConfig({
     build: {
         lib: {
             entry: {
-                index: resolve(__dirname, 'src/index.ts'),
+                index: resolve(import.meta.dirname, 'src/index.ts'),
                 'components/pages/account': resolve(
-                    __dirname,
+                    import.meta.dirname,
                     'src/components/Pages/Account/index.ts'
                 ),
-                'components/pages/admin': resolve(__dirname, 'src/components/Pages/Admin/index.ts'),
-                components: resolve(__dirname, 'src/components/index.ts'),
-                plugins: resolve(__dirname, 'src/plugins/index.ts'),
-                views: resolve(__dirname, 'src/views/index.ts')
+                'components/pages/admin': resolve(import.meta.dirname, 'src/components/Pages/Admin/index.ts'),
+                components: resolve(import.meta.dirname, 'src/components/index.ts'),
+                plugins: resolve(import.meta.dirname, 'src/plugins/index.ts'),
+                views: resolve(import.meta.dirname, 'src/views/index.ts')
             },
             formats: ['es']
         },

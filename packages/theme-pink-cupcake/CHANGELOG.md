@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Updated the Vite library config to use `import.meta.dirname`.
+
 ### Changed
 - Expanded frontend Vitest coverage toward 100%.
 

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Framework] Fortress validation adapters now treat validator entries defined without attributes (for example YAML `required:` resolving to `null`) as empty validator configurations instead of throwing a `TypeError` during client-side rule generation. Fix [#30](https://github.com/userfrosting/monorepo/issues/30).
 - [Monorepo] Narrow Vitest coverage globs to source-code extensions and exclude dotfiles/markdown files to avoid non-code parse warnings during coverage collection.
 - [Core] Fixed wrong PHP version requirement in `VersionsService` (`PHP_MIN_VERSION` should be `^8.1`, not `^8.0`).
+- Updated the Vite library config to use `import.meta.dirname`.
 
 ## 6.0.1 - 2026-06-28
 
