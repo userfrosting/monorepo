@@ -56,6 +56,7 @@ use UserFrosting\Sprinkle\Account\ServicesProvider\I18nService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\LoggersService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\MFAServices;
 use UserFrosting\Sprinkle\Account\ServicesProvider\ModelsService;
+use UserFrosting\Sprinkle\Account\ServicesProvider\MorphMapProvider;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\BakeryRecipe;
 use UserFrosting\Sprinkle\Core\Bakery\Event\BakeCommandEvent;
@@ -132,6 +133,7 @@ class Account implements
             AuthorizationService::class,
             AuthService::class,
             ModelsService::class,
+            MorphMapProvider::class,
             I18nService::class,
             LoggersService::class,
             MFAServices::class,
