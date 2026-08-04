@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Validate throttling configuration before creating throttle rules.
+
 ## [6.0.2](https://github.com/userfrosting/sprinkle-core/compare/6.0.1...6.0.2) - 2026-08-02
 
 ### Fixed

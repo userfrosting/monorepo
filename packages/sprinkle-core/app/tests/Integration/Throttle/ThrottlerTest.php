@@ -114,4 +114,44 @@ class ThrottlerTest extends CoreTestCase
         $this->assertInstanceOf(ThrottleRule::class, $rules['test']);
         $this->assertNull($rules['bar']);
     }
+
+    /**
+     * @dataProvider invalidConfigurationProvider
+     *
+     * @param mixed $data
+     */
+    public function testServiceRejectsInvalidConfiguration(mixed $data): void
+    {
+        $config = Mockery::mock(Config::class)
+            ->shouldReceive('has')->with('throttles')->once()->andReturn(true)
+            ->shouldReceive('get')->with('throttles')->once()->andReturn($data)
+            ->getMock();
+
+        $this->ci->set(Config::class, $config);
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->ci->get(Throttler::class);
+    }
+
+    /**
+     * @return array<string, array{mixed}>
+     */
+    public static function invalidConfigurationProvider(): array
+    {
+        return [
+            'non-array configuration' => ['invalid'],
+            'non-string rule name'    => [[1 => null]],
+            'missing rule field'      => [['test' => ['method' => 'ip', 'interval' => 3600]]],
+            'invalid rule field type' => [['test' => [
+                'method'   => 'ip',
+                'interval' => '3600',
+                'delays'   => [1 => 5],
+            ]]],
+            'invalid delay value'     => [['test' => [
+                'method'   => 'ip',
+                'interval' => 3600,
+                'delays'   => ['attempts' => 5],
+            ]]],
+        ];
+    }
 }
