@@ -45,37 +45,37 @@ class ExceptionHandlerTest extends TestCase
     public function testHandle(): void
     {
         // Mock Config to control the settings
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(true)
             ->shouldReceive('get')->with('logs.exception')->once()->andReturn(true)
             ->getMock();
 
-        /** @var ErrorRendererInterface $renderer */
+        /** @var Mockery\MockInterface&ErrorRendererInterface $renderer */
         $renderer = Mockery::mock(ErrorRendererInterface::class)
             ->shouldReceive('render')->once()->andReturn('Some body')
             ->getMock();
 
-        /** @var ErrorRendererInterface $renderer */
+        /** @var Mockery\MockInterface&ErrorRendererInterface $renderer */
         $textRenderer = Mockery::mock(ErrorRendererInterface::class)
             ->shouldReceive('render')->once()->andReturn('Some text body')
             ->getMock();
 
         // Mock CI and decide witch renderer is passed
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with(PrettyPageRenderer::class)->once()->andReturn($renderer) // Display
             ->shouldReceive('get')->with(PlainTextRenderer::class)->once()->andReturn($textRenderer) // Logger
             ->getMock();
 
         // Return from getBody of response
-        /** @var StreamInterface $streamInterface */
+        /** @var Mockery\MockInterface&StreamInterface $streamInterface */
         $streamInterface = Mockery::mock(StreamInterface::class)
             ->shouldReceive('write')->once()
             ->getMock();
 
         // Mocked response
-        /** @var ResponseInterface $response */
+        /** @var Mockery\MockInterface&ResponseInterface $response */
         $response = Mockery::mock(ResponseInterface::class)
             ->shouldReceive('getBody')->once()->andReturn($streamInterface)
             ->shouldReceive('withStatus')->with(500)->once()->andReturnSelf()
@@ -83,31 +83,31 @@ class ExceptionHandlerTest extends TestCase
             ->getMock();
 
         // Mock for ResponseFactory
-        /** @var ResponseFactory $responseFactory */
+        /** @var Mockery\MockInterface&ResponseFactory $responseFactory */
         $responseFactory = Mockery::mock(ResponseFactory::class)
             ->shouldReceive('createResponse')->with(500)->once()->andReturn($response)
             ->getMock();
 
         // Dictionary for the translator mock
-        /** @var DictionaryInterface $dictionary */
+        /** @var Mockery\MockInterface&DictionaryInterface $dictionary */
         $dictionary = Mockery::mock(DictionaryInterface::class)
             ->shouldReceive('has')->with('ERROR.500.TITLE')->times(2)->andReturn(true)
             ->shouldReceive('has')->with('ERROR.500.DESCRIPTION')->times(2)->andReturn(true)
             ->getMock();
 
-        /** @var Translator $translator */
+        /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class)
             ->shouldReceive('getDictionary')->times(4)->andReturn($dictionary)
             ->shouldReceive('translate')->with('ERROR.500.TITLE')->times(2)->andReturn('Error msg')
             ->shouldReceive('translate')->with('ERROR.500.DESCRIPTION')->times(2)->andReturn('Error description')
             ->getMock();
 
-        /** @var ErrorLoggerInterface $logger */
+        /** @var Mockery\MockInterface&ErrorLoggerInterface $logger */
         $logger = Mockery::mock(ErrorLoggerInterface::class)
             ->shouldReceive('error')->with('Some text body')->once()
             ->getMock();
 
-        /** @var ServerRequestInterface $request */
+        /** @var Mockery\MockInterface&ServerRequestInterface $request */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getMethod')->times(2)->andReturn('GET')
             ->shouldReceive('getHeaderLine')->with('Accept')->once()->andReturn('text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
@@ -126,31 +126,31 @@ class ExceptionHandlerTest extends TestCase
     public function testHandleWithUserMessageStringException(): void
     {
         // Mock Config to control the settings
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(true)
             ->shouldReceive('get')->with('logs.exception')->once()->andReturn(false)
             ->getMock();
 
-        /** @var ErrorRendererInterface $renderer */
+        /** @var Mockery\MockInterface&ErrorRendererInterface $renderer */
         $renderer = Mockery::mock(ErrorRendererInterface::class)
             ->shouldReceive('render')->once()->andReturn('Some body')
             ->getMock();
 
         // Mock CI and decide witch renderer is passed
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with(PrettyPageRenderer::class)->once()->andReturn($renderer) // Display
             ->getMock();
 
         // Return from getBody of response
-        /** @var StreamInterface $streamInterface */
+        /** @var Mockery\MockInterface&StreamInterface $streamInterface */
         $streamInterface = Mockery::mock(StreamInterface::class)
             ->shouldReceive('write')->once()
             ->getMock();
 
         // Mocked response
-        /** @var ResponseInterface $response */
+        /** @var Mockery\MockInterface&ResponseInterface $response */
         $response = Mockery::mock(ResponseInterface::class)
             ->shouldReceive('getBody')->once()->andReturn($streamInterface)
             ->shouldReceive('withStatus')->with(500)->once()->andReturnSelf()
@@ -158,21 +158,21 @@ class ExceptionHandlerTest extends TestCase
             ->getMock();
 
         // Mock for ResponseFactory
-        /** @var ResponseFactory $responseFactory */
+        /** @var Mockery\MockInterface&ResponseFactory $responseFactory */
         $responseFactory = Mockery::mock(ResponseFactory::class)
             ->shouldReceive('createResponse')->with(500)->once()->andReturn($response)
             ->getMock();
 
-        /** @var Translator $translator */
+        /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')->with('User %param', ['param' => 'Title'])->times(1)->andReturn('User Title')
             ->shouldReceive('translate')->with('User %param', ['param' => 'Description'])->times(1)->andReturn('User Description')
             ->getMock();
 
-        /** @var ErrorLoggerInterface $logger */
+        /** @var Mockery\MockInterface&ErrorLoggerInterface $logger */
         $logger = Mockery::mock(ErrorLoggerInterface::class);
 
-        /** @var ServerRequestInterface $request */
+        /** @var Mockery\MockInterface&ServerRequestInterface $request */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getMethod')->times(1)->andReturn('GET')
             ->shouldReceive('getHeaderLine')->with('Accept')->once()->andReturn('text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
@@ -191,31 +191,31 @@ class ExceptionHandlerTest extends TestCase
     public function testHandleWithUserMessageException(): void
     {
         // Mock Config to control the settings
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(true)
             ->shouldReceive('get')->with('logs.exception')->once()->andReturn(false)
             ->getMock();
 
-        /** @var ErrorRendererInterface $renderer */
+        /** @var Mockery\MockInterface&ErrorRendererInterface $renderer */
         $renderer = Mockery::mock(ErrorRendererInterface::class)
             ->shouldReceive('render')->once()->andReturn('Some body')
             ->getMock();
 
         // Mock CI and decide witch renderer is passed
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with(PrettyPageRenderer::class)->once()->andReturn($renderer) // Display
             ->getMock();
 
         // Return from getBody of response
-        /** @var StreamInterface $streamInterface */
+        /** @var Mockery\MockInterface&StreamInterface $streamInterface */
         $streamInterface = Mockery::mock(StreamInterface::class)
             ->shouldReceive('write')->once()
             ->getMock();
 
         // Mocked response
-        /** @var ResponseInterface $response */
+        /** @var Mockery\MockInterface&ResponseInterface $response */
         $response = Mockery::mock(ResponseInterface::class)
             ->shouldReceive('getBody')->once()->andReturn($streamInterface)
             ->shouldReceive('withStatus')->with(500)->once()->andReturnSelf()
@@ -223,21 +223,21 @@ class ExceptionHandlerTest extends TestCase
             ->getMock();
 
         // Mock for ResponseFactory
-        /** @var ResponseFactory $responseFactory */
+        /** @var Mockery\MockInterface&ResponseFactory $responseFactory */
         $responseFactory = Mockery::mock(ResponseFactory::class)
             ->shouldReceive('createResponse')->with(500)->once()->andReturn($response)
             ->getMock();
 
-        /** @var Translator $translator */
+        /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')->with('User Title')->times(1)->andReturn('User Title')
             ->shouldReceive('translate')->with('User Description')->times(1)->andReturn('Error description')
             ->getMock();
 
-        /** @var ErrorLoggerInterface $logger */
+        /** @var Mockery\MockInterface&ErrorLoggerInterface $logger */
         $logger = Mockery::mock(ErrorLoggerInterface::class);
 
-        /** @var ServerRequestInterface $request */
+        /** @var Mockery\MockInterface&ServerRequestInterface $request */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getMethod')->times(1)->andReturn('GET')
             ->shouldReceive('getHeaderLine')->with('Accept')->once()->andReturn('text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
@@ -256,31 +256,31 @@ class ExceptionHandlerTest extends TestCase
     public function testRenderResponseWithOptionsAndNoTranslationKeyAndCustomRenderer(): void
     {
         // Mock Config to control the settings
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(true)
             ->getMock();
 
         // Mock renderer, whichever
-        /** @var ErrorRendererInterface $renderer */
+        /** @var Mockery\MockInterface&ErrorRendererInterface $renderer */
         $renderer = Mockery::mock(ErrorRendererInterface::class)
             ->shouldReceive('render')->once()->andReturn('Some body')
             ->getMock();
 
         // Mock CI and decide witch renderer is passed
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($renderer::class)->once()->andReturn($renderer) // Get custom renderer
             ->getMock();
 
         // Return from getBody of response
-        /** @var StreamInterface $streamInterface */
+        /** @var Mockery\MockInterface&StreamInterface $streamInterface */
         $streamInterface = Mockery::mock(StreamInterface::class)
             ->shouldReceive('write')->once()
             ->getMock();
 
         // Mocked response
-        /** @var ResponseInterface $response */
+        /** @var Mockery\MockInterface&ResponseInterface $response */
         $response = Mockery::mock(ResponseInterface::class)
             ->shouldReceive('getBody')->once()->andReturn($streamInterface)
             ->shouldReceive('withStatus')->with(200)->once()->andReturnSelf()
@@ -288,28 +288,28 @@ class ExceptionHandlerTest extends TestCase
             ->getMock();
 
         // Mock for ResponseFactory
-        /** @var ResponseFactory $responseFactory */
+        /** @var Mockery\MockInterface&ResponseFactory $responseFactory */
         $responseFactory = Mockery::mock(ResponseFactory::class)
             ->shouldReceive('createResponse')->with(200)->once()->andReturn($response)
             ->getMock();
 
         // Dictionary for the translator mock
-        /** @var DictionaryInterface $dictionary */
+        /** @var Mockery\MockInterface&DictionaryInterface $dictionary */
         $dictionary = Mockery::mock(DictionaryInterface::class)
             ->shouldReceive('has')->times(2)->andReturn(false) // False
             ->getMock();
 
-        /** @var Translator $translator */
+        /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class)
             ->shouldReceive('getDictionary')->times(2)->andReturn($dictionary)
             ->shouldReceive('translate')->with('ERROR.TITLE')->once()->andReturn('Error msg') // Different key
             ->shouldReceive('translate')->with('ERROR.DESCRIPTION')->once()->andReturn('Error description') // Different key
             ->getMock();
 
-        /** @var ErrorLoggerInterface $logger */
+        /** @var Mockery\MockInterface&ErrorLoggerInterface $logger */
         $logger = Mockery::mock(ErrorLoggerInterface::class);
 
-        /** @var ServerRequestInterface $request */
+        /** @var Mockery\MockInterface&ServerRequestInterface $request */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getMethod')->once()->andReturn('OPTIONS') // OPTION
             ->shouldReceive('getHeaderLine')->with('Accept')->once()->andReturn('foo/bar') // Custom type
@@ -329,28 +329,28 @@ class ExceptionHandlerTest extends TestCase
     public function testRenderResponseWithBadRendererFromCi(): void
     {
         // Mock Config to control the settings
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class);
 
         // Mock CI and decide witch renderer is passed
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with(PrettyPageRenderer::class)->once()->andReturn(new \stdClass()) // Get custom renderer
             ->getMock();
 
         // Mock for ResponseFactory
-        /** @var ResponseFactory $responseFactory */
+        /** @var Mockery\MockInterface&ResponseFactory $responseFactory */
         $responseFactory = Mockery::mock(ResponseFactory::class)
             ->shouldNotReceive('createResponse')
             ->getMock();
 
-        /** @var Translator $translator */
+        /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class);
 
-        /** @var ErrorLoggerInterface $logger */
+        /** @var Mockery\MockInterface&ErrorLoggerInterface $logger */
         $logger = Mockery::mock(ErrorLoggerInterface::class);
 
-        /** @var ServerRequestInterface $request */
+        /** @var Mockery\MockInterface&ServerRequestInterface $request */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getMethod')->once()->andReturn('OPTIONS') // OPTION
             ->shouldReceive('getHeaderLine')->with('Accept')->once()->andReturn('foo/bar') // Custom type
@@ -369,25 +369,25 @@ class ExceptionHandlerTest extends TestCase
     public function testWriteToErrorLogWithBadRendererFromCi(): void
     {
         // Mock Config to control the settings
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class);
 
         // Mock CI and decide witch renderer is passed
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with(PlainTextRenderer::class)->once()->andReturn(new \stdClass()) // Get custom renderer
             ->getMock();
 
-        /** @var ResponseFactory $responseFactory */
+        /** @var Mockery\MockInterface&ResponseFactory $responseFactory */
         $responseFactory = Mockery::mock(ResponseFactory::class);
 
-        /** @var Translator $translator */
+        /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class);
 
-        /** @var ErrorLoggerInterface $logger */
+        /** @var Mockery\MockInterface&ErrorLoggerInterface $logger */
         $logger = Mockery::mock(ErrorLoggerInterface::class);
 
-        /** @var ServerRequestInterface $request */
+        /** @var Mockery\MockInterface&ServerRequestInterface $request */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldNotReceive('getMethod')
             ->shouldNotReceive('getHeaderLine')
@@ -405,19 +405,19 @@ class ExceptionHandlerTest extends TestCase
 
     public function testRegisterErrorRendererWithBadClass(): void
     {
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class);
 
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class);
 
-        /** @var ResponseFactory $responseFactory */
+        /** @var Mockery\MockInterface&ResponseFactory $responseFactory */
         $responseFactory = Mockery::mock(ResponseFactory::class);
 
-        /** @var Translator $translator */
+        /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class);
 
-        /** @var ErrorLoggerInterface $logger */
+        /** @var Mockery\MockInterface&ErrorLoggerInterface $logger */
         $logger = Mockery::mock(ErrorLoggerInterface::class);
 
         // Get handler

@@ -50,7 +50,7 @@ class MigratorTest extends TestCase
         parent::setUp();
 
         // Create mock objects
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -88,7 +88,7 @@ class MigratorTest extends TestCase
         $this->assertInstanceOf(MigrationRepositoryInterface::class, $migrator->getRepository());
 
         // Get mock
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $repository = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('exists')->twice()->andReturn(true, false)
             ->getMock();

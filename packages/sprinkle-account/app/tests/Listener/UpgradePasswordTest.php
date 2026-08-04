@@ -45,7 +45,7 @@ class UpgradePasswordTest extends AccountTestCase
 
     public function testUpgrade(): void
     {
-        /** @var UserActivityLogger */
+        /** @var Mockery\MockInterface&UserActivityLogger */
         $logger = Mockery::mock(UserActivityLogger::class)
             ->shouldReceive('debug')->once()
             ->getMock();

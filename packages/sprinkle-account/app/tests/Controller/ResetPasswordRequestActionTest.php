@@ -36,7 +36,7 @@ class ResetPasswordRequestActionTest extends AccountTestCase
 
     public function testVerificationRequest(): void
     {
-        /** @var Mailer */
+        /** @var Mockery\MockInterface&Mailer */
         $mailer = Mockery::mock(Mailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()
@@ -59,7 +59,7 @@ class ResetPasswordRequestActionTest extends AccountTestCase
 
     public function testVerificationRequestWithFailedThrottle(): void
     {
-        /** @var Mailer */
+        /** @var Mockery\MockInterface&Mailer */
         $mailer = Mockery::mock(Mailer::class)
             ->makePartial()
             ->shouldNotReceive('send')

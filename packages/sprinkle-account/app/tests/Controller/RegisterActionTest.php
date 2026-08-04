@@ -201,7 +201,7 @@ class RegisterActionTest extends AccountTestCase
 
     public function testRegisterWithEmailVerification(): void
     {
-        /** @var Mailer */
+        /** @var Mockery\MockInterface&Mailer */
         $mailer = Mockery::mock(Mailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()
@@ -238,7 +238,7 @@ class RegisterActionTest extends AccountTestCase
 
     public function testRegisterWithFailedEmailVerification(): void
     {
-        /** @var Mailer */
+        /** @var Mockery\MockInterface&Mailer */
         $mailer = Mockery::mock(Mailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()

@@ -34,7 +34,7 @@ class BakeCommandTest extends TestCase
     public function testBaseCommand(): void
     {
         // Setup services mock. Command will be set by BakeCommandEvent
-        /** @var ListenerProviderInterface */
+        /** @var Mockery\MockInterface&ListenerProviderInterface */
         $listener = Mockery::mock(ListenerProviderInterface::class)
             ->shouldReceive('getListenersForEvent')->andReturn([new BakeCommandListenerStub()])
             ->getMock();
@@ -59,7 +59,7 @@ class BakeCommandTest extends TestCase
     public function testOneCommandFails(): void
     {
         // Setup services mock. Command will be set by BakeCommandEvent
-        /** @var ListenerProviderInterface */
+        /** @var Mockery\MockInterface&ListenerProviderInterface */
         $listener = Mockery::mock(ListenerProviderInterface::class)
             ->shouldReceive('getListenersForEvent')->andReturn([new BakeCommandListenerStubFail()])
             ->getMock();

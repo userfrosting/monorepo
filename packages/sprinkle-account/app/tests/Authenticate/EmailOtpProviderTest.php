@@ -33,12 +33,12 @@ class EmailOtpProviderTest extends TestCase
 
     public function testSendCodeBuildsTwigMessageAndSendsIt(): void
     {
-        /** @var UserInterface */
+        /** @var Mockery\MockInterface&UserInterface */
         $user = Mockery::mock(UserInterface::class);
         $user->email = 'user@example.com';
         $user->full_name = 'Test User';
 
-        /** @var UserVerificationInterface */
+        /** @var Mockery\MockInterface&UserVerificationInterface */
         $model = Mockery::mock(UserVerificationInterface::class);
 
         $from = [
@@ -46,19 +46,19 @@ class EmailOtpProviderTest extends TestCase
             'name'  => 'Admin',
         ];
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->once()->with('address_book.admin')->andReturn($from)
             ->getMock();
 
         $environment = new Environment(new ArrayLoader([]));
 
-        /** @var \Slim\Views\Twig */
+        /** @var Mockery\MockInterface&\Slim\Views\Twig */
         $twig = Mockery::mock(\Slim\Views\Twig::class)
             ->shouldReceive('getEnvironment')->once()->andReturn($environment)
             ->getMock();
 
-        /** @var \UserFrosting\Sprinkle\Core\Mail\Mailer */
+        /** @var Mockery\MockInterface&\UserFrosting\Sprinkle\Core\Mail\Mailer */
         $mailer = Mockery::mock(\UserFrosting\Sprinkle\Core\Mail\Mailer::class)
             ->shouldReceive('send')->once()->with(Mockery::on(
                 fn ($message): bool => $message instanceof TwigMailMessage

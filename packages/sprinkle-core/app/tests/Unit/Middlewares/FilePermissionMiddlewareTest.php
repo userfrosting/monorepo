@@ -38,15 +38,15 @@ class FilePermissionMiddlewareTest extends TestCase
             ],
         ]);
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldNotReceive('handle')
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class);
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->once()->with('foo://')->andReturn(null)
             ->shouldReceive('findResource')->once()->with('foo://', false, true)->andReturn('app/foo')
@@ -56,7 +56,7 @@ class FilePermissionMiddlewareTest extends TestCase
         $this->expectException(BadConfigException::class);
         $this->expectExceptionMessage("Stream foo:// doesn't exist and is not writeable. Make sure path `app/foo` exist and is writeable.");
 
-        /** @var Cache */
+        /** @var Mockery\MockInterface&Cache */
         $cache = Mockery::mock(Cache::class);
 
         $middleware = new FilePermissionMiddleware($locator, $config, $cache);
@@ -76,7 +76,7 @@ class FilePermissionMiddlewareTest extends TestCase
         $namespace = $reflection_class->getNamespaceName();
         PHPMockery::mock($namespace, 'is_writable')->andReturn(true);
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldReceive('handle')
             ->once()
@@ -84,15 +84,15 @@ class FilePermissionMiddlewareTest extends TestCase
             ->andReturn(Mockery::mock(ResponseInterface::class))
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class);
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->once()->with('foo://')->andReturn('app/foo')
             ->getMock();
 
-        /** @var Cache */
+        /** @var Mockery\MockInterface&Cache */
         $cache = Mockery::mock(Cache::class);
 
         $middleware = new FilePermissionMiddleware($locator, $config, $cache);
@@ -112,15 +112,15 @@ class FilePermissionMiddlewareTest extends TestCase
         $namespace = $reflection_class->getNamespaceName();
         PHPMockery::mock($namespace, 'is_writable')->andReturn(false);
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldNotReceive('handle')
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class);
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->once()->with('foo://')->andReturn('app/foo')
             ->shouldReceive('findResource')->once()->with('foo://', false, true)->andReturn('app/foo')
@@ -130,7 +130,7 @@ class FilePermissionMiddlewareTest extends TestCase
         $this->expectException(BadConfigException::class);
         $this->expectExceptionMessage("Stream foo:// doesn't exist and is not writeable. Make sure path `app/foo` exist and is writeable.");
 
-        /** @var Cache */
+        /** @var Mockery\MockInterface&Cache */
         $cache = Mockery::mock(Cache::class);
 
         $middleware = new FilePermissionMiddleware($locator, $config, $cache);
@@ -145,7 +145,7 @@ class FilePermissionMiddlewareTest extends TestCase
             ],
         ]);
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldNotReceive('handle')
             ->once()
@@ -153,13 +153,13 @@ class FilePermissionMiddlewareTest extends TestCase
             ->andReturn(Mockery::mock(ResponseInterface::class))
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class);
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class);
 
-        /** @var Cache */
+        /** @var Mockery\MockInterface&Cache */
         $cache = Mockery::mock(Cache::class);
 
         $middleware = new FilePermissionMiddleware($locator, $config, $cache);
@@ -178,7 +178,7 @@ class FilePermissionMiddlewareTest extends TestCase
             'writable' => ['foo://' => true],
         ]);
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldReceive('handle')
             ->once()
@@ -186,16 +186,16 @@ class FilePermissionMiddlewareTest extends TestCase
             ->andReturn(Mockery::mock(ResponseInterface::class))
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class);
 
         // Locator must never be called on a cache hit
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldNotReceive('findResource')
             ->getMock();
 
-        /** @var Cache */
+        /** @var Mockery\MockInterface&Cache */
         $cache = Mockery::mock(Cache::class)
             ->shouldReceive('has')->once()->with('uf_file_permissions')->andReturn(true)
             ->getMock();
@@ -221,7 +221,7 @@ class FilePermissionMiddlewareTest extends TestCase
         $namespace = $reflection_class->getNamespaceName();
         PHPMockery::mock($namespace, 'is_writable')->andReturn(true);
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldReceive('handle')
             ->once()
@@ -229,15 +229,15 @@ class FilePermissionMiddlewareTest extends TestCase
             ->andReturn(Mockery::mock(ResponseInterface::class))
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class);
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->once()->with('foo://')->andReturn('app/foo')
             ->getMock();
 
-        /** @var Cache */
+        /** @var Mockery\MockInterface&Cache */
         $cache = Mockery::mock(Cache::class)
             ->shouldReceive('has')->once()->with('uf_file_permissions')->andReturn(false)
             ->shouldReceive('put')->once()->with('uf_file_permissions', true, 3600)

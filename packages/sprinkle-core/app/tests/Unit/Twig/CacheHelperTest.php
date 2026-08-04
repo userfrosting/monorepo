@@ -25,7 +25,7 @@ class CacheHelperTest extends TestCase
 
     public function testClearCache(): void
     {
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->with('cache://twig', true)->andReturn('/path/to/cache')
             ->getMock();
@@ -42,7 +42,7 @@ class CacheHelperTest extends TestCase
 
     public function testClearCachePathDoesNotExist(): void
     {
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->with('cache://twig', true)->andReturn('/path/to/cache')
             ->getMock();

@@ -43,19 +43,19 @@ class SprinkleTwigRepositoryTest extends TestCase
             ->shouldReceive('get')->with($mockExtension2::class)->once()->andReturn($mockExtension2)
             ->getMock();
 
-        /** @var TwigExtensionRecipe */
+        /** @var Mockery\MockInterface&TwigExtensionRecipe */
         $sprinkle1 = Mockery::mock(TwigExtensionRecipe::class)
             ->shouldReceive('getTwigExtensions')->andReturn([
                 $mockExtension1::class,
                 $mockExtension2::class,
             ])->getMock();
 
-        /** @var SprinkleRecipe */
+        /** @var Mockery\MockInterface&SprinkleRecipe */
         $sprinkle2 = Mockery::mock(SprinkleRecipe::class)
             ->shouldReceive('getTwigExtensions')->andReturn([$mockExtension1::class])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $manager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([
                 $sprinkle1,
@@ -72,17 +72,17 @@ class SprinkleTwigRepositoryTest extends TestCase
 
     public function testGetAllWithCommandNotFound(): void
     {
-        /** @var TwigExtensionRecipe */
+        /** @var Mockery\MockInterface&TwigExtensionRecipe */
         $sprinkle = Mockery::mock(TwigExtensionRecipe::class)
             ->shouldReceive('getTwigExtensions')->andReturn(['/Not/Extension'])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class);
 
         $repository = new SprinkleTwigRepository($sprinkleManager, $ci);
@@ -96,17 +96,17 @@ class SprinkleTwigRepositoryTest extends TestCase
     {
         $extension = Mockery::mock(stdClass::class);
 
-        /** @var TwigExtensionRecipe */
+        /** @var Mockery\MockInterface&TwigExtensionRecipe */
         $sprinkle = Mockery::mock(TwigExtensionRecipe::class)
             ->shouldReceive('getTwigExtensions')->andReturn([$extension::class])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($extension::class)->andReturn($extension)
             ->getMock();

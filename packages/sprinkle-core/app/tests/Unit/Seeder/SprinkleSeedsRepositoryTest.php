@@ -43,19 +43,19 @@ class SprinkleSeedsRepositoryTest extends TestCase
             ->shouldReceive('get')->with($mockSeed2::class)->andReturn($mockSeed2)
             ->getMock();
 
-        /** @var SeedRecipe */
+        /** @var Mockery\MockInterface&SeedRecipe */
         $sprinkle1 = Mockery::mock(SeedRecipe::class)
             ->shouldReceive('getSeeds')->andReturn([
                 $mockSeed1::class,
                 $mockSeed2::class,
             ])->getMock();
 
-        /** @var SprinkleRecipe */
+        /** @var Mockery\MockInterface&SprinkleRecipe */
         $sprinkle2 = Mockery::mock(SprinkleRecipe::class)
             ->shouldReceive('getSeeds')->andReturn([$mockSeed1::class])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $manager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([
                 $sprinkle1,
@@ -72,17 +72,17 @@ class SprinkleSeedsRepositoryTest extends TestCase
 
     public function testGetAllWithCommandNotFound(): void
     {
-        /** @var SeedRecipe */
+        /** @var Mockery\MockInterface&SeedRecipe */
         $sprinkle = Mockery::mock(SeedRecipe::class)
             ->shouldReceive('getSeeds')->andReturn(['/Not/Command'])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class);
 
         $repository = new SprinkleSeedsRepository($sprinkleManager, $ci);
@@ -96,17 +96,17 @@ class SprinkleSeedsRepositoryTest extends TestCase
     {
         $seed = Mockery::mock(stdClass::class);
 
-        /** @var SeedRecipe */
+        /** @var Mockery\MockInterface&SeedRecipe */
         $sprinkle = Mockery::mock(SeedRecipe::class)
             ->shouldReceive('getSeeds')->andReturn([$seed::class])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($seed::class)->andReturn($seed)
             ->getMock();

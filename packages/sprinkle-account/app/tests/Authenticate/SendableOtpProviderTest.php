@@ -29,10 +29,10 @@ class SendableOtpProviderTest extends TestCase
 
     public function testGenerateWithDefaultTimeout(): void
     {
-        /** @var UserInterface */
+        /** @var Mockery\MockInterface&UserInterface */
         $user = Mockery::mock(UserInterface::class);
 
-        /** @var UserVerificationInterface */
+        /** @var Mockery\MockInterface&UserVerificationInterface */
         $model = Mockery::mock(UserVerificationInterface::class)
             ->shouldReceive('forUser')->once()->with($user)->andReturnSelf()
             ->shouldReceive('delete')->once()
@@ -40,7 +40,7 @@ class SendableOtpProviderTest extends TestCase
             ->shouldReceive('storeCode')->once()->with($user, '123456', 900)
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('getInt')->once()->with('otp.timeout', 600)->andReturn(900)
             ->getMock();
@@ -57,10 +57,10 @@ class SendableOtpProviderTest extends TestCase
 
     public function testGenerateWithProvidedTimeout(): void
     {
-        /** @var UserInterface */
+        /** @var Mockery\MockInterface&UserInterface */
         $user = Mockery::mock(UserInterface::class);
 
-        /** @var UserVerificationInterface */
+        /** @var Mockery\MockInterface&UserVerificationInterface */
         $model = Mockery::mock(UserVerificationInterface::class)
             ->shouldReceive('forUser')->once()->with($user)->andReturnSelf()
             ->shouldReceive('delete')->once()
@@ -68,7 +68,7 @@ class SendableOtpProviderTest extends TestCase
             ->shouldReceive('storeCode')->once()->with($user, '654321', 120)
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $config = Mockery::mock(Config::class)
             ->shouldNotReceive('getInt')
             ->getMock();
@@ -85,15 +85,15 @@ class SendableOtpProviderTest extends TestCase
 
     public function testValidateReturnsTrueWhenCodeIsValid(): void
     {
-        /** @var UserInterface */
+        /** @var Mockery\MockInterface&UserInterface */
         $user = Mockery::mock(UserInterface::class);
 
-        /** @var UserVerificationInterface */
+        /** @var Mockery\MockInterface&UserVerificationInterface */
         $model = Mockery::mock(UserVerificationInterface::class)
             ->shouldReceive('validateCode')->once()->with($user, '123456')->andReturn(true)
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $config = Mockery::mock(Config::class);
 
         $provider = new TestableSendableOtpProvider($model, $config);
@@ -103,15 +103,15 @@ class SendableOtpProviderTest extends TestCase
 
     public function testValidateReturnsFalseWhenCodeIsInvalid(): void
     {
-        /** @var UserInterface */
+        /** @var Mockery\MockInterface&UserInterface */
         $user = Mockery::mock(UserInterface::class);
 
-        /** @var UserVerificationInterface */
+        /** @var Mockery\MockInterface&UserVerificationInterface */
         $model = Mockery::mock(UserVerificationInterface::class)
             ->shouldReceive('validateCode')->once()->with($user, 111111)->andReturn(false)
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $config = Mockery::mock(Config::class);
 
         $provider = new TestableSendableOtpProvider($model, $config);
@@ -121,10 +121,10 @@ class SendableOtpProviderTest extends TestCase
 
     public function testGenerateCodeReturnsSixDigitNumericString(): void
     {
-        /** @var UserVerificationInterface */
+        /** @var Mockery\MockInterface&UserVerificationInterface */
         $model = Mockery::mock(UserVerificationInterface::class);
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $config = Mockery::mock(Config::class);
 
         $provider = new TestableSendableOtpProvider($model, $config);

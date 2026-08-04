@@ -33,7 +33,7 @@ class MigratorDependencyTest extends TestCase
 
     protected function getMigrator(): Migrator
     {
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->andReturn([
                 StubAnalyserMigrationA::class,
@@ -41,7 +41,7 @@ class MigratorDependencyTest extends TestCase
             ])
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->andReturn([
                 StubAnalyserMigrationA::class,
@@ -60,7 +60,7 @@ class MigratorDependencyTest extends TestCase
             ->shouldReceive('get')->with(StubAnalyserMigrationE::class)->andReturn(new StubAnalyserMigrationE())
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -115,7 +115,7 @@ class MigratorDependencyTest extends TestCase
      */
     public function testGetPendingThirdStageDependency(): void
     {
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->andReturn([
                 StubAnalyserMigrationA::class,
@@ -123,7 +123,7 @@ class MigratorDependencyTest extends TestCase
             ])
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->andReturn([
                 StubAnalyserMigrationH::class, // Place H first
@@ -144,7 +144,7 @@ class MigratorDependencyTest extends TestCase
             ->shouldReceive('get')->with(StubAnalyserMigrationH::class)->andReturn(new StubAnalyserMigrationH())
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -166,12 +166,12 @@ class MigratorDependencyTest extends TestCase
      */
     public function testGetPendingWithNonAvailable(): void
     {
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->andReturn([])
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->andReturn([
                 StubAnalyserMigrationG::class,
@@ -180,7 +180,7 @@ class MigratorDependencyTest extends TestCase
             ->shouldReceive('get')->with(StubAnalyserMigrationG::class)->andReturn(new StubAnalyserMigrationG())
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)

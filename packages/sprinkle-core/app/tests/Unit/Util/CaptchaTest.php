@@ -27,7 +27,7 @@ class CaptchaTest extends TestCase
 
     public function testSomething(): void
     {
-        /** @var Session */
+        /** @var Mockery\MockInterface&Session */
         $session = Mockery::mock(Session::class)->makePartial();
 
         // Create captcha

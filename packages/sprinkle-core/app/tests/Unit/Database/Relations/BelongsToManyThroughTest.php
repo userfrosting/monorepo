@@ -38,7 +38,7 @@ class BelongsToManyThroughTest extends TestCase
         $baseQuery = Mockery::mock(QueryBuilder::class);
         $builder = Mockery::mock(EloquentBuilder::class, [$baseQuery])->makePartial();
 
-        /** @var \Mockery\MockInterface */
+        /** @var Mockery\MockInterface&\Illuminate\Database\Eloquent\Model $related */
         $related = $relation->getRelated();
         $related->shouldReceive('getQualifiedKeyName')->once()->andReturn('users.id');
 

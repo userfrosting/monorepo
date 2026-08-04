@@ -36,7 +36,7 @@ class MigratorRollbackTest extends TestCase
      */
     public function testGetMigrationsForRollback(): void
     {
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->twice()->andReturn([
                 StubAnalyserRollbackMigrationD::class,
@@ -44,14 +44,14 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationD::class)->once()->andReturn(true)
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->once()->andReturn([
                 StubAnalyserRollbackMigrationD::class,
             ])
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -69,7 +69,7 @@ class MigratorRollbackTest extends TestCase
      */
     public function testGetMigrationsForReset(): void
     {
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->twice()->andReturn([
                 StubAnalyserRollbackMigrationD::class,
@@ -77,14 +77,14 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationD::class)->once()->andReturn(true)
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->once()->andReturn([
                 StubAnalyserRollbackMigrationD::class,
             ])
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -104,7 +104,7 @@ class MigratorRollbackTest extends TestCase
     public function testValidateRollbackMigration(): void
     {
         // Set mock & analyser
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->times(4)->andReturn([
                 StubAnalyserRollbackMigrationA::class,
@@ -115,7 +115,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationD::class)->twice()->andReturn(true)
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->twice()->andReturn([
                 StubAnalyserRollbackMigrationA::class,
@@ -126,7 +126,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationC::class)->twice()->andReturn(true)
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -147,15 +147,15 @@ class MigratorRollbackTest extends TestCase
     public function testValidateRollbackMigrationForNotInstalledException(): void
     {
         // Set mock & analyser
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationD::class)->twice()->andReturn(false)
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class);
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -182,7 +182,7 @@ class MigratorRollbackTest extends TestCase
     public function testValidateRollbackMigrationForStaleException(): void
     {
         // Set mock & analyser
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->twice()->andReturn([
                 StubAnalyserRollbackMigrationA::class,
@@ -193,7 +193,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationD::class)->twice()->andReturn(true)
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->twice()->andReturn([
                 StubAnalyserRollbackMigrationC::class,
@@ -201,7 +201,7 @@ class MigratorRollbackTest extends TestCase
             ])
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -227,7 +227,7 @@ class MigratorRollbackTest extends TestCase
     public function testValidateRollbackMigrationForDependenciesNotMet(): void
     {
         // Set mock & analyser
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->times(4)->andReturn([
                 StubAnalyserRollbackMigrationA::class,
@@ -238,7 +238,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationC::class)->twice()->andReturn(true)
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->andReturn([
                 StubAnalyserRollbackMigrationA::class,
@@ -249,7 +249,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationC::class)->twice()->andReturn(true)
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -279,7 +279,7 @@ class MigratorRollbackTest extends TestCase
     public function testValidateRollbackMigrationForDependenciesDoesntExist(): void
     {
         // Set mock & analyser
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->times(4)->andReturn([
                 StubAnalyserRollbackMigrationA::class,
@@ -288,7 +288,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationA::class)->twice()->andReturn(true)
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->andReturn([
                 StubAnalyserRollbackMigrationA::class,
@@ -297,7 +297,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationC::class)->twice()->andReturn(false)
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)
@@ -326,7 +326,7 @@ class MigratorRollbackTest extends TestCase
     public function testValidateRollbackMigrationForDependenciesDoesntExistWithDirectMigration(): void
     {
         // Set mock & analyser
-        /** @var MigrationRepositoryInterface */
+        /** @var Mockery\MockInterface&MigrationRepositoryInterface */
         $installed = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('list')->times(4)->andReturn([
                 StubAnalyserRollbackMigrationB::class,
@@ -334,7 +334,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationB::class)->twice()->andReturn(true)
             ->getMock();
 
-        /** @var MigrationLocatorInterface */
+        /** @var Mockery\MockInterface&MigrationLocatorInterface */
         $available = Mockery::mock(MigrationLocatorInterface::class)
             ->shouldReceive('list')->twice()->andReturn([
                 StubAnalyserRollbackMigrationB::class,
@@ -342,7 +342,7 @@ class MigratorRollbackTest extends TestCase
             ->shouldReceive('has')->with(StubAnalyserRollbackMigrationC::class)->twice()->andReturn(false)
             ->getMock();
 
-        /** @var Capsule */
+        /** @var Mockery\MockInterface&Capsule */
         $database = Mockery::mock(Capsule::class)
             ->shouldReceive('getConnection')
             ->with(null)

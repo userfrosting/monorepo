@@ -41,14 +41,14 @@ class LogExecutedQueryTest extends TestCase
         ];
 
         // Create QueryExecuted Event Mock
-        /** @var SQLiteConnection */
+        /** @var Mockery\MockInterface&SQLiteConnection */
         $connection = Mockery::mock(SQLiteConnection::class)
             ->shouldReceive('getName')->once()->andReturn('foobar')
             ->getMock();
         $event = new QueryExecuted($sql, $bindings, $time, $connection);
 
         // Create Logger mocks
-        /** @var QueryLoggerInterface */
+        /** @var Mockery\MockInterface&QueryLoggerInterface */
         $logger = Mockery::mock(QueryLoggerInterface::class)
             ->shouldReceive('debug')->with($string, $data)->once()
             ->getMock();

@@ -40,7 +40,7 @@ class ExceptionHandlerMiddlewareTest extends TestCase
         $handler = Mockery::mock(ExceptionHandlerInterface::class);
 
         // Mock dependencies
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($handler::class)->once()->andReturn($handler)
             ->getMock();
@@ -97,7 +97,7 @@ class ExceptionHandlerMiddlewareTest extends TestCase
         $handler = Mockery::mock(ExceptionHandlerInterface::class);
 
         // Mock dependencies
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($handler::class)->once()->andReturn($handler)
             ->getMock();
@@ -119,7 +119,7 @@ class ExceptionHandlerMiddlewareTest extends TestCase
         $handler = Mockery::mock(ExceptionHandlerInterface::class);
 
         // Mock dependencies
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($handler::class)->once()->andReturn($handler)
             ->getMock();
@@ -141,7 +141,7 @@ class ExceptionHandlerMiddlewareTest extends TestCase
         $handler = Mockery::mock(ExceptionHandlerInterface::class);
 
         // Mock dependencies
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($handler::class)->once()->andReturn($handler)
             ->getMock();
@@ -163,7 +163,7 @@ class ExceptionHandlerMiddlewareTest extends TestCase
         $handler = Mockery::mock(ExceptionHandlerInterface::class);
 
         // Mock dependencies
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($handler::class)->times(2)->andReturn($handler)
             ->getMock();
@@ -190,12 +190,12 @@ class ExceptionHandlerMiddlewareTest extends TestCase
         $request2 = Mockery::mock(ServerRequestInterface::class);
 
         // Test exception to handle
-        /** @var HttpException $exception */
+        /** @var Mockery\MockInterface&HttpException $exception */
         $exception = Mockery::mock(HttpException::class)
             ->shouldReceive('getRequest')->once()->andReturn($request2)
             ->getMock();
 
-        /** @var RequestHandlerInterface $requestHandler */
+        /** @var Mockery\MockInterface&RequestHandlerInterface $requestHandler */
         $requestHandler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldReceive('handle')->with($request1)->once()->andThrow($exception)
             ->getMock();
@@ -209,7 +209,7 @@ class ExceptionHandlerMiddlewareTest extends TestCase
             ->getMock();
 
         // Mock dependencies
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($handler::class)->once()->andReturn($handler)
             ->getMock();

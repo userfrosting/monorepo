@@ -76,7 +76,7 @@ class UserCreateActionTest extends AdminTestCase
         $config->set('site.registration.user_defaults.locale', 'en_US');
         $config->set('site.locales.available', ['en_US' => true]);
 
-        /** @var Mailer */
+        /** @var Mockery\MockInterface&Mailer */
         $mailer = Mockery::mock(Mailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()
@@ -124,7 +124,7 @@ class UserCreateActionTest extends AdminTestCase
         $config->set('site.registration.user_defaults.locale', 'en_US');
         $config->set('site.locales.available', ['en_US' => true]);
 
-        /** @var Mailer */
+        /** @var Mockery\MockInterface&Mailer */
         $mailer = Mockery::mock(Mailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()
@@ -168,7 +168,7 @@ class UserCreateActionTest extends AdminTestCase
         $config->set('site.registration.user_defaults.locale', 'en_US');
         $config->set('site.locales.available', ['en_US' => true]);
 
-        /** @var Mailer */
+        /** @var Mockery\MockInterface&Mailer */
         $mailer = Mockery::mock(Mailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()

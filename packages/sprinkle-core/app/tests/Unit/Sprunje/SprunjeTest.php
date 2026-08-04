@@ -333,7 +333,7 @@ class SprunjeTestModelStub extends UfModel
      */
     protected function newBaseQueryBuilder()
     {
-        /** @var UfBuilder */
+        /** @var Mockery\MockInterface&UfBuilder */
         $builder = Mockery::mock(UfBuilder::class)
             ->makePartial()
             ->shouldReceive('from')->with('table')->once()

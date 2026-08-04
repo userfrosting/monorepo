@@ -41,7 +41,7 @@ class ShutdownHandlerTest extends TestCase
 
     public function testBuildJsonErrorWithDetails(): void
     {
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(true)
             ->getMock();
@@ -61,7 +61,7 @@ class ShutdownHandlerTest extends TestCase
 
     public function testBuildJsonErrorWithoutDetails(): void
     {
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(false)
             ->getMock();
@@ -81,7 +81,7 @@ class ShutdownHandlerTest extends TestCase
 
     public function testBuildTxtErrorWithDetails(): void
     {
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(true)
             ->getMock();
@@ -100,7 +100,7 @@ class ShutdownHandlerTest extends TestCase
 
     public function testBuildTxtErrorWithoutDetails(): void
     {
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(false)
             ->getMock();
@@ -119,7 +119,7 @@ class ShutdownHandlerTest extends TestCase
 
     public function testBuildHtmlErrorWithDetails(): void
     {
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(true)
             ->getMock();
@@ -138,7 +138,7 @@ class ShutdownHandlerTest extends TestCase
 
     public function testBuildHtmlErrorWithoutDetails(): void
     {
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(false)
             ->getMock();
@@ -168,7 +168,7 @@ class ShutdownHandlerTest extends TestCase
         $request = Mockery::mock(ServerRequestInterface::class);
 
         // Get handler, mock  the terminate method.
-        /** @var ShutdownHandler $handler */
+        /** @var Mockery\MockInterface&ShutdownHandler $handler */
         $handler = Mockery::mock(ShutdownHandler::class, [$config, $request])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
@@ -191,7 +191,7 @@ class ShutdownHandlerTest extends TestCase
         // Mock built-in php_sapi_name
         PHPMockery::mock($namespace, 'php_sapi_name')->andReturn('cli');
 
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(false)
             ->getMock();
@@ -199,7 +199,7 @@ class ShutdownHandlerTest extends TestCase
         $request = Mockery::mock(ServerRequestInterface::class);
 
         // Get handler, mock  the terminate method.
-        /** @var ShutdownHandler $handler */
+        /** @var Mockery\MockInterface&ShutdownHandler $handler */
         $handler = Mockery::mock(ShutdownHandler::class, [$config, $request])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
@@ -227,7 +227,7 @@ class ShutdownHandlerTest extends TestCase
         // Mock built-in php_sapi_name
         PHPMockery::mock($namespace, 'php_sapi_name')->andReturn('apache');
 
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(false)
             ->getMock();
@@ -237,7 +237,7 @@ class ShutdownHandlerTest extends TestCase
             ->getMock();
 
         // Get handler, mock  the terminate method.
-        /** @var ShutdownHandler $handler */
+        /** @var Mockery\MockInterface&ShutdownHandler $handler */
         $handler = Mockery::mock(ShutdownHandler::class, [$config, $request])
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()

@@ -39,37 +39,37 @@ class PhpMailerExceptionHandlerTest extends TestCase
     public function testHandle(): void
     {
         // Mock Config to control the settings
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('debug.exception')->once()->andReturn(true)
             ->shouldReceive('get')->with('logs.exception')->once()->andReturn(true)
             ->getMock();
 
-        /** @var ErrorRendererInterface $renderer */
+        /** @var Mockery\MockInterface&ErrorRendererInterface $renderer */
         $renderer = Mockery::mock(ErrorRendererInterface::class)
             ->shouldReceive('render')->once()->andReturn('Some body')
             ->getMock();
 
-        /** @var ErrorRendererInterface $renderer */
+        /** @var Mockery\MockInterface&ErrorRendererInterface $textRenderer */
         $textRenderer = Mockery::mock(ErrorRendererInterface::class)
             ->shouldReceive('render')->once()->andReturn('Some text body')
             ->getMock();
 
         // Mock CI and decide witch renderer is passed
-        /** @var ContainerInterface $ci */
+        /** @var Mockery\MockInterface&ContainerInterface $ci */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with(PrettyPageRenderer::class)->once()->andReturn($renderer) // Display
             ->shouldReceive('get')->with(PlainTextRenderer::class)->once()->andReturn($textRenderer) // Logger
             ->getMock();
 
         // Return from getBody of response
-        /** @var StreamInterface $streamInterface */
+        /** @var Mockery\MockInterface&StreamInterface $streamInterface */
         $streamInterface = Mockery::mock(StreamInterface::class)
             ->shouldReceive('write')->once()
             ->getMock();
 
         // Mocked response
-        /** @var ResponseInterface $response */
+        /** @var Mockery\MockInterface&ResponseInterface $response */
         $response = Mockery::mock(ResponseInterface::class)
             ->shouldReceive('getBody')->once()->andReturn($streamInterface)
             ->shouldReceive('withStatus')->with(500)->once()->andReturnSelf()
@@ -77,22 +77,22 @@ class PhpMailerExceptionHandlerTest extends TestCase
             ->getMock();
 
         // Mock for ResponseFactory
-        /** @var ResponseFactory $responseFactory */
+        /** @var Mockery\MockInterface&ResponseFactory $responseFactory */
         $responseFactory = Mockery::mock(ResponseFactory::class)
             ->shouldReceive('createResponse')->with(500)->once()->andReturn($response)
             ->getMock();
 
-        /** @var Translator $translator */
+        /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')->with('ERROR.MAIL')->times(2)->andReturn('Error mail') // <-- Here important part
             ->getMock();
 
-        /** @var ErrorLoggerInterface $logger */
+        /** @var Mockery\MockInterface&ErrorLoggerInterface $logger */
         $logger = Mockery::mock(ErrorLoggerInterface::class)
             ->shouldReceive('error')->with('Some text body')->once()
             ->getMock();
 
-        /** @var ServerRequestInterface $request */
+        /** @var Mockery\MockInterface&ServerRequestInterface $request */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getMethod')->times(2)->andReturn('GET')
             ->shouldReceive('getHeaderLine')->with('Accept')->once()->andReturn('text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')

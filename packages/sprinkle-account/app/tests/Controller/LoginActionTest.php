@@ -156,7 +156,7 @@ class LoginActionTest extends AccountTestCase
     public function testLoginWithThrottler(): void
     {
         // Create fake throttler
-        /** @var Throttler */
+        /** @var Mockery\MockInterface&Throttler */
         $throttler = Mockery::mock(Throttler::class)
             ->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => 'foo'])->andReturn(90)
             ->getMock();

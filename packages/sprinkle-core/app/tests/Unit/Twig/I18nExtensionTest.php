@@ -30,7 +30,7 @@ class I18nExtensionTest extends TestCase
 
     public function testTranslateIntegration(): void
     {
-        /** @var Translator */
+        /** @var Mockery\MockInterface&Translator */
         $translator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')
             ->with('USER', 2)

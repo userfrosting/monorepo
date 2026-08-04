@@ -27,7 +27,7 @@ class AccountExtensionTest extends TestCase
 
     public function testCheckAuthenticated(): void
     {
-        /** @var UserInterface */
+        /** @var Mockery\MockInterface&UserInterface */
         $user = Mockery::mock(UserInterface::class)
             ->shouldReceive('foo')->once()->andReturn('blah') // Don't need anything special here
             ->getMock();
@@ -55,7 +55,7 @@ class AccountExtensionTest extends TestCase
 
     public function testCheckAccess(): void
     {
-        /** @var UserInterface */
+        /** @var Mockery\MockInterface&UserInterface */
         $user = Mockery::mock(UserInterface::class);
 
         /** @var Authenticator */
@@ -78,7 +78,7 @@ class AccountExtensionTest extends TestCase
     public function testCurrentUser(): void
     {
         // Define mock Authenticator and register with Container
-        /** @var Authenticator */
+        /** @var Mockery\MockInterface&Authenticator */
         $authenticator = Mockery::mock(Authenticator::class);
 
         // Create and add to extensions.

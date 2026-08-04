@@ -51,12 +51,12 @@ class MailerTest extends TestCase
 
     public function testSmtp(): void
     {
-        /** @var MailLoggerInterface */
+        /** @var Mockery\MockInterface&MailLoggerInterface */
         $logger = Mockery::mock(MailLoggerInterface::class)
             ->shouldNotReceive('debug')
             ->getMock();
 
-        /** @var PHPMailer */
+        /** @var Mockery\MockInterface&PHPMailer */
         $phpMailer = Mockery::mock(PHPMailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()->andReturn(true)
@@ -111,12 +111,12 @@ class MailerTest extends TestCase
 
     public function testMailAndDistinct(): void
     {
-        /** @var MailLoggerInterface */
+        /** @var Mockery\MockInterface&MailLoggerInterface */
         $logger = Mockery::mock(MailLoggerInterface::class)
             ->shouldNotReceive('debug')
             ->getMock();
 
-        /** @var PHPMailer */
+        /** @var Mockery\MockInterface&PHPMailer */
         $phpMailer = Mockery::mock(PHPMailer::class)
             ->makePartial()
             ->shouldReceive('send')->times(2)->andReturn(true)
@@ -142,12 +142,12 @@ class MailerTest extends TestCase
 
     public function testQMail(): void
     {
-        /** @var MailLoggerInterface */
+        /** @var Mockery\MockInterface&MailLoggerInterface */
         $logger = Mockery::mock(MailLoggerInterface::class)
             ->shouldNotReceive('debug')
             ->getMock();
 
-        /** @var PHPMailer */
+        /** @var Mockery\MockInterface&PHPMailer */
         $phpMailer = Mockery::mock(PHPMailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()->andReturn(true)
@@ -171,12 +171,12 @@ class MailerTest extends TestCase
 
     public function testSendmail(): void
     {
-        /** @var MailLoggerInterface */
+        /** @var Mockery\MockInterface&MailLoggerInterface */
         $logger = Mockery::mock(MailLoggerInterface::class)
             ->shouldNotReceive('debug')
             ->getMock();
 
-        /** @var PHPMailer */
+        /** @var Mockery\MockInterface&PHPMailer */
         $phpMailer = Mockery::mock(PHPMailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()->andReturn(true)
@@ -194,12 +194,12 @@ class MailerTest extends TestCase
 
     public function testWithDebug(): void
     {
-        /** @var MailLoggerInterface */
+        /** @var Mockery\MockInterface&MailLoggerInterface */
         $logger = Mockery::mock(MailLoggerInterface::class)
             ->shouldReceive('debug')->once()
             ->getMock();
 
-        /** @var PHPMailer */
+        /** @var Mockery\MockInterface&PHPMailer */
         $phpMailer = Mockery::mock(PHPMailer::class)
             ->makePartial()
             ->shouldReceive('send')->once()->andReturn(true)

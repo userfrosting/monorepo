@@ -36,7 +36,7 @@ class URIMiddlewareTest extends TestCase
             ],
         ]);
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldReceive('handle')
             ->once()
@@ -44,7 +44,7 @@ class URIMiddlewareTest extends TestCase
             ->andReturn(Mockery::mock(ResponseInterface::class))
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldNotReceive('getUri')
             ->getMock();
@@ -70,7 +70,7 @@ class URIMiddlewareTest extends TestCase
             ->shouldReceive('getAuthority')->once()->andReturn('example.com')
             ->getMock();
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldReceive('handle')
             ->once()
@@ -78,7 +78,7 @@ class URIMiddlewareTest extends TestCase
             ->andReturn(Mockery::mock(ResponseInterface::class))
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getUri')->andReturn($uri)
             ->getMock();
@@ -104,7 +104,7 @@ class URIMiddlewareTest extends TestCase
             ->shouldReceive('getAuthority')->once()->andReturn('localhost:8888')
             ->getMock();
 
-        /** @var RequestHandlerInterface */
+        /** @var Mockery\MockInterface&RequestHandlerInterface */
         $handler = Mockery::mock(RequestHandlerInterface::class)
             ->shouldReceive('handle')
             ->once()
@@ -112,7 +112,7 @@ class URIMiddlewareTest extends TestCase
             ->andReturn(Mockery::mock(ResponseInterface::class))
             ->getMock();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getUri')->andReturn($uri)
             ->getMock();

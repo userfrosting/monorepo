@@ -34,17 +34,17 @@ class SetRouteCachingTest extends TestCase
             ->shouldReceive('getString')->with('cache.routerFile')->once()->andReturn('route.cache')
             ->getMock();
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->with('cache://route.cache', true, true)->once()->andReturn('/foo/route.cache')
             ->getMock();
 
-        /** @var RouteCollectorInterface */
+        /** @var Mockery\MockInterface&RouteCollectorInterface */
         $collector = Mockery::mock(RouteCollectorInterface::class)
             ->shouldReceive('setCacheFile')->with('/foo/route.cache')->once()
             ->getMock();
 
-        /** @var App<\DI\Container> */
+        /** @var Mockery\MockInterface&App<\DI\Container> */
         $app = Mockery::mock(App::class)
             ->shouldReceive('getRouteCollector')->once()->andReturn($collector)
             ->getMock();

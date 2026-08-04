@@ -40,7 +40,7 @@ class AssetsBuildCommandTest extends TestCase
     public function testBaseCommand(): void
     {
         // Setup services mock. Command will be set by AssetsBuildCommandEvent
-        /** @var ListenerProviderInterface */
+        /** @var Mockery\MockInterface&ListenerProviderInterface */
         $listener = Mockery::mock(ListenerProviderInterface::class)
             ->shouldReceive('getListenersForEvent')->andReturn([new AssetsBuildCommandListenerStub()])
             ->getMock();
@@ -66,7 +66,7 @@ class AssetsBuildCommandTest extends TestCase
     public function testOneCommandFails(): void
     {
         // Setup services mock. Command will be set by AssetsBuildCommandEvent
-        /** @var ListenerProviderInterface */
+        /** @var Mockery\MockInterface&ListenerProviderInterface */
         $listener = Mockery::mock(ListenerProviderInterface::class)
             ->shouldReceive('getListenersForEvent')->andReturn([new AssetsBuildCommandListenerStubFail()])
             ->getMock();
@@ -92,7 +92,7 @@ class AssetsBuildCommandTest extends TestCase
     public function testArgumentPassthrough(): void
     {
         // Setup services mock. Command will be set by AssetsBuildCommandEvent
-        /** @var ListenerProviderInterface */
+        /** @var Mockery\MockInterface&ListenerProviderInterface */
         $listener = Mockery::mock(ListenerProviderInterface::class)
             ->shouldReceive('getListenersForEvent')->andReturn([new AssetsBuildCommandListenerStubParam()])
             ->getMock();

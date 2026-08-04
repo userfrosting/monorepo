@@ -86,7 +86,7 @@ class TwigServiceTest extends TestCase
                 ->getMock();
         $this->ci->set(ResourceLocatorInterface::class, $locator);
 
-        /** @var TwigRepositoryInterface */
+        /** @var Mockery\MockInterface&TwigRepositoryInterface */
         $repository = Mockery::mock(TwigRepositoryInterface::class)
             ->shouldReceive('getIterator')->once()->andReturn(new ArrayIterator([]))
             ->getMock();

@@ -50,12 +50,12 @@ class PrettyPageRendererTest extends TestCase
         ];
 
         // Mocks dependencies
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('error.pages.status')->once()->andReturn('pages/error/%d.html.twig')
             ->getMock();
 
-        /** @var Twig $twig */
+        /** @var Mockery\MockInterface&Twig $twig */
         $twig = Mockery::mock(Twig::class)
             ->shouldReceive('fetch')->withArgs([
                 'pages/error/234.html.twig',
@@ -96,10 +96,10 @@ class PrettyPageRendererTest extends TestCase
         ];
 
         // Mocks dependencies
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class);
 
-        /** @var Twig $twig */
+        /** @var Mockery\MockInterface&Twig $twig */
         $twig = Mockery::mock(Twig::class)
             ->shouldReceive('fetch')->withArgs([
                 'pages/error/warning.html.twig',
@@ -140,13 +140,13 @@ class PrettyPageRendererTest extends TestCase
         ];
 
         // Mocks dependencies
-        /** @var Config $config */
+        /** @var Mockery\MockInterface&Config $config */
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('error.pages.status')->once()->andReturn('pages/error/%d.html.twig')
             ->shouldReceive('get')->with('error.pages.error')->once()->andReturn('pages/error/error.html.twig')
             ->getMock();
 
-        /** @var Twig $twig */
+        /** @var Mockery\MockInterface&Twig $twig */
         $twig = Mockery::mock(Twig::class)
             ->shouldReceive('fetch')->withArgs(['pages/error/234.html.twig', $payload])->once()->andThrow(LoaderError::class)
             ->shouldReceive('fetch')->withArgs(['pages/error/error.html.twig', $payload])->once()->andReturn('body')

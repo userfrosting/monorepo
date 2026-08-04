@@ -45,19 +45,19 @@ class SprinkleMigrationLocatorTest extends TestCase
             ->shouldReceive('get')->with($mockMigration2::class)->andReturn($mockMigration2)
             ->getMock();
 
-        /** @var SeedRecipe */
+        /** @var Mockery\MockInterface&MigrationRecipe */
         $sprinkle1 = Mockery::mock(MigrationRecipe::class)
             ->shouldReceive('getMigrations')->andReturn([
                 $mockMigration1::class,
                 $mockMigration2::class,
             ])->getMock();
 
-        /** @var SprinkleRecipe */
+        /** @var Mockery\MockInterface&SprinkleRecipe */
         $sprinkle2 = Mockery::mock(SprinkleRecipe::class)
             ->shouldReceive('getMigrations')->andReturn([$mockMigration1::class])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $manager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([
                 $sprinkle1,
@@ -74,17 +74,17 @@ class SprinkleMigrationLocatorTest extends TestCase
 
     public function testGetAllWithCommandNotFound(): void
     {
-        /** @var MigrationRecipe */
+        /** @var Mockery\MockInterface&MigrationRecipe */
         $sprinkle = Mockery::mock(MigrationRecipe::class)
             ->shouldReceive('getMigrations')->andReturn(['/Not/Command'])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class);
 
         $repository = new SprinkleMigrationLocator($sprinkleManager, $ci);
@@ -98,17 +98,17 @@ class SprinkleMigrationLocatorTest extends TestCase
     {
         $migration = Mockery::mock(stdClass::class);
 
-        /** @var MigrationRecipe */
+        /** @var Mockery\MockInterface&MigrationRecipe */
         $sprinkle = Mockery::mock(MigrationRecipe::class)
             ->shouldReceive('getMigrations')->andReturn([$migration::class])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($migration::class)->andReturn($migration)
             ->getMock();

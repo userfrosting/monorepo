@@ -30,7 +30,7 @@ class DeterminesContentTypeTraitTest extends TestCase
     {
         $stub = new DeterminesContentTypeTraitStub();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getHeaderLine')->once()->with('Accept')->andReturn('text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
             ->getMock();
@@ -44,7 +44,7 @@ class DeterminesContentTypeTraitTest extends TestCase
     {
         $stub = new DeterminesContentTypeTraitStub();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getHeaderLine')->once()->with('Accept')->andReturn('text/plain,application/html,application/xml')
             ->getMock();
@@ -58,7 +58,7 @@ class DeterminesContentTypeTraitTest extends TestCase
     {
         $stub = new DeterminesContentTypeTraitStub();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getHeaderLine')->once()->with('Accept')->andReturn('application/jpeg')
             ->getMock();
@@ -72,7 +72,7 @@ class DeterminesContentTypeTraitTest extends TestCase
     {
         $stub = new DeterminesContentTypeTraitStub();
 
-        /** @var ServerRequestInterface */
+        /** @var Mockery\MockInterface&ServerRequestInterface */
         $request = Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getHeaderLine')->once()->with('Accept')->andReturn('application/xhtml+xml')
             ->getMock();

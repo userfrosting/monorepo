@@ -35,7 +35,7 @@ class SetupCommandTest extends TestCase
     public function testBaseCommand(): void
     {
         // Setup services mock. Command will be set by SetupCommandEvent
-        /** @var ListenerProviderInterface */
+        /** @var Mockery\MockInterface&ListenerProviderInterface */
         $listener = Mockery::mock(ListenerProviderInterface::class)
             ->shouldReceive('getListenersForEvent')->andReturn([new SetupCommandListenerStub()])
             ->getMock();

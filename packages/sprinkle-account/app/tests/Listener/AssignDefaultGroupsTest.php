@@ -92,7 +92,7 @@ class AssignDefaultGroupsTest extends AccountTestCase
     public function testDefaultGroupException(): void
     {
         // Create a user
-        /** @var User */
+        /** @var Mockery\MockInterface&User */
         $user = Mockery::mock(User::class);
 
         /** @var Config */

@@ -30,17 +30,17 @@ class SprinkleRoutesRepositoryTest extends TestCase
     {
         $route = Mockery::mock(RouteDefinitionInterface::class);
 
-        /** @var SprinkleRecipe */
+        /** @var Mockery\MockInterface&SprinkleRecipe */
         $sprinkle = Mockery::mock(SprinkleRecipe::class)
             ->shouldReceive('getRoutes')->andReturn([$route::class])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($route::class)->andReturn($route)
             ->getMock();
@@ -54,17 +54,17 @@ class SprinkleRoutesRepositoryTest extends TestCase
 
     public function testGetAllWithCommandNotFound(): void
     {
-        /** @var SprinkleRecipe */
+        /** @var Mockery\MockInterface&SprinkleRecipe */
         $sprinkle = Mockery::mock(SprinkleRecipe::class)
             ->shouldReceive('getRoutes')->andReturn(['/Not/RouteDefinitionInterface'])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class);
 
         $repository = new SprinkleRoutesRepository($sprinkleManager, $ci);
@@ -78,17 +78,17 @@ class SprinkleRoutesRepositoryTest extends TestCase
     {
         $route = Mockery::mock(stdClass::class);
 
-        /** @var SprinkleRecipe */
+        /** @var Mockery\MockInterface&SprinkleRecipe */
         $sprinkle = Mockery::mock(SprinkleRecipe::class)
             ->shouldReceive('getRoutes')->andReturn([$route::class])
             ->getMock();
 
-        /** @var SprinkleManager */
+        /** @var Mockery\MockInterface&SprinkleManager */
         $sprinkleManager = Mockery::mock(SprinkleManager::class)
             ->shouldReceive('getSprinkles')->andReturn([$sprinkle])
             ->getMock();
 
-        /** @var ContainerInterface */
+        /** @var Mockery\MockInterface&ContainerInterface */
         $ci = Mockery::mock(ContainerInterface::class)
             ->shouldReceive('get')->with($route::class)->andReturn($route)
             ->getMock();

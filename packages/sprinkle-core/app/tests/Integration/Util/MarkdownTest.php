@@ -37,28 +37,28 @@ class MarkdownTest extends CoreTestCase
         $frontMatter = [];
         $config = ['name' => 'TestSite'];
 
-        /** @var ResourceInterface */
+        /** @var Mockery\MockInterface&ResourceInterface */
         $mockResource = Mockery::mock(ResourceInterface::class)
             ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . "/data/{$file}.md")
             ->getMock();
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
             ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn($mockResource)
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $mockConfig = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('site', [])->once()->andReturn($config)
             ->getMock();
 
-        /** @var Translator */
+        /** @var Mockery\MockInterface&Translator */
         $mockTranslator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')->with($markdownContent, ['site' => $config])->once()->andReturn($markdownContent)
             ->getMock();
 
-        /** @var SiteLocaleInterface */
+        /** @var Mockery\MockInterface&SiteLocaleInterface */
         $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
@@ -86,29 +86,29 @@ class MarkdownTest extends CoreTestCase
         $markdownContent = '<p>Lorem <strong>ipsum</strong> dolor</p>' . PHP_EOL;
         $config = ['name' => 'TestSite'];
 
-        /** @var ResourceInterface */
+        /** @var Mockery\MockInterface&ResourceInterface */
         $mockResource = Mockery::mock(ResourceInterface::class)
             ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . "/data/{$file}.md")
             ->getMock();
 
         // Input "About" is normalized to "about" before lookup, exact match succeeds.
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
             ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn($mockResource)
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $mockConfig = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('site', [])->once()->andReturn($config)
             ->getMock();
 
-        /** @var Translator */
+        /** @var Mockery\MockInterface&Translator */
         $mockTranslator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')->with($markdownContent, ['site' => $config])->once()->andReturn($markdownContent)
             ->getMock();
 
-        /** @var SiteLocaleInterface */
+        /** @var Mockery\MockInterface&SiteLocaleInterface */
         $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
@@ -135,31 +135,31 @@ class MarkdownTest extends CoreTestCase
         $markdownContent = '<p>Terms</p>' . PHP_EOL;
         $config = ['name' => 'TestSite'];
 
-        /** @var ResourceInterface */
+        /** @var Mockery\MockInterface&ResourceInterface */
         $mockResource = Mockery::mock(ResourceInterface::class)
             ->shouldReceive('getBasename')->once()->andReturn('Tos.md') // file on disk has uppercase
             ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . '/data/about.md') // reuse existing file
             ->getMock();
 
         // Exact match fails (file is "Tos.md" not "tos.md"), fallback via listResources.
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
             ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn(null)
             ->shouldReceive('listResources')->with('markdown://', true)->once()->andReturn([$mockResource])
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $mockConfig = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('site', [])->once()->andReturn($config)
             ->getMock();
 
-        /** @var Translator */
+        /** @var Mockery\MockInterface&Translator */
         $mockTranslator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')->once()->andReturn($markdownContent)
             ->getMock();
 
-        /** @var SiteLocaleInterface */
+        /** @var Mockery\MockInterface&SiteLocaleInterface */
         $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
@@ -187,37 +187,37 @@ class MarkdownTest extends CoreTestCase
         $markdownContent = '<p>Lorem <strong>ipsum</strong> dolor</p>' . PHP_EOL;
         $config = ['name' => 'TestSite'];
 
-        /** @var ResourceInterface */
+        /** @var Mockery\MockInterface&ResourceInterface */
         $defaultResource = Mockery::mock(ResourceInterface::class)
             ->shouldReceive('getBasename')->once()->andReturn('Tos.md')
             ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . '/data/notexistingfile.md')
             ->getMock();
 
-        /** @var ResourceInterface */
+        /** @var Mockery\MockInterface&ResourceInterface */
         $localizedResource = Mockery::mock(ResourceInterface::class)
             ->shouldReceive('getBasename')->once()->andReturn('Tos.fr.md')
             ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . '/data/about.md')
             ->getMock();
 
         // Exact match fails, fallback scan finds both; localized match should win.
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
             ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn(null)
             ->shouldReceive('listResources')->with('markdown://', true)->once()->andReturn([$defaultResource, $localizedResource])
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $mockConfig = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('site', [])->once()->andReturn($config)
             ->getMock();
 
-        /** @var Translator */
+        /** @var Mockery\MockInterface&Translator */
         $mockTranslator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')->with($markdownContent, ['site' => $config])->once()->andReturn($markdownContent)
             ->getMock();
 
-        /** @var SiteLocaleInterface */
+        /** @var Mockery\MockInterface&SiteLocaleInterface */
         $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
@@ -247,28 +247,28 @@ class MarkdownTest extends CoreTestCase
         ];
         $config = ['name' => 'TestSite'];
 
-        /** @var ResourceInterface */
+        /** @var Mockery\MockInterface&ResourceInterface */
         $mockResource = Mockery::mock(ResourceInterface::class)
             ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . "/data/{$file}.{$locale}.md")
             ->getMock();
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn($mockResource)
             ->shouldNotReceive('getResource')->with("markdown://{$file}.md")
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $mockConfig = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('site', [])->once()->andReturn($config)
             ->getMock();
 
-        /** @var Translator */
+        /** @var Mockery\MockInterface&Translator */
         $mockTranslator = Mockery::mock(Translator::class)
             ->shouldReceive('translate')->with($markdownContent, ['site' => $config])->once()->andReturn($markdownContent)
             ->getMock();
 
-        /** @var SiteLocaleInterface */
+        /** @var Mockery\MockInterface&SiteLocaleInterface */
         $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
@@ -294,20 +294,20 @@ class MarkdownTest extends CoreTestCase
         $file = 'about';
         $locale = 'en_US';
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
             ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn(null)
             ->shouldReceive('listResources')->with('markdown://', true)->once()->andReturn([])
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $mockConfig = Mockery::mock(Config::class);
 
-        /** @var Translator */
+        /** @var Mockery\MockInterface&Translator */
         $mockTranslator = Mockery::mock(Translator::class);
 
-        /** @var SiteLocaleInterface */
+        /** @var Mockery\MockInterface&SiteLocaleInterface */
         $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
@@ -332,28 +332,28 @@ class MarkdownTest extends CoreTestCase
         $file = 'notexistingfile';
         $locale = 'en_US';
 
-        /** @var ResourceInterface */
+        /** @var Mockery\MockInterface&ResourceInterface */
         $mockResource = Mockery::mock(ResourceInterface::class)
             ->shouldReceive('getAbsolutePath')->once()->andReturn(__DIR__ . "/data/{$file}.md")
             ->getMock();
 
-        /** @var ResourceLocatorInterface */
+        /** @var Mockery\MockInterface&ResourceLocatorInterface */
         $mockLocator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('getResource')->with("markdown://{$file}.{$locale}.md")->once()->andReturn(null)
             ->shouldReceive('getResource')->with("markdown://{$file}.md")->once()->andReturn($mockResource)
             ->getMock();
 
-        /** @var Config */
+        /** @var Mockery\MockInterface&Config */
         $mockConfig = Mockery::mock(Config::class)
             ->shouldNotReceive('get')
             ->getMock();
 
-        /** @var Translator */
+        /** @var Mockery\MockInterface&Translator */
         $mockTranslator = Mockery::mock(Translator::class)
             ->shouldNotReceive('translate')
             ->getMock();
 
-        /** @var SiteLocaleInterface */
+        /** @var Mockery\MockInterface&SiteLocaleInterface */
         $mockSiteLocale = Mockery::mock(SiteLocaleInterface::class)
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();

@@ -59,7 +59,7 @@ class DictionaryTest extends TestCase
             ->getMock();
 
         // Prepare mock Locator - Return no file
-        /** @var ResourceLocator */
+        /** @var Mockery\MockInterface&ResourceLocator */
         $locator = Mockery::mock(ResourceLocator::class)
             ->shouldReceive('listResources')->with('locale://aa_bb', true, false)->andReturn([])
             ->getMock();
@@ -82,7 +82,7 @@ class DictionaryTest extends TestCase
     public function testSetUri(): void
     {
         // Prepare mocked locale - aa_bb
-        /** @var Locale */
+        /** @var Mockery\MockInterface&Locale */
         $locale = Mockery::mock(Locale::class)
             ->shouldReceive('getDependentLocales')->andReturn([])
             ->shouldReceive('getDependentLocalesIdentifier')->andReturn([])
@@ -90,13 +90,13 @@ class DictionaryTest extends TestCase
             ->getMock();
 
         // Prepare mock Locator - Return no file
-        /** @var ResourceLocator */
+        /** @var Mockery\MockInterface&ResourceLocator */
         $locator = Mockery::mock(ResourceLocator::class)
             ->shouldReceive('listResources')->with('foo://aa_bb', true, false)->andReturn([])
             ->getMock();
 
         // Prepare mock FileLoader - No files, so loader shouldn't load anything
-        /** @var ArrayFileLoader */
+        /** @var Mockery\MockInterface&ArrayFileLoader */
         $fileLoader = Mockery::mock(ArrayFileLoader::class)
             ->shouldNotReceive('setPaths')
             ->shouldNotReceive('load')
@@ -117,7 +117,7 @@ class DictionaryTest extends TestCase
         $expectedResult = ['Foo' => 'Bar'];
 
         // Prepare mocked locale - aa_bb
-        /** @var Locale */
+        /** @var Mockery\MockInterface&Locale */
         $locale = Mockery::mock(Locale::class)
             ->shouldReceive('getDependentLocales')->andReturn([])
             ->shouldReceive('getDependentLocalesIdentifier')->andReturn([])
@@ -125,14 +125,14 @@ class DictionaryTest extends TestCase
             ->getMock();
 
         // Prepare mock Resource - File `Foo/Bar/File1.php`
-        /** @var \UserFrosting\UniformResourceLocator\Resource */
+        /** @var Mockery\MockInterface&\UserFrosting\UniformResourceLocator\Resource */
         $file = Mockery::mock(Resource::class)
             ->shouldReceive('getExtension')->andReturn('php')
             ->shouldReceive('__toString')->andReturn('Foo/Bar/File1.php')
             ->getMock();
 
         // Prepare mock Locator - Return the file
-        /** @var ResourceLocator */
+        /** @var Mockery\MockInterface&ResourceLocator */
         $locator = Mockery::mock(ResourceLocator::class)
             ->shouldReceive('listResources')->with('locale://aa_bb', true, false)->andReturn([$file])
             ->getMock();
@@ -189,7 +189,7 @@ class DictionaryTest extends TestCase
             ->getMock();
 
         // Prepare mock Locator - Return the file
-        /** @var ResourceLocator */
+        /** @var Mockery\MockInterface&ResourceLocator */
         $locator = Mockery::mock(ResourceLocator::class)
             ->shouldReceive('listResources')->with('locale://aa_bb', true, false)->once()->andReturn([$file1, $file2, $file3])
             ->getMock();
