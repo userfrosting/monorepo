@@ -161,12 +161,12 @@ class SetupMailCommand extends Command
     protected function askForMailMethod(InputInterface $input): array
     {
         // If the user defined any of the command argument, skip right to SMTP method
-        if ($input->getOption('smtp_host') == true ||
-            $input->getOption('smtp_user') == true ||
-            $input->getOption('smtp_password') == true ||
-            $input->getOption('smtp_port') == true ||
-            $input->getOption('smtp_auth') == true ||
-            $input->getOption('smtp_secure') == true
+        if (($input->getOption('smtp_host') !== null && $input->getOption('smtp_host') !== '') ||
+            ($input->getOption('smtp_user') !== null && $input->getOption('smtp_user') !== '') ||
+            ($input->getOption('smtp_password') !== null && $input->getOption('smtp_password') !== '') ||
+            ($input->getOption('smtp_port') !== null && $input->getOption('smtp_port') !== '') ||
+            ($input->getOption('smtp_auth') !== null && $input->getOption('smtp_auth') !== '') ||
+            ($input->getOption('smtp_secure') !== null && $input->getOption('smtp_secure') !== '')
         ) {
             return $this->askForSmtp($input);
         }
@@ -209,18 +209,18 @@ class SetupMailCommand extends Command
         $secure = $input->getOption('smtp_secure');
 
         // Validate options, if not set, ask for them// Ask for the smtp values now
-        $host = ($host == true) ? $host : $this->io->ask('SMTP Server Host', 'host.example.com');
-        $user = ($user == true) ? $user : $this->io->ask('SMTP Server User', 'relay@example.com');
-        $password = ($password == true) ? $password : $this->io->askHidden('SMTP Server Password', function ($password) {
+        $host = ($host !== null && $host !== '') ? $host : $this->io->ask('SMTP Server Host', 'host.example.com');
+        $user = ($user !== null && $user !== '') ? $user : $this->io->ask('SMTP Server User', 'relay@example.com');
+        $password = ($password !== null && $password !== '') ? $password : $this->io->askHidden('SMTP Server Password', function ($password) {
             // Use custom validator to accept empty password
             return $password;
         });
-        $port = ($port == true) ? $port : $this->io->ask('SMTP Server Port', '587');
-        $auth = ($auth == true) ? $auth : $this->io->confirm('SMTP Server Authentication', true);
-        $secure = ($secure == true) ? $secure : $this->io->choice('SMTP Server Security type', ['tls', 'ssl', 'Other...'], 'tls');
+        $port = ($port !== null && $port !== '') ? $port : $this->io->ask('SMTP Server Port', '587');
+        $auth = ($auth !== null && $auth !== '') ? $auth : $this->io->confirm('SMTP Server Authentication', true);
+        $secure = ($secure !== null && $secure !== '') ? $secure : $this->io->choice('SMTP Server Security type', ['tls', 'ssl', 'Other...'], 'tls');
 
         // Ask for custom input if 'other' was chosen
-        if ($secure == 'Other...') {
+        if ($secure === 'Other...') {
             $secure = $this->io->ask('Enter custom SMTP Server Security type');
         }
 
@@ -230,7 +230,7 @@ class SetupMailCommand extends Command
             'SMTP_USER'     => strval($user),
             'SMTP_PASSWORD' => strval($password),
             'SMTP_PORT'     => strval($port),
-            'SMTP_AUTH'     => ($auth == true) ? 'true' : 'false',
+            'SMTP_AUTH'     => ((bool) $auth) ? 'true' : 'false',
             'SMTP_SECURE'   => strval($secure),
         ];
     }
@@ -373,13 +373,13 @@ class SetupMailCommand extends Command
             'SMTP_SECURE'   => ($this->dotenvEditor->keyExists('SMTP_SECURE')) ? $this->dotenvEditor->getValue('SMTP_SECURE') : $this->config->get('mail.secure'),
         ];
 
-        return $this->config->get('mail.mailer') != $env['MAIL_MAILER'] ||
-            $this->config->get('mail.host') != $env['SMTP_HOST'] ||
-            $this->config->get('mail.username') != $env['SMTP_USER'] ||
-            $this->config->get('mail.password') != $env['SMTP_PASSWORD'] ||
-            $this->config->get('mail.port') != $env['SMTP_PORT'] ||
-            $this->config->get('mail.auth') != $env['SMTP_AUTH'] ||
-            $this->config->get('mail.secure') != $env['SMTP_SECURE'];
+        return (string) $this->config->get('mail.mailer') !== (string) $env['MAIL_MAILER'] ||
+            (string) $this->config->get('mail.host') !== (string) $env['SMTP_HOST'] ||
+            (string) $this->config->get('mail.username') !== (string) $env['SMTP_USER'] ||
+            (string) $this->config->get('mail.password') !== (string) $env['SMTP_PASSWORD'] ||
+            (string) $this->config->get('mail.port') !== (string) $env['SMTP_PORT'] ||
+            (string) $this->config->get('mail.auth') !== (string) $env['SMTP_AUTH'] ||
+            (string) $this->config->get('mail.secure') !== (string) $env['SMTP_SECURE'];
     }
 
     /**

@@ -81,7 +81,7 @@ class CsrfGuard extends Guard
         // Go through the blacklist and determine if the path and method match any of the blacklist entries.
         foreach ($csrfBlacklist as $pattern => $methods) {
             $methods = array_map('strtoupper', $methods);
-            if (in_array($method, $methods, true) && $pattern !== '' && preg_match('~' . $pattern . '~', $path) == true) {
+            if (in_array($method, $methods, true) && $pattern !== '' && preg_match('~' . $pattern . '~', $path) === 1) {
                 $isBlacklisted = true;
                 break;
             }

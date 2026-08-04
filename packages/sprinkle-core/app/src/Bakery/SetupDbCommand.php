@@ -189,15 +189,15 @@ class SetupDbCommand extends Command
         $driversList = array_column($drivers, 'name');
 
         // Ask for database type if not defined in command arguments
-        if ($args->getOption('db_driver') == true) {
-            $selectedDriver = $args->getOption('db_driver');
+        $selectedDriver = $args->getOption('db_driver');
+        if (is_string($selectedDriver) && $selectedDriver !== '') {
             $driver = array_filter($drivers, function ($value) use ($selectedDriver) {
-                return $value['driver'] == $selectedDriver;
+                return $value['driver'] === $selectedDriver;
             });
         } else {
             $selectedDriver = $this->io->choice('Database type', $driversList);
             $driver = array_filter($drivers, function ($value) use ($selectedDriver) {
-                return $value['name'] == $selectedDriver;
+                return $value['name'] === $selectedDriver;
             });
         }
 
@@ -210,7 +210,7 @@ class SetupDbCommand extends Command
         // Ask further questions based on driver
         if ($driver['driver'] === 'sqlite') {
             $path = (string) $args->getOption('db_name');
-            $path = ($path == true) ? $path : (string) $this->io->ask('Database path', $driver['defaultDBName']);
+            $path = ($path !== '') ? $path : (string) $this->io->ask('Database path', $driver['defaultDBName']);
 
             // Check if file exists, attempt to create it otherwise
             if (!file_exists($path)) {
@@ -230,20 +230,20 @@ class SetupDbCommand extends Command
             ];
         } else {
             $host = (string) $args->getOption('db_host');
-            $host = ($host == true) ? $host : (string) $this->io->ask('Hostname', 'localhost');
+            $host = ($host !== '') ? $host : (string) $this->io->ask('Hostname', 'localhost');
 
             $port = (string) $args->getOption('db_port');
-            $port = ($port == true) ? $port : (string) $this->io->ask('Port', (string) $driver['defaultPort']);
+            $port = ($port !== '') ? $port : (string) $this->io->ask('Port', (string) $driver['defaultPort']);
 
             $path = (string) $args->getOption('db_name');
-            $path = ($path == true) ? $path : (string) $this->io->ask('Database name', $driver['defaultDBName']);
+            $path = ($path !== '') ? $path : (string) $this->io->ask('Database name', $driver['defaultDBName']);
 
             $user = (string) $args->getOption('db_user');
-            $user = ($user == true) ? $user : (string) $this->io->ask('Username', 'userfrosting');
+            $user = ($user !== '') ? $user : (string) $this->io->ask('Username', 'userfrosting');
 
             // Use custom validator to accept empty password
             $password = (string) $args->getOption('db_password');
-            $password = ($password == true) ? $password : (string) $this->io->askHidden('Password', function ($password) {
+            $password = ($password !== '') ? $password : (string) $this->io->askHidden('Password', function ($password) {
                 return $password;
             });
 

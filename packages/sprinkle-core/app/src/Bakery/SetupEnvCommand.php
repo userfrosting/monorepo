@@ -131,8 +131,9 @@ class SetupEnvCommand extends Command
     protected function askForEnv(InputInterface $args): string
     {
         // Ask for mode if not defined in command arguments
-        if ($args->getOption('mode') == true) {
-            return strval($args->getOption('mode'));
+        $mode = $args->getOption('mode');
+        if (is_string($mode) && $mode !== '') {
+            return $mode;
         } else {
             // Add "other" option so user can add their own mode
             $modes = array_merge($this->modes, ['Other...']);

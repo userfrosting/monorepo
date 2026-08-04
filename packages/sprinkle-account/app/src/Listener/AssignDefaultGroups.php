@@ -28,10 +28,10 @@ class AssignDefaultGroups
     public function __invoke(UserCreatedEvent $event): void
     {
         // TODO : Default group should be defined in the DB instead of config.
-        $defaultGroupSlug = $this->config->get('site.registration.user_defaults.group');
+        $defaultGroupSlug = $this->config->getString('site.registration.user_defaults.group', '');
 
         // Stop if default group is null
-        if ($defaultGroupSlug == false) {
+        if ($defaultGroupSlug === '') {
             return;
         }
 
@@ -39,7 +39,7 @@ class AssignDefaultGroups
         /** @var GroupInterface|null */
         $defaultGroup = $this->groupModel->where('slug', $defaultGroupSlug)->first();
         if ($defaultGroup === null) {
-            $e = new DefaultGroupException();
+            $e = new DefaultGroupException("Default group with slug '{$defaultGroupSlug}' not found.");
             $e->setSlug(strval($defaultGroupSlug));
 
             throw $e;

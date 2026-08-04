@@ -42,7 +42,7 @@ final class JsonRenderer implements ErrorRendererInterface
             $error['request'] = $this->renderRequest($request);
 
             // Add trace
-            if (($trace = $exception->getTrace()) == true) {
+            if (($trace = $exception->getTrace()) !== []) {
                 $error['trace'] = $trace;
             }
 
