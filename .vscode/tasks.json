@@ -102,7 +102,7 @@
                     "XDEBUG_CONFIG": "idekey=VSCODE"
                 }
             },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit",
+            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --stop-on-failure --stop-on-error",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -116,7 +116,7 @@
         {
             "label": "PHPStan",
             "type": "shell",
-            "command": "vendor/bin/phpstan analyse"
+            "command": "printf '\\33c\\e[3J' && vendor/bin/phpstan analyse"
         },
         {
             "label": "Update PHP Headers",
