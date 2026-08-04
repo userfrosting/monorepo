@@ -150,7 +150,7 @@ class LoginAction
 
         // If credential is an email address, but email login is not enabled, raise an error.
         // Note that this error counts towards the throttling limit.
-        if ($isEmail == true && $this->config->get('site.login.enable_email') === false) {
+        if ($isEmail !== false && $this->config->get('site.login.enable_email') === false) {
             $this->throttler->logEvent('sign_in_attempt', [
                 'user_identifier' => $userIdentifier,
             ]);
@@ -161,7 +161,7 @@ class LoginAction
 
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
         try {
-            $currentUser = $this->authenticator->attempt($isEmail == true ? 'email' : 'user_name', $userIdentifier, $data['password'], $data['rememberme'] == true);
+            $currentUser = $this->authenticator->attempt($isEmail !== false ? 'email' : 'user_name', $userIdentifier, $data['password'], $data['rememberme'] === true);
         } catch (AccountException $e) {
             // only let unsuccessful logins count toward the throttling limit
             $this->throttler->logEvent('sign_in_attempt', [

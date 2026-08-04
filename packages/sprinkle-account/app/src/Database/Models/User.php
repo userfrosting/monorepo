@@ -317,7 +317,7 @@ class User extends Model implements UserInterface
         $masterId = intval($config->get('reserved_user_ids.master'));
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        return $this->id == $masterId;
+        return $this->id === $masterId;
     }
 
     /**

@@ -79,10 +79,10 @@ class Util
 
         $len = strlen($num);
 
-        if ($len == 7) {
+        if ($len === 7) {
             /** @var string */
             $num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num);
-        } elseif ($len == 10) {
+        } elseif ($len === 10) {
             /** @var string */
             $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
         }

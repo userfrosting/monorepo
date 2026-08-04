@@ -70,7 +70,7 @@ class MigrateRollbackCommand extends Command
 
         // Set connection to the selected database
         $database = $input->getOption('database');
-        if ($database != '') {
+        if ($database !== '') {
             $this->io->info("Running {$this->getName()} with `$database` database connection");
             $this->db->getDatabaseManager()->setDefaultConnection($database);
         }

@@ -92,7 +92,7 @@ class Throttler
                 // If a field is not specified in the logged data, or it doesn't match the value we're searching for,
                 // then filter out this event from the collection.
                 foreach ($requestData as $name => $value) {
-                    if (!isset($data->$name) || ($data->$name != $value)) {
+                    if (!isset($data->$name) || ($data->$name !== $value)) {
                         return false;
                     }
                 }

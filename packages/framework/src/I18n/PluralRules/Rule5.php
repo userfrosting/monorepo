@@ -24,11 +24,11 @@ final class Rule5 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        if ($number == 1) {
+        if ($number === 1) {
             return 1;
         }
 
-        if ($number == 0 || (($number % 100 > 0) && ($number % 100 < 20))) {
+        if ($number === 0 || (($number % 100 > 0) && ($number % 100 < 20))) {
             return 2;
         }
 

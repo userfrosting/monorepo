@@ -63,7 +63,7 @@ class MigrateCleanCommand extends Command
         $force = (bool) $input->getOption('force');
 
         // Set connection to the selected database
-        if ($database != '') {
+        if ($database !== '') {
             $this->io->info("Running {$this->getName()} with `$database` database connection");
             $this->db->getDatabaseManager()->setDefaultConnection($database);
         }

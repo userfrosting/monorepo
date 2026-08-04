@@ -57,7 +57,7 @@ class MigrateResetHardCommand extends Command
         $database = strval($input->getOption('database'));
 
         // Set connection to the selected database
-        if ($database != '') {
+        if ($database !== '') {
             $this->io->info("Running {$this->getName()} with `$database` database connection");
             $this->db->getDatabaseManager()->setDefaultConnection($database);
         }

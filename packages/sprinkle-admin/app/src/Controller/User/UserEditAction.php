@@ -148,7 +148,7 @@ class UserEditAction
         }
 
         // Unset group relation if group_id is 0
-        if (isset($data['group_id']) && $data['group_id'] == 0) {
+        if (isset($data['group_id']) && $data['group_id'] === 0) {
             $data['group_id'] = null;
         }
 

@@ -24,7 +24,7 @@ final class Rule7 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        if (($number % 10 == 1) && ($number % 100 != 11)) {
+        if (($number % 10 === 1) && ($number % 100 !== 11)) {
             return 1;
         }
 

@@ -268,7 +268,7 @@ class DefaultPermissions implements SeedInterface
 
             // Don't save if already exist, use existing permission reference
             // otherwise to re-sync permissions and roles
-            if ($existingPermission == null) {
+            if ($existingPermission === null) {
                 $permission->save();
             } else {
                 $permissions[$slug] = $existingPermission;

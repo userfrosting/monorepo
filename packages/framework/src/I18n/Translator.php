@@ -243,7 +243,7 @@ class Translator
         // Bypass the rules for a value of "0". Instead of returning the correct
         // plural form (>= 1), we force return the "0" form, which can used to
         // display "0 users" as "No users".
-        if ($pluralValue == 0 && isset($messageArray[0])) {
+        if ($pluralValue === 0 && isset($messageArray[0])) {
             return 0;
         }
 

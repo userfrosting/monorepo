@@ -25,11 +25,11 @@ final class Rule4 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        if ($number == 1 || $number == 11) {
+        if ($number === 1 || $number === 11) {
             return 1;
         }
 
-        if ($number == 2 || $number == 12) {
+        if ($number === 2 || $number === 12) {
             return 2;
         }
 

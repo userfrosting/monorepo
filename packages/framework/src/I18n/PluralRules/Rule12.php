@@ -28,11 +28,11 @@ final class Rule12 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        if ($number == 1) {
+        if ($number === 1) {
             return 1;
         }
 
-        if ($number == 2) {
+        if ($number === 2) {
             return 2;
         }
 
@@ -44,7 +44,7 @@ final class Rule12 implements RuleInterface
             return 4;
         }
 
-        if ($number != 0) {
+        if ($number !== 0) {
             return 5;
         }
 

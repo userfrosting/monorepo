@@ -29,7 +29,7 @@ class DefaultGroups implements SeedInterface
 
         foreach ($groups as $group) {
             // Don't save if already exist
-            if (Group::where('slug', $group->slug)->first() == null) {
+            if (Group::where('slug', $group->slug)->first() === null) {
                 $group->save();
             }
         }

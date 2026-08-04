@@ -32,7 +32,7 @@ class Util
             return '';
         }
 
-        if (substr($str, 0, strlen($prefix)) == $prefix) {
+        if (substr($str, 0, strlen($prefix)) === $prefix) {
             $str = substr($str, strlen($prefix));
         }
 
@@ -63,7 +63,7 @@ class Util
         $result = false;
         foreach ((array) $patterns as $pattern) {
             $currMatches = [];
-            if ($pattern != '' && preg_match($delimiter . $pattern . $delimiter, $subject, $currMatches, $flags, $offset) === 1) {
+            if ($pattern !== '' && preg_match($delimiter . $pattern . $delimiter, $subject, $currMatches, $flags, $offset) === 1) {
                 $result = true;
                 $matches[$pattern] = $currMatches;
             }

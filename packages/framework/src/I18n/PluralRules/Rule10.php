@@ -25,15 +25,15 @@ final class Rule10 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        if ($number % 100 == 1) {
+        if ($number % 100 === 1) {
             return 1;
         }
 
-        if ($number % 100 == 2) {
+        if ($number % 100 === 2) {
             return 2;
         }
 
-        if (($number % 100 == 3) || ($number % 100 == 4)) {
+        if (($number % 100 === 3) || ($number % 100 === 4)) {
             return 3;
         }
 

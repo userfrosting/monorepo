@@ -156,7 +156,7 @@ class Dictionary extends Repository implements DictionaryInterface
     {
         // @phpstan-ignore-next-line False positive. ResourceInterface is Stringable.
         return array_filter($files, function ($file) {
-            if ($file->getExtension() == 'php') {
+            if ($file->getExtension() === 'php') {
                 return (string) $file;
             }
         });

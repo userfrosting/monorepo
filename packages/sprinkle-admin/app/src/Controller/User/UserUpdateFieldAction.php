@@ -164,7 +164,7 @@ class UserUpdateFieldAction
         if ($fieldName === 'flag_enabled') {
             // Check that we are not disabling the master account
             if (
-                $user->id == $this->config->get('reserved_user_ids.master') &&
+                $user->id === $this->config->getInt('reserved_user_ids.master') &&
                 $fieldValue === '0'
             ) {
                 $e = new AccountException();
@@ -207,7 +207,7 @@ class UserUpdateFieldAction
             $message->message = 'ENABLE_SUCCESSFUL';
         } elseif ($fieldName === 'flag_enabled') {
             $message->message = 'DISABLE_SUCCESSFUL';
-        } elseif ($fieldName == 'flag_verified') {
+        } elseif ($fieldName === 'flag_verified') {
             $message->message = 'MANUALLY_ACTIVATED';
         } else {
             $message->message = 'DETAILS_UPDATED';

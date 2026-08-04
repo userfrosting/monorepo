@@ -218,7 +218,7 @@ abstract class Sprunje
         $format = $this->options['format'];
 
         // TODO : This should be split into two methods, one for JSON and one for CSV. This would allow to add more format later.
-        if ($format == 'csv') {
+        if ($format === 'csv') {
             // Prepare response
             $response = $response->withHeader('Content-Disposition', "attachment;filename={$this->name}.csv");
             $response = $response->withHeader('Content-Type', 'text/csv; charset=utf-8');
@@ -394,7 +394,7 @@ abstract class Sprunje
     {
         foreach ($this->options['filters'] as $name => $value) {
             // Check that this filter is allowed
-            if (($name != '_all') && !in_array($name, $this->getFilterable(), true)) {
+            if (($name !== '_all') && !in_array($name, $this->getFilterable(), true)) {
                 $e = new SprunjeException("Bad filter: $name");
                 $message = new UserMessage('VALIDATE.SPRUNJE.BAD_FILTER', ['name' => $name]);
                 $e->setDescription($message);
@@ -588,7 +588,7 @@ abstract class Sprunje
     protected function filterAll(EloquentBuilderContract|QueryBuilderContract $query, mixed $value): static
     {
         foreach ($this->getFilterable() as $name) {
-            if (Str::studly($name) != 'all' && !in_array($name, $this->excludeForAll, true)) {
+            if (Str::studly($name) !== 'all' && !in_array($name, $this->excludeForAll, true)) {
                 // Since we want to match _any_ of the fields, we wrap the field callback in a 'orWhere' callback
                 $query->orWhere(function ($fieldQuery) use ($name, $value) {
                     $this->buildFilterQuery($fieldQuery, $name, $value);

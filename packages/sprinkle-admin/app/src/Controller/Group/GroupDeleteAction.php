@@ -86,7 +86,7 @@ class GroupDeleteAction
 
         // Check that we are not deleting the default group
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        if ($group->slug == $this->config->get('site.registration.user_defaults.group')) {
+        if ($group->slug === $this->config->getString('site.registration.user_defaults.group')) {
             $e = new GroupException();
             $message = new UserMessage('GROUP.DELETE_DEFAULT', $group->toArray());
             $e->setDescription($message);

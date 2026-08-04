@@ -36,9 +36,9 @@ class Hasher implements HasherInterface
     public function getHashType(string $password): string
     {
         // If the password in the db is 65 characters long, we have an sha1-hashed password.
-        if (strlen($password) == 65) {
+        if (strlen($password) === 65) {
             return 'sha1';
-        } elseif (strlen($password) == 82) {
+        } elseif (strlen($password) === 82) {
             return 'legacy';
         }
 
@@ -71,13 +71,13 @@ class Hasher implements HasherInterface
     {
         $hashType = self::getHashType($hash);
 
-        if ($hashType == 'sha1') {
+        if ($hashType === 'sha1') {
             // Legacy UserCake passwords
             $salt = substr($hash, 0, 25);		// Extract the salt from the hash
             $inputHash = $salt . sha1($salt . $password);
 
             return hash_equals($inputHash, $hash) === true;
-        } elseif ($hashType == 'legacy') {
+        } elseif ($hashType === 'legacy') {
             // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
             // Used for manual implementation of bcrypt.
             // Note that this legacy hashing put the salt at the _end_ for some reason.

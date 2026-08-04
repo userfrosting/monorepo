@@ -49,7 +49,7 @@ final class FormValidationHtml5Adapter implements ValidationAdapterInterface
                     $validator = $validator ?? [];
 
                     // Skip messages that are for server-side use only
-                    if (isset($validator['domain']) && $validator['domain'] == 'server') {
+                    if (isset($validator['domain']) && $validator['domain'] === 'server') {
                         continue;
                     }
 

@@ -289,7 +289,7 @@ class Migrator
 
             // Remove the migration form the list, to simulate it's been
             // rollback for the next pass.
-            $migrations = array_filter($migrations, fn ($m) => $m != $migration);
+            $migrations = array_filter($migrations, fn ($m) => $m !== $migration);
         }
     }
 
@@ -309,7 +309,7 @@ class Migrator
         $pending = $this->getPending();
 
         // Don't go further if no pending migration.
-        if (count($pending) == 0) {
+        if (count($pending) === 0) {
             return [];
         }
 
@@ -359,7 +359,7 @@ class Migrator
         $pending = $this->getPending();
 
         // Don't go further if no pending migration.
-        if (count($pending) == 0) {
+        if (count($pending) === 0) {
             return [];
         }
 

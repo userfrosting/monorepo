@@ -89,7 +89,7 @@ class Captcha
      */
     public function verifyCode(string $code): bool
     {
-        return md5($code) == $this->session->get($this->key, []);
+        return md5($code) === $this->session->get($this->key, []);
     }
 
     /**

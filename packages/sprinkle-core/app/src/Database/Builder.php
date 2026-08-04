@@ -174,7 +174,7 @@ class Builder extends QueryBuilder
         $tables = [];
 
         foreach ($columns as $column) {
-            if (substr($column, -1) == '*') {
+            if (substr($column, -1) === '*') {
                 $tableName = explode('.', $column)[0];
                 if ($tableName !== '') {
                     $tables[$column] = $tableName;

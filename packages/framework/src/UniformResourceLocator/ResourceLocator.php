@@ -360,7 +360,7 @@ class ResourceLocator implements ResourceLocatorInterface
                 // Create the resource and add it to the list
                 // Handle relPath that is an absolute outside the basePath
                 // This can happen when the location has an absolute path outside the locator base path.
-                if ($fullPath == $relPath) {
+                if ($fullPath === $relPath) {
                     $resource = new Resource($directory->getStream(), $directory->getLocation(), $fullPath);
                 } else {
                     $resource = new Resource($directory->getStream(), $directory->getLocation(), $relPath, $basePath);
@@ -527,7 +527,7 @@ class ResourceLocator implements ResourceLocatorInterface
                 if ($all || $this->filesystem->exists($fullPath)) {
                     // Handle relative path that is an absolute outside the basePath
                     // This can happen when the location has an absolute path outside the locator base path.
-                    if ($fullPath == $relPath) {
+                    if ($fullPath === $relPath) {
                         $currentResource = new Resource($stream, $location, $fullPath);
                     } else {
                         $currentResource = new Resource($stream, $location, $relPath, $basePath);

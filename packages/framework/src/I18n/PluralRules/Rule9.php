@@ -24,7 +24,7 @@ final class Rule9 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        if ($number == 1) {
+        if ($number === 1) {
             return 1;
         }
 

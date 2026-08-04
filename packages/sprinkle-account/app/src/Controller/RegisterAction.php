@@ -209,7 +209,7 @@ class RegisterAction
      */
     protected function validateHoneypot(array $params): void
     {
-        if (!isset($params['spiderbro']) || $params['spiderbro'] != 'http://') {
+        if (!isset($params['spiderbro']) || $params['spiderbro'] !== 'http://') {
             throw new RegistrationException('Possible spam detected: Honey pot challenge failed.');
         }
     }

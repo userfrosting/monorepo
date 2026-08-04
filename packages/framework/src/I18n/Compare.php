@@ -108,7 +108,7 @@ class Compare
     public static function dictionariesEmptyValues(DictionaryInterface $dictionary): array
     {
         $diff = array_filter($dictionary->getFlattenDictionary(), function ($value) {
-            return $value == '';
+            return $value === '';
         });
 
         return array_keys($diff);

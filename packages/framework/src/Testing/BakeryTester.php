@@ -49,7 +49,7 @@ class BakeryTester
         $commandTester = new CommandTester($command);
 
         // Set user input
-        if (count($userInput) != 0) {
+        if (count($userInput) !== 0) {
             $commandTester->setInputs($userInput);
         }
 

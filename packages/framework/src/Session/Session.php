@@ -45,7 +45,7 @@ class Session implements ArrayAccess
     {
         $this->handler = $handler;
 
-        if ($this->status() == PHP_SESSION_NONE) {
+        if ($this->status() === PHP_SESSION_NONE) {
             session_set_save_handler($handler, true);
 
             if (isset($config['cache_limiter'])) {
@@ -86,7 +86,7 @@ class Session implements ArrayAccess
      */
     public function start(): void
     {
-        if ($this->status() == PHP_SESSION_NONE) {
+        if ($this->status() === PHP_SESSION_NONE) {
             session_start();
         }
     }
@@ -99,7 +99,7 @@ class Session implements ArrayAccess
      */
     public function destroy(bool $destroyCookie = true): void
     {
-        if ($this->status() == PHP_SESSION_NONE) {
+        if ($this->status() === PHP_SESSION_NONE) {
             return;
         }
 

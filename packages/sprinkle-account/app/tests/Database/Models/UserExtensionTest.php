@@ -218,7 +218,7 @@ class Member extends User
 
     protected function createAuxIfNotExists(): void
     {
-        if ($this->auxType != '' && is_null($this->aux)) {
+        if ($this->auxType !== '' && is_null($this->aux)) {
             $aux = new $this->auxType();
             $this->setRelation('aux', $aux);
         }

@@ -24,11 +24,11 @@ final class Rule14 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        if ($number % 10 == 1) {
+        if ($number % 10 === 1) {
             return 1;
         }
 
-        if ($number % 10 == 2) {
+        if ($number % 10 === 2) {
             return 2;
         }
 

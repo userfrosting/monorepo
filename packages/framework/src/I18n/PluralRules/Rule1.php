@@ -23,6 +23,6 @@ final class Rule1 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        return ($number == 1) ? 1 : 2;
+        return ($number === 1) ? 1 : 2;
     }
 }

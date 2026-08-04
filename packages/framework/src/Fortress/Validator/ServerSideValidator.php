@@ -83,7 +83,7 @@ class ServerSideValidator implements ServerSideValidatorInterface
             $validators = $field['validators'];
             foreach ($validators as $validatorName => $validator) {
                 // Skip messages that are for client-side use only
-                if (isset($validator['domain']) && $validator['domain'] == 'client') {
+                if (isset($validator['domain']) && $validator['domain'] === 'client') {
                     continue;
                 }
 

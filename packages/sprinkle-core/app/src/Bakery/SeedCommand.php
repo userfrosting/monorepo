@@ -80,7 +80,7 @@ class SeedCommand extends Command
         $this->io->title('Seeder');
 
         // Set connection to the selected database
-        if (is_string($database) && $database != '') {
+        if (is_string($database) && $database !== '') {
             $this->io->info("Running {$this->getName()} with `$database` database connection");
             $this->db->getDatabaseManager()->setDefaultConnection($database);
         }

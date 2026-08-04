@@ -36,7 +36,7 @@ class CustomValidatorRules
             $targetValue = strtolower($targetValue);
         }
 
-        return $value == $targetValue;
+        return $value === $targetValue;
     }
 
     /**

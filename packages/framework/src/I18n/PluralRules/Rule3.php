@@ -24,11 +24,11 @@ final class Rule3 implements RuleInterface
 {
     public static function selectPluralForm(int $number): int
     {
-        if ($number == 0) {
+        if ($number === 0) {
             return 1;
         }
 
-        if (($number % 10 == 1) && ($number % 100 != 11)) {
+        if (($number % 10 === 1) && ($number % 100 !== 11)) {
             return 2;
         }
 

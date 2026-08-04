@@ -29,7 +29,7 @@ class DefaultRoles implements SeedInterface
 
         foreach ($roles as $role) {
             // Don't save if already exist
-            if (Role::where('slug', $role->slug)->first() == null) {
+            if (Role::where('slug', $role->slug)->first() === null) {
                 $role->save();
             }
         }

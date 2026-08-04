@@ -123,11 +123,11 @@ class UserSprunje extends Sprunje
         $values = explode($this->orSeparator, $value);
         $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                if ($value == 'disabled') {
+                if ($value === 'disabled') {
                     $query->orWhere('flag_enabled', 0);
-                } elseif ($value == 'unactivated') {
+                } elseif ($value === 'unactivated') {
                     $query->orWhere('flag_verified', 0);
-                } elseif ($value == 'active') {
+                } elseif ($value === 'active') {
                     $query->orWhere(function ($query) {
                         $query->where('flag_enabled', 1)->where('flag_verified', 1);
                     });

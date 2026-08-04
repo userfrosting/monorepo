@@ -165,7 +165,7 @@ class CreateAdminUserTest extends AccountTestCase
         $result = BakeryTester::runCommand($command);
         $this->assertSame(1, $result->getStatusCode());
 
-        // Format the output to remove new lines and extra spaces added by the 
+        // Format the output to remove new lines and extra spaces added by the
         // console wrapping, so we can assert on it.
         $display = preg_replace('/\\s+/', ' ', $result->getDisplay());
         $this->assertIsString($display);

@@ -82,7 +82,7 @@ class AccessConditions implements AccessConditionsInterface
             return false;
         }
 
-        return $val1 == $val2;
+        return $val1 === $val2;
     }
 
     /**
@@ -137,7 +137,7 @@ class AccessConditions implements AccessConditionsInterface
             return false;
         }
 
-        return $user->group_id == $group_id;
+        return $user->group_id === $group_id;
     }
 
     /**
@@ -152,7 +152,7 @@ class AccessConditions implements AccessConditionsInterface
         $user_id = ($user instanceof UserInterface) ? $user->id : $user;
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        return $user_id == $this->config->get('reserved_user_ids.master');
+        return $user_id === $this->config->get('reserved_user_ids.master');
     }
 
     /**
@@ -165,7 +165,7 @@ class AccessConditions implements AccessConditionsInterface
      */
     public function subset(array $needle, array $haystack): bool
     {
-        return count($needle) == count(array_intersect($needle, $haystack));
+        return count($needle) === count(array_intersect($needle, $haystack));
     }
 
     /**
@@ -180,7 +180,7 @@ class AccessConditions implements AccessConditionsInterface
      */
     public function subset_keys(array $needle, array $haystack): bool
     {
-        return count($needle) == count(array_intersect(array_keys($needle), $haystack));
+        return count($needle) === count(array_intersect(array_keys($needle), $haystack));
     }
 
     /**
