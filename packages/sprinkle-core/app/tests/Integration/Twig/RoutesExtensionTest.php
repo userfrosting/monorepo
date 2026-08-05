@@ -23,7 +23,7 @@ class RoutesExtensionTest extends CoreTestCase
     public function testUrlFor(): void
     {
         /** @var Twig */
-        $view = $this->ci->get(Twig::class);
+        $view = $this->getService(Twig::class);
 
         $result = $view->fetchFromString("{{ urlFor('api.config') }}");
         $this->assertSame('/api/config', $result);

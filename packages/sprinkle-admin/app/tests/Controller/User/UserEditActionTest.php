@@ -86,7 +86,7 @@ class UserEditActionTest extends AdminTestCase
         $this->actAsUser($user, permissions: ['update_user_field']);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Force locale config.
         $config->set('site.registration.user_defaults.locale', 'en_US');
@@ -137,7 +137,7 @@ class UserEditActionTest extends AdminTestCase
         $userToEdit = User::factory()->create();
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('reserved_user_ids.master', $userToEdit->id);
 
         // Create request with method and url and fetch response

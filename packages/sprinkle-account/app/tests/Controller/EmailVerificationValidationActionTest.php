@@ -44,7 +44,7 @@ class EmailVerificationValidationActionTest extends AccountTestCase
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldReceive('validate')->once()->with(Mockery::any(), 'potatoCode')->andReturn(true)
             ->getMock();
-        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+        $this->getContainer()->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/verify/email', [
@@ -70,7 +70,7 @@ class EmailVerificationValidationActionTest extends AccountTestCase
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldNotReceive('validate')
             ->getMock();
-        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+        $this->getContainer()->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/verify/email', [
@@ -97,7 +97,7 @@ class EmailVerificationValidationActionTest extends AccountTestCase
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldReceive('validate')->once()->with(Mockery::any(), 'potatoCode')->andReturn(false)
             ->getMock();
-        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+        $this->getContainer()->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/verify/email', [
@@ -121,7 +121,7 @@ class EmailVerificationValidationActionTest extends AccountTestCase
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldNotReceive('validate')
             ->getMock();
-        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+        $this->getContainer()->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/verify/email');
@@ -145,13 +145,13 @@ class EmailVerificationValidationActionTest extends AccountTestCase
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldNotReceive('validate')
             ->getMock();
-        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+        $this->getContainer()->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create fake throttler
         $throttler = Mockery::mock(Throttler::class)
             ->shouldReceive('getDelay')->once()->with('account.verify.email', ['email' => $user->email])->andReturn(90)
             ->getMock();
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/verify/email', [
@@ -167,7 +167,7 @@ class EmailVerificationValidationActionTest extends AccountTestCase
     public function testVerifyForDisabledVerification(): void
     {
         // Make sure email verification is required
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.require_email_verification', false);
         $this->assertFalse($config->get('site.registration.require_email_verification'));
 
@@ -175,7 +175,7 @@ class EmailVerificationValidationActionTest extends AccountTestCase
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldNotReceive('validate')
             ->getMock();
-        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+        $this->getContainer()->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/verify/email');

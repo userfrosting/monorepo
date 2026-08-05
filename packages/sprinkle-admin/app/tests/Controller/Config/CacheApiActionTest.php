@@ -73,7 +73,7 @@ class CacheApiActionTest extends AdminTestCase
             ->shouldReceive('clearTwigCache')->once()
             ->shouldReceive('clearRouterCache')->once()
             ->getMock();
-        $this->ci->set(ClearCacheCommand::class, $clearCacheCommand);
+        $this->getContainer()->set(ClearCacheCommand::class, $clearCacheCommand);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/api/config/clear-cache');

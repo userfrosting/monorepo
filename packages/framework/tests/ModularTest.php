@@ -29,8 +29,8 @@ class ModularTest extends TestCase
      */
     public function testServiceOverwritten(): void
     {
-        $this->assertSame('blah', $this->ci->get('testMessageGenerator'));
-        $this->assertSame('bar', $this->ci->get('foo'));
+        $this->assertSame('blah', $this->getContainer()->get('testMessageGenerator'));
+        $this->assertSame('bar', $this->getContainer()->get('foo'));
     }
 }
 

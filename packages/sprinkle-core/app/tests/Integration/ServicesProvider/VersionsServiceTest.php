@@ -25,18 +25,18 @@ class VersionsServiceTest extends TestCase
 {
     public function testService(): void
     {
-        $this->assertIsString($this->ci->get('PHP_MIN_VERSION'));
-        $this->assertIsString($this->ci->get('PHP_RECOMMENDED_VERSION'));
-        $this->assertIsString($this->ci->get('NODE_MIN_VERSION'));
-        $this->assertIsString($this->ci->get('NPM_MIN_VERSION'));
+        $this->assertIsString($this->getContainer()->get('PHP_MIN_VERSION'));
+        $this->assertIsString($this->getContainer()->get('PHP_RECOMMENDED_VERSION'));
+        $this->assertIsString($this->getContainer()->get('NODE_MIN_VERSION'));
+        $this->assertIsString($this->getContainer()->get('NPM_MIN_VERSION'));
 
-        $this->assertIsString($this->ci->get('PHP_VERSION'));
-        $this->assertIsString($this->ci->get('NODE_VERSION'));
-        $this->assertIsString($this->ci->get('NPM_VERSION'));
+        $this->assertIsString($this->getContainer()->get('PHP_VERSION'));
+        $this->assertIsString($this->getContainer()->get('NODE_VERSION'));
+        $this->assertIsString($this->getContainer()->get('NPM_VERSION'));
 
-        $this->assertInstanceOf(PhpVersionValidator::class, $this->ci->get(PhpVersionValidator::class)); // @phpstan-ignore-line
-        $this->assertInstanceOf(PhpDeprecationValidator::class, $this->ci->get(PhpDeprecationValidator::class)); // @phpstan-ignore-line
-        $this->assertInstanceOf(NodeVersionValidator::class, $this->ci->get(NodeVersionValidator::class)); // @phpstan-ignore-line
-        $this->assertInstanceOf(NpmVersionValidator::class, $this->ci->get(NpmVersionValidator::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(PhpVersionValidator::class, $this->getService(PhpVersionValidator::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(PhpDeprecationValidator::class, $this->getService(PhpDeprecationValidator::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(NodeVersionValidator::class, $this->getService(NodeVersionValidator::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(NpmVersionValidator::class, $this->getService(NpmVersionValidator::class)); // @phpstan-ignore-line
     }
 }

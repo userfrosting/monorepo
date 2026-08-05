@@ -63,7 +63,7 @@ class PDOStorageTest extends AccountTestCase
         $this->testUser = $user;
 
         /** @var Capsule */
-        $capsule = $this->ci->get(Capsule::class);
+        $capsule = $this->getService(Capsule::class);
         $this->storage = new PDOStorage($capsule);
     }
 

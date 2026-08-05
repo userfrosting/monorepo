@@ -30,7 +30,7 @@ class FilesystemTest extends TestCase
         parent::setUp();
 
         // Setup test config
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('filesystems.disks.testing', [
             'driver' => 'local',
             'root'   => 'testing://',
@@ -43,7 +43,7 @@ class FilesystemTest extends TestCase
 
         // Set up the locator stream in the testing directory
         /** @var ResourceLocatorInterface */
-        $locator = $this->ci->get(ResourceLocatorInterface::class);
+        $locator = $this->getService(ResourceLocatorInterface::class);
         $locator->addStream(new ResourceStream('testing', __DIR__ . '/storage/testing', true));
     }
 
@@ -53,11 +53,11 @@ class FilesystemTest extends TestCase
     public function testService(): FilesystemAdapter
     {
         // Set the default filesystem to the testing disk
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('filesystems.default', 'testing');
 
         // Filesystem service will return an instance of FilesystemManger
-        $filesystem = $this->ci->get(FilesystemManager::class);
+        $filesystem = $this->getService(FilesystemManager::class);
 
         // Main aspect of our FilesystemManager is to adapt our config structure
         // to Laravel class we'll make sure here the forced config actually works
@@ -73,9 +73,9 @@ class FilesystemTest extends TestCase
     public function testDefaultCloud(): void
     {
         // Set the default cloud to the testing disk
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('filesystems.cloud', 'testingDriver');
-        $filesystem = $this->ci->get(FilesystemManager::class);
+        $filesystem = $this->getService(FilesystemManager::class);
         $this->assertEquals('testingDriver', $filesystem->getDefaultCloudDriver());
     }
 
@@ -139,7 +139,7 @@ class FilesystemTest extends TestCase
      */
     public function testNonExistingAdapter(): void
     {
-        $filesystemManager = $this->ci->get(FilesystemManager::class);
+        $filesystemManager = $this->getService(FilesystemManager::class);
 
         // InvalidArgumentException
         $this->expectException('InvalidArgumentException');
@@ -151,9 +151,9 @@ class FilesystemTest extends TestCase
      */
     public function testCallCustomCreator(): void
     {
-        $filesystemManager = $this->ci->get(FilesystemManager::class);
+        $filesystemManager = $this->getService(FilesystemManager::class);
         $filesystemManager->extend('localTest', function ($configService, $config) {
-            $locator = $this->ci->get(ResourceLocatorInterface::class);
+            $locator = $this->getService(ResourceLocatorInterface::class);
             $config['root'] = $locator->findResource($config['root'], all: true);
             $adapter = new LocalAdapter($config['root']); // @phpstan-ignore-line
             $filesystem = new Filesystem($adapter);

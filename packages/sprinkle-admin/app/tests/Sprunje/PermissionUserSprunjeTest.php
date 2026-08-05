@@ -77,7 +77,7 @@ class PermissionUserSprunjeTest extends AdminTestCase
     public function testBaseSprunje(): void
     {
         /** @var Translator */
-        $translator = $this->ci->get(Translator::class);
+        $translator = $this->getService(Translator::class);
         $sprunje = new PermissionUserSprunje($this->permission, $translator);
         $data = $sprunje->getArray();
 
@@ -96,7 +96,7 @@ class PermissionUserSprunjeTest extends AdminTestCase
     public function testWithPagination(): void
     {
         /** @var Translator */
-        $translator = $this->ci->get(Translator::class);
+        $translator = $this->getService(Translator::class);
         $sprunje = new PermissionUserSprunje($this->permission, $translator);
         $sprunje->setOptions([
             'size' => 1,
@@ -112,7 +112,7 @@ class PermissionUserSprunjeTest extends AdminTestCase
     public function testForFilterName(): void
     {
         /** @var Translator */
-        $translator = $this->ci->get(Translator::class);
+        $translator = $this->getService(Translator::class);
         $sprunje = new PermissionUserSprunje($this->permission, $translator);
         $sprunje->setOptions([
             'filters' => ['name' => $this->users[0]->email], // @phpstan-ignore-line
@@ -139,7 +139,7 @@ class PermissionUserSprunjeTest extends AdminTestCase
     public function testForFilterStatus(): void
     {
         /** @var Translator */
-        $translator = $this->ci->get(Translator::class);
+        $translator = $this->getService(Translator::class);
         $sprunje = new PermissionUserSprunje($this->permission, $translator);
 
         // Filter by disabled
@@ -172,7 +172,7 @@ class PermissionUserSprunjeTest extends AdminTestCase
     public function testForSortName(): void
     {
         /** @var Translator */
-        $translator = $this->ci->get(Translator::class);
+        $translator = $this->getService(Translator::class);
         $sprunje = new PermissionUserSprunje($this->permission, $translator);
 
         $sprunje->setOptions([
@@ -198,7 +198,7 @@ class PermissionUserSprunjeTest extends AdminTestCase
     public function testForSortStatus(): void
     {
         /** @var Translator */
-        $translator = $this->ci->get(Translator::class);
+        $translator = $this->getService(Translator::class);
         $sprunje = new PermissionUserSprunje($this->permission, $translator);
 
         $sprunje->setOptions([

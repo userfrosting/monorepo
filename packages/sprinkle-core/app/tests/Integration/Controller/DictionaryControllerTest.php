@@ -38,8 +38,8 @@ class DictionaryControllerTest extends CoreTestCase
         });
 
         // Set mocks in the CI
-        $this->ci->set(DictionaryInterface::class, $dictionaryMock);
-        $this->ci->set(Cache::class, $cacheMock);
+        $this->getContainer()->set(DictionaryInterface::class, $dictionaryMock);
+        $this->getContainer()->set(Cache::class, $cacheMock);
 
         // Set expectations
         $expected = [

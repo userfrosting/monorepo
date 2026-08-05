@@ -26,7 +26,7 @@ class MigrateResetHardCommandTest extends CoreTestCase
     public function tearDown(): void
     {
         // Drop table, in case test fails and table stays up.
-        $schema = $this->ci->get(Builder::class);
+        $schema = $this->getService(Builder::class);
         if ($schema->hasTable('migrate_reset_hard_command_test')) {
             $schema->drop('migrate_reset_hard_command_test');
         }
@@ -37,10 +37,10 @@ class MigrateResetHardCommandTest extends CoreTestCase
     public function testPretendHardReset(): void
     {
         // Get and run command
-        $command = $this->ci->get(MigrateResetHardCommand::class);
+        $command = $this->getService(MigrateResetHardCommand::class);
 
         // Create a table
-        $schema = $this->ci->get(Builder::class);
+        $schema = $this->getService(Builder::class);
         $this->assertFalse($schema->hasTable('migrate_reset_hard_command_test'));
         $schema->create('migrate_reset_hard_command_test', function (Blueprint $table) {
             $table->id();

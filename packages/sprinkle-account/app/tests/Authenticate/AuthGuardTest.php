@@ -38,7 +38,7 @@ class AuthGuardTest extends AccountTestCase
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('check')->once()->andReturn(true)
             ->getMock();
-        $this->ci->set(Authenticator::class, $authenticator);
+        $this->getContainer()->set(Authenticator::class, $authenticator);
 
         // Create request with method and url and fetch response
         $request = $this->createRequest('GET', '/test');
@@ -55,7 +55,7 @@ class AuthGuardTest extends AccountTestCase
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('check')->once()->andReturn(false)
             ->getMock();
-        $this->ci->set(Authenticator::class, $authenticator);
+        $this->getContainer()->set(Authenticator::class, $authenticator);
 
         // Create request with method and url and fetch response
         $request = $this->createRequest('GET', '/test');

@@ -84,7 +84,7 @@ class SprunjeTest extends CoreTestCase
 
         // Run custom migration up
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         $migration = new TestTableMigration($builder);
         $migration->up();
         $migration = new TestRelationTableMigration($builder);
@@ -98,7 +98,7 @@ class SprunjeTest extends CoreTestCase
     {
         // Run custom migration down
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         $migration = new TestTableMigration($builder);
         $migration->down();
         $migration = new TestRelationTableMigration($builder);

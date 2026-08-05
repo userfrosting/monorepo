@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Validate throttling configuration before creating throttle rules.
 
+### Changed
+- Updated the `RefreshDatabase` testing trait to use the typed application container accessor.
+
 ## [6.0.2](https://github.com/userfrosting/sprinkle-core/compare/6.0.1...6.0.2) - 2026-08-02
 
 ### Fixed

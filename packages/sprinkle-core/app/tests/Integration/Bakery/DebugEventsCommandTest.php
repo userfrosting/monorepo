@@ -28,7 +28,7 @@ class DebugEventsCommandTest extends CoreTestCase
     public function testCommand(): void
     {
         /** @var DebugEventsCommand */
-        $command = $this->ci->get(DebugEventsCommand::class);
+        $command = $this->getService(DebugEventsCommand::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(0, $result->getStatusCode());
     }

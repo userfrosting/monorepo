@@ -52,7 +52,7 @@ class ActivitySprunjeTest extends AdminTestCase
     public function testBaseSprunje(): void
     {
         /** @var ActivitySprunje */
-        $sprunje = $this->ci->get(ActivitySprunje::class);
+        $sprunje = $this->getService(ActivitySprunje::class);
         $data = $sprunje->getArray();
 
         $this->assertEquals(6, $data['count']);
@@ -64,7 +64,7 @@ class ActivitySprunjeTest extends AdminTestCase
     public function testWithPagination(): void
     {
         /** @var ActivitySprunje */
-        $sprunje = $this->ci->get(ActivitySprunje::class);
+        $sprunje = $this->getService(ActivitySprunje::class);
         $sprunje->setOptions([
             'size' => 1,
             'page' => 1, // First page is 0, so second row will be displayed.
@@ -79,7 +79,7 @@ class ActivitySprunjeTest extends AdminTestCase
     public function testWithUserSort(): void
     {
         /** @var ActivitySprunje */
-        $sprunje = $this->ci->get(ActivitySprunje::class);
+        $sprunje = $this->getService(ActivitySprunje::class);
         $sprunje->setOptions([
             'sorts' => ['user' => 'desc'],
         ]);
@@ -110,7 +110,7 @@ class ActivitySprunjeTest extends AdminTestCase
     public function testWithOccurredAtSort(): void
     {
         /** @var ActivitySprunje */
-        $sprunje = $this->ci->get(ActivitySprunje::class);
+        $sprunje = $this->getService(ActivitySprunje::class);
         $sprunje->setOptions([
             'sorts' => ['occurred_at' => 'desc'],
         ]);
@@ -131,7 +131,7 @@ class ActivitySprunjeTest extends AdminTestCase
     public function testWithMultipleSorts(): void
     {
         /** @var ActivitySprunje */
-        $sprunje = $this->ci->get(ActivitySprunje::class);
+        $sprunje = $this->getService(ActivitySprunje::class);
         $sprunje->setOptions([
             'sorts' => [
                 'occurred_at' => 'desc',
@@ -149,7 +149,7 @@ class ActivitySprunjeTest extends AdminTestCase
     public function testWithUserFilter(): void
     {
         /** @var ActivitySprunje */
-        $sprunje = $this->ci->get(ActivitySprunje::class);
+        $sprunje = $this->getService(ActivitySprunje::class);
         $sprunje->setOptions([
             'filters' => ['user' => $this->users[0]->email], // @phpstan-ignore-line
         ]);

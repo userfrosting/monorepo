@@ -27,7 +27,7 @@ class DebugTwigCommandTest extends CoreTestCase
     public function testCommand(): void
     {
         /** @var DebugTwigCommand */
-        $command = $this->ci->get(DebugTwigCommand::class);
+        $command = $this->getService(DebugTwigCommand::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(0, $result->getStatusCode());
     }

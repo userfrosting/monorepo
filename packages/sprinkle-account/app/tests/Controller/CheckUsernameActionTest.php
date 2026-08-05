@@ -89,7 +89,7 @@ class CheckUsernameActionTest extends AccountTestCase
         // Create fake throttler
         $throttler = Mockery::mock(Throttler::class);
         $throttler->shouldReceive('getDelay')->once()->with('check_username_request')->andReturn(90);
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('GET', '/account/check-username');

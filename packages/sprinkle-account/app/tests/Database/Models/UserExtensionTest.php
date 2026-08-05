@@ -50,18 +50,18 @@ class UserExtensionTest extends AccountTestCase
 
         // Run custom migration up
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         $migration = new MemberMigration($builder);
         $migration->up();
 
-        $this->ci->set(UserInterface::class, Member::class);
+        $this->getContainer()->set(UserInterface::class, Member::class);
     }
 
     protected function tearDown(): void
     {
         // Run custom migration down
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         $migration = new MemberMigration($builder);
         $migration->down();
 

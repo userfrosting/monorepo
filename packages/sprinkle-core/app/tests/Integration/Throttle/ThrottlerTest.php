@@ -106,9 +106,9 @@ class ThrottlerTest extends CoreTestCase
             ->shouldReceive('get')->with('throttles')->andReturn($data)
             ->getMock();
 
-        $this->ci->set(Config::class, $config);
+        $this->getContainer()->set(Config::class, $config);
 
-        $throttler = $this->ci->get(Throttler::class);
+        $throttler = $this->getService(Throttler::class);
         $rules = $throttler->getThrottleRules();
         $this->assertCount(2, $rules);
         $this->assertInstanceOf(ThrottleRule::class, $rules['test']);
@@ -127,10 +127,10 @@ class ThrottlerTest extends CoreTestCase
             ->shouldReceive('get')->with('throttles')->once()->andReturn($data)
             ->getMock();
 
-        $this->ci->set(Config::class, $config);
+        $this->getContainer()->set(Config::class, $config);
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->ci->get(Throttler::class);
+        $this->getService(Throttler::class);
     }
 
     /**

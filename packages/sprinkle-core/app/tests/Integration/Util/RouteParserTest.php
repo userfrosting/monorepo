@@ -37,7 +37,7 @@ class RouteParserTest extends CoreTestCase
         parent::setUp();
 
         /** @var App<\DI\Container> */
-        $app = $this->ci->get(App::class);
+        $app = $this->getService(App::class);
         $collector = $app->getRouteCollector();
         $collector->setBasePath('/Myfoo');
 
@@ -92,7 +92,7 @@ class RouteParserTest extends CoreTestCase
     public function testService(): void
     {
         /** @var RouteParserInterface */
-        $parser = $this->ci->get(RouteParserInterface::class);
+        $parser = $this->getService(RouteParserInterface::class);
 
         $this->assertSame('/api/config', $parser->relativeUrlFor('api.config'));
         $this->assertSame('/fallback', $parser->relativeUrlFor('invalid', fallbackRoute: '/fallback'));

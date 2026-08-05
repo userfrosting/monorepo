@@ -47,11 +47,11 @@ class LogoutActionTest extends AccountTestCase
 
         // We have to manually login the user first.
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $session->start();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
         $authenticator->login($user);
         $this->assertFalse($authenticator->guest());
 

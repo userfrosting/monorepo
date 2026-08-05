@@ -41,7 +41,7 @@ class ResetPasswordRequestActionTest extends AccountTestCase
             ->makePartial()
             ->shouldReceive('send')->once()
             ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
+        $this->getContainer()->set(Mailer::class, $mailer);
 
         /** @var User */
         $user = User::factory(['flag_verified' => false])->create();
@@ -64,7 +64,7 @@ class ResetPasswordRequestActionTest extends AccountTestCase
             ->makePartial()
             ->shouldNotReceive('send')
             ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
+        $this->getContainer()->set(Mailer::class, $mailer);
 
         /** @var User */
         $user = User::factory(['flag_verified' => true])->create();
@@ -73,7 +73,7 @@ class ResetPasswordRequestActionTest extends AccountTestCase
         $throttler = Mockery::mock(Throttler::class)
             ->shouldReceive('getDelay')->once()->with('account.password.reset.request', ['email' => $user->email])->andReturn(90)
             ->getMock();
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/forgot-password/request', [

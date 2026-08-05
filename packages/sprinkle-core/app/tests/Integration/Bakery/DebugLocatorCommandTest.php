@@ -27,7 +27,7 @@ class DebugLocatorCommandTest extends CoreTestCase
     public function testCommand(): void
     {
         /** @var DebugLocatorCommand */
-        $command = $this->ci->get(DebugLocatorCommand::class);
+        $command = $this->getService(DebugLocatorCommand::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(0, $result->getStatusCode());
     }

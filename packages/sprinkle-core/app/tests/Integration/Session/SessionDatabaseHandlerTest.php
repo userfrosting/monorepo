@@ -38,8 +38,8 @@ class SessionDatabaseHandlerTest extends TestCase
         $this->refreshDatabase();
 
         // Set service alias
-        $this->connection = $this->ci->get(Connection::class); // @phpstan-ignore-line
-        $this->config = $this->ci->get(Config::class); // @phpstan-ignore-line
+        $this->connection = $this->getService(Connection::class); // @phpstan-ignore-line
+        $this->config = $this->getService(Config::class); // @phpstan-ignore-line
     }
 
     /**
@@ -71,7 +71,7 @@ class SessionDatabaseHandlerTest extends TestCase
 
         // Get handler
         /** @var DatabaseSessionHandler */
-        $handler = $this->ci->get(DatabaseSessionHandler::class);
+        $handler = $this->getService(DatabaseSessionHandler::class);
 
         // Write session
         // https://github.com/laravel/framework/blob/10.x/src/Illuminate/Session/DatabaseSessionHandler.php#L132
@@ -110,7 +110,7 @@ class SessionDatabaseHandlerTest extends TestCase
         @session_destroy();
 
         /** @var DatabaseSessionHandler */
-        $handler = $this->ci->get(DatabaseSessionHandler::class);
+        $handler = $this->getService(DatabaseSessionHandler::class);
         $session = new Session($handler, []);
 
         // Test handler is right

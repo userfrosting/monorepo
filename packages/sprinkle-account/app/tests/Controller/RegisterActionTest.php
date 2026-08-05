@@ -45,7 +45,7 @@ class RegisterActionTest extends AccountTestCase
         $auth = Mockery::mock(Authenticator::class)
             ->shouldReceive('check')->once()->andReturn(true)
             ->getMock();
-        $this->ci->set(Authenticator::class, $auth);
+        $this->getContainer()->set(Authenticator::class, $auth);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/register');
@@ -63,7 +63,7 @@ class RegisterActionTest extends AccountTestCase
     public function testWithDisabledRegistration(): void
     {
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.enabled', false);
 
         // Create request with method and url and fetch response
@@ -206,7 +206,7 @@ class RegisterActionTest extends AccountTestCase
             ->makePartial()
             ->shouldReceive('send')->once()
             ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
+        $this->getContainer()->set(Mailer::class, $mailer);
 
         $this->setMasterUser();
         $captcha = $this->getCaptcha();
@@ -244,7 +244,7 @@ class RegisterActionTest extends AccountTestCase
             ->shouldReceive('send')->once()
             ->andThrow(PHPMailerException::class)
             ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
+        $this->getContainer()->set(Mailer::class, $mailer);
 
         $this->setMasterUser();
         $captcha = $this->getCaptcha();
@@ -278,7 +278,7 @@ class RegisterActionTest extends AccountTestCase
         // Create fake throttler
         $throttler = Mockery::mock(Throttler::class);
         $throttler->shouldReceive('getDelay')->once()->with('registration_attempt')->andReturn(90);
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/register', []);
@@ -297,7 +297,7 @@ class RegisterActionTest extends AccountTestCase
         $masterUser = User::factory()->create();
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('reserved_user_ids.master', $masterUser->id);
     }
 
@@ -309,10 +309,10 @@ class RegisterActionTest extends AccountTestCase
     protected function getCaptcha(): Captcha
     {
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         /** @var Captcha */
-        $captcha = $this->ci->get(Captcha::class);
+        $captcha = $this->getService(Captcha::class);
         $captcha->setKey(strval($config->get('session.keys.captcha')));
         $captcha->generateRandomCode();
 
@@ -327,7 +327,7 @@ class RegisterActionTest extends AccountTestCase
     protected function forceLocaleConfig(string $locale = 'en_US'): void
     {
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         $config->set('site.registration.user_defaults.locale', $locale);
         $config->set('site.locales.available', [$locale => true]);
@@ -341,7 +341,7 @@ class RegisterActionTest extends AccountTestCase
     protected function setRequireEmailVerification(bool $value): void
     {
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         $config->set('site.registration.require_email_verification', $value);
     }

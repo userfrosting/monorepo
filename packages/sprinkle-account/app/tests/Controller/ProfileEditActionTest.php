@@ -84,12 +84,12 @@ class ProfileEditActionTest extends AccountTestCase
 
         // Force locale config
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.locales.default', 'fr_FR');
         $config->set('site.locales.available', [
             'fr_FR' => true,
         ]);
-        $this->ci->set(Config::class, $config);
+        $this->getContainer()->set(Config::class, $config);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/settings/profile', [

@@ -49,7 +49,7 @@ class SuggestUsernameActionTest extends AccountTestCase
         // Fake all user suggestions are taken
         $userModel = Mockery::mock(UserInterface::class);
         $userModel->shouldReceive('firstWhere')->andReturn(true);
-        $this->ci->set(UserInterface::class, $userModel);
+        $this->getContainer()->set(UserInterface::class, $userModel);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('GET', '/account/suggest-username');
@@ -65,7 +65,7 @@ class SuggestUsernameActionTest extends AccountTestCase
         // Create fake throttler
         $throttler = Mockery::mock(Throttler::class);
         $throttler->shouldReceive('getDelay')->once()->with('suggest_username')->andReturn(90);
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('GET', '/account/suggest-username');

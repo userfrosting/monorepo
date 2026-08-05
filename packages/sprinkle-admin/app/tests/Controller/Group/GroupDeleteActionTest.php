@@ -122,7 +122,7 @@ class GroupDeleteActionTest extends AdminTestCase
 
         // Set default group
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.user_defaults.group', $groupToDelete->slug);
 
         // Create request with method and url and fetch response

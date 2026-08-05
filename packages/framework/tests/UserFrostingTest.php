@@ -10,9 +10,7 @@
 
 namespace UserFrosting\Tests;
 
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\App;
 use UserFrosting\Sprinkle\SprinkleManager;
 use UserFrosting\Testing\TestCase;
 use UserFrosting\Tests\TestSprinkle\TestSprinkle;
@@ -27,10 +25,14 @@ class UserFrostingTest extends TestCase
 
     public function testGetters(): void
     {
-        $this->assertInstanceOf(App::class, $this->userfrosting->getApp()); // @phpstan-ignore-line
-        $this->assertInstanceOf(ContainerInterface::class, $this->userfrosting->getContainer()); // @phpstan-ignore-line
-        $this->assertSame(TestSprinkle::class, $this->userfrosting->getMainSprinkle());
-        $this->assertInstanceOf(SprinkleManager::class, $this->userfrosting->getContainer()->get(SprinkleManager::class)); // @phpstan-ignore-line
+        $userfrosting = $this->getUserFrosting();
+        $this->assertSame($this->getApp(), $userfrosting->getApp());
+        $this->assertSame($this->getContainer(), $userfrosting->getContainer());
+        $this->assertSame(TestSprinkle::class, $userfrosting->getMainSprinkle());
+        $this->assertSame(
+            $userfrosting->getContainer()->get(SprinkleManager::class),
+            $this->getService(SprinkleManager::class)
+        );
     }
 
     /**
@@ -38,7 +40,10 @@ class UserFrostingTest extends TestCase
      */
     public function testService(): void
     {
-        $this->assertInstanceOf(ServerRequestInterface::class, $this->ci->get(ServerRequestInterface::class)); // @phpstan-ignore-line
+        $this->assertSame(
+            $this->getContainer()->get(ServerRequestInterface::class),
+            $this->getService(ServerRequestInterface::class)
+        );
     }
 
     /**

@@ -55,7 +55,7 @@ class GroupSprunjeTest extends AdminTestCase
     public function testBaseSprunje(): void
     {
         /** @var GroupSprunje */
-        $sprunje = $this->ci->get(GroupSprunje::class);
+        $sprunje = $this->getService(GroupSprunje::class);
         $data = $sprunje->getArray();
 
         $this->assertEquals(3, $data['count']);

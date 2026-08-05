@@ -68,7 +68,7 @@ class AuthCheckActionTest extends AccountTestCase
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('user')->once()->andReturn($user)
             ->getMock();
-        $this->ci->set(Authenticator::class, $authenticator);
+        $this->getContainer()->set(Authenticator::class, $authenticator);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('GET', '/account/auth');

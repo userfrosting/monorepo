@@ -33,7 +33,7 @@ class SprunjeBelongsToManyThroughTest extends CoreTestCase
 
         // Run custom migration up
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         (new TestTableUsersMigration($builder))->up();
         (new TestRolesTableMigration($builder))->up();
         (new TestPermissionsTableMigration($builder))->up();
@@ -48,7 +48,7 @@ class SprunjeBelongsToManyThroughTest extends CoreTestCase
     {
         // Run custom migration down
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         (new TestTableUsersMigration($builder))->down();
         (new TestRolesTableMigration($builder))->down();
         (new TestPermissionsTableMigration($builder))->down();

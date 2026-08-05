@@ -29,25 +29,25 @@ class DatabaseServiceTest extends TestCase
 {
     public function testService(): void
     {
-        $this->assertInstanceOf(Capsule::class, $this->ci->get(Capsule::class)); // @phpstan-ignore-line
-        $this->assertInstanceOf(Connection::class, $this->ci->get(Connection::class)); // @phpstan-ignore-line
-        $this->assertInstanceOf(Builder::class, $this->ci->get(Builder::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(Capsule::class, $this->getService(Capsule::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(Connection::class, $this->getService(Connection::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(Builder::class, $this->getService(Builder::class)); // @phpstan-ignore-line
     }
 
     public function testWithQueryLogger(): void
     {
         // Enable debug queries on config service
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('debug.queries', true);
-        $this->ci->set(Config::class, $config);
+        $this->getContainer()->set(Config::class, $config);
 
         // Set the QueryLogger with test handler
         $handler = new TestHandler();
         $logger = new QueryLogger($handler);
-        $this->ci->set(QueryLoggerInterface::class, $logger);
+        $this->getContainer()->set(QueryLoggerInterface::class, $logger);
 
         // Get capsule service
-        $capsule = $this->ci->get(Capsule::class);
+        $capsule = $this->getService(Capsule::class);
 
         // Run a test query
         $capsule->getConnection()->select('SELECT 1');

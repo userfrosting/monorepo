@@ -70,7 +70,7 @@ class UserCreateActionTest extends AdminTestCase
         $this->actAsUser($user, permissions: ['create_user']);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Force locale config.
         $config->set('site.registration.user_defaults.locale', 'en_US');
@@ -81,7 +81,7 @@ class UserCreateActionTest extends AdminTestCase
             ->makePartial()
             ->shouldReceive('send')->once()
             ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
+        $this->getContainer()->set(Mailer::class, $mailer);
 
         // Set post payload
         $data = [
@@ -118,7 +118,7 @@ class UserCreateActionTest extends AdminTestCase
         $this->actAsUser($user, permissions: ['create_user']);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Force locale config.
         $config->set('site.registration.user_defaults.locale', 'en_US');
@@ -129,7 +129,7 @@ class UserCreateActionTest extends AdminTestCase
             ->makePartial()
             ->shouldReceive('send')->once()
             ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
+        $this->getContainer()->set(Mailer::class, $mailer);
 
         // Set post payload
         $data = [
@@ -162,7 +162,7 @@ class UserCreateActionTest extends AdminTestCase
         $this->actAsUser($user, isMaster: true);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Force locale config.
         $config->set('site.registration.user_defaults.locale', 'en_US');
@@ -173,7 +173,7 @@ class UserCreateActionTest extends AdminTestCase
             ->makePartial()
             ->shouldReceive('send')->once()
             ->getMock();
-        $this->ci->set(Mailer::class, $mailer);
+        $this->getContainer()->set(Mailer::class, $mailer);
 
         // Set post payload
         $data = [
@@ -236,7 +236,7 @@ class UserCreateActionTest extends AdminTestCase
         $this->actAsUser($user, isMaster: true);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Force locale config.
         $config->set('site.registration.user_defaults.locale', 'en_US');

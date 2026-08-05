@@ -47,7 +47,7 @@ class DatabaseTest extends TestCase
         parent::setUp();
 
         // Alias schema Builder
-        $this->schema = $this->ci->get(Builder::class);
+        $this->schema = $this->getService(Builder::class);
 
         // Create tests tables
         $this->createSchema();

@@ -42,7 +42,7 @@ class ForgetPasswordSetPasswordActionTest extends AccountTestCase
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldReceive('validate')->once()->with(Mockery::any(), 'potatoCode')->andReturn(true)
             ->getMock();
-        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+        $this->getContainer()->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/forgot-password/set-password', [
@@ -70,7 +70,7 @@ class ForgetPasswordSetPasswordActionTest extends AccountTestCase
         $emailVerification = Mockery::mock(EmailVerificationProvider::class)
             ->shouldReceive('validate')->once()->with(Mockery::any(), 'potatoCode')->andReturn(false)
             ->getMock();
-        $this->ci->set(EmailVerificationProvider::class, $emailVerification);
+        $this->getContainer()->set(EmailVerificationProvider::class, $emailVerification);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/forgot-password/set-password', [

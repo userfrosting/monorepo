@@ -100,10 +100,10 @@ class SystemInfoApiActionTest extends AdminTestCase
             ->getMock();
 
         // Create fake controller, inject mocked connection and set it in container
-        $controller = $this->ci->make(SystemInfoApiAction::class, [
+        $controller = $this->getContainer()->make(SystemInfoApiAction::class, [
             'dbConnection' => $connection,
         ]);
-        $this->ci->set(SystemInfoApiAction::class, $controller);
+        $this->getContainer()->set(SystemInfoApiAction::class, $controller);
 
         /** @var User */
         $user = User::factory()->create();

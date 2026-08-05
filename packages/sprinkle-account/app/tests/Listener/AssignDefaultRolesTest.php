@@ -45,7 +45,7 @@ class AssignDefaultRolesTest extends AccountTestCase
         $this->assertSame([], $user->roles()->pluck('id')->all());
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.user_defaults.roles', [$role->slug => true]);
 
         // Create event
@@ -53,7 +53,7 @@ class AssignDefaultRolesTest extends AccountTestCase
 
         // Handle
         /** @var AssignDefaultRoles */
-        $listener = $this->ci->get(AssignDefaultRoles::class);
+        $listener = $this->getService(AssignDefaultRoles::class);
         $listener($event);
 
         // Check user group

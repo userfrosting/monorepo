@@ -42,7 +42,7 @@ class SetupEnvCommandTest extends CoreTestCase
         $envStream = new ResourceStream('sprinkles', path: 'env', shared: true);
         $locator = new ResourceLocator(__DIR__ . '/data');
         $locator->addStream($envStream);
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
     }
 
     public function testEnvNotFound(): void
@@ -50,11 +50,11 @@ class SetupEnvCommandTest extends CoreTestCase
         // Force locator return with Mockery
         $locator = Mockery::mock(ResourceLocatorInterface::class);
         $locator->shouldReceive('findResource')->andReturn(null);
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
         // Run command and assert it fails
         /** @var SetupEnvCommand */
-        $command = $this->ci->get(SetupEnvCommand::class);
+        $command = $this->getService(SetupEnvCommand::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(1, $result->getStatusCode());
         $this->assertStringContainsString('Could not find .env file', $result->getDisplay());
@@ -64,7 +64,7 @@ class SetupEnvCommandTest extends CoreTestCase
     {
         // Run command and assert result
         /** @var SetupEnvCommand */
-        $command = $this->ci->get(SetupEnvCommand::class);
+        $command = $this->getService(SetupEnvCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
             '2',
         ]);
@@ -83,7 +83,7 @@ class SetupEnvCommandTest extends CoreTestCase
     {
         // Run command and assert result
         /** @var SetupEnvCommand */
-        $command = $this->ci->get(SetupEnvCommand::class);
+        $command = $this->getService(SetupEnvCommand::class);
         $result = BakeryTester::runCommand($command, verbosity: OutputInterface::VERBOSITY_VERBOSE, input: [
             '--mode'   => 'foo',
         ]);
@@ -98,7 +98,7 @@ class SetupEnvCommandTest extends CoreTestCase
     {
         // Run command and assert result
         /** @var SetupEnvCommand */
-        $command = $this->ci->get(SetupEnvCommand::class);
+        $command = $this->getService(SetupEnvCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
             '3',
             'bar',

@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
+use RuntimeException;
 use Slim\App;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use UserFrosting\UserFrosting;
@@ -30,19 +31,19 @@ class TestCase extends BaseTestCase
     /**
      * The global container object, which holds all services.
      */
-    protected Container $ci;
+    protected ?Container $ci = null;
 
     /**
      * The Slim App Instance.
      *
      * @var App<\DI\Container>
      */
-    protected App $app;
+    protected ?App $app = null;
 
     /**
      * The UF app instance.
      */
-    protected UserFrosting $userfrosting;
+    protected ?UserFrosting $userfrosting = null;
 
     /**
      * String reference to SprinkleRecipe.
@@ -76,9 +77,55 @@ class TestCase extends BaseTestCase
      */
     protected function createApplication(): void
     {
-        $this->userfrosting = new UserFrosting($this->mainSprinkle);
-        $this->app = $this->userfrosting->getApp();
-        $this->ci = $this->userfrosting->getContainer();
+        $userfrosting = new UserFrosting($this->mainSprinkle);
+        $this->userfrosting = $userfrosting;
+        $this->app = $userfrosting->getApp();
+        $this->ci = $userfrosting->getContainer();
+    }
+
+    /**
+     * Get the global container object.
+     *
+     * @throws RuntimeException If the application has not been created.
+     */
+    protected function getContainer(): Container
+    {
+        return $this->ci ?? throw new RuntimeException('The application has not been created.');
+    }
+
+    /**
+     * Get the Slim application instance.
+     *
+     * @throws RuntimeException   If the application has not been created.
+     * @return App<\DI\Container>
+     */
+    protected function getApp(): App
+    {
+        return $this->app ?? throw new RuntimeException('The application has not been created.');
+    }
+
+    /**
+     * Get the UserFrosting application instance.
+     *
+     * @throws RuntimeException If the application has not been created.
+     */
+    protected function getUserFrosting(): UserFrosting
+    {
+        return $this->userfrosting ?? throw new RuntimeException('The application has not been created.');
+    }
+
+    /**
+     * Get a service from the global container.
+     *
+     * @template T of object
+     *
+     * @param class-string<T> $class
+     *
+     * @return T
+     */
+    protected function getService(string $class): object
+    {
+        return $this->getContainer()->get($class);
     }
 
     /**
@@ -86,9 +133,9 @@ class TestCase extends BaseTestCase
      */
     protected function deleteApplication(): void
     {
-        unset($this->userfrosting);
-        unset($this->app);
-        unset($this->ci);
+        $this->userfrosting = null;
+        $this->app = null;
+        $this->ci = null;
     }
 
     /**
@@ -143,6 +190,6 @@ class TestCase extends BaseTestCase
      */
     protected function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->app->handle($request);
+        return $this->getApp()->handle($request);
     }
 }

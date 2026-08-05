@@ -12,16 +12,16 @@ declare(strict_types=1);
 
 namespace UserFrosting\Tests\Unit\Testing;
 
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 use Slim\App;
 use UserFrosting\Routes\RouteDefinitionInterface;
+use UserFrosting\Sprinkle\SprinkleManager;
 use UserFrosting\Testing\TestCase;
 use UserFrosting\Tests\TestSprinkle\TestSprinkle;
-use UserFrosting\UserFrosting;
 
 /**
  * Tests the custom `createRequest` part of the TestCase class.
@@ -30,11 +30,46 @@ class TestCaseTest extends TestCase
 {
     protected string $mainSprinkle = Sprinkle::class;
 
-    public function testProperties(): void
+    public function testAccessors(): void
     {
-        $this->assertInstanceOf(UserFrosting::class, $this->userfrosting); // @phpstan-ignore-line
-        $this->assertInstanceOf(App::class, $this->app); // @phpstan-ignore-line
-        $this->assertInstanceOf(ContainerInterface::class, $this->ci); // @phpstan-ignore-line
+        $this->assertSame(Sprinkle::class, $this->getUserFrosting()->getMainSprinkle());
+        $this->assertSame($this->getUserFrosting()->getApp(), $this->getApp());
+        $this->assertSame($this->getUserFrosting()->getContainer(), $this->getContainer());
+    }
+
+    public function testGetService(): void
+    {
+        $this->assertSame(
+            $this->getContainer()->get(SprinkleManager::class),
+            $this->getService(SprinkleManager::class)
+        );
+    }
+
+    public function testGetContainerWithoutApplication(): void
+    {
+        $this->deleteApplication();
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The application has not been created.');
+
+        $this->getContainer();
+    }
+
+    public function testGetAppWithoutApplication(): void
+    {
+        $this->deleteApplication();
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The application has not been created.');
+
+        $this->getApp();
+    }
+
+    public function testGetUserFrostingWithoutApplication(): void
+    {
+        $this->deleteApplication();
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The application has not been created.');
+
+        $this->getUserFrosting();
     }
 
     /**

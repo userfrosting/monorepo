@@ -33,7 +33,7 @@ class CsrfActionTest extends TestCase
             ->shouldReceive('getTokenName')->andReturn('mocked_token_name')
             ->shouldReceive('getTokenValue')->andReturn('mocked_token_value')
             ->getMock();
-        $this->ci->set(CsrfGuard::class, $csrfGuardMock);
+        $this->getContainer()->set(CsrfGuard::class, $csrfGuardMock);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('GET', '/api/csrf');

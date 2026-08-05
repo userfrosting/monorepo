@@ -47,7 +47,7 @@ class AssignDefaultGroupsTest extends AccountTestCase
         $this->assertNotSame($group->id, $user->group_id);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.user_defaults.group', $group->slug);
 
         // Create event
@@ -55,7 +55,7 @@ class AssignDefaultGroupsTest extends AccountTestCase
 
         // Handle
         /** @var AssignDefaultGroups */
-        $listener = $this->ci->get(AssignDefaultGroups::class);
+        $listener = $this->getService(AssignDefaultGroups::class);
         $listener($event);
 
         // Check user group
@@ -73,7 +73,7 @@ class AssignDefaultGroupsTest extends AccountTestCase
         $this->assertNull($user->group_id);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.user_defaults.group', null);
 
         // Create event
@@ -81,7 +81,7 @@ class AssignDefaultGroupsTest extends AccountTestCase
 
         // Handle
         /** @var AssignDefaultGroups */
-        $listener = $this->ci->get(AssignDefaultGroups::class);
+        $listener = $this->getService(AssignDefaultGroups::class);
         $listener($event);
 
         // Check user group
@@ -96,7 +96,7 @@ class AssignDefaultGroupsTest extends AccountTestCase
         $user = Mockery::mock(User::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.user_defaults.group', 'foo');
 
         // Create event
@@ -104,7 +104,7 @@ class AssignDefaultGroupsTest extends AccountTestCase
 
         // Handle
         /** @var AssignDefaultGroups */
-        $listener = $this->ci->get(AssignDefaultGroups::class);
+        $listener = $this->getService(AssignDefaultGroups::class);
 
         // Assert exception is thrown
         try {

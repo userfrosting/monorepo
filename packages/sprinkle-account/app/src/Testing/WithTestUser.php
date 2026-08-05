@@ -38,12 +38,12 @@ trait WithTestUser
         array $permissions = []
     ): void {
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $masterId = ($isMaster) ? $user->id : 0;
         $config->set('reserved_user_ids.master', $masterId);
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
         $authenticator->login($user);
 
         // Assign roles
@@ -82,7 +82,7 @@ trait WithTestUser
 
         // Make sure we have a session
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $session->start();
     }
 
@@ -93,7 +93,7 @@ trait WithTestUser
     {
         // Make sure to clean up the session before we delete the application.
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $session->destroy();
 
         parent::deleteApplication();

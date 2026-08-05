@@ -37,25 +37,25 @@ class ClearCacheCommandTest extends CoreTestCase
         $cache = Mockery::mock(Cache::class)
             ->shouldReceive('flush')->once()
             ->getMock();
-        $this->ci->set(Cache::class, $cache);
+        $this->getContainer()->set(Cache::class, $cache);
 
         $cacheHelper = Mockery::mock(CacheHelper::class)
             ->shouldReceive('clearCache')->once()->andReturn(true)
             ->getMock();
-        $this->ci->set(CacheHelper::class, $cacheHelper);
+        $this->getContainer()->set(CacheHelper::class, $cacheHelper);
 
         // Route caching mock
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->with('cache://routes.cache', true)->once()->andReturn($this->cachePath)
             ->getMock();
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
         // Set file to be deleted
         touch($this->cachePath);
         $this->assertFileExists($this->cachePath);
 
         /** @var ClearCacheCommand */
-        $command = $this->ci->get(ClearCacheCommand::class);
+        $command = $this->getService(ClearCacheCommand::class);
         $result = BakeryTester::runCommand($command);
 
         // Assert some output
@@ -70,15 +70,15 @@ class ClearCacheCommandTest extends CoreTestCase
         $cache = Mockery::mock(Cache::class)
             ->shouldReceive('flush')->once()
             ->getMock();
-        $this->ci->set(Cache::class, $cache);
+        $this->getContainer()->set(Cache::class, $cache);
 
         $cacheHelper = Mockery::mock(CacheHelper::class)
             ->shouldReceive('clearCache')->once()->andReturn(false)
             ->getMock();
-        $this->ci->set(CacheHelper::class, $cacheHelper);
+        $this->getContainer()->set(CacheHelper::class, $cacheHelper);
 
         /** @var ClearCacheCommand */
-        $command = $this->ci->get(ClearCacheCommand::class);
+        $command = $this->getService(ClearCacheCommand::class);
         $result = BakeryTester::runCommand($command);
 
         // Assert some output
@@ -92,27 +92,27 @@ class ClearCacheCommandTest extends CoreTestCase
         $cache = Mockery::mock(Cache::class)
             ->shouldReceive('flush')->once()
             ->getMock();
-        $this->ci->set(Cache::class, $cache);
+        $this->getContainer()->set(Cache::class, $cache);
 
         $cacheHelper = Mockery::mock(CacheHelper::class)
             ->shouldReceive('clearCache')->once()->andReturn(true)
             ->getMock();
-        $this->ci->set(CacheHelper::class, $cacheHelper);
+        $this->getContainer()->set(CacheHelper::class, $cacheHelper);
 
         // Route caching mock
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->with('cache://routes.cache', true)->once()->andReturn($this->cachePath)
             ->getMock();
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
         // Filesystem return not found
         $filesystem = Mockery::mock(Filesystem::class)
             ->shouldReceive('exists')->with($this->cachePath)->once()->andReturn(false)
             ->getMock();
-        $this->ci->set(Filesystem::class, $filesystem);
+        $this->getContainer()->set(Filesystem::class, $filesystem);
 
         /** @var ClearCacheCommand */
-        $command = $this->ci->get(ClearCacheCommand::class);
+        $command = $this->getService(ClearCacheCommand::class);
         $result = BakeryTester::runCommand($command);
 
         // Assert some output
@@ -126,28 +126,28 @@ class ClearCacheCommandTest extends CoreTestCase
         $cache = Mockery::mock(Cache::class)
             ->shouldReceive('flush')->once()
             ->getMock();
-        $this->ci->set(Cache::class, $cache);
+        $this->getContainer()->set(Cache::class, $cache);
 
         $cacheHelper = Mockery::mock(CacheHelper::class)
             ->shouldReceive('clearCache')->once()->andReturn(true)
             ->getMock();
-        $this->ci->set(CacheHelper::class, $cacheHelper);
+        $this->getContainer()->set(CacheHelper::class, $cacheHelper);
 
         // Route caching mock
         $locator = Mockery::mock(ResourceLocatorInterface::class)
             ->shouldReceive('findResource')->with('cache://routes.cache', true)->andReturn($this->cachePath)
             ->getMock();
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
         // Filesystem return found, but delete error
         $filesystem = Mockery::mock(Filesystem::class)
             ->shouldReceive('exists')->with($this->cachePath)->once()->andReturn(true)
             ->shouldReceive('delete')->with($this->cachePath)->once()->andReturn(false)
             ->getMock();
-        $this->ci->set(Filesystem::class, $filesystem);
+        $this->getContainer()->set(Filesystem::class, $filesystem);
 
         /** @var ClearCacheCommand */
-        $command = $this->ci->get(ClearCacheCommand::class);
+        $command = $this->getService(ClearCacheCommand::class);
         $result = BakeryTester::runCommand($command);
 
         // Assert some output

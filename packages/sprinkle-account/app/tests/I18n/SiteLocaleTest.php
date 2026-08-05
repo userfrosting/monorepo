@@ -44,7 +44,7 @@ class SiteLocaleTest extends AccountTestCase
         parent::setUp();
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Set test config
         $config->set('site.locales.available', $this->testLocale);
@@ -56,7 +56,7 @@ class SiteLocaleTest extends AccountTestCase
     public function testService(): void
     {
         /** @var SiteLocale */
-        $locale = $this->ci->get(SiteLocaleInterface::class);
+        $locale = $this->getService(SiteLocaleInterface::class);
 
         // @phpstan-ignore-next-line Check overwriting is working
         $this->assertInstanceOf(SiteLocaleInterface::class, $locale);
@@ -69,7 +69,7 @@ class SiteLocaleTest extends AccountTestCase
     public function testFallbackWhenNoUser(): void
     {
         /** @var SiteLocale */
-        $locale = $this->ci->get(SiteLocaleInterface::class);
+        $locale = $this->getService(SiteLocaleInterface::class);
 
         $this->assertSame('fr_FR', $locale->getLocaleIdentifier());
     }
@@ -82,10 +82,10 @@ class SiteLocaleTest extends AccountTestCase
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('user')->once()->andReturn(null)
             ->getMock();
-        $this->ci->set(Authenticator::class, $authenticator);
+        $this->getContainer()->set(Authenticator::class, $authenticator);
 
         /** @var SiteLocale */
-        $locale = $this->ci->get(SiteLocaleInterface::class);
+        $locale = $this->getService(SiteLocaleInterface::class);
 
         $this->assertSame('fr_FR', $locale->getLocaleIdentifier());
     }
@@ -100,10 +100,10 @@ class SiteLocaleTest extends AccountTestCase
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('user')->once()->andReturn($user)
             ->getMock();
-        $this->ci->set(Authenticator::class, $authenticator);
+        $this->getContainer()->set(Authenticator::class, $authenticator);
 
         /** @var SiteLocale */
-        $locale = $this->ci->get(SiteLocaleInterface::class);
+        $locale = $this->getService(SiteLocaleInterface::class);
 
         $this->assertSame('en_US', $locale->getLocaleIdentifier());
     }
@@ -118,13 +118,13 @@ class SiteLocaleTest extends AccountTestCase
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('user')->once()->andReturn($user)
             ->getMock();
-        $this->ci->set(Authenticator::class, $authenticator);
+        $this->getContainer()->set(Authenticator::class, $authenticator);
 
         // Remove en_US from available locale
         $this->config->set('site.locales.available', ['fr_FR']);
 
         /** @var SiteLocale */
-        $locale = $this->ci->get(SiteLocaleInterface::class);
+        $locale = $this->getService(SiteLocaleInterface::class);
 
         $this->assertSame('fr_FR', $locale->getLocaleIdentifier());
     }

@@ -25,10 +25,10 @@ class MigrationsTest extends AccountTestCase
     public function testMigrations(): void
     {
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
 
         /** @var Migrator */
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         // Initiate migrations
         $migrator->reset();

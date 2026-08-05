@@ -48,18 +48,18 @@ class AuthorizationManagerTest extends AccountTestCase
         // We'll test using the `debug.auth` on and a mock AuthLoggerInterface, to not
         // get our dirty test into the real log
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('debug.auth', true);
         $config->set('reserved_user_ids.master', 1);
 
         $this->logger = Mockery::mock(AuthLoggerInterface::class);
-        $this->ci->set(AuthLoggerInterface::class, $this->logger);
+        $this->getContainer()->set(AuthLoggerInterface::class, $this->logger);
     }
 
     public function testCheckAccessWithNullUser(): void
     {
         /** @var AuthorizationManager */
-        $manager = $this->ci->get(AuthorizationManagerInterface::class);
+        $manager = $this->getService(AuthorizationManagerInterface::class);
         $this->logger->shouldReceive('debug')->once()->with('Authorization check requested at: ', Mockery::any());
         $this->logger->shouldReceive('debug')->once()->with('No user defined. Access denied.', []);
         $this->assertFalse($manager->checkAccess(null, 'foo'));
@@ -77,7 +77,7 @@ class AuthorizationManagerTest extends AccountTestCase
         $this->logger->shouldReceive('debug')->times(2);
 
         /** @var AuthorizationManager */
-        $manager = $this->ci->get(AuthorizationManagerInterface::class);
+        $manager = $this->getService(AuthorizationManagerInterface::class);
         $this->assertFalse($manager->checkAccess($user, 'blah'));
     }
 
@@ -93,10 +93,10 @@ class AuthorizationManagerTest extends AccountTestCase
         $this->logger->shouldReceive('debug')->times(2);
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
 
         // Start session
         $session->start();
@@ -122,7 +122,7 @@ class AuthorizationManagerTest extends AccountTestCase
         $this->logger->shouldReceive('debug')->times(2);
 
         /** @var AuthorizationManager */
-        $manager = $this->ci->get(AuthorizationManagerInterface::class);
+        $manager = $this->getService(AuthorizationManagerInterface::class);
         $this->assertTrue($manager->checkAccess($user, 'foo'));
     }
 
@@ -152,7 +152,7 @@ class AuthorizationManagerTest extends AccountTestCase
         $this->logger->shouldReceive('debug')->times(6);
 
         /** @var AuthorizationManager */
-        $manager = $this->ci->get(AuthorizationManagerInterface::class);
+        $manager = $this->getService(AuthorizationManagerInterface::class);
         $this->assertTrue($manager->checkAccess($user, 'foo'));
     }
 
@@ -181,7 +181,7 @@ class AuthorizationManagerTest extends AccountTestCase
         $this->logger->shouldReceive('debug')->times(7);
 
         /** @var AuthorizationManager */
-        $manager = $this->ci->get(AuthorizationManagerInterface::class);
+        $manager = $this->getService(AuthorizationManagerInterface::class);
         $this->assertFalse($manager->checkAccess($user, 'foo'));
     }
 }

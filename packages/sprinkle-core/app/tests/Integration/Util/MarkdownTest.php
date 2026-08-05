@@ -64,7 +64,7 @@ class MarkdownTest extends CoreTestCase
             ->getMock();
 
         // Get the real converter
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = new Markdown(
             $mockLocator,
@@ -113,7 +113,7 @@ class MarkdownTest extends CoreTestCase
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
 
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = new Markdown(
             $mockLocator,
@@ -164,7 +164,7 @@ class MarkdownTest extends CoreTestCase
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
 
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = new Markdown(
             $mockLocator,
@@ -222,7 +222,7 @@ class MarkdownTest extends CoreTestCase
             ->shouldReceive('getLocaleIdentifier')->once()->andReturn($locale)
             ->getMock();
 
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = new Markdown(
             $mockLocator,
@@ -274,7 +274,7 @@ class MarkdownTest extends CoreTestCase
             ->getMock();
 
         // Get the real converter
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = new Markdown(
             $mockLocator,
@@ -313,7 +313,7 @@ class MarkdownTest extends CoreTestCase
             ->getMock();
 
         // Get the real converter
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = new Markdown(
             $mockLocator,
@@ -359,7 +359,7 @@ class MarkdownTest extends CoreTestCase
             ->getMock();
 
         // Get the real converter
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = new Markdown(
             $mockLocator,

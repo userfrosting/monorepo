@@ -39,7 +39,7 @@ final class UserActivityLoggerTest extends AccountTestCase
         $user = User::factory()->create();
 
         /** @var UserActivityLogger */
-        $logger = $this->ci->get(UserActivityLoggerInterface::class);
+        $logger = $this->getService(UserActivityLoggerInterface::class);
 
         $logger->info('User did a test', [
             'type'    => 'test',
@@ -61,7 +61,7 @@ final class UserActivityLoggerTest extends AccountTestCase
     public function testLoggerWithNoDefaultData(): void
     {
         /** @var UserActivityLogger */
-        $logger = $this->ci->get(UserActivityLoggerInterface::class);
+        $logger = $this->getService(UserActivityLoggerInterface::class);
 
         $this->expectException(LogicException::class);
         $logger->info('User did a test');

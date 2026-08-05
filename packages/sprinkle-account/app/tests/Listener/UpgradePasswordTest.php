@@ -39,7 +39,7 @@ class UpgradePasswordTest extends AccountTestCase
 
         // Handle
         /** @var UpgradePassword */
-        $listener = $this->ci->get(UpgradePassword::class);
+        $listener = $this->getService(UpgradePassword::class);
         $listener($event);
     }
 
@@ -49,7 +49,7 @@ class UpgradePasswordTest extends AccountTestCase
         $logger = Mockery::mock(UserActivityLogger::class)
             ->shouldReceive('debug')->once()
             ->getMock();
-        $this->ci->set(UserActivityLoggerInterface::class, $logger);
+        $this->getContainer()->set(UserActivityLoggerInterface::class, $logger);
 
         /** @var User */
         $user = Mockery::mock(User::class)
@@ -65,7 +65,7 @@ class UpgradePasswordTest extends AccountTestCase
 
         // Handle
         /** @var UpgradePassword */
-        $listener = $this->ci->get(UpgradePassword::class);
+        $listener = $this->getService(UpgradePassword::class);
         $listener($event);
     }
 }

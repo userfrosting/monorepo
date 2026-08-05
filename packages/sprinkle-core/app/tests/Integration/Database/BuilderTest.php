@@ -29,7 +29,7 @@ class BuilderTest extends TestCase
 
     protected function createData(): void
     {
-        $schema = $this->ci->get(Builder::class);
+        $schema = $this->getService(Builder::class);
         $schema->create('objects', function ($table) {
             $table->string('name');
             $table->string('description')->nullable();
@@ -47,7 +47,7 @@ class BuilderTest extends TestCase
      */
     public function tearDown(): void
     {
-        $schema = $this->ci->get(Builder::class);
+        $schema = $this->getService(Builder::class);
         $schema->drop('objects');
 
         parent::tearDown();

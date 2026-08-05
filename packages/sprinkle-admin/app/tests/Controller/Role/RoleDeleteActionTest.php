@@ -122,7 +122,7 @@ class RoleDeleteActionTest extends AdminTestCase
 
         // Set default Role
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.user_defaults.roles', [$role->slug => true]);
 
         // Create request with method and url and fetch response

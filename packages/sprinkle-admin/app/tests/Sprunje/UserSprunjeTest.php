@@ -67,7 +67,7 @@ class UserSprunjeTest extends AdminTestCase
     public function testBaseSprunje(): void
     {
         /** @var UserSprunje */
-        $sprunje = $this->ci->get(UserSprunje::class);
+        $sprunje = $this->getService(UserSprunje::class);
         $data = $sprunje->getArray();
 
         $this->assertEquals(3, $data['count']);
@@ -86,7 +86,7 @@ class UserSprunjeTest extends AdminTestCase
     public function testWithPagination(): void
     {
         /** @var UserSprunje */
-        $sprunje = $this->ci->get(UserSprunje::class);
+        $sprunje = $this->getService(UserSprunje::class);
         $sprunje->setOptions([
             'size' => 1,
             'page' => 1, // First page is 0, so second row will be displayed.
@@ -101,7 +101,7 @@ class UserSprunjeTest extends AdminTestCase
     public function testForFilterName(): void
     {
         /** @var UserSprunje */
-        $sprunje = $this->ci->get(UserSprunje::class);
+        $sprunje = $this->getService(UserSprunje::class);
         $sprunje->setOptions([
             'filters' => ['name' => $this->users[0]->email], // @phpstan-ignore-line
         ]);
@@ -127,7 +127,7 @@ class UserSprunjeTest extends AdminTestCase
     public function testForFilterLastActivity(): void
     {
         /** @var UserSprunje */
-        $sprunje = $this->ci->get(UserSprunje::class);
+        $sprunje = $this->getService(UserSprunje::class);
         $sprunje->setOptions([
             'filters' => ['last_activity' => 'Description #1'], // @phpstan-ignore-line
         ]);
@@ -142,7 +142,7 @@ class UserSprunjeTest extends AdminTestCase
     public function testForFilterStatus(): void
     {
         /** @var UserSprunje */
-        $sprunje = $this->ci->get(UserSprunje::class);
+        $sprunje = $this->getService(UserSprunje::class);
 
         // Filter by disabled
         $sprunje->setOptions([
@@ -174,7 +174,7 @@ class UserSprunjeTest extends AdminTestCase
     public function testForSortName(): void
     {
         /** @var UserSprunje */
-        $sprunje = $this->ci->get(UserSprunje::class);
+        $sprunje = $this->getService(UserSprunje::class);
 
         $sprunje->setOptions([
             'sorts' => ['name' => 'desc'],
@@ -199,7 +199,7 @@ class UserSprunjeTest extends AdminTestCase
     public function testForSortStatus(): void
     {
         /** @var UserSprunje */
-        $sprunje = $this->ci->get(UserSprunje::class);
+        $sprunje = $this->getService(UserSprunje::class);
 
         $sprunje->setOptions([
             'sorts' => ['status' => 'desc'],
@@ -227,7 +227,7 @@ class UserSprunjeTest extends AdminTestCase
     public function testForSortLastActivity(): void
     {
         /** @var UserSprunje */
-        $sprunje = $this->ci->get(UserSprunje::class);
+        $sprunje = $this->getService(UserSprunje::class);
 
         $sprunje->setOptions([
             'sorts' => ['last_activity' => 'desc'],

@@ -49,20 +49,20 @@ class AccessConditionEvaluatorTest extends AccountTestCase
 
         // We'll test using the `debug.auth` on.
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('debug.auth', true);
         $config->set('reserved_user_ids.master', 1);
 
         // We'll test using a mock AuthLoggerInterface, to not get our dirty test into
         // the real log.
         $this->logger = Mockery::mock(AuthLoggerInterface::class);
-        $this->ci->set(AuthLoggerInterface::class, $this->logger);
+        $this->getContainer()->set(AuthLoggerInterface::class, $this->logger);
     }
 
     public function testEvaluate(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         /** @var User */
         $user = User::factory()->make();
@@ -80,7 +80,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithAuthorizationException(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         /** @var User */
         $user = User::factory()->make();
@@ -96,7 +96,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithParams(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         /** @var User */
         $user = User::factory([
@@ -122,7 +122,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithNonAccessConditions(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         // Set logger expectations.
         $this->logger->shouldReceive('debug')->with("Evaluating access condition 'foo()' with parameters:", [])->once();
@@ -136,7 +136,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithArrayNode(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         $this->logger->shouldReceive('debug')->times(4);
         $result = $ace->evaluate("subset(['group'],fields)", ['fields' => ['group', 'foobar']]);
@@ -146,7 +146,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithArrayAndKeysNode(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         $this->logger->shouldReceive('debug')->times(4);
         $result = $ace->evaluate("subset(['foo' => 'group'],fields)", ['fields' => ['foo' => 'group']]);
@@ -156,7 +156,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithNumberNode(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         $this->logger->shouldReceive('debug')->times(4);
         $result = $ace->evaluate('equals_num(1, 1)');
@@ -166,7 +166,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithStringNode(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         $this->logger->shouldReceive('debug')->times(4);
         $result = $ace->evaluate("equals('1', '1')");
@@ -176,7 +176,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithDecimalNode(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         $this->logger->shouldReceive('debug')->times(4);
         $result = $ace->evaluate('equals(1.1, 1.1)');
@@ -186,7 +186,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testEvaluateWithUnknownNode(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         $this->logger->shouldReceive('debug')->times(4);
         $result = $ace->evaluate('equals(__LINE__, __LINE__)'); // As "MagicConst" node.
@@ -199,7 +199,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
         $this->refreshDatabase();
 
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         /** @var User */
         $user = User::factory()->create();
@@ -218,7 +218,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     public function testCustomCondition(): void
     {
         /** @var AccessConditionEvaluator */
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         // Set logger expectations.
         $this->logger->shouldReceive('debug')->times(8);
@@ -230,7 +230,7 @@ class AccessConditionEvaluatorTest extends AccountTestCase
     /*public function testMoreCustomCondition(): void
     {
         /** @var AccessConditionEvaluator * /
-        $ace = $this->ci->get(AccessConditionEvaluator::class);
+        $ace = $this->getService(AccessConditionEvaluator::class);
 
         // Set logger expectations.
         $this->logger->shouldReceive('debug')->times(8);

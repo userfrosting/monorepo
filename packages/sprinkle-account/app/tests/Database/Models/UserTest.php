@@ -98,7 +98,7 @@ class UserTest extends AccountTestCase
         $config = Mockery::mock(Config::class)
             ->shouldReceive('get')->with('reserved_user_ids.master')->times(2)->andReturn($masterUser->id)
             ->getMock();
-        $this->ci->set(Config::class, $config);
+        $this->getContainer()->set(Config::class, $config);
 
         $this->assertTrue($masterUser->isMaster());
         $this->assertFalse($normalUser->isMaster());
@@ -130,7 +130,7 @@ class UserTest extends AccountTestCase
     {
         // Get current config and set password expiration to 90 days
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('user.password.expiration.timeout', 90);
 
         /** @var User */
@@ -148,7 +148,7 @@ class UserTest extends AccountTestCase
     {
         // Get current config and set password expiration to 90 days
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('user.password.expiration.timeout', 90);
 
         /** @var User */
@@ -225,10 +225,10 @@ class UserTest extends AccountTestCase
         $user = User::factory()->create();
 
         /** @var Cache */
-        $cache = $this->ci->get(Cache::class);
+        $cache = $this->getService(Cache::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Config key
         $key = $config->get('cache.user.key') . $user->id;
@@ -253,10 +253,10 @@ class UserTest extends AccountTestCase
     public function testFindCacheWithNullUser(): void
     {
         /** @var Cache */
-        $cache = $this->ci->get(Cache::class);
+        $cache = $this->getService(Cache::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Config key (with fake user id)
         $key = $config->get('cache.user.key') . '1234';

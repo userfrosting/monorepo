@@ -43,14 +43,14 @@ class SetupMailCommandTest extends CoreTestCase
         $envStream = new ResourceStream('sprinkles', path: 'env', shared: true);
         $locator = new ResourceLocator(__DIR__ . '/data');
         $locator->addStream($envStream);
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
         // Delete existing env file
         @unlink(__DIR__ . '/data/env/.env');
 
         // Force config, so test env is not used
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('mail.mailer', 'smtp');
         $config->set('mail.host', '');
         $config->set('mail.port', '');
@@ -69,11 +69,11 @@ class SetupMailCommandTest extends CoreTestCase
         // Force locator return with Mockery
         $locator = Mockery::mock(ResourceLocatorInterface::class);
         $locator->shouldReceive('findResource')->andReturn(null);
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
         // Run command and assert it fails
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(1, $result->getStatusCode());
         $this->assertStringContainsString('Could not find .env file', $result->getDisplay());
@@ -91,7 +91,7 @@ class SetupMailCommandTest extends CoreTestCase
     public function testCommand(): void
     {
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
             '0', // smtp
             'smtp.test.com', // host
@@ -122,7 +122,7 @@ class SetupMailCommandTest extends CoreTestCase
     public function testCommandWithOptionsAndVerbose(): void
     {
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command, verbosity: OutputInterface::VERBOSITY_VERBOSE, input: [
             '--smtp_host'     => 'smtp.test.com',
             '--smtp_user'     => 'user',
@@ -152,7 +152,7 @@ class SetupMailCommandTest extends CoreTestCase
     public function testCommandForNativeMethod(): void
     {
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command, input: ['--force' => true], userInput: [
             '2', // native
             'no', // Don't confirm, and start again
@@ -168,7 +168,7 @@ class SetupMailCommandTest extends CoreTestCase
     public function testCommandForNoneMethod(): void
     {
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command, input: ['--force' => true], userInput: [
             '3',
             'no', // Don't confirm, and start again
@@ -193,7 +193,7 @@ class SetupMailCommandTest extends CoreTestCase
     public function testCommandForGmailMethod(): void
     {
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command, input: ['--force' => true], userInput: [
             '1', // gmail
             'test@gmail.com',
@@ -214,7 +214,7 @@ class SetupMailCommandTest extends CoreTestCase
         $dotenvEditor->save();
 
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command);
 
         // Assertions
@@ -231,7 +231,7 @@ class SetupMailCommandTest extends CoreTestCase
         $dotenvEditor->save();
 
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command);
 
         // Assertions
@@ -249,12 +249,12 @@ class SetupMailCommandTest extends CoreTestCase
 
         // Force config to not obey env to trigger warning
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('mail.host', 'smtp.bar');
 
         // Need to force, as dotenv is present
         /** @var SetupMailCommand */
-        $command = $this->ci->get(SetupMailCommand::class);
+        $command = $this->getService(SetupMailCommand::class);
         $result = BakeryTester::runCommand($command, input: ['--force' => true]);
 
         // Assertions

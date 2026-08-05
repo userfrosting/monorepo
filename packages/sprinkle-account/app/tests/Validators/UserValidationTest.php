@@ -46,7 +46,7 @@ class UserValidationTest extends AccountTestCase
     public function testValidation(): void
     {
         /** @var UserValidation */
-        $validator = $this->ci->get(UserValidation::class);
+        $validator = $this->getService(UserValidation::class);
         $user = new User($this->fakeUserData);
         $validation = $validator->validate($user);
         $this->assertTrue($validation);
@@ -60,7 +60,7 @@ class UserValidationTest extends AccountTestCase
         $user = new User($data);
 
         /** @var UserValidation */
-        $validator = $this->ci->get(UserValidation::class);
+        $validator = $this->getService(UserValidation::class);
 
         // Assert exception is thrown
         try {
@@ -82,7 +82,7 @@ class UserValidationTest extends AccountTestCase
         $user = new User($data);
 
         /** @var UserValidation */
-        $validator = $this->ci->get(UserValidation::class);
+        $validator = $this->getService(UserValidation::class);
 
         $this->expectException(UsernameNotUniqueException::class);
         $validator->validate($user);
@@ -99,7 +99,7 @@ class UserValidationTest extends AccountTestCase
         $user = new User($data);
 
         /** @var UserValidation */
-        $validator = $this->ci->get(UserValidation::class);
+        $validator = $this->getService(UserValidation::class);
 
         $this->expectException(EmailNotUniqueException::class);
         $validator->validate($user);
@@ -108,7 +108,7 @@ class UserValidationTest extends AccountTestCase
     public function testSetterGetters(): void
     {
         /** @var UserValidation */
-        $validator = $this->ci->get(UserValidation::class);
+        $validator = $this->getService(UserValidation::class);
 
         $result = $validator->setRequiredProperties([])->getRequiredProperties();
         $this->assertSame([], $result);

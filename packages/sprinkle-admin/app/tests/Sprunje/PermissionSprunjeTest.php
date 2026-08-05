@@ -49,7 +49,7 @@ class PermissionSprunjeTest extends AdminTestCase
     public function testBaseSprunje(): void
     {
         /** @var PermissionSprunje */
-        $sprunje = $this->ci->get(PermissionSprunje::class);
+        $sprunje = $this->getService(PermissionSprunje::class);
         $data = $sprunje->getArray();
 
         $this->assertEquals(3, $data['count']);
@@ -61,7 +61,7 @@ class PermissionSprunjeTest extends AdminTestCase
     public function testWithInfoFilter(): void
     {
         /** @var PermissionSprunje */
-        $sprunje = $this->ci->get(PermissionSprunje::class);
+        $sprunje = $this->getService(PermissionSprunje::class);
         $sprunje->setOptions([
             'filters' => ['info' => 'name_1'],
         ]);
@@ -75,7 +75,7 @@ class PermissionSprunjeTest extends AdminTestCase
     public function testForSortProperties(): void
     {
         /** @var PermissionSprunje */
-        $sprunje = $this->ci->get(PermissionSprunje::class);
+        $sprunje = $this->getService(PermissionSprunje::class);
 
         $sprunje->setOptions([
             'sorts' => ['properties' => 'desc'],

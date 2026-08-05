@@ -56,7 +56,7 @@ class SetupDbCommandTest extends CoreTestCase
         $locator = new ResourceLocator(__DIR__ . '/data');
         $locator->addStream($dbStream);
         $locator->addStream($envStream);
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
         // Delete existing env file
         @unlink($this->dbFile);
@@ -68,11 +68,11 @@ class SetupDbCommandTest extends CoreTestCase
         $locator = Mockery::mock(ResourceLocatorInterface::class);
         $locator->shouldReceive('getResource')->andReturn(null); // For databaseDrivers method
         $locator->shouldReceive('findResource')->andReturn(null);
-        $this->ci->set(ResourceLocatorInterface::class, $locator);
+        $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
         // Run command and assert it fails
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(1, $result->getStatusCode());
         $this->assertStringContainsString('Could not find .env file', $result->getDisplay());
@@ -82,7 +82,7 @@ class SetupDbCommandTest extends CoreTestCase
     {
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, input: ['--force' => true]);
 
         // Assertions
@@ -96,11 +96,11 @@ class SetupDbCommandTest extends CoreTestCase
         $tester = Mockery::mock(DbParamTester::class)
             ->shouldReceive('test')->once()->andReturn(true)
             ->getMock();
-        $this->ci->set(DbParamTester::class, $tester);
+        $this->getContainer()->set(DbParamTester::class, $tester);
 
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command);
 
         // Assertions
@@ -122,7 +122,7 @@ class SetupDbCommandTest extends CoreTestCase
         $tester = Mockery::mock(DbParamTester::class)
             ->shouldReceive('test')->times(1)->andThrow(new PDOException())
             ->getMock();
-        $this->ci->set(DbParamTester::class, $tester);
+        $this->getContainer()->set(DbParamTester::class, $tester);
 
         // Mock touch function to fail
         $reflection_class = new ReflectionClass(SetupDbCommand::class);
@@ -131,7 +131,7 @@ class SetupDbCommandTest extends CoreTestCase
 
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
             '3',
             $this->dbFile,
@@ -145,7 +145,7 @@ class SetupDbCommandTest extends CoreTestCase
     public function testCommand(): void
     {
         /** @var Capsule */
-        $capsule = $this->ci->get(Capsule::class);
+        $capsule = $this->getService(Capsule::class);
         $connection = $capsule->getConnection();
         $this->assertNotSame($this->dbFile, $connection->getDatabaseName());
 
@@ -158,11 +158,11 @@ class SetupDbCommandTest extends CoreTestCase
             ->shouldReceive('test')->times(1)->andThrow(new PDOException())
             ->shouldReceive('test')->times(1)->andReturn(true)
             ->getMock();
-        $this->ci->set(DbParamTester::class, $tester);
+        $this->getContainer()->set(DbParamTester::class, $tester);
 
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
             '3',
             $this->dbFile,
@@ -181,19 +181,19 @@ class SetupDbCommandTest extends CoreTestCase
 
         // Assert config is ok, env was update by the command
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $this->assertSame('sqlite', $config->get('db.default'));
         $this->assertSame($this->dbFile, $config->get('db.connections.sqlite.database'));
 
         /** @var Capsule */
-        $capsule = $this->ci->get(Capsule::class);
+        $capsule = $this->getService(Capsule::class);
         $connection = $capsule->getConnection();
         $this->assertSame('sqlite', $connection->getDriverName());
         $this->assertSame($this->dbFile, $connection->getDatabaseName());
 
         // Assert services were updated
-        $this->assertInstanceOf(SQLiteConnection::class, $this->ci->get(Connection::class));
-        $this->assertInstanceOf(SQLiteBuilder::class, $this->ci->get(Builder::class));
+        $this->assertInstanceOf(SQLiteConnection::class, $this->getService(Connection::class));
+        $this->assertInstanceOf(SQLiteBuilder::class, $this->getService(Builder::class));
 
         // Delete database file
         unlink($this->dbFile);
@@ -221,11 +221,11 @@ class SetupDbCommandTest extends CoreTestCase
             ->shouldReceive('test')->times(1)->andThrow(new PDOException())
             ->shouldReceive('test')->times(2)->andReturn(true)
             ->getMock();
-        $this->ci->set(DbParamTester::class, $tester);
+        $this->getContainer()->set(DbParamTester::class, $tester);
 
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
             '3',
             $this->dbFile,
@@ -242,11 +242,11 @@ class SetupDbCommandTest extends CoreTestCase
 
         // Assert config is ok, env was update by the command
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $this->assertSame($dbFile2, $config->get('db.connections.sqlite.database'));
 
         /** @var Capsule */
-        $capsule = $this->ci->get(Capsule::class);
+        $capsule = $this->getService(Capsule::class);
         $this->assertSame($dbFile2, $capsule->getConnection()->getDatabaseName());
 
         // Delete database file
@@ -263,11 +263,11 @@ class SetupDbCommandTest extends CoreTestCase
         $tester = Mockery::mock(DbParamTester::class)
             ->shouldReceive('test')->times(1)->andReturn(true)
             ->getMock();
-        $this->ci->set(DbParamTester::class, $tester);
+        $this->getContainer()->set(DbParamTester::class, $tester);
 
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, verbosity: OutputInterface::VERBOSITY_VERBOSE, input: [
             '--force'       => true,
             '--db_driver'   => 'mysql',
@@ -292,11 +292,11 @@ class SetupDbCommandTest extends CoreTestCase
         $tester = Mockery::mock(DbParamTester::class)
             ->shouldReceive('test')->times(1)->andThrow(new PDOException())
             ->getMock();
-        $this->ci->set(DbParamTester::class, $tester);
+        $this->getContainer()->set(DbParamTester::class, $tester);
 
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, input: [
             '--force'       => true,
             '--db_driver'   => 'mysql',
@@ -319,11 +319,11 @@ class SetupDbCommandTest extends CoreTestCase
         $tester = Mockery::mock(DbParamTester::class)
             ->shouldReceive('test')->times(1)->andReturn(true)
             ->getMock();
-        $this->ci->set(DbParamTester::class, $tester);
+        $this->getContainer()->set(DbParamTester::class, $tester);
 
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, input: ['--force' => true], userInput: [
             '0',
             'localhost',
@@ -343,7 +343,7 @@ class SetupDbCommandTest extends CoreTestCase
     {
         // Run command and assert result
         /** @var SetupDbCommand */
-        $command = $this->ci->get(SetupDbCommand::class);
+        $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, input: [
             '--force'       => true,
             '--db_driver'   => 'foo',

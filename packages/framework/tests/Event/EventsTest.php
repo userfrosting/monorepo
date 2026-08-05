@@ -26,7 +26,7 @@ class EventsTest extends TestCase
     public function testGetRegisteredListeners(): void
     {
         /** @var SprinkleListenerProvider */
-        $provider = $this->ci->get(SprinkleListenerProvider::class);
+        $provider = $this->getService(SprinkleListenerProvider::class);
 
         $data = $provider->getRegisteredListeners();
         $this->assertSame([
@@ -51,7 +51,7 @@ class EventsTest extends TestCase
     public function testIntegration(): void
     {
         /** @var EventDispatcher */
-        $dispatcher = $this->ci->get(EventDispatcher::class);
+        $dispatcher = $this->getService(EventDispatcher::class);
 
         $event = $dispatcher->dispatch(new PizzaArrived());
         $this->assertSame([
@@ -67,7 +67,7 @@ class EventsTest extends TestCase
     public function testStoppableEvent(): void
     {
         /** @var EventDispatcher */
-        $dispatcher = $this->ci->get(EventDispatcher::class);
+        $dispatcher = $this->getService(EventDispatcher::class);
 
         // 'HandlePizza::isPizzaHot' is not here, as LogPizza stop execution
         $event = $dispatcher->dispatch(new Pizza());
@@ -84,7 +84,7 @@ class EventsTest extends TestCase
     public function testUnregisteredEvent(): void
     {
         /** @var EventDispatcher */
-        $dispatcher = $this->ci->get(EventDispatcher::class);
+        $dispatcher = $this->getService(EventDispatcher::class);
 
         $pizzaIsCold = new PizzaIsCold();
         $event = $dispatcher->dispatch($pizzaIsCold);

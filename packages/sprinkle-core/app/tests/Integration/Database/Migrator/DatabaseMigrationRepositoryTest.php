@@ -33,13 +33,13 @@ class DatabaseMigrationRepositoryTest extends TestCase
     {
         // Repository should not exists before migration is instantiated
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         $builder->dropIfExists('migrationTest');
 
         // Replace the default model with a custom one for testing
         $this->assertFalse($builder->hasTable('migrationTest'));
-        $this->ci->set(MigrationTable::class, new TestMigration());
-        $repository = $this->ci->get(DatabaseMigrationRepository::class);
+        $this->getContainer()->set(MigrationTable::class, new TestMigration());
+        $repository = $this->getService(DatabaseMigrationRepository::class);
 
         // Create table
         $repository->create();
@@ -67,8 +67,8 @@ class DatabaseMigrationRepositoryTest extends TestCase
 
     public function testRepository(): void
     {
-        $this->ci->set(MigrationTable::class, new TestMigration());
-        $repository = $this->ci->get(DatabaseMigrationRepository::class);
+        $this->getContainer()->set(MigrationTable::class, new TestMigration());
+        $repository = $this->getService(DatabaseMigrationRepository::class);
 
         // Init batch number
         $this->assertSame(0, $repository->getLastBatchNumber());
@@ -121,8 +121,8 @@ class DatabaseMigrationRepositoryTest extends TestCase
 
     public function testMigrationNotFound(): void
     {
-        $this->ci->set(MigrationTable::class, new TestMigration());
-        $repository = $this->ci->get(DatabaseMigrationRepository::class);
+        $this->getContainer()->set(MigrationTable::class, new TestMigration());
+        $repository = $this->getService(DatabaseMigrationRepository::class);
 
         $this->expectException(MigrationNotFoundException::class);
         $repository->get('foo');  // @phpstan-ignore-line
@@ -141,8 +141,8 @@ class DatabaseMigrationRepositoryTest extends TestCase
     public function testLegacyMigrations(): void
     {
         // Replace the default model with a custom one for testing
-        $this->ci->set(MigrationTable::class, new TestMigration());
-        $repository = $this->ci->get(DatabaseMigrationRepository::class);
+        $this->getContainer()->set(MigrationTable::class, new TestMigration());
+        $repository = $this->getService(DatabaseMigrationRepository::class);
 
         // Log the migration with the old class name ("\" at the beginning)
         $repository->log('\\' . MigrationClassStub::class);

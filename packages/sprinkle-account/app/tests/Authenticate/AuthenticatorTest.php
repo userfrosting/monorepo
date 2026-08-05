@@ -58,7 +58,7 @@ class AuthenticatorTest extends AccountTestCase
         $user = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         // Valid credentials.
         // N.B.: "password" is hardcoded in factory.
@@ -72,7 +72,7 @@ class AuthenticatorTest extends AccountTestCase
         $user = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         $this->expectException(InvalidCredentialsException::class);
         $authenticator->authenticate('id', $user->id, 'secret');
@@ -81,7 +81,7 @@ class AuthenticatorTest extends AccountTestCase
     public function testAuthenticateWithNullUser(): void
     {
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         $this->expectException(AccountNotFoundException::class);
         $authenticator->authenticate('id', 123, 'password');
@@ -95,7 +95,7 @@ class AuthenticatorTest extends AccountTestCase
         ])->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         $this->expectException(PasswordExpiredException::class);
         $authenticator->authenticate('id', $user->id, '');
@@ -109,7 +109,7 @@ class AuthenticatorTest extends AccountTestCase
         ])->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         $this->expectException(AccountDisabledException::class);
         $authenticator->authenticate('id', $user->id, 'password');
@@ -123,12 +123,12 @@ class AuthenticatorTest extends AccountTestCase
         ])->create();
 
         // Make sure email verification is required
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.registration.require_email_verification', true);
         $this->assertTrue($config->get('site.registration.require_email_verification'));
 
         // Get authenticator, set expectation and run test
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
         $this->expectException(AccountNotVerifiedException::class);
         $authenticator->authenticate('id', $user->id, 'password');
     }
@@ -136,10 +136,10 @@ class AuthenticatorTest extends AccountTestCase
     public function testCheckGuestWithDefault(): void
     {
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
 
         // Start session
         $session->start();
@@ -149,7 +149,7 @@ class AuthenticatorTest extends AccountTestCase
         $this->assertTrue($authenticator->guest());
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
     }
 
     public function testLogin(): void
@@ -158,13 +158,13 @@ class AuthenticatorTest extends AccountTestCase
         $user = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
 
         // Start session
         $session->start();
@@ -203,10 +203,10 @@ class AuthenticatorTest extends AccountTestCase
         $user = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
 
         // Start session
         $session->start();
@@ -227,14 +227,14 @@ class AuthenticatorTest extends AccountTestCase
         $testUser = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('remember_me.domain', 'foo.bar');
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $key = strval($config->get('session.keys.current_user_id'));
 
         // Start session
@@ -259,7 +259,7 @@ class AuthenticatorTest extends AccountTestCase
         // First, we'll simulate a page refresh by creating a new authenticator
         // (So `$this->user` will be null)
         /** @var Authenticator */
-        $authenticator = $this->ci->make(Authenticator::class);
+        $authenticator = $this->getContainer()->make(Authenticator::class);
 
         // Get user
         $user = $authenticator->user();
@@ -281,14 +281,14 @@ class AuthenticatorTest extends AccountTestCase
         $testUser = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('remember_me.domain', 'foo.bar');
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $key = strval($config->get('session.keys.current_user_id'));
 
         // Start session
@@ -311,7 +311,7 @@ class AuthenticatorTest extends AccountTestCase
 
         // We also remove cached user AND delete the user
         /** @var Cache */
-        $cache = $this->ci->get(Cache::class);
+        $cache = $this->getService(Cache::class);
         $key = $config->get('cache.user.key') . $testUser->id;
         $cache->delete($key);
         $testUser->delete();
@@ -320,7 +320,7 @@ class AuthenticatorTest extends AccountTestCase
         // First, we'll simulate a page refresh by creating a new authenticator
         // (So `$this->user` will be null)
         /** @var Authenticator */
-        $authenticator = $this->ci->make(Authenticator::class);
+        $authenticator = $this->getContainer()->make(Authenticator::class);
 
         // Get user
         $user = $authenticator->user();
@@ -341,25 +341,25 @@ class AuthenticatorTest extends AccountTestCase
             ->shouldReceive('isSuccess')->once()->andReturn(false)
             ->shouldReceive('hasPossibleManipulation')->once()->andReturn(true)
             ->getMock();
-        $storageInterface = $this->ci->get(AbstractStorage::class);
+        $storageInterface = $this->getService(AbstractStorage::class);
 
         $class = RememberMe::class . '[login]';
         $rememberMe = Mockery::mock($class, [$storageInterface])
             ->shouldReceive('login')->once()->andReturn($loginResult)
             ->getMock();
-        $this->ci->set(RememberMe::class, $rememberMe);
+        $this->getContainer()->set(RememberMe::class, $rememberMe);
 
         /** @var User */
         $testUser = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $key = strval($config->get('session.keys.current_user_id'));
 
         // Start session and login user
@@ -373,7 +373,7 @@ class AuthenticatorTest extends AccountTestCase
         // First, we'll simulate a page refresh by creating a new authenticator
         // (So `$this->user` will be null)
         /** @var Authenticator */
-        $authenticator = $this->ci->make(Authenticator::class);
+        $authenticator = $this->getContainer()->make(Authenticator::class);
 
         // Get user
         $this->expectException(AuthCompromisedException::class);
@@ -389,13 +389,13 @@ class AuthenticatorTest extends AccountTestCase
         $testUser = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $key = strval($config->get('session.keys.current_user_id'));
 
         // Start session
@@ -408,7 +408,7 @@ class AuthenticatorTest extends AccountTestCase
         // First, we'll simulate a page refresh by creating a new authenticator
         // (So `$this->user` will be null)
         /** @var Authenticator */
-        $authenticator = $this->ci->make(Authenticator::class);
+        $authenticator = $this->getContainer()->make(Authenticator::class);
 
         // Get user
         $user = $authenticator->user();
@@ -430,10 +430,10 @@ class AuthenticatorTest extends AccountTestCase
         $testUser = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
 
         // Start session
         $session->start();
@@ -445,7 +445,7 @@ class AuthenticatorTest extends AccountTestCase
         // First, we'll simulate a page refresh by creating a new authenticator
         // (So `$this->user` will be null)
         /** @var Authenticator */
-        $authenticator = $this->ci->make(Authenticator::class);
+        $authenticator = $this->getContainer()->make(Authenticator::class);
 
         // We now destroy session
         $session->destroy();
@@ -462,7 +462,7 @@ class AuthenticatorTest extends AccountTestCase
     public function testLoginSessionUserWithAuthExpired(): void
     {
         // Mock RememberMe to simulate a fake cookie.
-        $storageInterface = $this->ci->get(AbstractStorage::class);
+        $storageInterface = $this->getService(AbstractStorage::class);
         $cookie = Mockery::mock(PHPCookie::class)
             ->makePartial()
             ->shouldReceive('getValue')->andReturn('foo')
@@ -472,16 +472,16 @@ class AuthenticatorTest extends AccountTestCase
         $rememberMe = Mockery::mock($class, [$storageInterface])
             ->shouldReceive('getCookie')->andReturn($cookie)
             ->getMock();
-        $this->ci->set(RememberMe::class, $rememberMe);
+        $this->getContainer()->set(RememberMe::class, $rememberMe);
 
         /** @var User */
         $testUser = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
 
         // Start session
         $session->start();
@@ -493,7 +493,7 @@ class AuthenticatorTest extends AccountTestCase
         // First, we'll simulate a page refresh by creating a new authenticator
         // (So `$this->user` will be null)
         /** @var Authenticator */
-        $authenticator = $this->ci->make(Authenticator::class);
+        $authenticator = $this->getContainer()->make(Authenticator::class);
 
         // Get user
         $this->expectException(AuthExpiredException::class);
@@ -506,7 +506,7 @@ class AuthenticatorTest extends AccountTestCase
     public function testLoginWithNoOneLoggedIn(): void
     {
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
         $this->assertTrue($authenticator->guest());
         $authenticator->logout();
         $this->assertTrue($authenticator->guest());
@@ -518,13 +518,13 @@ class AuthenticatorTest extends AccountTestCase
         $testUser = User::factory()->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $key = strval($config->get('session.keys.current_user_id'));
 
         // Start session
@@ -541,7 +541,7 @@ class AuthenticatorTest extends AccountTestCase
         // First, we'll simulate a page refresh by creating a new authenticator
         // (So `$this->user` will be null)
         /** @var Authenticator */
-        $authenticator = $this->ci->make(Authenticator::class);
+        $authenticator = $this->getContainer()->make(Authenticator::class);
 
         // Get user
         $this->expectException(AccountNotFoundException::class);
@@ -559,14 +559,14 @@ class AuthenticatorTest extends AccountTestCase
             ->getMock();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
         $authenticator->setUserModel($userModel);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         /** @var Session */
-        $session = $this->ci->get(Session::class);
+        $session = $this->getService(Session::class);
         $key = strval($config->get('session.keys.current_user_id'));
 
         // Start session
@@ -590,7 +590,7 @@ class AuthenticatorTest extends AccountTestCase
         ])->create();
 
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
 
         $this->expectException(PasswordExpiredException::class);
         $authenticator->authenticate('id', $user->id, 'hashed-password');

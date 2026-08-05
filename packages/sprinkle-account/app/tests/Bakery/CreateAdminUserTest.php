@@ -62,16 +62,16 @@ class CreateAdminUserTest extends AccountTestCase
                 return $arg1;
             })
             ->getMock();
-        $this->ci->set(EventDispatcherInterface::class, $eventDispatcher);
+        $this->getContainer()->set(EventDispatcherInterface::class, $eventDispatcher);
 
         // Mock userActivityLogger to assert it's being called properly.
         $userActivityLogger = Mockery::mock(UserActivityLogger::class)
             ->shouldReceive('info')->once()
             ->getMock();
-        $this->ci->set(UserActivityLoggerInterface::class, $userActivityLogger);
+        $this->getContainer()->set(UserActivityLoggerInterface::class, $userActivityLogger);
 
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command, userInput: [
             'test', // username
             'password123', // password
@@ -92,7 +92,7 @@ class CreateAdminUserTest extends AccountTestCase
         $this->assertEquals(0, User::count());
 
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command, input: [
             '--username'  => 'test',
             '--password'  => 'password123',
@@ -121,7 +121,7 @@ class CreateAdminUserTest extends AccountTestCase
         $this->assertEquals(0, User::count());
 
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command, userInput: [
             '', // username
             'test', // username repeated
@@ -143,10 +143,10 @@ class CreateAdminUserTest extends AccountTestCase
         $connection = Mockery::mock(Capsule::class)
             ->shouldReceive('getDatabaseManager')->once()->andThrow(new PDOException())
             ->getMock();
-        $this->ci->set(Capsule::class, $connection);
+        $this->getContainer()->set(Capsule::class, $connection);
 
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(1, $result->getStatusCode());
         $this->assertStringContainsString('Could not connect to the database', $result->getDisplay());
@@ -158,10 +158,10 @@ class CreateAdminUserTest extends AccountTestCase
         $repository = Mockery::mock(MigrationRepositoryInterface::class)
             ->shouldReceive('exists')->once()->andReturn(false)
             ->getMock();
-        $this->ci->set(MigrationRepositoryInterface::class, $repository);
+        $this->getContainer()->set(MigrationRepositoryInterface::class, $repository);
 
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(1, $result->getStatusCode());
 
@@ -179,10 +179,10 @@ class CreateAdminUserTest extends AccountTestCase
             ->shouldReceive('exists')->once()->andReturn(true)
             ->shouldReceive('has')->once()->andReturn(false)
             ->getMock();
-        $this->ci->set(MigrationRepositoryInterface::class, $repository);
+        $this->getContainer()->set(MigrationRepositoryInterface::class, $repository);
 
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(1, $result->getStatusCode());
     }
@@ -193,7 +193,7 @@ class CreateAdminUserTest extends AccountTestCase
         $this->assertEquals(1, User::count());
 
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command);
         $this->assertSame(0, $result->getStatusCode());
         $this->assertStringContainsString("Table 'users' is not empty.", $result->getDisplay());
@@ -211,7 +211,7 @@ class CreateAdminUserTest extends AccountTestCase
     public function testValidationRetriesAfterInvalidEmail(): void
     {
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command, userInput: [
             'test', // username
             'password123', // password
@@ -245,10 +245,10 @@ class CreateAdminUserTest extends AccountTestCase
         $validator = Mockery::mock(UserValidation::class)
             ->shouldReceive('validate')->once()->andThrow(new UsernameNotUniqueException())
             ->getMock();
-        $this->ci->set(UserValidation::class, $validator);
+        $this->getContainer()->set(UserValidation::class, $validator);
 
         /** @var CreateAdminUser */
-        $command = $this->ci->get(CreateAdminUser::class);
+        $command = $this->getService(CreateAdminUser::class);
         $result = BakeryTester::runCommand($command, userInput: [
             'test', // username
             'password123', // password

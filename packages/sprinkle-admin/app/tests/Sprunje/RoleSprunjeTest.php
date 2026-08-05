@@ -49,7 +49,7 @@ class RoleSprunjeTest extends AdminTestCase
     public function testBaseSprunje(): void
     {
         /** @var RoleSprunje */
-        $sprunje = $this->ci->get(RoleSprunje::class);
+        $sprunje = $this->getService(RoleSprunje::class);
         $data = $sprunje->getArray();
 
         $this->assertEquals(3, $data['count']);
@@ -61,7 +61,7 @@ class RoleSprunjeTest extends AdminTestCase
     public function testWithInfoFilter(): void
     {
         /** @var RoleSprunje */
-        $sprunje = $this->ci->get(RoleSprunje::class);
+        $sprunje = $this->getService(RoleSprunje::class);
         $sprunje->setOptions([
             'filters' => ['info' => 'Name 1'],
         ]);

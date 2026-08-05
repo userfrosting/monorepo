@@ -19,7 +19,7 @@ class BakeCommandListenerTest extends AccountTestCase
     public function testListener(): void
     {
         /** @var \UserFrosting\Event\EventDispatcher */
-        $eventDispatcher = $this->ci->get(EventDispatcherInterface::class);
+        $eventDispatcher = $this->getService(EventDispatcherInterface::class);
 
         $event = new BakeCommandEvent([]);
         $event = $eventDispatcher->dispatch($event);

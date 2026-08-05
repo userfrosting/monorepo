@@ -84,7 +84,7 @@ class LoginActionTest extends AccountTestCase
 
         // We have to logout the user to avoid problem
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
         $authenticator->logout();
     }
 
@@ -109,7 +109,7 @@ class LoginActionTest extends AccountTestCase
 
         // We have to logout the user to avoid problem
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
         $authenticator->logout();
     }
 
@@ -123,7 +123,7 @@ class LoginActionTest extends AccountTestCase
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('check')->once()->andReturn(true)
             ->getMock();
-        $this->ci->set(Authenticator::class, $authenticator);
+        $this->getContainer()->set(Authenticator::class, $authenticator);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/login', [
@@ -160,7 +160,7 @@ class LoginActionTest extends AccountTestCase
         $throttler = Mockery::mock(Throttler::class)
             ->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => 'foo'])->andReturn(90)
             ->getMock();
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/login', [
@@ -183,7 +183,7 @@ class LoginActionTest extends AccountTestCase
             ->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => 'foo'])->andReturn(0)
             ->shouldReceive('logEvent')->once()->with('sign_in_attempt', ['user_identifier' => 'foo'])
             ->getMock();
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/login', [
@@ -216,7 +216,7 @@ class LoginActionTest extends AccountTestCase
             ->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => $user->email])->andReturn(0)
             ->shouldNotReceive('logEvent')
             ->getMock();
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/login', [
@@ -231,7 +231,7 @@ class LoginActionTest extends AccountTestCase
 
         // We have to logout the user to avoid problem
         /** @var Authenticator */
-        $authenticator = $this->ci->get(Authenticator::class);
+        $authenticator = $this->getService(Authenticator::class);
         $authenticator->logout();
     }
 
@@ -239,7 +239,7 @@ class LoginActionTest extends AccountTestCase
     {
         // Force config
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('site.login.enable_email', false);
 
         // Create fake throttler
@@ -248,7 +248,7 @@ class LoginActionTest extends AccountTestCase
             ->shouldReceive('getDelay')->once()->with('sign_in_attempt', ['user_identifier' => 'foo@bar.com'])->andReturn(0)
             ->shouldReceive('logEvent')->once()->with('sign_in_attempt', ['user_identifier' => 'foo@bar.com'])
             ->getMock();
-        $this->ci->set(Throttler::class, $throttler);
+        $this->getContainer()->set(Throttler::class, $throttler);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/login', [

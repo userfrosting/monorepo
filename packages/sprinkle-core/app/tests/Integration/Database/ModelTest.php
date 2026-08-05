@@ -86,7 +86,7 @@ class ModelTest extends CoreTestCase
     {
         // Run custom migration up
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         $migration = new TestTables($builder);
         $migration->up();
 
@@ -111,7 +111,7 @@ class ModelTest extends CoreTestCase
     {
         // Run custom migration up
         /** @var Builder */
-        $builder = $this->ci->get(Builder::class);
+        $builder = $this->getService(Builder::class);
         $migration = new TestTables($builder);
         $migration->up();
 

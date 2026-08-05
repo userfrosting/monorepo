@@ -35,7 +35,7 @@ class MigratorRollbackTest extends TestCase
 
         // Add installed
         /** @var MigrationRepositoryInterface */
-        $repository = $this->ci->get(MigrationRepositoryInterface::class);
+        $repository = $this->getService(MigrationRepositoryInterface::class);
         $repository->log(StubAnalyserRollbackMigrationA::class, 1);
         $repository->log(StubAnalyserRollbackMigrationC::class, 2);
         $repository->log(StubAnalyserRollbackMigrationB::class, 2);
@@ -53,7 +53,7 @@ class MigratorRollbackTest extends TestCase
 
     public function testCanRollbackMigration(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         // "D" and "A" are clear for rollback
         $this->assertTrue($migrator->canRollbackMigration(StubAnalyserRollbackMigrationD::class));
@@ -71,7 +71,7 @@ class MigratorRollbackTest extends TestCase
 
     public function testGetMigrationsForRollbackForLast(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         $resultA = $migrator->getMigrationsForRollback();
         $resultB = $migrator->getMigrationsForRollback(1);
@@ -83,7 +83,7 @@ class MigratorRollbackTest extends TestCase
 
     public function testGetMigrationsForRollbackForStep2(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         $result = $migrator->getMigrationsForRollback(2);
 
@@ -96,7 +96,7 @@ class MigratorRollbackTest extends TestCase
 
     public function testGetMigrationsForReset(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         $result = $migrator->getMigrationsForReset();
 
@@ -110,7 +110,7 @@ class MigratorRollbackTest extends TestCase
 
     public function testGetMigrationsForRollbackForTooManyStep(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         // Will do same as reset in this case
         $result = $migrator->getMigrationsForRollback(99);
@@ -125,13 +125,13 @@ class MigratorRollbackTest extends TestCase
 
     public function testGetMigrationsForRollbackForStaleError(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         // Add "E" as installed. It's gonna be stale
         $this->repository->log(StubAnalyserRollbackMigrationE::class, 1);
 
         // Get analyser back to propagate changes
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         // Expect exception because of stale migration.
         $this->expectException(MigrationRollbackException::class);

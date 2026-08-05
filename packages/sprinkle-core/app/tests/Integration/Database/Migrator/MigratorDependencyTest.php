@@ -35,7 +35,7 @@ class MigratorDependencyTest extends TestCase
 
         // Add installed
         /** @var MigrationRepositoryInterface */
-        $repository = $this->ci->get(MigrationRepositoryInterface::class);
+        $repository = $this->getService(MigrationRepositoryInterface::class);
         $repository->log(StubAnalyserMigrationA::class, 1);
         $repository->log(StubAnalyserMigrationD::class, 2); // @phpstan-ignore-line - D doesn't exist, which is the point
 
@@ -51,7 +51,7 @@ class MigratorDependencyTest extends TestCase
 
     public function testGetInstalled(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         $this->assertSame([
             StubAnalyserMigrationA::class,
@@ -61,7 +61,7 @@ class MigratorDependencyTest extends TestCase
 
     public function testGetAvailable(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         $this->assertSame([
             StubAnalyserMigrationA::class,
@@ -73,7 +73,7 @@ class MigratorDependencyTest extends TestCase
 
     public function testGetPending(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         $this->assertSame([
             StubAnalyserMigrationC::class, // C is before B because B depend on C
@@ -84,7 +84,7 @@ class MigratorDependencyTest extends TestCase
 
     public function testGetStale(): void
     {
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         $this->assertSame([
             // Installed, not available
@@ -101,7 +101,7 @@ class MigratorDependencyTest extends TestCase
         $this->repository->remove(StubAnalyserMigrationD::class); // @phpstan-ignore-line
 
         // Get migrator
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getService(Migrator::class);
 
         // Make sure installed is right
         $this->assertSame([

@@ -34,7 +34,7 @@ class DefaultPermissionsTest extends AccountTestCase
         $this->refreshDatabase();
 
         /** @var Permission */
-        $permission = $this->ci->get(Permission::class);
+        $permission = $this->getService(Permission::class);
 
         // Assert initial table state
         $this->assertCount(0, $permission::all());
@@ -60,7 +60,7 @@ class DefaultPermissionsTest extends AccountTestCase
         $this->refreshDatabase();
 
         /** @var Permission */
-        $permission = $this->ci->get(Permission::class);
+        $permission = $this->getService(Permission::class);
 
         // Assert initial table state
         $this->assertCount(0, $permission::all());

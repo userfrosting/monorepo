@@ -23,14 +23,14 @@ class MarkdownServiceTest extends TestCase
 {
     public function testService(): void
     {
-        $this->assertInstanceOf(ConverterInterface::class, $this->ci->get(ConverterInterface::class)); // @phpstan-ignore-line
-        $this->assertInstanceOf(MarkdownRepositoryInterface::class, $this->ci->get(MarkdownRepositoryInterface::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(ConverterInterface::class, $this->getService(ConverterInterface::class)); // @phpstan-ignore-line
+        $this->assertInstanceOf(MarkdownRepositoryInterface::class, $this->getService(MarkdownRepositoryInterface::class)); // @phpstan-ignore-line
     }
 
     public function testMarkdownConversion(): void
     {
         /** @var ConverterInterface */
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = '# Hello World';
         $result = $converter->convert($markdown);
@@ -42,7 +42,7 @@ class MarkdownServiceTest extends TestCase
     public function testGithubFlavoredMarkdown(): void
     {
         /** @var ConverterInterface */
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         // Test strikethrough (GFM feature)
         $markdown = '~~strikethrough~~';
@@ -55,7 +55,7 @@ class MarkdownServiceTest extends TestCase
     public function testFrontMatter(): void
     {
         /** @var ConverterInterface */
-        $converter = $this->ci->get(ConverterInterface::class);
+        $converter = $this->getService(ConverterInterface::class);
 
         $markdown = <<<'MD'
 ---

@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Database\Connection;
 use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
+use UserFrosting\Testing\TestCase;
 
 /**
  * Trait o refresh database to fresh state.
@@ -27,12 +28,19 @@ trait RefreshDatabase
      */
     public function refreshDatabase(): void
     {
-        // @phpstan-ignore-next-line Allow for extra protection in case Trait is misused.
-        if (!isset($this->ci) || !$this->ci instanceof ContainerInterface) {
+        $this->usingInMemoryDatabase() ? $this->refreshInMemoryDatabase() : $this->refreshTestDatabase();
+    }
+
+    /**
+     * Get the test case container.
+     */
+    private function getTestContainer(): ContainerInterface
+    {
+        if (!$this instanceof TestCase) {
             throw new Exception('CI/Container not available. Make sure you extend the correct TestCase');
         }
 
-        $this->usingInMemoryDatabase() ? $this->refreshInMemoryDatabase() : $this->refreshTestDatabase();
+        return $this->getContainer();
     }
 
     /**
@@ -43,7 +51,7 @@ trait RefreshDatabase
     public function usingInMemoryDatabase(): bool
     {
         /** @var Connection */
-        $connection = $this->ci->get(Connection::class);
+        $connection = $this->getTestContainer()->get(Connection::class);
 
         return $connection->getDatabaseName() === ':memory:';
     }
@@ -54,7 +62,7 @@ trait RefreshDatabase
     private function refreshInMemoryDatabase(): void
     {
         /** @var Migrator */
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getTestContainer()->get(Migrator::class);
         $migrator->migrate();
     }
 
@@ -65,7 +73,7 @@ trait RefreshDatabase
     private function refreshTestDatabase(): void
     {
         /** @var Migrator */
-        $migrator = $this->ci->get(Migrator::class);
+        $migrator = $this->getTestContainer()->get(Migrator::class);
         $migrator->reset();
         $migrator->migrate();
     }

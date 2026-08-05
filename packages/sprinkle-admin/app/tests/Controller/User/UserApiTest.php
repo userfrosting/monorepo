@@ -158,7 +158,7 @@ class UserApiTest extends AdminTestCase
         $this->actAsUser($user);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Force locale config.
         $config->set('site.registration.user_defaults.locale', 'en_US');
@@ -197,7 +197,7 @@ class UserApiTest extends AdminTestCase
         $this->actAsUser($user);
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
 
         // Force locale config.
         $config->set('site.registration.user_defaults.locale', 'en_US');

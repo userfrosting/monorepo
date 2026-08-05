@@ -304,7 +304,7 @@ class UserUpdateFieldActionTest extends AdminTestCase
         $userToEdit = User::factory()->create();
 
         /** @var Config */
-        $config = $this->ci->get(Config::class);
+        $config = $this->getService(Config::class);
         $config->set('reserved_user_ids.master', $userToEdit->id);
 
         // Create request with method and url and fetch response

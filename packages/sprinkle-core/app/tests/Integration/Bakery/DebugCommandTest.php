@@ -53,7 +53,7 @@ class DebugCommandTest extends CoreTestCase
         $class = Mockery::mock(Capsule::class)
             ->shouldReceive('getDatabaseManager')->andThrow(PDOException::class)
             ->getMock();
-        $this->ci->set(Capsule::class, $class);
+        $this->getContainer()->set(Capsule::class, $class);
 
         $result = $this->getCommandTester();
 
@@ -68,7 +68,7 @@ class DebugCommandTest extends CoreTestCase
         $class = Mockery::mock(PhpVersionValidator::class)
             ->shouldReceive('validate')->andThrow(VersionCompareException::class, 'Version is not supported')
             ->getMock();
-        $this->ci->set(PhpVersionValidator::class, $class);
+        $this->getContainer()->set(PhpVersionValidator::class, $class);
 
         $result = $this->getCommandTester();
 
@@ -83,7 +83,7 @@ class DebugCommandTest extends CoreTestCase
         $class = Mockery::mock(PhpDeprecationValidator::class)
             ->shouldReceive('validate')->andThrow(VersionCompareException::class, 'Version deprecated')
             ->getMock();
-        $this->ci->set(PhpDeprecationValidator::class, $class);
+        $this->getContainer()->set(PhpDeprecationValidator::class, $class);
 
         $result = $this->getCommandTester();
 
@@ -114,12 +114,12 @@ class DebugCommandTest extends CoreTestCase
             DebugTwigCommand::class,
         ];
         foreach ($commands as $command) {
-            $app->add($command = $this->ci->get($command));
+            $app->add($command = $this->getContainer()->get($command));
         }
 
         // Get command to test
         /** @var DebugCommand */
-        $debugCommand = $this->ci->get(DebugCommand::class);
+        $debugCommand = $this->getService(DebugCommand::class);
 
         // Create command tester & execute command
         $commandTester = new CommandTester($debugCommand);
