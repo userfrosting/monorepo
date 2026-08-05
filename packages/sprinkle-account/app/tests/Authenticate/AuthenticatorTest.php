@@ -342,7 +342,7 @@ class AuthenticatorTest extends AccountTestCase
             ->shouldReceive('hasPossibleManipulation')->once()->andReturn(true)
             ->getMock();
         $storageInterface = $this->ci->get(AbstractStorage::class);
-        /** @var class-string */
+
         $class = RememberMe::class . '[login]';
         $rememberMe = Mockery::mock($class, [$storageInterface])
             ->shouldReceive('login')->once()->andReturn($loginResult)
@@ -467,7 +467,7 @@ class AuthenticatorTest extends AccountTestCase
             ->makePartial()
             ->shouldReceive('getValue')->andReturn('foo')
             ->getMock();
-        /** @var class-string */
+
         $class = RememberMe::class . '[getCookie]';
         $rememberMe = Mockery::mock($class, [$storageInterface])
             ->shouldReceive('getCookie')->andReturn($cookie)

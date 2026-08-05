@@ -524,7 +524,7 @@ class User extends Model implements UserInterface
     {
         $permissions = [];
 
-        /** @var PermissionInterface $permission */
+        /** @var PermissionInterface&Model $permission */
         foreach ($this->permissions()->get() as $permission) {
             $permissions[$permission->slug][] = $permission->conditions;
         }

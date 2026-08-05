@@ -469,7 +469,8 @@ class ResourceLocator implements ResourceLocatorInterface
             $parts[] = trim($stream->getPath(), $this->separator);
 
             // Merge both paths. Array_filter will take
-            $path = implode($this->separator, array_filter($parts));
+            $parts = array_filter($parts, static fn (string $part): bool => $part !== '');
+            $path = implode($this->separator, $parts);
 
             $list[$path] = $location;
         }

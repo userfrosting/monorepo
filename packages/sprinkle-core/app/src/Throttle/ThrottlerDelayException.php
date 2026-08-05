@@ -34,7 +34,7 @@ final class ThrottlerDelayException extends UserFacingException
     /**
      * {@inheritDoc}
      */
-    public function getDescription(): string|UserMessage
+    public function getDescription(): UserMessage
     {
         // @phpstan-ignore-next-line - Property is a string
         return new UserMessage($this->description, ['delay' => $this->delay]);

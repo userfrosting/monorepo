@@ -15,7 +15,6 @@ namespace UserFrosting\Sprinkle\Core\Exceptions;
 use Exception;
 use Throwable;
 use UserFrosting\Sprinkle\Core\Exceptions\Contracts\UserMessageException;
-use UserFrosting\Support\Message\UserMessage;
 
 /**
  * Validation related Exception.
@@ -76,7 +75,7 @@ final class ValidationException extends Exception implements UserMessageExceptio
     /**
      * {@inheritDoc}
      */
-    public function getTitle(): string|UserMessage
+    public function getTitle(): string
     {
         return 'VALIDATE.ERROR';
     }
@@ -84,7 +83,7 @@ final class ValidationException extends Exception implements UserMessageExceptio
     /**
      * {@inheritDoc}
      */
-    public function getDescription(): string|UserMessage
+    public function getDescription(): string
     {
         return implode(' ', $this->getErrors());
     }

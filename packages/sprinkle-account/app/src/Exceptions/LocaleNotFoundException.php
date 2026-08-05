@@ -24,7 +24,7 @@ final class LocaleNotFoundException extends AccountException
     /**
      * {@inheritDoc}
      */
-    public function getDescription(): string|UserMessage
+    public function getDescription(): UserMessage
     {
         return new UserMessage('LOCALE.INVALID', ['locale' => $this->locale]);
     }

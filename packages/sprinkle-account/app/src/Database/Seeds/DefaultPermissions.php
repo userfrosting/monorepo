@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Database\Seeds;
 
-use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PermissionInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Core\Seeder\SeedInterface;
@@ -32,7 +31,7 @@ class DefaultPermissions implements SeedInterface
 
         // Get and save permissions
         $permissions = $this->getPermissions();
-        $this->savePermissions($permissions);
+        $permissions = $this->savePermissions($permissions);
 
         // Add default mappings to permissions
         $this->syncPermissionsRole($permissions);
@@ -254,13 +253,16 @@ class DefaultPermissions implements SeedInterface
     /**
      * Save permissions.
      *
-     * @param array<string, PermissionInterface> $permissions
+     * @param array<string, Permission> $permissions
+     *
+     * @return array<string, Permission> The saved permissions
      */
-    protected function savePermissions(array &$permissions): void
+    protected function savePermissions(array $permissions): array
     {
-        /** @var PermissionInterface $permission */
+        /** @var Permission $permission */
         foreach ($permissions as $slug => $permission) {
             // Trying to find if the permission already exists
+            /** @var Permission|null */
             $existingPermission = Permission::where([
                 'slug'       => $permission->slug,
                 'conditions' => $permission->conditions,
@@ -274,12 +276,14 @@ class DefaultPermissions implements SeedInterface
                 $permissions[$slug] = $existingPermission;
             }
         }
+
+        return $permissions;
     }
 
     /**
      * Sync permissions with default roles.
      *
-     * @param Permission[] $permissions
+     * @param array<string, Permission> $permissions
      */
     protected function syncPermissionsRole(array $permissions): void
     {

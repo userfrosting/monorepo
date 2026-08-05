@@ -25,7 +25,7 @@ final class DefaultGroupException extends AccountException
     /**
      * {@inheritDoc}
      */
-    public function getDescription(): string|UserMessage
+    public function getDescription(): UserMessage
     {
         return new UserMessage('ACCOUNT.EXCEPTION.DEFAULT_GROUP.DESCRIPTION', ['slug' => $this->slug]);
     }

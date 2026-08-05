@@ -107,7 +107,7 @@ class Session implements ArrayAccess
 
         // If it's desired to kill the session, also delete the session cookie.
         // Note: This will destroy the session, and not just the session data!
-        if ($destroyCookie && ini_get('session.use_cookies') == true) {
+        if ($destroyCookie && ini_get('session.use_cookies') === '1') {
             $params = session_get_cookie_params();
             $name = session_name();
             setcookie(

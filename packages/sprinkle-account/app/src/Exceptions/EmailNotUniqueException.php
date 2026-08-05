@@ -25,7 +25,7 @@ final class EmailNotUniqueException extends AccountException
     /**
      * {@inheritDoc}
      */
-    public function getDescription(): string|UserMessage
+    public function getDescription(): UserMessage
     {
         return new UserMessage('EMAIL.IN_USE', ['email' => $this->email]);
     }

@@ -169,10 +169,10 @@ class AccessConditionEvaluator extends NodeVisitorAbstract
         }
 
         if ($this->debug) {
-            $this->logger->debug('Result: ' . ($result == true ? '1' : '0'));
+            $this->logger->debug('Result: ' . ((bool) $result ? '1' : '0'));
         }
 
-        return new \PhpParser\Node\Scalar\LNumber($result == true ? 1 : 0);
+        return new \PhpParser\Node\Scalar\LNumber((bool) $result ? 1 : 0);
     }
 
     /**
@@ -198,7 +198,7 @@ class AccessConditionEvaluator extends NodeVisitorAbstract
 
         /** @var \PhpParser\Node\Expr\ArrayItem $item */
         foreach ($value->items as $item) {
-            if ($item->key == true) {
+            if ($item->key !== null) {
                 // @phpstan-ignore-next-line : $item define key/value as abstract method Expr, actual object usually has value property.
                 $arr[$item->key->value] = $item->value->value;
             } else {
@@ -290,11 +290,11 @@ class AccessConditionEvaluator extends NodeVisitorAbstract
             $result = eval($expr_eval);
 
             if ($this->debug) {
-                $this->logger->debug("Expression '$expr' evaluates to " . ($result == true ? 'true' : 'false'));
+                $this->logger->debug("Expression '$expr' evaluates to " . ((bool) $result ? 'true' : 'false'));
             }
 
             // Return loose bool, as strict bool.
-            return ($result == true) ? true : false;
+            return (bool) $result;
         } catch (PhpParserException|AuthorizationException $e) {
             if ($this->debug) {
                 $this->logger->debug("Error parsing access condition '$condition': " . $e->getMessage());

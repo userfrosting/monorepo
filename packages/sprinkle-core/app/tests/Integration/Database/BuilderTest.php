@@ -55,7 +55,7 @@ class BuilderTest extends TestCase
 
     public function testGet(): void
     {
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::get();
         $this->assertEquals([
             ['name' => 'foo', 'description' => 'The Foo'],
@@ -65,7 +65,6 @@ class BuilderTest extends TestCase
 
     public function testExclude(): void
     {
-        /** @var TestObject */
         $objects = TestObject::exclude('description')->get();
         $this->assertEquals([
             ['name' => 'foo'],
@@ -75,17 +74,17 @@ class BuilderTest extends TestCase
 
     public function testLike(): void
     {
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::like('name', 'oo')->get();
         $this->assertEquals([
             ['name' => 'foo', 'description' => 'The Foo'],
         ], $objects->toArray());
 
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::like('description', 'null')->get();
         $this->assertEquals([], $objects->toArray());
 
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::like('description', 'The')->get();
         $this->assertEquals([
             ['name' => 'foo', 'description' => 'The Foo'],
@@ -95,18 +94,18 @@ class BuilderTest extends TestCase
 
     public function testOrLike(): void
     {
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::orLike('name', 'oo')->orLike('name', 'bar')->get();
         $this->assertEquals([
             ['name' => 'foo', 'description' => 'The Foo'],
             ['name' => 'bar', 'description' => 'The Bar'],
         ], $objects->toArray());
 
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::orLike('description', 'null')->orLike('description', 'New')->get();
         $this->assertEquals([], $objects->toArray());
 
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::orLike('description', 'Foo')->orLike('description', 'Bar')->get();
         $this->assertEquals([
             ['name' => 'foo', 'description' => 'The Foo'],
@@ -116,17 +115,17 @@ class BuilderTest extends TestCase
 
     public function testBeginsWith(): void
     {
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::beginsWith('name', 'f')->get();
         $this->assertEquals([
             ['name' => 'foo', 'description' => 'The Foo'],
         ], $objects->toArray());
 
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::beginsWith('description', 'Foo')->get();
         $this->assertEquals([], $objects->toArray());
 
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::beginsWith('description', 'The')->get();
         $this->assertEquals([
             ['name' => 'foo', 'description' => 'The Foo'],
@@ -136,13 +135,13 @@ class BuilderTest extends TestCase
 
     public function testEndsWith(): void
     {
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::endsWith('name', 'o')->get();
         $this->assertEquals([
             ['name' => 'foo', 'description' => 'The Foo'],
         ], $objects->toArray());
 
-        /** @var TestObject */
+        /** @var \Illuminate\Support\Collection<int, TestObject> */
         $objects = TestObject::endsWith('description', 'The')->get();
         $this->assertEquals([], $objects->toArray());
     }

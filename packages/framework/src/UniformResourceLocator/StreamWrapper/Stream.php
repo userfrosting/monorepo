@@ -80,6 +80,10 @@ class Stream implements StreamInterface
      */
     public function stream_lock(int $operation): bool
     {
+        if ($operation < 0 || $operation > 7) {
+            return false;
+        }
+
         return flock($this->handle, $operation);
     }
 

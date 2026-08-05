@@ -23,14 +23,14 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
  *
- * @property int                       $id
- * @property string                    $slug
- * @property string                    $name
- * @property string                    $description
- * @property string                    $icon
- * @property timestamp                 $created_at
- * @property timestamp                 $updated_at
- * @property Collection<UserInterface> $users
+ * @property int                                  $id
+ * @property string                               $slug
+ * @property string                               $name
+ * @property string                               $description
+ * @property string                               $icon
+ * @property \DateTimeImmutable                   $created_at
+ * @property \DateTimeImmutable                   $updated_at
+ * @property Collection<int, UserInterface&Model> $users
  */
 interface GroupInterface
 {

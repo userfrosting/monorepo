@@ -253,9 +253,16 @@ trait HasRelationships
         // the relationship instances for this relation. This relations will set
         // appropriate query constraints then entirely manages the hydrations.
         if ($table === null) {
-            $words = preg_split('/(_)/u', $name, -1, PREG_SPLIT_DELIM_CAPTURE);
-            $lastWord = array_pop($words);
-            $table = implode('', $words) . Str::plural($lastWord);
+            $separatorPosition = strrpos($name, '_');
+            if ($separatorPosition === false) {
+                $prefix = '';
+                $lastWord = $name;
+            } else {
+                $prefix = substr($name, 0, $separatorPosition + 1);
+                $lastWord = substr($name, $separatorPosition + 1);
+            }
+
+            $table = $prefix . Str::plural($lastWord);
         }
 
         return new MorphToManyUnique(

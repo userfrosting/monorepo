@@ -103,54 +103,64 @@ class Captcha
         /** @var \GdImage */
         $image = imagecreatetruecolor(150, 30);
 
-        // Color pallette
-        /** @var int */
-        $white = imagecolorallocate($image, 255, 255, 255);
-        /** @var int */
-        $black = imagecolorallocate($image, 0, 0, 0);
-        /** @var int */
-        $red = imagecolorallocate($image, 255, 0, 0);
-        /** @var int */
-        $yellow = imagecolorallocate($image, 255, 255, 0);
-        /** @var int */
-        $dark_grey = imagecolorallocate($image, 64, 64, 64);
+        // Color palette
+        /** @var array<string, array{int<0, 255>, int<0, 255>, int<0, 255>, int}> $colorDefinitions array[R, G, B, Default] */
+        $colorDefinitions = [
+            'white'     => [255, 255, 255, 16777215],
+            'black'     => [0, 0, 0, 0],
+            'red'       => [255, 0, 0, 16711680],
+            'yellow'    => [255, 255, 0, 16776960],
+            'dark_grey' => [64, 64, 64, 4210752],
+            'blue'      => [0, 0, 255, 255],
+        ];
+
+        // Create colors allocations
+        /** @var array<string, int> $colors */
+        $colors = [];
+        foreach ($colorDefinitions as $name => [$red, $green, $blue, $default]) {
+            $color = imagecolorallocate($image, $red, $green, $blue);
+            if ($color === false) {
+                $color = $default;
+            }
+
+            $colors[$name] = $color;
+        }
 
         // Create white rectangle
-        imagefilledrectangle($image, 0, 0, 150, 30, $white);
+        imagefilledrectangle($image, 0, 0, 150, 30, $colors['white']);
 
         // Add some lines
         for ($i = 0; $i < 2; $i++) {
-            imageline($image, 0, rand() % 10, 10, rand() % 30, $dark_grey);
-            imageline($image, 0, rand() % 30, 150, rand() % 30, $red);
-            imageline($image, 0, rand() % 30, 150, rand() % 30, $yellow);
+            imageline($image, 0, rand() % 10, 10, rand() % 30, $colors['dark_grey']);
+            imageline($image, 0, rand() % 30, 150, rand() % 30, $colors['red']);
+            imageline($image, 0, rand() % 30, 150, rand() % 30, $colors['yellow']);
         }
 
-        // RandTab color pallette
-        /** @var int[] */
-        $randc = [
-            0 => imagecolorallocate($image, 0, 0, 0),
-            1 => imagecolorallocate($image, 255, 0, 0),
-            2 => imagecolorallocate($image, 255, 255, 0),
-            3 => imagecolorallocate($image, 64, 64, 64),
-            4 => imagecolorallocate($image, 0, 0, 255),
+        // Random dot colors
+        $randomColors = [
+            $colors['black'],
+            $colors['red'],
+            $colors['yellow'],
+            $colors['dark_grey'],
+            $colors['blue'],
         ];
 
-        //add some dots
+        // Add some dots
         for ($i = 0; $i < 1000; $i++) {
-            imagesetpixel($image, rand() % 200, rand() % 50, $randc[rand() % 5]);
+            imagesetpixel($image, rand() % 200, rand() % 50, $randomColors[rand() % 5]);
         }
 
-        //calculate center of text
+        // Calculate center of text
         $x = (int) round((150 - 0 - imagefontwidth(5) * strlen($this->code)) / 2 + 0 + 5);
 
-        //write string twice
-        imagestring($image, 5, $x, 7, $this->code, $black);
-        imagestring($image, 5, $x, 7, $this->code, $black);
-        //start ob
+        // Write string twice
+        imagestring($image, 5, $x, 7, $this->code, $colors['black']);
+        imagestring($image, 5, $x, 7, $this->code, $colors['black']);
+        // Start output buffering
         ob_start();
         imagepng($image);
 
-        //get binary image data
+        // Get binary image data
         $this->image = (string) ob_get_clean();
 
         return $this->image;

@@ -58,7 +58,7 @@ class PDOStorageTest extends AccountTestCase
         $this->expire = Carbon::now()->addYear();
 
         // Create a test user
-        /** @var UserInterface */
+        /** @var User&UserInterface */
         $user = User::factory()->create();
         $this->testUser = $user;
 

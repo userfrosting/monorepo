@@ -69,7 +69,7 @@ class RouteList
         }, $routes);
 
         // Remove nulls
-        $routes = array_filter($routes);
+        $routes = array_filter($routes, fn ($route) => $route !== null);
 
         // Apply sort
         if (!is_null($sortBy)) {

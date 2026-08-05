@@ -39,14 +39,13 @@ class ActivitySprunjeTest extends AdminTestCase
 
     protected function createData(): void
     {
-        // @phpstan-ignore-next-line
         $this->users = User::factory()
                     ->count(2)
                     ->sequence(fn ($sequence) => [
                         'first_name' => 'First ' . $sequence->index,
                         'last_name'  => 'Name ' . $sequence->index,
                     ])
-                    ->hasActivities(3)
+                    ->hasActivities(3) // @phpstan-ignore-line
                     ->create();
     }
 

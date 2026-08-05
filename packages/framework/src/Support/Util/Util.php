@@ -80,12 +80,18 @@ class Util
      *
      * @return mixed[]
      */
-    public static function arrayFilterRecursive(array $input, $callback = null): array
+    public static function arrayFilterRecursive(array $input, ?callable $callback = null): array
     {
         foreach ($input as &$value) {
             if (is_array($value)) {
                 $value = self::arrayFilterRecursive($value, $callback);
             }
+        }
+
+        // Create a default callback if none is provided. This will filter out
+        // all falsy values.
+        if ($callback === null) {
+            $callback = static fn (mixed $value): bool => (bool) $value;
         }
 
         return array_filter($input, $callback);

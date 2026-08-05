@@ -707,16 +707,14 @@ class DatabaseTest extends TestCase
         ], $usersWithPermissions[1]['permissions']);
 
         // Test counting related models (withCount)
+        /** @var Collection<int, EloquentTestUser> */
         $users = EloquentTestUser::withCount('permissions')->get();
 
         // N.B.: Changed behavior in UF 4.6 due to change in Laravel API. Duplicated permission now count as two, instead of 1.
         // See : https://github.com/laravel/framework/issues/30575#issuecomment-554096259
         $this->assertEquals(4, $users[0]->permissions_count); // Used to be 3
         $this->assertEquals(4, $users[1]->permissions_count);
-
-        $this->assertInstanceOf(EloquentTestPermission::class, $users[0]->permissions[0]);
-        $this->assertInstanceOf(EloquentTestPermission::class, $users[0]->permissions[1]);
-        $this->assertInstanceOf(EloquentTestPermission::class, $users[0]->permissions[2]);
+        $this->assertContainsOnlyInstancesOf(EloquentTestPermission::class, $users[0]->permissions);
     }
 
     /**
@@ -884,8 +882,8 @@ class DatabaseTest extends TestCase
             return $query->withVia('roles_via');
         }])->get();
 
-        $this->assertInstanceOf(EloquentTestPermission::class, $users[0]->permissions[0]);
-        $this->assertInstanceOf(EloquentTestRole::class, $users[0]->permissions[0]->roles_via[0]);
+        $this->assertContainsOnlyInstancesOf(EloquentTestPermission::class, $users[0]->permissions);
+        $this->assertContainsOnlyInstancesOf(EloquentTestRole::class, $users[0]->permissions[0]->roles_via);
 
         $usersWithPermissions = $users->toArray();
 
@@ -1390,16 +1388,17 @@ class EloquentTestModel extends Model
 }
 
 /**
- * @property int                                $id
- * @property string                             $name
- * @property Collection<EloquentTestEmail>      $emails
- * @property Collection<EloquentTestPhone>      $phones
- * @property Collection<EloquentTestRole>       $roles
- * @property Collection<EloquentTestPermission> $permissions
- * @property Collection<EloquentTestTask>       $assignmentTasks
- * @property Collection<EloquentTestTask>       $tasks
- * @property Collection<EloquentTestRole>       $jobRoles
- * @property Collection<EloquentTestRole>       $jobs
+ * @property int                                     $id
+ * @property string                                  $name
+ * @property int                                     $permissions_count
+ * @property Collection<int, EloquentTestEmail>      $emails
+ * @property Collection<int, EloquentTestPhone>      $phones
+ * @property Collection<int, EloquentTestRole>       $roles
+ * @property Collection<int, EloquentTestPermission> $permissions
+ * @property Collection<int, EloquentTestTask>       $assignmentTasks
+ * @property Collection<int, EloquentTestTask>       $tasks
+ * @property Collection<int, EloquentTestRole>       $jobRoles
+ * @property Collection<int, EloquentTestRole>       $jobs
  */
 class EloquentTestUser extends EloquentTestModel
 {
@@ -1539,9 +1538,9 @@ class EloquentTestPhone extends EloquentTestModel
 }
 
 /**
- * @property int                                $user_id
- * @property int                                $role_id
- * @property Collection<EloquentTestPermission> $permissions
+ * @property int                                     $user_id
+ * @property int                                     $role_id
+ * @property Collection<int, EloquentTestPermission> $permissions
  */
 class EloquentTestRole extends EloquentTestModel
 {
@@ -1558,10 +1557,10 @@ class EloquentTestRole extends EloquentTestModel
 }
 
 /**
- * @property int                          $id
- * @property string                       $slug
- * @property Collection<EloquentTestRole> $roles_via
- * @property Collection<EloquentTestRole> $roles
+ * @property int                               $id
+ * @property string                            $slug
+ * @property Collection<int, EloquentTestRole> $roles_via
+ * @property Collection<int, EloquentTestRole> $roles
  */
 class EloquentTestPermission extends EloquentTestModel
 {
@@ -1578,9 +1577,9 @@ class EloquentTestPermission extends EloquentTestModel
 }
 
 /**
- * @property int                              $id
- * @property string                           $name
- * @property Collection<EloquentTestLocation> $location
+ * @property int                                   $id
+ * @property string                                $name
+ * @property Collection<int, EloquentTestLocation> $location
  */
 class EloquentTestTask extends EloquentTestModel
 {

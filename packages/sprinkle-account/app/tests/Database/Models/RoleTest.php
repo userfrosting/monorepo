@@ -71,7 +71,6 @@ class RoleTest extends AccountTestCase
         /** @var Role */
         $role = Role::factory()->create();
 
-        /** @var User[] */
         $users = User::factory()
             ->count(3)
             ->hasAttached($role)
@@ -93,7 +92,6 @@ class RoleTest extends AccountTestCase
 
     public function testScopeForUser(): void
     {
-        /** @var Role[] */
         $roles = Role::factory()->count(3)->create();
 
         /** @var User */

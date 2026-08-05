@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Illuminate\Database\Connection;
+use Illuminate\Database\Eloquent\Model;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -141,7 +142,7 @@ class EmailVerificationValidationAction
             ]);
 
             // Load the user, by email address
-            /** @var UserInterface|null */
+            /** @var (UserInterface&Model)|null $user */
             $user = $this->userModel->firstWhere('email', $data['email']);
 
             // Verify that the user exists and is not already verified.

@@ -75,7 +75,6 @@ class PermissionTest extends AccountTestCase
         /** @var Permission */
         $permission = Permission::factory()->create();
 
-        /** @var Role[] */
         $roles = Role::factory()
             ->count(3)
             ->hasAttached($permission)

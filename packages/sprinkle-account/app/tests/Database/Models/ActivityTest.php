@@ -77,7 +77,6 @@ class ActivityTest extends AccountTestCase
         /** @var User */
         $user = User::factory()->create();
 
-        /** @var Activity[] */
         $activities = Activity::factory()
             ->count(3)
             ->state(new Sequence(
@@ -151,7 +150,6 @@ class ActivityTest extends AccountTestCase
         )->create();
 
         // Default order is 1, 2
-        /** @var User[] */
         $nonSortedUsers = User::all();
         $this->assertContainsOnlyInstancesOf(UserInterface::class, $nonSortedUsers);
         $this->assertSame('2022-01-01', $nonSortedUsers[0]->lastActivity?->occurred_at?->format('Y-m-d'));
@@ -159,7 +157,6 @@ class ActivityTest extends AccountTestCase
         $this->assertSame([$userA->id, $userB->id], $nonSortedUsers->pluck('id')->toArray()); // @phpstan-ignore-line
 
         // Sort by lastActivity, order will be 2, 1
-        /** @var User[] */
         $sortedUsers = User::joinLastActivity()
                             ->orderBy('last_activity')
                             ->get();
@@ -186,7 +183,6 @@ class ActivityTest extends AccountTestCase
             ->create();
 
         // Default order is 'foo', 'bar'
-        /** @var Activity[] */
         $nonSortedActivity = Activity::all();
         $this->assertContainsOnlyInstancesOf(ActivityInterface::class, $nonSortedActivity);
         $this->assertSame('foo', $nonSortedActivity[0]->user->user_name);
@@ -194,7 +190,6 @@ class ActivityTest extends AccountTestCase
         $this->assertSame([$userFoo->id, $userBar->id], $nonSortedActivity->pluck('id')->toArray()); // @phpstan-ignore-line
 
         // Sort by lastActivity, order will be 2, 1
-        /** @var Activity[] */
         $sortedUsers = Activity::joinUser()
                             ->orderBy('users.user_name')
                             ->get();

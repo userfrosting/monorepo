@@ -90,7 +90,8 @@ class SiteLocale implements SiteLocaleInterface
     public function getAvailableIdentifiers(): array
     {
         // Get all keys where value is true
-        $available = array_filter($this->config->getArray('site.locales.available', []));
+        $config = $this->config->getArray('site.locales.available', []);
+        $available = array_filter($config, fn ($value) => $value !== false && $value !== null && $value !== '');
 
         // Add the default to the list. it will always be available
         $default = $this->getDefaultLocale();
@@ -187,29 +188,26 @@ class SiteLocale implements SiteLocaleInterface
             // Split to access locale & "q"
             $parts = explode(';', $browserLocale);
 
-            // Ensure we've got at least one sub parts
-            if (array_key_exists(0, $parts)) {
-                // Format locale for UF's i18n
-                $identifier = trim(str_replace('-', '_', $parts[0]));
+            // Format locale for UF's i18n
+            $identifier = trim(str_replace('-', '_', $parts[0]));
 
-                // Ensure locale available
-                $localeIndex = array_search(strtolower($identifier), array_map('strtolower', $availableLocales), true);
+            // Ensure locale available
+            $localeIndex = array_search(strtolower($identifier), array_map('strtolower', $availableLocales), true);
 
-                if ($localeIndex !== false) {
-                    $matchedLocale = $availableLocales[$localeIndex];
+            if ($localeIndex !== false) {
+                $matchedLocale = $availableLocales[$localeIndex];
 
-                    // Determine preference level (q=0.x), and add to $foundLocales
-                    // If no preference level, set as 1
-                    if (array_key_exists(1, $parts)) {
-                        $preference = str_replace('q=', '', $parts[1]);
-                        $preference = (float) $preference; // Sanitize with int cast (bad values go to 0)
-                    } else {
-                        $preference = 1;
-                    }
-
-                    // Add to list, and format for UF's i18n.
-                    $foundLocales[$matchedLocale] = $preference;
+                // Determine preference level (q=0.x), and add to $foundLocales
+                // If no preference level, set as 1
+                if (isset($parts[1])) {
+                    $preference = str_replace('q=', '', $parts[1]);
+                    $preference = (float) $preference; // Sanitize with int cast (bad values go to 0)
+                } else {
+                    $preference = 1;
                 }
+
+                // Add to list, and format for UF's i18n.
+                $foundLocales[$matchedLocale] = $preference;
             }
         }
 
@@ -222,8 +220,6 @@ class SiteLocale implements SiteLocaleInterface
         arsort($foundLocales, SORT_NUMERIC);
 
         // Return first element
-        reset($foundLocales);
-
-        return key($foundLocales);
+        return array_key_first($foundLocales);
     }
 }

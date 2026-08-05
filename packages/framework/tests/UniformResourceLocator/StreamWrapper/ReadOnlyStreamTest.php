@@ -129,7 +129,7 @@ class ReadOnlyStreamTest extends TestCase
         $locator = new ResourceLocator(__DIR__);
         $locator->addStream(new ResourceStream('extra', shared: true, readonly: true));
 
-        $array = include 'extra://adjectives.php';
+        $array = include 'extra://adjectives.php'; // @phpstan-ignore-line
         $this->assertSame([
             'able',
             'above',

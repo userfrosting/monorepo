@@ -25,7 +25,7 @@ final class UsernameNotUniqueException extends AccountException
     /**
      * {@inheritDoc}
      */
-    public function getDescription(): string|UserMessage
+    public function getDescription(): UserMessage
     {
         return new UserMessage('USERNAME.IN_USE', ['user_name' => $this->username]);
     }

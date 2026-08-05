@@ -80,11 +80,9 @@ class Util
         $len = strlen($num);
 
         if ($len === 7) {
-            /** @var string */
-            $num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num);
+            $num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num) ?? $num;
         } elseif ($len === 10) {
-            /** @var string */
-            $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
+            $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num) ?? $num;
         }
 
         return $num;
@@ -185,8 +183,8 @@ class Util
         $nouns = include self::$nounsFile;
 
         for ($n = 0; $n < $maxTries; $n++) {
-            /** @var array<string> */
             $keys = array_rand($adjectives, $numAdjectives);
+            $keys = is_array($keys) ? $keys : [$keys];
             $matches = Arr::only($adjectives, $keys);
 
             $result = implode($separator, $matches);

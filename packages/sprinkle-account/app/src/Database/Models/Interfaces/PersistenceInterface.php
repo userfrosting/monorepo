@@ -25,14 +25,14 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
  *
- * @property int           $id
- * @property int           $user_id
- * @property string        $token
- * @property string        $persistent_token
- * @property DateTime|null $expires_at
- * @property timestamp     $created_at
- * @property timestamp     $updated_at
- * @property UserInterface $user
+ * @property int                $id
+ * @property int                $user_id
+ * @property string             $token
+ * @property string             $persistent_token
+ * @property DateTime|null      $expires_at
+ * @property \DateTimeImmutable $created_at
+ * @property \DateTimeImmutable $updated_at
+ * @property UserInterface      $user
  *
  * @method        $this notExpired()
  * @method static $this notExpired()

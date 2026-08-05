@@ -23,12 +23,12 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
  *
- * @property int                             $id
- * @property string                          $slug
- * @property string                          $name
- * @property string                          $description
- * @property Collection<UserInterface>       $users
- * @property Collection<PermissionInterface> $permissions
+ * @property int                                        $id
+ * @property string                                     $slug
+ * @property string                                     $name
+ * @property string                                     $description
+ * @property Collection<int, UserInterface&Model>       $users
+ * @property Collection<int, PermissionInterface&Model> $permissions
  *
  * @method        $this forUser(int|UserInterface $user)
  * @method static $this forUser(int|UserInterface $user)

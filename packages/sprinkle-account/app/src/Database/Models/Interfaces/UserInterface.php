@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
+use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
 
 /**
@@ -30,30 +31,30 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
  *
- * @property int                              $id
- * @property string                           $user_name
- * @property string                           $first_name
- * @property string                           $last_name
- * @property string                           $full_name
- * @property string                           $email
- * @property string                           $locale
- * @property int|null                         $group_id
- * @property bool                             $flag_verified
- * @property bool                             $flag_enabled
- * @property string                           $password
- * @property \Carbon\Carbon|null              $password_last_set
- * @property string                           $avatar
- * @property timestamp                        $created_at
- * @property timestamp                        $updated_at
- * @property timestamp|null                   $deleted_at
- * @property GroupInterface|null              $group
- * @property Collection<ActivityInterface>    $activities
- * @property Collection<PersistenceInterface> $persistences
- * @property Collection<PermissionInterface>  $permissions
- * @property Collection<RoleInterface>        $roles
- * @property ActivityInterface|null           $last_activity
- * @property ActivityInterface|null           $lastActivity
- * @property array<string, mixed>             $apiData
+ * @property int                                         $id
+ * @property string                                      $user_name
+ * @property string                                      $first_name
+ * @property string                                      $last_name
+ * @property string                                      $full_name
+ * @property string                                      $email
+ * @property string                                      $locale
+ * @property int|null                                    $group_id
+ * @property bool                                        $flag_verified
+ * @property bool                                        $flag_enabled
+ * @property string                                      $password
+ * @property \Carbon\Carbon|null                         $password_last_set
+ * @property string                                      $avatar
+ * @property \DateTimeImmutable                          $created_at
+ * @property \DateTimeImmutable                          $updated_at
+ * @property \DateTimeImmutable|null                     $deleted_at
+ * @property GroupInterface|null                         $group
+ * @property Collection<int, ActivityInterface&Model>    $activities
+ * @property Collection<int, PersistenceInterface&Model> $persistences
+ * @property Collection<int, PermissionInterface&Model>  $permissions
+ * @property Collection<int, RoleInterface&Model>        $roles
+ * @property ActivityInterface|null                      $last_activity
+ * @property ActivityInterface|null                      $lastActivity
+ * @property array<string, mixed>                        $apiData
  *
  * @method        $this joinLastActivity()
  * @method static $this joinLastActivity()

@@ -103,7 +103,7 @@ class ActivitySprunje extends Sprunje
     protected function sortOccurredAt($query, string $direction): static
     {
         $query->orderBy('activities.occurred_at', $direction)
-              ->orderby('activities.id', $direction);
+              ->orderBy('activities.id', $direction);
 
         return $this;
     }

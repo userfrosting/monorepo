@@ -71,21 +71,20 @@ class Throttler
 
         // Fetch all throttle events of the specified type, that match the specified rule
         if ($throttleRule->getMethod() === 'ip') {
-            /** @var Collection<int, ThrottleModelInterface> */
             $events = $this->throttleModel
                 ->where('type', $type)
                 ->where('created_at', '>', $startTime)
                 ->where('ip', $_SERVER['REMOTE_ADDR'])
                 ->get();
         } else {
-            /** @var Collection<int, ThrottleModelInterface> */
-            $events = $this->throttleModel
+            $eventsCollection = $this->throttleModel
                 ->where('type', $type)
                 ->where('created_at', '>', $startTime)
                 ->get();
 
             // Filter out only events that match the required JSON data
-            $events = $events->filter(function (ThrottleModelInterface $item, int $key) use ($requestData) {
+            // @phpstan-ignore-next-line method.nonObject
+            $events = $eventsCollection->filter(function (ThrottleModelInterface $item, int $key) use ($requestData) {
                 /** @var \stdClass */
                 $data = json_decode($item->request_data);
 
@@ -102,6 +101,7 @@ class Throttler
         }
 
         // Check the collection of events against the specified throttle rule.
+        // @phpstan-ignore-next-line argument.type
         return $this->computeDelay($events, $throttleRule);
     }
 

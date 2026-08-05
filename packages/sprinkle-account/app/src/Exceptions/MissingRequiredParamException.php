@@ -25,7 +25,7 @@ final class MissingRequiredParamException extends AccountException
     /**
      * {@inheritDoc}
      */
-    public function getDescription(): string|UserMessage
+    public function getDescription(): UserMessage
     {
         return new UserMessage('ACCOUNT.ERROR.MISSING_PARAM', ['param' => $this->param]);
     }

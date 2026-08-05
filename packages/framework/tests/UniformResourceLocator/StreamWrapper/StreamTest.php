@@ -150,13 +150,13 @@ class StreamTest extends TestCase
         // Don't check true/false here, we just want to make sure it's called
         $owner = fileowner($this->file);
         $this->assertIsInt($owner);
-        $this->assertIsBool(chown($this->file, $owner));
-        $this->assertIsBool(chown($this->file, get_current_user()));
+        $this->assertIsBool(chown($this->file, $owner)); // @phpstan-ignore-line
+        $this->assertIsBool(chown($this->file, get_current_user())); // @phpstan-ignore-line
 
         // chgrp
         $group = filegroup($this->file);
         $this->assertIsInt($group);
-        $this->assertIsBool(chgrp($this->file, $group));
+        $this->assertIsBool(chgrp($this->file, $group)); // @phpstan-ignore-line
 
         unlink($this->file);  // Reset state
     }
@@ -250,6 +250,14 @@ class StreamTest extends TestCase
         unlink($this->file); // Reset state
     }
 
+    public function testFLockRejectsOutOfRangeOperation(): void
+    {
+        $stream = new Stream();
+
+        $this->assertFalse($stream->stream_lock(-1));
+        $this->assertFalse($stream->stream_lock(8));
+    }
+
     /**
      * Test when a stream exist, but the resource doesn't
      *
@@ -322,7 +330,7 @@ class StreamTest extends TestCase
         $locator = new ResourceLocator(__DIR__);
         $locator->addStream(new ResourceStream('extra', shared: true));
 
-        $array = include 'extra://adjectives.php';
+        $array = include 'extra://adjectives.php'; // @phpstan-ignore-line
         $this->assertSame([
             'able',
             'above',

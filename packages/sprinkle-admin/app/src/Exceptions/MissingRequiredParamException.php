@@ -26,7 +26,7 @@ final class MissingRequiredParamException extends UserFacingException
     /**
      * {@inheritDoc}
      */
-    public function getDescription(): string|UserMessage
+    public function getDescription(): UserMessage
     {
         return new UserMessage('VALIDATE.REQUIRED', ['label' => $this->param]);
     }

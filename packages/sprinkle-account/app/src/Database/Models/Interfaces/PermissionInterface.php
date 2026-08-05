@@ -26,13 +26,13 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
  *
- * @property int                       $id
- * @property string                    $slug
- * @property string                    $name
- * @property string                    $conditions
- * @property string                    $description
- * @property Collection<UserInterface> $users
- * @property Collection<RoleInterface> $roles
+ * @property int                                  $id
+ * @property string                               $slug
+ * @property string                               $name
+ * @property string                               $conditions
+ * @property string                               $description
+ * @property Collection<int, UserInterface&Model> $users
+ * @property Collection<int, RoleInterface&Model> $roles
  *
  * @method        $this forRole(int|RoleInterface $role)
  * @method static $this forRole(int|RoleInterface $role)

@@ -22,7 +22,6 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
 use UserFrosting\Sprinkle\Core\Database\MigrationInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\SprinkleMigrationLocator;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MigrationRecipe;
-use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\SeedRecipe;
 use UserFrosting\Sprinkle\SprinkleManager;
 use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\Support\Exception\BadClassNameException;
