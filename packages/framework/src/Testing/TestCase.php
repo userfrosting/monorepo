@@ -96,7 +96,8 @@ class TestCase extends BaseTestCase
     /**
      * Get the Slim application instance.
      *
-     * @throws RuntimeException   If the application has not been created.
+     * @throws RuntimeException If the application has not been created.
+     *
      * @return App<\DI\Container>
      */
     protected function getApp(): App
