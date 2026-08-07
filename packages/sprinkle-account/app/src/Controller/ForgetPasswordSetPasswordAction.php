@@ -25,7 +25,7 @@ use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\EmailVerificationProvider;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\PasswordResetInvalidException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
@@ -56,15 +56,15 @@ class ForgetPasswordSetPasswordAction
     /**
      * Inject dependencies.
      *
-     * @param Translator                  $translator
-     * @param Config                      $config
-     * @param RouteParserInterface        $routeParser
-     * @param EmailVerificationProvider   $emailVerification
-     * @param RequestDataTransformer      $transformer
-     * @param ServerSideValidator         $validator
-     * @param Connection                  $db
-     * @param UserInterface               $userModel
-     * @param UserActivityLoggerInterface $logger
+     * @param Translator                $translator
+     * @param Config                    $config
+     * @param RouteParserInterface      $routeParser
+     * @param EmailVerificationProvider $emailVerification
+     * @param RequestDataTransformer    $transformer
+     * @param ServerSideValidator       $validator
+     * @param Connection                $db
+     * @param UserInterface             $userModel
+     * @param ActivityRecorderInterface $logger
      */
     public function __construct(
         protected Translator $translator,
@@ -75,7 +75,7 @@ class ForgetPasswordSetPasswordAction
         protected ServerSideValidator $validator,
         protected Connection $db,
         protected UserInterface $userModel,
-        protected UserActivityLoggerInterface $logger,
+        protected ActivityRecorderInterface $logger,
     ) {
     }
 
@@ -134,10 +134,10 @@ class ForgetPasswordSetPasswordAction
             $user->save();
 
             // Create activity record
-            $this->logger->info("User {$user->user_name} reset it's password.", [
-                'type'    => UserActivityTypes::PASSWORD_RESET,
-                'user_id' => $user->id,
-            ]);
+            $this->logger->record(
+                user: $user,
+                type: UserActivityTypes::PASSWORD_RESET
+            );
         });
     }
 

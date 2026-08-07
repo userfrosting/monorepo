@@ -25,8 +25,9 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\RoleException;
+use UserFrosting\Sprinkle\Admin\Log\RoleActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
@@ -55,7 +56,7 @@ class RoleEditAction
         protected Authenticator $authenticator,
         protected Config $config,
         protected Connection $db,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected RoleInterface $roleModel,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
@@ -137,10 +138,11 @@ class RoleEditAction
             $role->save();
 
             // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} updated details for role {$role->name}.", [
-                'type'    => 'role_update_info',
-                'user_id' => $currentUser->id,
-            ]);
+            $this->logger->record(
+                user: $currentUser,
+                type: RoleActivityTypes::UPDATE_INFO,
+                context: $role
+            );
 
             return $role;
         });

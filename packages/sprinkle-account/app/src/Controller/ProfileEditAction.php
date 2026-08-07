@@ -23,7 +23,8 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Exceptions\LocaleNotFoundException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
@@ -53,7 +54,7 @@ class ProfileEditAction
         protected Translator $translator,
         protected Authenticator $authenticator,
         protected SiteLocale $locale,
-        protected UserActivityLoggerInterface $logger,
+        protected ActivityRecorderInterface $logger,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator
     ) {
@@ -128,10 +129,10 @@ class ProfileEditAction
         $currentUser->save();
 
         // Create activity record
-        $this->logger->info("User {$currentUser->user_name} updated their profile settings.", [
-            'type'    => 'update_profile_settings',
-            'user_id' => $currentUser->id,
-        ]);
+        $this->logger->record(
+            user: $currentUser,
+            type: AccountActivityTypes::UPDATE_PROFILE_SETTINGS
+        );
     }
 
     /**

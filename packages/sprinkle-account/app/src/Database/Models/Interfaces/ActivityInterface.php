@@ -15,7 +15,9 @@ namespace UserFrosting\Sprinkle\Account\Database\Models\Interfaces;
 use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -25,18 +27,25 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
  *
- * @property int           $id
- * @property string|null   $ip_address
- * @property int           $user_id
- * @property string        $type
- * @property Datetime|null $occurred_at
- * @property string        $description
- * @property UserInterface $user
+ * @property int                       $id
+ * @property string|null               $ip_address
+ * @property int                       $user_id
+ * @property string                    $type
+ * @property Datetime|null             $occurred_at
+ * @property string                    $description  @deprecated 6.1
+ * @property UserInterface             $user
+ * @property string|null               $context_type
+ * @property string|null               $context_id
+ * @property string|null               $subject_type
+ * @property string|null               $subject_id
+ * @property array<string, mixed>|null $metadata
+ *
+ * @property-read UserInterface|null   $user
  *
  * @method        $this joinUser()
  * @method static $this joinUser()
  */
-interface ActivityInterface
+interface ActivityInterface extends MorphableModelInterface
 {
     /**
      * Users which belong to this activity.
@@ -44,6 +53,16 @@ interface ActivityInterface
      * @return BelongsTo
      */
     public function user(): BelongsTo;
+
+    /**
+     * Get the contextual model this activity belongs to.
+     */
+    public function context(): MorphTo;
+
+    /**
+     * Get the secondary model targeted by this activity.
+     */
+    public function subject(): MorphTo;
 
     /**
      * Scope a query to only include specific type.

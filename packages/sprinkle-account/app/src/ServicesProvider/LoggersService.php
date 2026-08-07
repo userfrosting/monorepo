@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
 use UserFrosting\ServicesProvider\ServicesProviderInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorder;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Log\AuthLogger;
 use UserFrosting\Sprinkle\Account\Log\AuthLoggerInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
@@ -24,7 +26,8 @@ final class LoggersService implements ServicesProviderInterface
     {
         return [
             AuthLoggerInterface::class         => \DI\autowire(AuthLogger::class),
-            UserActivityLoggerInterface::class => \DI\autowire(UserActivityLogger::class),
+            UserActivityLoggerInterface::class => \DI\autowire(UserActivityLogger::class), // @phpstan-ignore-line classConstant.deprecatedInterface classConstant.deprecatedClass
+            ActivityRecorderInterface::class   => \DI\autowire(ActivityRecorder::class),
         ];
     }
 }

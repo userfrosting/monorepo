@@ -27,7 +27,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\EmailVerificationProvi
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\FailedVerificationException;
 use UserFrosting\Sprinkle\Account\Exceptions\VerificationDisabledException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
@@ -73,7 +73,7 @@ class EmailVerificationValidationAction
      * @param RequestDataTransformer              $transformer
      * @param ServerSideValidator                 $validator
      * @param UserInterface                       $userModel
-     * @param UserActivityLoggerInterface         $logger
+     * @param ActivityRecorderInterface           $logger
      * @param Connection                          $db
      * @param Throttler                           $throttler
      */
@@ -84,7 +84,7 @@ class EmailVerificationValidationAction
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
         protected UserInterface $userModel,
-        protected UserActivityLoggerInterface $logger,
+        protected ActivityRecorderInterface $logger,
         protected Connection $db,
         protected Throttler $throttler,
         protected Config $config,
@@ -163,10 +163,10 @@ class EmailVerificationValidationAction
             $user->save();
 
             // Create activity record
-            $this->logger->info("User {$user->user_name} verified it's account.", [
-                'type'    => UserActivityTypes::VERIFIED,
-                'user_id' => $user->id,
-            ]);
+            $this->logger->record(
+                user: $user,
+                type: UserActivityTypes::VERIFIED
+            );
         });
     }
 

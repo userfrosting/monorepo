@@ -18,6 +18,8 @@ use UserFrosting\Sprinkle\Core\Log\Logger;
  * User Activity Logger.
  *
  * @todo : We could bring back the processor, to add the current user into the context
+ *
+ * @deprecated 6.1 Use ActivityRecorder instead
  */
 class UserActivityLogger extends Logger implements UserActivityLoggerInterface
 {

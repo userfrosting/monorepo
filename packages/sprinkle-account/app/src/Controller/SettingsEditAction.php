@@ -24,7 +24,8 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Exceptions\PasswordInvalidException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
@@ -54,7 +55,7 @@ class SettingsEditAction
         protected Translator $translator,
         protected Authenticator $authenticator,
         protected Config $config,
-        protected UserActivityLoggerInterface $logger,
+        protected ActivityRecorderInterface $logger,
         protected UserInterface $userModel,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator
@@ -127,10 +128,10 @@ class SettingsEditAction
         $currentUser->save();
 
         // Create activity record
-        $this->logger->info("User {$currentUser->user_name} updated their account settings.", [
-            'type'    => 'update_account_settings',
-            'user_id' => $currentUser->id,
-        ]);
+        $this->logger->record(
+            user: $currentUser,
+            type: AccountActivityTypes::UPDATE_ACCOUNT_SETTINGS
+        );
     }
 
     /**

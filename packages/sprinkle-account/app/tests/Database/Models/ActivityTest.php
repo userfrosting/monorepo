@@ -14,8 +14,10 @@ namespace UserFrosting\Sprinkle\Account\Tests\Database\Models;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
@@ -51,7 +53,6 @@ class ActivityTest extends AccountTestCase
         ]);
         $activity->user()->associate($user);
         $activity->save();
-        $this->assertInstanceOf(ActivityInterface::class, $activity); // @phpstan-ignore-line
 
         // Assert new state
         $this->assertSame(1, Activity::count());
@@ -121,6 +122,50 @@ class ActivityTest extends AccountTestCase
         $this->assertSame(0, Activity::count());
     }
 
+    public function testContextSubjectRelations(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+
+        /** @var Role */
+        $context = Role::create([
+            'slug'        => 'test_role',
+            'name'        => 'Test Role',
+            'description' => 'A role for testing purposes.',
+        ]);
+
+        /** @var Group */
+        $subject = Group::create([
+            'slug'        => 'test_group',
+            'name'        => 'Test Group',
+            'description' => 'A group for testing purposes.',
+        ]);
+
+        /** @var Activity */
+        $activity = Activity::create([
+            'user_id'       => $user->id,
+            'context_type'  => 'role',
+            'context_id'    => $context->id,
+            'subject_type'  => 'group',
+            'subject_id'    => $subject->id,
+            'type'          => 'role_created',
+            'metadata'      => ['role_name' => $context->name],
+            'occurred_at'   => '2026-01-01 10:00:00',
+        ]);
+
+        // Refetch the activity to ensure relations are loaded correctly
+        $activity->refresh();
+
+        // Assert results
+        $this->assertEquals($user->id, $activity->user?->id);
+        $this->assertEquals($context->id, $activity->context_id);
+        $this->assertEquals($subject->id, $activity->subject_id);
+        $this->assertEquals('role', $activity->context_type);
+        $this->assertEquals('group', $activity->subject_type);
+        $this->assertEquals($context->id, $activity->context->id);
+        $this->assertEquals($subject->id, $activity->subject->id);
+    }
+
     public function testNoLastActivity(): void
     {
         /** @var User */
@@ -133,6 +178,7 @@ class ActivityTest extends AccountTestCase
 
     /**
      * Test for join operation for Sprunje.
+     * N.B.: Apply to the activity related helper from the User model.
      */
     public function testUserJoinLastActivity(): void
     {
@@ -185,8 +231,8 @@ class ActivityTest extends AccountTestCase
         // Default order is 'foo', 'bar'
         $nonSortedActivity = Activity::all();
         $this->assertContainsOnlyInstancesOf(ActivityInterface::class, $nonSortedActivity);
-        $this->assertSame('foo', $nonSortedActivity[0]->user->user_name);
-        $this->assertSame('bar', $nonSortedActivity[1]->user->user_name);
+        $this->assertSame('foo', $nonSortedActivity[0]->user?->user_name);
+        $this->assertSame('bar', $nonSortedActivity[1]->user?->user_name);
         $this->assertSame([$userFoo->id, $userBar->id], $nonSortedActivity->pluck('id')->toArray()); // @phpstan-ignore-line
 
         // Sort by lastActivity, order will be 2, 1
@@ -195,8 +241,8 @@ class ActivityTest extends AccountTestCase
                             ->get();
 
         $this->assertContainsOnlyInstancesOf(ActivityInterface::class, $sortedUsers);
-        $this->assertSame('bar', $sortedUsers[0]->user->user_name);
-        $this->assertSame('foo', $sortedUsers[1]->user->user_name);
+        $this->assertSame('bar', $sortedUsers[0]->user?->user_name);
+        $this->assertSame('foo', $sortedUsers[1]->user?->user_name);
         $this->assertSame([$userBar->id, $userFoo->id], $sortedUsers->pluck('id')->toArray()); // @phpstan-ignore-line
     }
 }

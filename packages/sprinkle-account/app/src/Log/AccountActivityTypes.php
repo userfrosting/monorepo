@@ -12,13 +12,12 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Log;
 
-use Psr\Log\LoggerInterface;
-
-/**
- * Monolog alias for dependency injection.
- *
- * @deprecated 6.1 Use ActivityRecorder instead
- */
-interface UserActivityLoggerInterface extends LoggerInterface
+enum AccountActivityTypes: string
 {
+    case CREATE = 'account_create';
+    case DELETE = 'account_delete';
+    case UPDATE_INFO = 'account_update_info';
+    case UPDATE_FIELD = 'account_update_field';
+    case UPDATE_PROFILE_SETTINGS = 'update_profile_settings';
+    case UPDATE_ACCOUNT_SETTINGS = 'update_account_settings';
 }

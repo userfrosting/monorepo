@@ -14,6 +14,7 @@ namespace UserFrosting\Sprinkle\Account\Database\Models\Interfaces;
 
 use DateTime;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -36,7 +37,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @method $this expired()                    Link to the expired scope
  * @method $this notExpired()                 Link to the not expired scope
  */
-interface UserVerificationInterface
+interface UserVerificationInterface extends MorphableModelInterface
 {
     /**
      * User associated with this verification request.

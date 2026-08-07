@@ -21,7 +21,8 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountException;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\AccountNotFoundException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
@@ -52,7 +53,7 @@ class UserDeleteAction
         protected Authenticator $authenticator,
         protected Config $config,
         protected Connection $db,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
     ) {
     }
 
@@ -99,10 +100,12 @@ class UserDeleteAction
             $user->delete();
 
             // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} deleted the account for {$username}.", [
-                'type'    => 'account_delete',
-                'user_id' => $currentUser->id,
-            ]);
+            $this->logger->record(
+                user: $currentUser,
+                type: AccountActivityTypes::DELETE,
+                context: $user,
+                metadata: ['username' => $username]
+            );
         });
     }
 

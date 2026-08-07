@@ -62,6 +62,11 @@ class MigrationsTest extends AccountTestCase
                 'occurred_at',
                 'type',
                 'user_id',
+                'context_id',
+                'context_type',
+                'subject_id',
+                'subject_type',
+                'metadata',
             ],
             'groups'           => [
                 'id',

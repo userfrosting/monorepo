@@ -24,8 +24,9 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\RoleException;
+use UserFrosting\Sprinkle\Admin\Log\RoleActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
@@ -54,7 +55,7 @@ class RoleCreateAction
         protected Authenticator $authenticator,
         protected Connection $db,
         protected RoleInterface $roleModel,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
     ) {
@@ -117,10 +118,11 @@ class RoleCreateAction
             $role->save();
 
             // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} created role {$role->name}.", [
-                'type'    => 'role_create',
-                'user_id' => $currentUser->id,
-            ]);
+            $this->logger->record(
+                user: $currentUser,
+                type: RoleActivityTypes::CREATE,
+                context: $role
+            );
 
             return $role;
         });

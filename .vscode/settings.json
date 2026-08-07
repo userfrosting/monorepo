@@ -6,5 +6,12 @@
         "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .oxlint*, oxlint*, .prettier*, prettier*, .editorconfig",
         "composer.json": "composer.lock, phpunit.xml*, phpstan.neon*, phpstan-baseline.neon*, .php-cs*, .php_cs*, .styleci.yml*, .phpdoc.*"
     },
-    "cSpell.words": ["axios", "pinia", "Sprunjer", "tdate", "TOTP"]
+    "cSpell.words": [
+        "axios",
+        "Morphable",
+        "pinia",
+        "Sprunjer",
+        "tdate",
+        "TOTP"
+    ]
 }

@@ -28,7 +28,8 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Event\UserCreatedEvent;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Exceptions\LocaleNotFoundException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Validators\UserValidation;
 use UserFrosting\Sprinkle\Admin\Mail\UserCreatedEmail;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
@@ -67,7 +68,7 @@ class UserCreateAction
         protected EventDispatcherInterface $eventDispatcher,
         protected GroupInterface $groupModel,
         protected SiteLocaleInterface $siteLocale,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected UserCreatedEmail $userCreationEmail,
         protected UserInterface $userModel,
         protected UserValidation $userValidation,
@@ -159,10 +160,11 @@ class UserCreateAction
             $user = $this->eventDispatcher->dispatch($event)->user;
 
             // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} created a new account for {$user->user_name}.", [
-                'type'    => 'account_create', // UserActivityLogger::TYPE_REGISTER,
-                'user_id' => $user->id,
-            ]);
+            $this->logger->record(
+                user: $currentUser,
+                type: AccountActivityTypes::CREATE,
+                context: $user
+            );
 
             // Send an email to the user who's been created
             $this->userCreationEmail->send($user);

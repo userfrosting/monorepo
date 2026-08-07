@@ -20,8 +20,8 @@ use UserFrosting\Sprinkle\Account\Bakery\CreateAdminUser;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Event\UserCreatedEvent;
 use UserFrosting\Sprinkle\Account\Exceptions\UsernameNotUniqueException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorder;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Account\Validators\UserValidation;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRepositoryInterface;
@@ -65,10 +65,10 @@ class CreateAdminUserTest extends AccountTestCase
         $this->getContainer()->set(EventDispatcherInterface::class, $eventDispatcher);
 
         // Mock userActivityLogger to assert it's being called properly.
-        $userActivityLogger = Mockery::mock(UserActivityLogger::class)
-            ->shouldReceive('info')->once()
+        $userActivityLogger = Mockery::mock(ActivityRecorder::class)
+            ->shouldReceive('record')->once()
             ->getMock();
-        $this->getContainer()->set(UserActivityLoggerInterface::class, $userActivityLogger);
+        $this->getContainer()->set(ActivityRecorderInterface::class, $userActivityLogger);
 
         /** @var CreateAdminUser */
         $command = $this->getService(CreateAdminUser::class);

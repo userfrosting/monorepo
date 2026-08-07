@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Validate throttling configuration before creating throttle rules.
 
 ### Changed
+- Added `MorphableModelInterface` to the shared model contract. Used to represent an Eloquent model that can be used as a polymorphic relation target, i.e. a Model that provides `getKey` and `getMorphClass` methods. Required for type validation since Eloquent doesn't provide a shared `Model` interface, so our dynamic model interfaces (e.g. `UserInterface`, `GroupInterface`, etc.) don't extend the base Eloquent `Model` class.
 - Updated the `RefreshDatabase` testing trait to use the typed application container accessor.
 
 ## [6.0.2](https://github.com/userfrosting/sprinkle-core/compare/6.0.1...6.0.2) - 2026-08-02

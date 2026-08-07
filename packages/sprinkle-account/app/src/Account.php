@@ -35,6 +35,7 @@ use UserFrosting\Sprinkle\Account\Database\Migrations\v600\DropPasswordResetsTab
 use UserFrosting\Sprinkle\Account\Database\Migrations\v600\DropVerificationsTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v600\UpdateUsersTable as V600UpdateUsersTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v600\UserVerificationTable;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v610\ActivitiesV2Table;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultPermissions;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultRoles;
@@ -171,6 +172,8 @@ class Account implements
             V600UpdateUsersTable::class,
             DropPasswordResetsTable::class,
             DropVerificationsTable::class,
+            // v610
+            ActivitiesV2Table::class,
         ];
     }
 
