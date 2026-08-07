@@ -39,7 +39,6 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @property string|null               $subject_type
  * @property string|null               $subject_id
  * @property array<string, mixed>|null $metadata
- *
  * @property-read UserInterface|null   $user
  *
  * @method        $this joinUser()
