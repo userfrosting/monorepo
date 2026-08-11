@@ -68,6 +68,12 @@ return [
             'CREATE'      => 'Group created',
             'DELETE'      => 'Group deleted',
             'UPDATE_INFO' => 'Group information updated',
+
+            'LABEL' => [
+                'CREATE'      => 'Group created',
+                'DELETE'      => 'Group deleted',
+                'UPDATE_INFO' => 'Group updated',
+            ],
         ],
     ],
 
@@ -126,6 +132,13 @@ return [
             'DELETE'       => 'Role deleted',
             'UPDATE_INFO'  => 'Role information updated',
             'UPDATE_FIELD' => 'Role field {{field}} updated',
+
+            'LABEL' => [
+                'CREATE'       => 'Role created',
+                'DELETE'       => 'Role deleted',
+                'UPDATE_INFO'  => 'Role updated',
+                'UPDATE_FIELD' => 'Role field updated',
+            ],
         ],
     ],
 

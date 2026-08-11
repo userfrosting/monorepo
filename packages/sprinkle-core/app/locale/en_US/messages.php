@@ -93,6 +93,7 @@ return [
     'EDIT'                     => 'Edit',
     'ENABLE'                   => 'Enable',
     'ENABLED'                  => 'Enabled',
+    'LABEL'                    => 'Label',
     'MORE_OPTIONS'             => 'More options',
     'NO'                       => 'No',
     'NONE'                     => 'None',

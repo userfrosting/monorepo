@@ -31,6 +31,21 @@ return [
             'LOGGED_IN'         => 'Utilisateur connecté',
             'LOGGED_OUT'        => 'Utilisateur déconnecté',
             'PASSWORD_UPGRADED' => 'Mot de passe amélioré',
+
+            'LABEL' => [
+                'CREATE'                  => 'Compte créé',
+                'DELETE'                  => 'Compte supprimé',
+                'UPDATE_INFO'             => 'Compte mis à jour',
+                'UPDATE_FIELD'            => 'Champ du compte mis à jour',
+                'UPDATE_PROFILE_SETTINGS' => 'Paramètres du profil mis à jour',
+                'UPDATE_ACCOUNT_SETTINGS' => 'Paramètres du compte mis à jour',
+                'REGISTER'                => 'Utilisateur inscrit',
+                'VERIFIED'                => 'Utilisateur vérifié',
+                'PASSWORD_RESET'          => 'Mot de passe réinitialisé',
+                'LOGGED_IN'               => 'Utilisateur connecté',
+                'LOGGED_OUT'              => 'Utilisateur déconnecté',
+                'PASSWORD_UPGRADED'       => 'Mot de passe amélioré',
+            ],
         ],
 
         'EXCEPTION' => [

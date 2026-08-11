@@ -84,6 +84,7 @@ class Activity extends Model implements ActivityInterface
         'occurred_at',
         'metadata',
         'description',
+        'label',
         'user',
         'context',
         'subject',

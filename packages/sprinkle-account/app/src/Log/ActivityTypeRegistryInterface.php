@@ -29,4 +29,13 @@ interface ActivityTypeRegistryInterface extends ClassRepositoryInterface
      * @return string|null
      */
     public function getI18nKey(string $value): ?string;
+
+    /**
+     * Return the i18n key for a concise label for a persisted activity type value.
+     *
+     * @param string $value
+     *
+     * @return string|null
+     */
+    public function getLabelI18nKey(string $value): ?string;
 }

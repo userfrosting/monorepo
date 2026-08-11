@@ -36,4 +36,20 @@ enum AccountActivityTypes: string implements ActivityTypes
             default                       => null,
         };
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getLabelI18nKey(string $value): ?string
+    {
+        return match (self::tryFrom($value)) {
+            self::CREATE                  => 'ACCOUNT.ACTIVITY.LABEL.CREATE',
+            self::DELETE                  => 'ACCOUNT.ACTIVITY.LABEL.DELETE',
+            self::UPDATE_INFO             => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_INFO',
+            self::UPDATE_FIELD            => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_FIELD',
+            self::UPDATE_PROFILE_SETTINGS => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_PROFILE_SETTINGS',
+            self::UPDATE_ACCOUNT_SETTINGS => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_ACCOUNT_SETTINGS',
+            default                       => null,
+        };
+    }
 }

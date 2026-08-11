@@ -34,4 +34,18 @@ enum RoleActivityTypes: string implements ActivityTypes
             default            => null,
         };
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getLabelI18nKey(string $value): ?string
+    {
+        return match (self::tryFrom($value)) {
+            self::CREATE       => 'ROLE.ACTIVITY.LABEL.CREATE',
+            self::DELETE       => 'ROLE.ACTIVITY.LABEL.DELETE',
+            self::UPDATE_INFO  => 'ROLE.ACTIVITY.LABEL.UPDATE_INFO',
+            self::UPDATE_FIELD => 'ROLE.ACTIVITY.LABEL.UPDATE_FIELD',
+            default            => null,
+        };
+    }
 }

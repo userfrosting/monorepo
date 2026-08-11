@@ -31,6 +31,21 @@ return [
             'LOGGED_IN'         => 'User signed in',
             'LOGGED_OUT'        => 'User signed out',
             'PASSWORD_UPGRADED' => 'Password upgraded',
+
+            'LABEL' => [
+                'CREATE'                  => 'Account created',
+                'DELETE'                  => 'Account deleted',
+                'UPDATE_INFO'             => 'Account updated',
+                'UPDATE_FIELD'            => 'Account field updated',
+                'UPDATE_PROFILE_SETTINGS' => 'Profile settings updated',
+                'UPDATE_ACCOUNT_SETTINGS' => 'Account settings updated',
+                'REGISTER'                => 'User registered',
+                'VERIFIED'                => 'User verified',
+                'PASSWORD_RESET'          => 'Password reset',
+                'LOGGED_IN'               => 'User signed in',
+                'LOGGED_OUT'              => 'User signed out',
+                'PASSWORD_UPGRADED'       => 'Password upgraded',
+            ],
         ],
 
         'EXCEPTION' => [

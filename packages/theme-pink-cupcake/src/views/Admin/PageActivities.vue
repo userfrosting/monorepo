@@ -7,7 +7,7 @@
             <template #header>
                 <UFSprunjeHeader sort="occurred_at">{{ $t('ACTIVITY.TIME') }}</UFSprunjeHeader>
                 <UFSprunjeHeader sort="user">{{ $t('USER') }}</UFSprunjeHeader>
-                <UFSprunjeHeader sort="description">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
+                <UFSprunjeHeader sort="label">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
             <template #body="{ row }">

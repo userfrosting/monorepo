@@ -36,4 +36,20 @@ enum UserActivityTypes: string implements ActivityTypes
             default                 => null,
         };
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getLabelI18nKey(string $value): ?string
+    {
+        return match (self::tryFrom($value)) {
+            self::REGISTER          => 'ACCOUNT.ACTIVITY.LABEL.REGISTER',
+            self::VERIFIED          => 'ACCOUNT.ACTIVITY.LABEL.VERIFIED',
+            self::PASSWORD_RESET    => 'ACCOUNT.ACTIVITY.LABEL.PASSWORD_RESET',
+            self::LOGGED_IN         => 'ACCOUNT.ACTIVITY.LABEL.LOGGED_IN',
+            self::LOGGED_OUT        => 'ACCOUNT.ACTIVITY.LABEL.LOGGED_OUT',
+            self::PASSWORD_UPGRADED => 'ACCOUNT.ACTIVITY.LABEL.PASSWORD_UPGRADED',
+            default                 => null,
+        };
+    }
 }

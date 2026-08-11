@@ -68,6 +68,12 @@ return [
             'CREATE'      => 'Groupe créé',
             'DELETE'      => 'Groupe supprimé',
             'UPDATE_INFO' => 'Informations du groupe {{context.name}} mises à jour',
+
+            'LABEL' => [
+                'CREATE'      => 'Groupe créé',
+                'DELETE'      => 'Groupe supprimé',
+                'UPDATE_INFO' => 'Groupe mis à jour',
+            ],
         ],
     ],
 
@@ -126,6 +132,13 @@ return [
             'DELETE'       => 'Rôle supprimé',
             'UPDATE_INFO'  => 'Informations du rôle mises à jour',
             'UPDATE_FIELD' => 'Champ du rôle {{field}} mis à jour',
+
+            'LABEL' => [
+                'CREATE'       => 'Rôle créé',
+                'DELETE'       => 'Rôle supprimé',
+                'UPDATE_INFO'  => 'Rôle mis à jour',
+                'UPDATE_FIELD' => 'Champ du rôle mis à jour',
+            ],
         ],
     ],
 

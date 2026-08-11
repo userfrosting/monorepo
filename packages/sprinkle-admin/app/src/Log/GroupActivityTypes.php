@@ -32,4 +32,17 @@ enum GroupActivityTypes: string implements ActivityTypes
             default           => null,
         };
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getLabelI18nKey(string $value): ?string
+    {
+        return match (self::tryFrom($value)) {
+            self::CREATE      => 'GROUP.ACTIVITY.LABEL.CREATE',
+            self::DELETE      => 'GROUP.ACTIVITY.LABEL.DELETE',
+            self::UPDATE_INFO => 'GROUP.ACTIVITY.LABEL.UPDATE_INFO',
+            default           => null,
+        };
+    }
 }

@@ -22,4 +22,13 @@ interface ActivityTypes
      * @return string|null
      */
     public static function getI18nKey(string $value): ?string;
+
+    /**
+     * Return the i18n key for a concise label for a persisted activity type value.
+     *
+     * @param string $value
+     *
+     * @return string|null
+     */
+    public static function getLabelI18nKey(string $value): ?string;
 }

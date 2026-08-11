@@ -68,6 +68,21 @@ final class SprinkleActivityTypeRegistry extends ClassRepository implements Acti
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getLabelI18nKey(string $value): ?string
+    {
+        $this->loadActivityTypes();
+
+        $activityType = $this->activityTypesByValue[$value] ?? null;
+        if ($activityType === null) {
+            return null;
+        }
+
+        return get_class($activityType)::getLabelI18nKey($value);
+    }
+
+    /**
      * Expand the activity enum classes registered by all loaded Sprinkles.
      */
     protected function loadActivityTypes(): void

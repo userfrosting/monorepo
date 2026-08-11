@@ -29,6 +29,11 @@ enum DuplicateActivityType: string implements ActivityTypes
     {
         return null;
     }
+
+    public static function getLabelI18nKey(string $value): ?string
+    {
+        return null;
+    }
 }
 
 class SprinkleActivityTypeRegistryTest extends TestCase
@@ -51,14 +56,17 @@ class SprinkleActivityTypeRegistryTest extends TestCase
 
         $registry = new SprinkleActivityTypeRegistry($manager);
 
-        $this->assertCount(19, $registry->all());
-        $this->assertCount(19, $registry->all());
+        $this->assertCount(20, $registry->all());
+        $this->assertCount(20, $registry->all());
         $this->assertTrue($registry->has(UserActivityTypes::class));
         $this->assertInstanceOf(UserActivityTypes::class, $registry->get(UserActivityTypes::class));
-        $this->assertSame(19, $registry->count());
+        $this->assertSame(20, $registry->count());
         $this->assertSame('ACCOUNT.ACTIVITY.REGISTER', $registry->getI18nKey('sign_up'));
+        $this->assertSame('ACCOUNT.ACTIVITY.LABEL.REGISTER', $registry->getLabelI18nKey('sign_up'));
         $this->assertSame('ROLE.ACTIVITY.UPDATE_FIELD', $registry->getI18nKey('role_update_field'));
+        $this->assertSame('ROLE.ACTIVITY.LABEL.UPDATE_FIELD', $registry->getLabelI18nKey('role_update_field'));
         $this->assertNull($registry->getI18nKey('unknown_activity'));
+        $this->assertNull($registry->getLabelI18nKey('unknown_activity'));
 
         $this->assertSame('ACCOUNT.ACTIVITY.VERIFIED', UserActivityTypes::getI18nKey('verified'));
         $this->assertSame('ACCOUNT.ACTIVITY.PASSWORD_RESET', UserActivityTypes::getI18nKey('password_reset'));
@@ -77,10 +85,55 @@ class SprinkleActivityTypeRegistryTest extends TestCase
         $this->assertSame('ROLE.ACTIVITY.CREATE', RoleActivityTypes::getI18nKey('role_create'));
         $this->assertSame('ROLE.ACTIVITY.DELETE', RoleActivityTypes::getI18nKey('role_delete'));
         $this->assertSame('ROLE.ACTIVITY.UPDATE_INFO', RoleActivityTypes::getI18nKey('role_update_info'));
+
+        $this->assertSame([
+            'ACCOUNT.ACTIVITY.LABEL.REGISTER',
+            'ACCOUNT.ACTIVITY.LABEL.VERIFIED',
+            'ACCOUNT.ACTIVITY.LABEL.PASSWORD_RESET',
+            'ACCOUNT.ACTIVITY.LABEL.LOGGED_IN',
+            'ACCOUNT.ACTIVITY.LABEL.LOGGED_OUT',
+            'ACCOUNT.ACTIVITY.LABEL.PASSWORD_UPGRADED',
+        ], array_map(
+            static fn (UserActivityTypes $activityType): ?string => UserActivityTypes::getLabelI18nKey($activityType->value),
+            UserActivityTypes::cases()
+        ));
+        $this->assertSame([
+            'ACCOUNT.ACTIVITY.LABEL.CREATE',
+            'ACCOUNT.ACTIVITY.LABEL.DELETE',
+            'ACCOUNT.ACTIVITY.LABEL.UPDATE_INFO',
+            'ACCOUNT.ACTIVITY.LABEL.UPDATE_FIELD',
+            'ACCOUNT.ACTIVITY.LABEL.UPDATE_PROFILE_SETTINGS',
+            'ACCOUNT.ACTIVITY.LABEL.UPDATE_ACCOUNT_SETTINGS',
+            'ACCOUNT.ACTIVITY.LABEL.UPDATE_EMAIL',
+        ], array_map(
+            static fn (AccountActivityTypes $activityType): ?string => AccountActivityTypes::getLabelI18nKey($activityType->value),
+            AccountActivityTypes::cases()
+        ));
+        $this->assertSame([
+            'GROUP.ACTIVITY.LABEL.CREATE',
+            'GROUP.ACTIVITY.LABEL.DELETE',
+            'GROUP.ACTIVITY.LABEL.UPDATE_INFO',
+        ], array_map(
+            static fn (GroupActivityTypes $activityType): ?string => GroupActivityTypes::getLabelI18nKey($activityType->value),
+            GroupActivityTypes::cases()
+        ));
+        $this->assertSame([
+            'ROLE.ACTIVITY.LABEL.CREATE',
+            'ROLE.ACTIVITY.LABEL.DELETE',
+            'ROLE.ACTIVITY.LABEL.UPDATE_INFO',
+            'ROLE.ACTIVITY.LABEL.UPDATE_FIELD',
+        ], array_map(
+            static fn (RoleActivityTypes $activityType): ?string => RoleActivityTypes::getLabelI18nKey($activityType->value),
+            RoleActivityTypes::cases()
+        ));
         $this->assertNull(UserActivityTypes::getI18nKey('unknown_activity'));
         $this->assertNull(AccountActivityTypes::getI18nKey('unknown_activity'));
         $this->assertNull(GroupActivityTypes::getI18nKey('unknown_activity'));
         $this->assertNull(RoleActivityTypes::getI18nKey('unknown_activity'));
+        $this->assertNull(UserActivityTypes::getLabelI18nKey('unknown_activity'));
+        $this->assertNull(AccountActivityTypes::getLabelI18nKey('unknown_activity'));
+        $this->assertNull(GroupActivityTypes::getLabelI18nKey('unknown_activity'));
+        $this->assertNull(RoleActivityTypes::getLabelI18nKey('unknown_activity'));
     }
 
     public function testMissingClassIsRejected(): void

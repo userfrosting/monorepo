@@ -93,6 +93,7 @@ return [
     'EDIT'                     => 'Modifier',
     'ENABLE'                   => 'Activer',
     'ENABLED'                  => 'Activé',
+    'LABEL'                    => 'Libellé',
     'MORE_OPTIONS'             => 'Plus d\'options',
     'NO'                       => 'Non',
     'NONE'                     => 'Aucun',
