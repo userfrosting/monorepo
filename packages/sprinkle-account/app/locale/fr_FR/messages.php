@@ -17,6 +17,22 @@ return [
     'ACCOUNT' => [
         '@TRANSLATION'        => 'Compte d\'utilisateur',
 
+        'ACTIVITY' => [
+            'CREATE'                  => 'Compte créé',
+            'DELETE'                  => 'Compte supprimé',
+            'UPDATE_INFO'             => 'Informations du compte mises à jour',
+            'UPDATE_FIELD'            => 'Champ du compte {{field}} mis à jour',
+            'UPDATE_PROFILE_SETTINGS' => 'Paramètres du profil mis à jour',
+            'UPDATE_ACCOUNT_SETTINGS' => 'Paramètres du compte mis à jour',
+
+            'REGISTER'          => 'Utilisateur inscrit',
+            'VERIFIED'          => 'Utilisateur vérifié',
+            'PASSWORD_RESET'    => 'Mot de passe réinitialisé',
+            'LOGGED_IN'         => 'Utilisateur connecté',
+            'LOGGED_OUT'        => 'Utilisateur déconnecté',
+            'PASSWORD_UPGRADED' => 'Mot de passe amélioré',
+        ],
+
         'EXCEPTION' => [
             'TITLE'       => 'Exception de compte',
             'DESCRIPTION' => 'Une erreur non spécifiée avec le compte a été rencontrée.',

@@ -75,6 +75,21 @@ class Activity extends Model implements ActivityInterface
     ];
 
     /**
+     * @var array<string> The attributes that should be visible in arrays.
+     */
+    protected $visible = [
+        'id',
+        'ip_address',
+        'type',
+        'occurred_at',
+        'metadata',
+        'description',
+        'user',
+        'context',
+        'subject',
+    ];
+
+    /**
      * @var bool Disable timestamps for this class.
      */
     public $timestamps = false;

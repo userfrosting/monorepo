@@ -16,7 +16,10 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Collection;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
@@ -40,18 +43,72 @@ class ActivitySprunje extends Sprunje
 
     public function __construct(
         protected ActivityInterface $activityModel,
+        protected ActivityTypeRegistryInterface $activityTypeRegistry,
+        protected Translator $translator,
     ) {
         parent::__construct();
+    }
+
+    /**
+     * Translate activity types after the database query has been executed.
+     *
+     * @param Collection<int, Model> $collection
+     *
+     * @return Collection<int, Model>
+     */
+    protected function applyTransformations(Collection $collection): Collection
+    {
+        return $collection->each(function (Model $activity): void {
+            $type = (string) $activity->getAttribute('type');
+            $i18nKey = $this->activityTypeRegistry->getI18nKey($type);
+
+            if ($i18nKey === null || !$this->translator->getDictionary()->has($i18nKey)) {
+                $conventionKey = 'ACTIVITY.TYPE.' . $type;
+                $i18nKey = $this->translator->getDictionary()->has($conventionKey)
+                    ? $conventionKey
+                    : null;
+            }
+
+            if ($i18nKey !== null) {
+                $placeholders = $activity->getAttribute('metadata');
+                if (!is_array($placeholders)) {
+                    $placeholders = [];
+                }
+                $placeholders['context'] = $activity->getRelationValue('context');
+                $placeholders['subject'] = $activity->getRelationValue('subject');
+
+                $activity->setAttribute(
+                    'description',
+                    $this->translator->translate($i18nKey, $placeholders)
+                );
+
+                return;
+            }
+
+            $description = $activity->getAttribute('description');
+            if (!is_string($description) || $description === '') {
+                $activity->setAttribute('description', $type);
+            }
+        });
     }
 
     /**
      * Set the initial query used by your Sprunje.
      * {@inheritDoc}
      */
-    protected function baseQuery()
+    protected function baseQuery(): EloquentBuilder
     {
         // @phpstan-ignore-next-line Activity interface mixin Model and non-static method.
-        return $this->activityModel->joinUser();
+        $query = $this->activityModel->newQuery();
+        $query->getQuery()
+            ->leftJoin('users', 'activities.user_id', '=', 'users.id')
+            ->select('activities.*');
+
+        return $query
+            ->with(['user' => function ($query) {
+                $query->withTrashed();
+            }, 'context', 'subject'])
+            ->latest('occurred_at');
     }
 
     /**

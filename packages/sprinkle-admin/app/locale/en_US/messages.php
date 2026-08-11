@@ -63,6 +63,12 @@ return [
         'PAGE_DESCRIPTION'    => 'A listing of the groups for your site.  Provides management tools for editing and deleting groups.',
         'UPDATE'              => 'Details updated for group <strong>{{name}}</strong>',
         'USERS'               => 'Users in this group',
+
+        'ACTIVITY' => [
+            'CREATE'      => 'Group created',
+            'DELETE'      => 'Group deleted',
+            'UPDATE_INFO' => 'Group information updated',
+        ],
     ],
 
     'MANUALLY_ACTIVATED'    => "{{user_name}}'s account has been manually activated",
@@ -114,6 +120,13 @@ return [
         'UPDATE'              => 'Update Roles',
         'UPDATED'             => 'Details updated for role <strong>{{name}}</strong>',
         'USERS'               => 'Users with this role',
+
+        'ACTIVITY' => [
+            'CREATE'       => 'Role created',
+            'DELETE'       => 'Role deleted',
+            'UPDATE_INFO'  => 'Role information updated',
+            'UPDATE_FIELD' => 'Role field {{field}} updated',
+        ],
     ],
 
     'SITE_CONFIG' => [

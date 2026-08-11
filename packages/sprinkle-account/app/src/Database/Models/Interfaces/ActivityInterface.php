@@ -41,8 +41,9 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @property array<string, mixed>|null $metadata
  * @property-read UserInterface|null   $user
  *
- * @method        $this joinUser()
- * @method static $this joinUser()
+ * @method        $this   joinUser()
+ * @method static $this   joinUser()
+ * @method        Builder newQuery()
  */
 interface ActivityInterface extends MorphableModelInterface
 {

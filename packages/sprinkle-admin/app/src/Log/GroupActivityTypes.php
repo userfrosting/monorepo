@@ -12,9 +12,24 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Log;
 
-enum GroupActivityTypes: string
+use UserFrosting\Sprinkle\Account\Log\ActivityTypes;
+
+enum GroupActivityTypes: string implements ActivityTypes
 {
     case CREATE = 'group_create';
     case DELETE = 'group_delete';
     case UPDATE_INFO = 'group_update_info';
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getI18nKey(string $value): ?string
+    {
+        return match (self::tryFrom($value)) {
+            self::CREATE      => 'GROUP.ACTIVITY.CREATE',
+            self::DELETE      => 'GROUP.ACTIVITY.DELETE',
+            self::UPDATE_INFO => 'GROUP.ACTIVITY.UPDATE_INFO',
+            default           => null,
+        };
+    }
 }

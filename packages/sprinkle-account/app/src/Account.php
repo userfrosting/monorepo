@@ -49,8 +49,11 @@ use UserFrosting\Sprinkle\Account\Listener\AssignDefaultRoles;
 use UserFrosting\Sprinkle\Account\Listener\UpgradePassword;
 use UserFrosting\Sprinkle\Account\Listener\UserLogoutActivity;
 use UserFrosting\Sprinkle\Account\Listener\UserSignInActivity;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 use UserFrosting\Sprinkle\Account\Routes\AuthRoutes;
 use UserFrosting\Sprinkle\Account\ServicesProvider\AccessConditionsService;
+use UserFrosting\Sprinkle\Account\ServicesProvider\ActivityService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\AuthorizationService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\AuthService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\I18nService;
@@ -58,6 +61,7 @@ use UserFrosting\Sprinkle\Account\ServicesProvider\LoggersService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\MFAServices;
 use UserFrosting\Sprinkle\Account\ServicesProvider\ModelsService;
 use UserFrosting\Sprinkle\Account\ServicesProvider\MorphMapProvider;
+use UserFrosting\Sprinkle\Account\Sprinkle\Recipe\ActivityRecipe;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\BakeryRecipe;
 use UserFrosting\Sprinkle\Core\Bakery\Event\BakeCommandEvent;
@@ -69,6 +73,7 @@ use UserFrosting\Sprinkle\SprinkleRecipe;
 
 class Account implements
     SprinkleRecipe,
+    ActivityRecipe,
     MigrationRecipe,
     SeedRecipe,
     EventListenerRecipe,
@@ -117,6 +122,17 @@ class Account implements
     /**
      * {@inheritDoc}
      */
+    public function getActivityTypes(): array
+    {
+        return [
+            UserActivityTypes::class,
+            AccountActivityTypes::class,
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getRoutes(): array
     {
         return [
@@ -131,6 +147,7 @@ class Account implements
     {
         return [
             AccessConditionsService::class,
+            ActivityService::class,
             AuthorizationService::class,
             AuthService::class,
             ModelsService::class,
