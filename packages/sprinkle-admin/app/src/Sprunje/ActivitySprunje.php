@@ -98,17 +98,13 @@ class ActivitySprunje extends Sprunje
      */
     protected function baseQuery(): EloquentBuilder
     {
-        // @phpstan-ignore-next-line Activity interface mixin Model and non-static method.
-        $query = $this->activityModel->newQuery();
-        $query->getQuery()
-            ->leftJoin('users', 'activities.user_id', '=', 'users.id')
-            ->select('activities.*');
+        // @phpstan-ignore-next-line staticMethod.dynamicCall
+        $query = $this->activityModel->joinUser();
 
         return $query
             ->with(['user' => function ($query) {
                 $query->withTrashed();
-            }, 'context', 'subject'])
-            ->latest('occurred_at');
+            }, 'context', 'subject']);
     }
 
     /**
