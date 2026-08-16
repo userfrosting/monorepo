@@ -126,12 +126,23 @@ class ProfileEditAction
         // Note that only fields listed in `profile-settings.yaml` will be
         // permitted in $data, so this prevents the user from updating all columns in the DB
         $currentUser->fill($data);
+
+        // Keep only fields whose values actually changed for the activity metadata.
+        $changes = array_intersect_key($currentUser->getDirty(), $data);
+        $metadata = [];
+        foreach (array_keys($changes) as $field) {
+            $metadata['old_' . $field] = $currentUser->getOriginal($field);
+            $metadata['new_' . $field] = $currentUser->getAttribute($field);
+        }
+
         $currentUser->save();
 
         // Create activity record
         $this->logger->record(
             user: $currentUser,
-            type: AccountActivityTypes::UPDATE_PROFILE_SETTINGS
+            type: AccountActivityTypes::UPDATE_PROFILE_SETTINGS,
+            context: $currentUser,
+            metadata: $metadata
         );
     }
 

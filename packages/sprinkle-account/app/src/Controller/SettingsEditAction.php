@@ -130,7 +130,8 @@ class SettingsEditAction
         // Create activity record
         $this->logger->record(
             user: $currentUser,
-            type: AccountActivityTypes::UPDATE_ACCOUNT_SETTINGS
+            type: AccountActivityTypes::UPDATE_PASSWORD,
+            context: $currentUser
         );
     }
 

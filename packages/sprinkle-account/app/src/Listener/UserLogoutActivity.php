@@ -31,7 +31,8 @@ class UserLogoutActivity
         // Add a sign out activity (time is automatically set by database)
         $this->logger->record(
             user: $event->user,
-            type: UserActivityTypes::LOGGED_OUT
+            type: UserActivityTypes::LOGGED_OUT,
+            context: $event->user
         );
     }
 }

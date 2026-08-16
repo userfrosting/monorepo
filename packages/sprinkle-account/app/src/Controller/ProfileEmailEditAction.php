@@ -124,6 +124,9 @@ class ProfileEmailEditAction
             throw new EmailNotUniqueException();
         }
 
+        // Keep the old email for activity log
+        $oldEmail = $currentUser->email;
+
         // Looks good, let's update with new values!
         // Note that only fields listed in `account-email.yaml` will be
         // permitted in $data, so this prevents the user from updating all columns in the DB
@@ -133,7 +136,12 @@ class ProfileEmailEditAction
         // Create activity record
         $this->logger->record(
             user: $currentUser,
-            type: AccountActivityTypes::UPDATE_ACCOUNT_SETTINGS
+            type: AccountActivityTypes::UPDATE_EMAIL,
+            context: $currentUser,
+            metadata: [
+                'old' => $oldEmail,
+                'new' => $data['email'],
+            ]
         );
     }
 

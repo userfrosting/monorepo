@@ -156,7 +156,12 @@ class UserEditAction
         // Begin transaction - DB will be rolled back if an exception occurs
         $newUser = $this->db->transaction(function () use ($data, $user, $currentUser) {
             // Update the user and generate success messages
+            $metadata = [];
             foreach ($data as $name => $value) {
+                $metadata[$name] = [
+                    'old' => $user->getAttribute($name),
+                    'new' => $value,
+                ];
                 $user->setAttribute($name, $value);
             }
 
@@ -166,7 +171,8 @@ class UserEditAction
             $this->logger->record(
                 user: $currentUser,
                 type: AccountActivityTypes::UPDATE_INFO,
-                context: $user
+                context: $user,
+                metadata: $metadata
             );
 
             return $user;

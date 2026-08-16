@@ -165,7 +165,8 @@ class EmailVerificationValidationAction
             // Create activity record
             $this->logger->record(
                 user: $user,
-                type: UserActivityTypes::VERIFIED
+                type: UserActivityTypes::VERIFIED,
+                context: $user
             );
         });
     }

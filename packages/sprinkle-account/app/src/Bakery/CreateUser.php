@@ -36,8 +36,8 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Event\UserCreatedEvent;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountException;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
-use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 use UserFrosting\Sprinkle\Account\Validators\UserValidation;
 use UserFrosting\Sprinkle\Core\Bakery\Helper\DatabaseTest;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRepositoryInterface;
@@ -191,8 +191,9 @@ class CreateUser extends Command
 
             // Create activity record
             $this->logger->record(
-                user: $user,
-                type: UserActivityTypes::REGISTER
+                user: $user, // TODO : Should be null, as the command line user is not a user.
+                type: AccountActivityTypes::CREATE,
+                context: $user
             );
 
             return $user;

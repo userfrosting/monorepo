@@ -30,7 +30,8 @@ class UserSignInActivity
     {
         $this->logger->record(
             user: $event->user,
-            type: UserActivityTypes::LOGGED_IN
+            type: UserActivityTypes::LOGGED_IN,
+            context: $event->user
         );
     }
 }

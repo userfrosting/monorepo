@@ -176,7 +176,8 @@ class RegisterAction
             // Create activity record
             $this->logger->record(
                 user: $user,
-                type: UserActivityTypes::REGISTER
+                type: UserActivityTypes::REGISTER,
+                context: $user
             );
 
             // Send activation email

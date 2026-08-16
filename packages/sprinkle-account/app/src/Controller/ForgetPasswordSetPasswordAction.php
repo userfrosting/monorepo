@@ -136,7 +136,8 @@ class ForgetPasswordSetPasswordAction
             // Create activity record
             $this->logger->record(
                 user: $user,
-                type: UserActivityTypes::PASSWORD_RESET
+                type: UserActivityTypes::PASSWORD_RESET,
+                context: $user
             );
         });
     }

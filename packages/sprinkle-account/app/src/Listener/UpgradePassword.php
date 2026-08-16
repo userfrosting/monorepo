@@ -41,7 +41,8 @@ class UpgradePassword
             // Add a sign in activity (time is automatically set by database)
             $this->logger->record(
                 user: $event->user,
-                type: UserActivityTypes::PASSWORD_UPGRADED
+                type: UserActivityTypes::PASSWORD_UPGRADED,
+                context: $event->user
             );
         }
     }

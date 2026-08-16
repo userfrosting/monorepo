@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\Tests\Controller;
 
 use UserFrosting\Config\Config;
+use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
@@ -37,6 +39,7 @@ class ProfileEditActionTest extends AccountTestCase
         /** @var User */
         $user = User::factory()->create();
         $this->actAsUser($user, true);
+        $oldFirstName = $user->first_name;
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/settings/profile', [
@@ -59,6 +62,13 @@ class ProfileEditActionTest extends AccountTestCase
         $this->assertSame('foo', $editedUser->first_name);
         $this->assertSame($user->last_name, $editedUser->last_name);
         $this->assertSame($user->locale, $editedUser->locale);
+
+        /** @var Activity */
+        $activity = Activity::where('type', AccountActivityTypes::UPDATE_PROFILE_SETTINGS->value)->latest('id')->first();
+        $this->assertSame([
+            'old_first_name' => $oldFirstName,
+            'new_first_name' => 'foo',
+        ], $activity->metadata);
     }
 
     public function testProfileWithNoPermissions(): void
