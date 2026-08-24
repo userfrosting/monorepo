@@ -25,6 +25,11 @@ return [
         'PAGE_DESCRIPTION' => 'A listing of user activities',
         'TIME'             => 'Activity Time',
     ],
+    'ADMIN' => [
+        'ACTIVITY' => [
+            'CACHE_CLEARED' => 'Cleared site cache',
+        ],
+    ],
     'ADMIN_PANEL' => 'Admin Panel',
 
     'DASHBOARD'             => 'Dashboard',

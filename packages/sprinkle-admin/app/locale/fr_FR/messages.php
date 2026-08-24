@@ -25,6 +25,11 @@ return [
         'PAGE_DESCRIPTION' => 'Une liste des activités des utilisateurs',
         'TIME'             => 'Date de l\'activité',
     ],
+    'ADMIN' => [
+        'ACTIVITY' => [
+            'CACHE_CLEARED' => 'Cache du site vidé',
+        ],
+    ],
     'ADMIN_PANEL' => "Panneau d'admin",
 
     'DASHBOARD'           => 'Tableau de bord',
