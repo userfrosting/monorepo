@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Controller;
 
+use Illuminate\Database\Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Config\Config;
@@ -59,7 +60,8 @@ class ProfileEmailEditAction
         protected ActivityRecorderInterface $logger,
         protected UserInterface $userModel,
         protected RequestDataTransformer $transformer,
-        protected ServerSideValidator $validator
+        protected ServerSideValidator $validator,
+        protected Connection $db
     ) {
     }
 
@@ -130,19 +132,22 @@ class ProfileEmailEditAction
         // Looks good, let's update with new values!
         // Note that only fields listed in `account-email.yaml` will be
         // permitted in $data, so this prevents the user from updating all columns in the DB
-        $currentUser->fill($data);
-        $currentUser->save();
+        $this->db->transaction(function () use ($currentUser, $data, $oldEmail): void {
+            $currentUser->fill($data);
 
-        // Create activity record
-        $this->logger->record(
-            user: $currentUser,
-            type: AccountActivityTypes::UPDATE_EMAIL,
-            context: $currentUser,
-            metadata: [
-                'old' => $oldEmail,
-                'new' => $data['email'],
-            ]
-        );
+            // Record while the subject still contains its dirty attributes.
+            $this->logger->record(
+                user: $currentUser,
+                type: AccountActivityTypes::UPDATE_EMAIL,
+                subject: $currentUser,
+                metadata: [
+                    'old' => $oldEmail,
+                    'new' => $data['email'],
+                ]
+            );
+
+            $currentUser->save();
+        });
     }
 
     /**

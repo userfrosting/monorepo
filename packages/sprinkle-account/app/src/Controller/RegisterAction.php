@@ -177,7 +177,7 @@ class RegisterAction
             $this->logger->record(
                 user: $user,
                 type: UserActivityTypes::REGISTER,
-                context: $user
+                subject: $user
             );
 
             // Send activation email

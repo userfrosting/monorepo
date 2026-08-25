@@ -120,7 +120,7 @@ class RoleDeleteAction
             $this->logger->record(
                 user: $currentUser,
                 type: RoleActivityTypes::DELETE,
-                context: $role
+                subject: $role
             );
         });
     }

@@ -67,6 +67,7 @@ class MigrationsTest extends AccountTestCase
                 'subject_id',
                 'subject_type',
                 'metadata',
+                'properties',
             ],
             'groups'           => [
                 'id',

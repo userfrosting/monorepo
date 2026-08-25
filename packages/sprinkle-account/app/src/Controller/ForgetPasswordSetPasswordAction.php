@@ -137,7 +137,7 @@ class ForgetPasswordSetPasswordAction
             $this->logger->record(
                 user: $user,
                 type: UserActivityTypes::PASSWORD_RESET,
-                context: $user
+                subject: $user
             );
         });
     }

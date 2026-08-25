@@ -117,7 +117,7 @@ class GroupDeleteAction
             $this->logger->record(
                 user: $currentUser,
                 type: GroupActivityTypes::DELETE,
-                context: $group
+                subject: $group
             );
         });
 

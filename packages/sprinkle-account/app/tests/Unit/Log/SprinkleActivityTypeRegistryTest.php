@@ -64,7 +64,7 @@ class SprinkleActivityTypeRegistryTest extends TestCase
         $this->assertSame(21, $registry->count());
 
         foreach ([
-            'sign_up' => ['ACCOUNT.ACTIVITY.REGISTER', 'ACCOUNT.ACTIVITY.LABEL.REGISTER'],
+            'sign_up'           => ['ACCOUNT.ACTIVITY.REGISTER', 'ACCOUNT.ACTIVITY.LABEL.REGISTER'],
             'role_update_field' => ['ROLE.ACTIVITY.UPDATE_FIELD', 'ROLE.ACTIVITY.LABEL.UPDATE_FIELD'],
         ] as $value => [$expectedI18nKey, $expectedLabelI18nKey]) {
             $this->assertSame($expectedI18nKey, $registry->getI18nKey($value));
@@ -76,29 +76,29 @@ class SprinkleActivityTypeRegistryTest extends TestCase
         /** @var array<class-string<BackedEnum&ActivityTypes>, array<string, string>> $expectedI18nKeys */
         $expectedI18nKeys = [
             UserActivityTypes::class => [
-                'verified' => 'ACCOUNT.ACTIVITY.VERIFIED',
-                'password_reset' => 'ACCOUNT.ACTIVITY.PASSWORD_RESET',
-                'sign_in' => 'ACCOUNT.ACTIVITY.LOGGED_IN',
-                'sign_out' => 'ACCOUNT.ACTIVITY.LOGGED_OUT',
+                'verified'          => 'ACCOUNT.ACTIVITY.VERIFIED',
+                'password_reset'    => 'ACCOUNT.ACTIVITY.PASSWORD_RESET',
+                'sign_in'           => 'ACCOUNT.ACTIVITY.LOGGED_IN',
+                'sign_out'          => 'ACCOUNT.ACTIVITY.LOGGED_OUT',
                 'password_upgraded' => 'ACCOUNT.ACTIVITY.PASSWORD_UPGRADED',
             ],
             AccountActivityTypes::class => [
-                'account_create' => 'ACCOUNT.ACTIVITY.CREATE',
-                'account_delete' => 'ACCOUNT.ACTIVITY.DELETE',
-                'account_update_info' => 'ACCOUNT.ACTIVITY.UPDATE_INFO',
-                'account_update_field' => 'ACCOUNT.ACTIVITY.UPDATE_FIELD',
+                'account_create'          => 'ACCOUNT.ACTIVITY.CREATE',
+                'account_delete'          => 'ACCOUNT.ACTIVITY.DELETE',
+                'account_update_info'     => 'ACCOUNT.ACTIVITY.UPDATE_INFO',
+                'account_update_field'    => 'ACCOUNT.ACTIVITY.UPDATE_FIELD',
                 'update_profile_settings' => 'ACCOUNT.ACTIVITY.UPDATE_PROFILE_SETTINGS',
                 'update_account_settings' => 'ACCOUNT.ACTIVITY.UPDATE_ACCOUNT_SETTINGS',
-                'update_password' => 'ACCOUNT.ACTIVITY.UPDATE_PASSWORD',
+                'update_password'         => 'ACCOUNT.ACTIVITY.UPDATE_PASSWORD',
             ],
             GroupActivityTypes::class => [
-                'group_create' => 'GROUP.ACTIVITY.CREATE',
-                'group_delete' => 'GROUP.ACTIVITY.DELETE',
+                'group_create'      => 'GROUP.ACTIVITY.CREATE',
+                'group_delete'      => 'GROUP.ACTIVITY.DELETE',
                 'group_update_info' => 'GROUP.ACTIVITY.UPDATE_INFO',
             ],
             RoleActivityTypes::class => [
-                'role_create' => 'ROLE.ACTIVITY.CREATE',
-                'role_delete' => 'ROLE.ACTIVITY.DELETE',
+                'role_create'      => 'ROLE.ACTIVITY.CREATE',
+                'role_delete'      => 'ROLE.ACTIVITY.DELETE',
                 'role_update_info' => 'ROLE.ACTIVITY.UPDATE_INFO',
             ],
         ];

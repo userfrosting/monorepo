@@ -70,6 +70,16 @@ class ActivitySprunje extends Sprunje
     protected function applyTransformations(Collection $collection): Collection
     {
         return $collection->each(function (Model $activity): void {
+            if ($activity->getAttribute('user_id') === null) {
+                $activity->setRelation('user', null);
+            } else {
+                $activity->load([
+                    'user' => function ($query): void {
+                        $query->withTrashed();
+                    },
+                ]);
+            }
+
             $type = (string) $activity->getAttribute('type');
             $activity->setAttribute('label', $this->getActivityLabel($type));
 
@@ -246,9 +256,7 @@ class ActivitySprunje extends Sprunje
         $query = $this->activityModel->joinUser();
 
         return $query
-            ->with(['user' => function ($query) {
-                $query->withTrashed();
-            }, 'context', 'subject']);
+            ->with(['context', 'subject']);
     }
 
     /**

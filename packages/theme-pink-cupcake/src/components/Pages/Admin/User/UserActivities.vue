@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ActivityDescription } from '../../../Activities'
+
 const { user_name } = defineProps<{
     user_name: string
 }>()
@@ -18,10 +20,10 @@ const { user_name } = defineProps<{
             <template #body="{ row }">
                 <UFSprunjeColumn>
                     <div>{{ $tdate(row.occurred_at) }}</div>
+                    <div class="uk-text-meta">{{ row.ip_address }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <div>{{ row.description }}</div>
-                    <div class="uk-text-meta">{{ row.ip_address }}</div>
+                    <ActivityDescription :activity="row" />
                 </UFSprunjeColumn>
             </template>
         </UFSprunjeTable>

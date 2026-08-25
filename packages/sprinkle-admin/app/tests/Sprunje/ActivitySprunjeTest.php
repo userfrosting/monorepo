@@ -347,6 +347,27 @@ class ActivitySprunjeTest extends AdminTestCase
         $this->assertSame('unregistered_event', $rowsById[$legacy->id]['label']);
         $this->assertSame('unknown_event', $rowsById[$raw->id]['description']);
         $this->assertSame('unknown_event', $rowsById[$raw->id]['label']);
+        $this->assertArrayNotHasKey('metadata', $rowsById[$registered->id]);
+    }
+
+    public function testActorlessActivityIsVisible(): void
+    {
+        /** @var Activity */
+        $activity = Activity::factory()->create([
+            'user_id' => null,
+            'type'    => 'actorless_event',
+        ]);
+
+        /** @var ActivitySprunje */
+        $sprunje = $this->getService(ActivitySprunje::class);
+        $rows = $sprunje->getArray()['rows'];
+        $rowsById = [];
+        foreach ($rows as $row) {
+            $rowsById[$row['id']] = $row;
+        }
+
+        $this->assertArrayHasKey($activity->id, $rowsById);
+        $this->assertNull($rowsById[$activity->id]['user']);
     }
 
     public function testConventionFallbackUsesMockedDictionary(): void

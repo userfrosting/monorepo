@@ -78,7 +78,58 @@ class ActivityRecorderTest extends AccountTestCase
         $this->assertEquals($subject->id, $activity->subject->id);
         $this->assertSame('TEST_ACTIVITY', $activity->type);
         $this->assertSame($metadata, $activity->metadata);
+        $this->assertNull($activity->properties);
         $this->assertNotNull($activity->occurred_at);
+    }
+
+    public function testRecordDerivesPropertiesFromSubject(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+
+        /** @var Group */
+        $subject = Group::factory()->create();
+        $oldName = $subject->name;
+        $subject->name = 'Updated group';
+
+        /** @var ActivityRecorderInterface */
+        $recorder = $this->getService(ActivityRecorderInterface::class);
+        $activity = $recorder->record(
+            user: $user,
+            type: TestActivityTypes::TEST_ACTIVITY,
+            subject: $subject
+        );
+
+        $this->assertSame([
+            'name' => [
+                'old' => $oldName,
+                'new' => 'Updated group',
+            ],
+        ], $activity->properties);
+        $this->assertArrayNotHasKey('metadata', $activity->toArray());
+        $this->assertArrayHasKey('properties', $activity->toArray());
+    }
+
+    public function testRecordOmitsSensitiveSubjectProperties(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        $user->email = 'updated@example.com';
+        $user->password = 'new-password';
+
+        /** @var ActivityRecorderInterface */
+        $recorder = $this->getService(ActivityRecorderInterface::class);
+        $activity = $recorder->record(
+            user: $user,
+            type: TestActivityTypes::TEST_ACTIVITY,
+            subject: $user
+        );
+
+        $properties = $activity->properties;
+        $this->assertIsArray($properties);
+        $this->assertArrayHasKey('email', $properties);
+        $this->assertArrayNotHasKey('password', $properties);
+        $this->assertArrayNotHasKey('password_last_set', $properties);
     }
 
     public function testBuiltinModelsImplementActivitySubjectInterface(): void
@@ -122,6 +173,19 @@ class ActivityRecorderTest extends AccountTestCase
         $this->assertNull($fetched->subject_type);
         $this->assertNull($fetched->subject_id);
         $this->assertSame(['test' => 'success'], $fetched->metadata);
+    }
+
+    public function testRecordForNullUser(): void
+    {
+        /** @var ActivityRecorderInterface */
+        $recorder = $this->getService(ActivityRecorderInterface::class);
+        $activity = $recorder->record(
+            user: null,
+            type: TestActivityTypes::TEST_NULL_RELATIONS
+        );
+
+        $this->assertNull($activity->user_id);
+        $this->assertNull($activity->user);
     }
 }
 

@@ -29,16 +29,17 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  *
  * @property int                       $id
  * @property string|null               $ip_address
- * @property int                       $user_id
+ * @property int|null                  $user_id
  * @property string                    $type
  * @property Datetime|null             $occurred_at
  * @property string                    $description  @deprecated 6.1
- * @property UserInterface             $user
+ * @property UserInterface|null        $user
  * @property string|null               $context_type
  * @property string|null               $context_id
  * @property string|null               $subject_type
  * @property string|null               $subject_id
  * @property array<string, mixed>|null $metadata
+ * @property array<string, mixed>|null $properties
  * @property-read UserInterface|null   $user
  *
  * @method        $this   joinUser()
@@ -55,12 +56,12 @@ interface ActivityInterface extends MorphableModelInterface
     public function user(): BelongsTo;
 
     /**
-     * Get the contextual model this activity belongs to.
+     * Get the optional third model related to this activity.
      */
     public function context(): MorphTo;
 
     /**
-     * Get the secondary model targeted by this activity.
+     * Get the model this activity was performed on.
      */
     public function subject(): MorphTo;
 

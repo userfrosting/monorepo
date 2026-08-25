@@ -166,7 +166,7 @@ class EmailVerificationValidationAction
             $this->logger->record(
                 user: $user,
                 type: UserActivityTypes::VERIFIED,
-                context: $user
+                subject: $user
             );
         });
     }

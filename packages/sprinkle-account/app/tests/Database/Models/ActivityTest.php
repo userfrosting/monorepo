@@ -64,6 +64,8 @@ class ActivityTest extends AccountTestCase
         $this->assertSame($user->id, $fetched->user_id);
         $this->assertSame('TEST', $fetched->type);
         $this->assertNull($fetched->occurred_at);
+        $this->assertNull($fetched->properties);
+        $this->assertArrayNotHasKey('metadata', $fetched->toArray());
         $this->assertSame('', $fetched->description);
 
         // Delete

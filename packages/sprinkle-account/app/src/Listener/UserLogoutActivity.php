@@ -32,7 +32,7 @@ class UserLogoutActivity
         $this->logger->record(
             user: $event->user,
             type: UserActivityTypes::LOGGED_OUT,
-            context: $event->user
+            subject: $event->user
         );
     }
 }

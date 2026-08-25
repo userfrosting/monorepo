@@ -22,31 +22,33 @@ interface ActivityRecorderInterface
     /**
      * Record one activity event.
      *
-     * The $user is the one doing the action, while the $context and $subject
-     * are the models affected by the action.
+     * The $user is the actor performing the action (caused the activity). The
+     * $subject is the model the action is performed on, while the optional
+     * $context is a third related model that gives the activity additional
+     * context.
      *
-     * For example, if a user comments on a post, the context would be the post,
-     * and the subject would be the comment. A record can be displayed for user,
+     * For example, if a user comments on a post, the subject would be the
+     * comment and the context would be the post. A record can be displayed for user,
      * context, or subject, (eg. show activities related to a specific post,
      * comment, or a specific user).
      *
      * Context and subject are optional. For example, if a user logs in, there
      * is no context or subject.
      *
-     * Metadata is an optional array of additional information to store with
-     * the activity and time related to the activity. For example, renaming a
-     * post could have metadata containing the old and new name of the post.
+     * Metadata is an optional array of translation placeholders. Properties
+     * are derived automatically from the subject's dirty attributes and store
+     * their old and new values.
      *
-     * @param UserInterface                           $user     The actor responsible for the activity.
+     * @param UserInterface|null                      $user     The actor responsible for the activity, or null for CLI/unauthenticated actions.
      * @param BackedEnum                              $type     The action being logged. The type key (eg. `user_created`) will be used to retrieve the activity template and i18n for rendering.
-     * @param array<string, scalar|array<mixed>|null> $metadata Additional event payload for UI rendering.
-     * @param MorphableModelInterface|null            $context  Primary related model (polymorphic context).
-     * @param MorphableModelInterface|null            $subject  Secondary related model (polymorphic subject).
+     * @param array<string, scalar|array<mixed>|null> $metadata Additional placeholders passed to the translator.
+     * @param MorphableModelInterface|null            $context  Optional third related model (polymorphic context).
+     * @param MorphableModelInterface|null            $subject  Model the action is performed on (polymorphic subject).
      *
      * @return ActivityInterface
      */
     public function record(
-        UserInterface $user,
+        ?UserInterface $user,
         BackedEnum $type,
         array $metadata = [],
         ?MorphableModelInterface $context = null,

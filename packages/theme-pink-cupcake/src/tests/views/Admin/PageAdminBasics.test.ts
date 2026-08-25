@@ -11,6 +11,12 @@ import PagePermissions from '../../../views/Admin/PagePermissions.vue'
 import PageRoles from '../../../views/Admin/PageRoles.vue'
 import PageUsers from '../../../views/Admin/PageUsers.vue'
 
+vi.mock('@userfrosting/sprinkle-core/stores', () => ({
+    useTranslator: () => ({
+        translate: (key: string) => key
+    })
+}))
+
 const SprunjeTableStub = {
     template: `
         <div data-test="sprunje-table">

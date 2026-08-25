@@ -148,19 +148,22 @@ class RoleUpdateFieldAction
                 $this->cache->clear();
             } else {
                 $role->$fieldName = $fieldValue; // @phpstan-ignore-line Variable property is ok here.
-                $role->save();
             }
 
             // Create activity record
             $this->logger->record(
                 user: $currentUser,
                 type: RoleActivityTypes::UPDATE_FIELD,
-                context: $role,
+                subject: $role,
                 metadata: [
                     'field' => $fieldName,
                     'value' => $fieldValue,
                 ]
             );
+
+            if ($fieldName !== 'permissions') {
+                $role->save();
+            }
         });
 
         // Add success messages

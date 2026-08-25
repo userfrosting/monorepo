@@ -21,11 +21,10 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
  *
  * Adds context and subject columns to the activities table to support
  * polymorphic relationships. Following this version, "type" will be used to
- * identify the type of activity using a string identifier, while "context" and
- * "subject" will be used to identify the related entities. "description" is
- * kept for backward compatibility and won't be used anymore, as it's replaced
- * by "metadata" which is a JSON column that can store any additional
- * information related to the activity.
+ * identify the type of activity using a string identifier. "subject" identifies
+ * the model the action was performed on, while "context" identifies an
+ * additional related model. "metadata" stores translation data and
+ * "properties" stores changed subject values.
  */
 class ActivitiesV2Table extends Migration
 {
@@ -41,9 +40,13 @@ class ActivitiesV2Table extends Migration
                 $table->string('subject_type', 100)->nullable();
                 $table->char('subject_id', 36)->nullable();
                 $table->json('metadata')->nullable();
+                $table->json('properties')->nullable();
 
                 $table->index(['context_type', 'context_id']);
                 $table->index(['subject_type', 'subject_id']);
+
+                // Make user_id nullable to support activities that are not associated with a user (eg. system activities).
+                $table->unsignedInteger('user_id')->nullable()->change();
             });
         }
     }
@@ -62,7 +65,10 @@ class ActivitiesV2Table extends Migration
                         'subject_type',
                         'subject_id',
                         'metadata',
+                        'properties',
                     ]);
+
+                    $table->unsignedInteger('user_id')->nullable(false)->change();
                 });
             });
         }

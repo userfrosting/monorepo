@@ -190,19 +190,22 @@ class UserUpdateFieldAction
                 $user->forgetCache();
             } else {
                 $user->$fieldName = $fieldValue; // @phpstan-ignore-line Variable property is ok here.
-                $user->save();
             }
 
             // Create activity record
             $this->logger->record(
                 user: $currentUser,
                 type: AccountActivityTypes::UPDATE_FIELD,
-                context: $user,
+                subject: $user,
                 metadata: [
                     'field' => $fieldName,
                     'value' => $fieldValue,
                 ]
             );
+
+            if ($fieldName !== 'roles') {
+                $user->save();
+            }
         });
 
         // Return success messages

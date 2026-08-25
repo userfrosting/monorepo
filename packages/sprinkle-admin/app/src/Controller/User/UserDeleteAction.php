@@ -103,7 +103,7 @@ class UserDeleteAction
             $this->logger->record(
                 user: $currentUser,
                 type: AccountActivityTypes::DELETE,
-                context: $user,
+                subject: $user,
                 metadata: ['username' => $username]
             );
         });

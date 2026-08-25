@@ -42,7 +42,7 @@ class UpgradePassword
             $this->logger->record(
                 user: $event->user,
                 type: UserActivityTypes::PASSWORD_UPGRADED,
-                context: $event->user
+                subject: $event->user
             );
         }
     }

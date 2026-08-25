@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Controller;
 
+use Illuminate\Database\Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Fortress\RequestSchema;
@@ -56,7 +57,8 @@ class ProfileEditAction
         protected SiteLocale $locale,
         protected ActivityRecorderInterface $logger,
         protected RequestDataTransformer $transformer,
-        protected ServerSideValidator $validator
+        protected ServerSideValidator $validator,
+        protected Connection $db
     ) {
     }
 
@@ -125,25 +127,18 @@ class ProfileEditAction
         // Looks good, let's update with new values!
         // Note that only fields listed in `profile-settings.yaml` will be
         // permitted in $data, so this prevents the user from updating all columns in the DB
-        $currentUser->fill($data);
+        $this->db->transaction(function () use ($currentUser, $data): void {
+            $currentUser->fill($data);
 
-        // Keep only fields whose values actually changed for the activity metadata.
-        $changes = array_intersect_key($currentUser->getDirty(), $data);
-        $metadata = [];
-        foreach (array_keys($changes) as $field) {
-            $metadata['old_' . $field] = $currentUser->getOriginal($field);
-            $metadata['new_' . $field] = $currentUser->getAttribute($field);
-        }
+            // Record while the subject still contains its dirty attributes.
+            $this->logger->record(
+                user: $currentUser,
+                type: AccountActivityTypes::UPDATE_PROFILE_SETTINGS,
+                subject: $currentUser
+            );
 
-        $currentUser->save();
-
-        // Create activity record
-        $this->logger->record(
-            user: $currentUser,
-            type: AccountActivityTypes::UPDATE_PROFILE_SETTINGS,
-            context: $currentUser,
-            metadata: $metadata
-        );
+            $currentUser->save();
+        });
     }
 
     /**

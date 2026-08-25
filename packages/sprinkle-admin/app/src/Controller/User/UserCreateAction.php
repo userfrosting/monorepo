@@ -163,7 +163,7 @@ class UserCreateAction
             $this->logger->record(
                 user: $currentUser,
                 type: AccountActivityTypes::CREATE,
-                context: $user
+                subject: $user
             );
 
             // Send an email to the user who's been created

@@ -66,9 +66,12 @@ class ProfileEditActionTest extends AccountTestCase
         /** @var Activity */
         $activity = Activity::where('type', AccountActivityTypes::UPDATE_PROFILE_SETTINGS->value)->latest('id')->first();
         $this->assertSame([
-            'old_first_name' => $oldFirstName,
-            'new_first_name' => 'foo',
-        ], $activity->metadata);
+            'first_name' => [
+                'old' => $oldFirstName,
+                'new' => 'foo',
+            ],
+        ], $activity->properties);
+        $this->assertSame([], $activity->metadata);
     }
 
     public function testProfileWithNoPermissions(): void

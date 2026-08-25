@@ -121,7 +121,7 @@ class RoleCreateAction
             $this->logger->record(
                 user: $currentUser,
                 type: RoleActivityTypes::CREATE,
-                context: $role
+                subject: $role
             );
 
             return $role;

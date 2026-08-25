@@ -118,7 +118,7 @@ class GroupCreateAction
             $this->logger->record(
                 user: $currentUser,
                 type: GroupActivityTypes::CREATE,
-                context: $group
+                subject: $group
             );
 
             return $group;

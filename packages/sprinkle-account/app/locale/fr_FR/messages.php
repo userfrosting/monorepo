@@ -24,7 +24,7 @@ return [
             'UPDATE_FIELD'            => 'Champ du compte {{field}} mis à jour',
             'UPDATE_PROFILE_SETTINGS' => 'Profil mis à jour',
             'UPDATE_ACCOUNT_SETTINGS' => 'Paramètres du compte mis à jour',
-            'UPDATE_EMAIL'            => 'Email mis à jour<br /><i>{{old}}</i> → <i>{{new}}</i>',
+            'UPDATE_EMAIL'            => 'Email mis à jour',
             'UPDATE_PASSWORD'         => 'Mot de passe modifié',
 
             'REGISTER'          => 'Utilisateur inscrit',

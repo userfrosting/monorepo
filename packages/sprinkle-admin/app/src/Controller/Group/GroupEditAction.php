@@ -140,15 +140,15 @@ class GroupEditAction
                 $group->setAttribute($name, $value);
             }
 
-            $group->save();
-
-            // Create activity record
+            // Create activity record while the subject still contains its dirty attributes.
             $this->logger->record(
                 user: $currentUser,
                 type: GroupActivityTypes::UPDATE_INFO,
-                context: $group,
+                subject: $group,
                 metadata: $metadata
             );
+
+            $group->save();
         });
 
         return $group;

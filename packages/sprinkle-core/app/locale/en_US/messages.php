@@ -69,6 +69,10 @@ return [
     'THEME_BY'      => 'Theme built with',
     'TOS'           => 'Terms of Service',
 
+    // Locales
+    'en_US'   => 'English',
+    'fr_FR'   => 'French',
+
     // Actions words
     'ACTIONS'                  => 'Actions',
     'ACTIVATE'                 => 'Activate',

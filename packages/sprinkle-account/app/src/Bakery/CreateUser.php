@@ -193,7 +193,7 @@ class CreateUser extends Command
             $this->logger->record(
                 user: $user, // TODO : Should be null, as the command line user is not a user.
                 type: AccountActivityTypes::CREATE,
-                context: $user
+                subject: $user
             );
 
             return $user;

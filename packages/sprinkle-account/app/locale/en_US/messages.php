@@ -24,7 +24,7 @@ return [
             'UPDATE_FIELD'            => 'Account field {{field}} updated',
             'UPDATE_PROFILE_SETTINGS' => 'Profile updated',
             'UPDATE_ACCOUNT_SETTINGS' => 'Account settings updated',
-            'UPDATE_EMAIL'            => 'Email updated<br /><i>{{old}}</i> → <i>{{new}}</i>',
+            'UPDATE_EMAIL'            => 'Email updated',
             'UPDATE_PASSWORD'         => 'Password changed',
 
             'REGISTER'          => 'User registered',

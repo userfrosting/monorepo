@@ -140,15 +140,15 @@ class RoleEditAction
                 $role->setAttribute($name, $value);
             }
 
-            $role->save();
-
-            // Create activity record
+            // Create activity record while the subject still contains its dirty attributes.
             $this->logger->record(
                 user: $currentUser,
                 type: RoleActivityTypes::UPDATE_INFO,
-                context: $role,
+                subject: $role,
                 metadata: $metadata
             );
+
+            $role->save();
 
             return $role;
         });
