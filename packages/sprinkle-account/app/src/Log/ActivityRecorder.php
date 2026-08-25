@@ -30,6 +30,7 @@ class ActivityRecorder implements ActivityRecorderInterface
         array $metadata = [],
         ?MorphableModelInterface $context = null,
         ?MorphableModelInterface $subject = null,
+        bool $withProperties = true,
     ): Activity {
         $activity = new Activity([
             'ip_address'   => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
@@ -40,7 +41,7 @@ class ActivityRecorder implements ActivityRecorderInterface
             'subject_id'   => $subject?->getKey(),
             'type'         => $type->value,
             'metadata'     => $metadata,
-            'properties'   => $this->getProperties($subject),
+            'properties'   => $withProperties ? $this->getProperties($subject) : null,
             'occurred_at'  => new DateTimeImmutable(),
         ]);
 

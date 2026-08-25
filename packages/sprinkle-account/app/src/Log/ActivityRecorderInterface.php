@@ -44,6 +44,7 @@ interface ActivityRecorderInterface
      * @param array<string, scalar|array<mixed>|null> $metadata Additional placeholders passed to the translator.
      * @param MorphableModelInterface|null            $context  Optional third related model (polymorphic context).
      * @param MorphableModelInterface|null            $subject  Model the action is performed on (polymorphic subject).
+     * @param bool                                    $withProperties Whether to derive changed properties from the subject.
      *
      * @return ActivityInterface
      */
@@ -53,5 +54,6 @@ interface ActivityRecorderInterface
         array $metadata = [],
         ?MorphableModelInterface $context = null,
         ?MorphableModelInterface $subject = null,
+        bool $withProperties = true,
     ): ActivityInterface;
 }
