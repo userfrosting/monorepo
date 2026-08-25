@@ -26,7 +26,8 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Exceptions\AccountException;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\MissingRequiredParamException;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
@@ -65,7 +66,7 @@ class UserUpdateFieldAction
         protected Authenticator $authenticator,
         protected Config $config,
         protected Connection $db,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
     ) {
@@ -189,14 +190,22 @@ class UserUpdateFieldAction
                 $user->forgetCache();
             } else {
                 $user->$fieldName = $fieldValue; // @phpstan-ignore-line Variable property is ok here.
-                $user->save();
             }
 
             // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for user {$user->user_name}.", [
-                'type'    => 'account_update_field',
-                'user_id' => $user->id,
-            ]);
+            $this->logger->record(
+                user: $currentUser,
+                type: AccountActivityTypes::UPDATE_FIELD,
+                subject: $user,
+                metadata: [
+                    'field' => $fieldName,
+                    'value' => $fieldValue,
+                ]
+            );
+
+            if ($fieldName !== 'roles') {
+                $user->save();
+            }
         });
 
         // Return success messages

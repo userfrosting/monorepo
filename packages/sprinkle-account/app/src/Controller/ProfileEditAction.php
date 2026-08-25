@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Controller;
 
+use Illuminate\Database\Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Fortress\RequestSchema;
@@ -23,7 +24,8 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Exceptions\LocaleNotFoundException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
@@ -53,9 +55,10 @@ class ProfileEditAction
         protected Translator $translator,
         protected Authenticator $authenticator,
         protected SiteLocale $locale,
-        protected UserActivityLoggerInterface $logger,
+        protected ActivityRecorderInterface $logger,
         protected RequestDataTransformer $transformer,
-        protected ServerSideValidator $validator
+        protected ServerSideValidator $validator,
+        protected Connection $db
     ) {
     }
 
@@ -124,14 +127,18 @@ class ProfileEditAction
         // Looks good, let's update with new values!
         // Note that only fields listed in `profile-settings.yaml` will be
         // permitted in $data, so this prevents the user from updating all columns in the DB
-        $currentUser->fill($data);
-        $currentUser->save();
+        $this->db->transaction(function () use ($currentUser, $data): void {
+            $currentUser->fill($data);
 
-        // Create activity record
-        $this->logger->info("User {$currentUser->user_name} updated their profile settings.", [
-            'type'    => 'update_profile_settings',
-            'user_id' => $currentUser->id,
-        ]);
+            // Record while the subject still contains its dirty attributes.
+            $this->logger->record(
+                user: $currentUser,
+                type: AccountActivityTypes::UPDATE_PROFILE_SETTINGS,
+                subject: $currentUser
+            );
+
+            $currentUser->save();
+        });
     }
 
     /**

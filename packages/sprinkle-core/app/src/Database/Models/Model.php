@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model as LaravelModel;
 use Psr\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Core\Database\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 
 /**
  * Model Class.
@@ -26,7 +27,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
  * @mixin \Illuminate\Database\Eloquent\Builder
  * @mixin \UserFrosting\Sprinkle\Core\Database\Builder
  */
-abstract class Model extends LaravelModel
+abstract class Model extends LaravelModel implements MorphableModelInterface
 {
     use HasRelationships;
 

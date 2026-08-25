@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\Listener;
 
 use UserFrosting\Sprinkle\Account\Event\UserLoggedInEvent;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 
 /**
@@ -22,16 +22,16 @@ use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 class UserSignInActivity
 {
     public function __construct(
-        protected UserActivityLoggerInterface $logger,
+        protected ActivityRecorderInterface $logger,
     ) {
     }
 
     public function __invoke(UserLoggedInEvent $event): void
     {
-        // Add a sign in activity (time is automatically set by database)
-        $this->logger->info("User {$event->user->user_name} signed in.", [
-            'type'    => UserActivityTypes::LOGGED_IN,
-            'user_id' => $event->user->id,
-        ]);
+        $this->logger->record(
+            user: $event->user,
+            type: UserActivityTypes::LOGGED_IN,
+            subject: $event->user
+        );
     }
 }

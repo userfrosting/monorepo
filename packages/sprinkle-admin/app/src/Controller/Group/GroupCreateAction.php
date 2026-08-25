@@ -24,8 +24,9 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\GroupException;
+use UserFrosting\Sprinkle\Admin\Log\GroupActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
@@ -54,7 +55,7 @@ class GroupCreateAction
         protected Authenticator $authenticator,
         protected Connection $db,
         protected GroupInterface $groupModel,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
     ) {
@@ -110,15 +111,15 @@ class GroupCreateAction
         // All checks passed!  log events/activities and create group
         // Begin transaction - DB will be rolled back if an exception occurs
         $group = $this->db->transaction(function () use ($data, $currentUser) {
-            // Create the group
             $group = new $this->groupModel($data);
             $group->save();
 
             // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} created group {$group->name}.", [
-                'type'    => 'group_create',
-                'user_id' => $currentUser->id,
-            ]);
+            $this->logger->record(
+                user: $currentUser,
+                type: GroupActivityTypes::CREATE,
+                subject: $group
+            );
 
             return $group;
         });

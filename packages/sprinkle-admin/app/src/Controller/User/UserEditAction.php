@@ -25,7 +25,8 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\EmailNotUniqueException;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
@@ -53,7 +54,7 @@ class UserEditAction
         protected Authenticator $authenticator,
         protected Config $config,
         protected Connection $db,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected UserInterface $userModel,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
@@ -159,13 +160,14 @@ class UserEditAction
                 $user->setAttribute($name, $value);
             }
 
-            $user->save();
+            // Create activity record while the subject still contains its dirty attributes.
+            $this->logger->record(
+                user: $currentUser,
+                type: AccountActivityTypes::UPDATE_INFO,
+                subject: $user
+            );
 
-            // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} updated basic account info for user {$user->user_name}.", [
-                'type'    => 'account_update_info',
-                'user_id' => $user->id,
-            ]);
+            $user->save();
 
             return $user;
         });

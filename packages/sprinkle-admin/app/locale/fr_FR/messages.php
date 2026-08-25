@@ -25,6 +25,11 @@ return [
         'PAGE_DESCRIPTION' => 'Une liste des activités des utilisateurs',
         'TIME'             => 'Date de l\'activité',
     ],
+    'ADMIN' => [
+        'ACTIVITY' => [
+            'CACHE_CLEARED' => 'Cache du site vidé',
+        ],
+    ],
     'ADMIN_PANEL' => "Panneau d'admin",
 
     'DASHBOARD'           => 'Tableau de bord',
@@ -63,6 +68,18 @@ return [
         'PAGE_DESCRIPTION'    => 'Une liste des groupes pour votre site. Fournit des outils de gestion pour éditer et supprimer des groupes.',
         'UPDATE'              => 'Les détails du groupe <strong>{{name}}</strong> ont été enregistrés',
         'USERS'               => 'Utilisateurs dans ce groupe',
+
+        'ACTIVITY' => [
+            'CREATE'      => 'Groupe créé',
+            'DELETE'      => 'Groupe supprimé',
+            'UPDATE_INFO' => 'Informations du groupe {{context.name}} mises à jour',
+
+            'LABEL' => [
+                'CREATE'      => 'Groupe créé',
+                'DELETE'      => 'Groupe supprimé',
+                'UPDATE_INFO' => 'Groupe mis à jour',
+            ],
+        ],
     ],
 
     'MANUALLY_ACTIVATED'    => 'Le compte de {{user_name}} a été activé manuellement',
@@ -114,6 +131,20 @@ return [
         'UPDATE'              => 'Mettre à jour les rôles',
         'UPDATED'             => 'Détails mis à jour pour le rôle <strong>{{name}}</strong>',
         'USERS'               => 'Utilisateurs avec ce rôle',
+
+        'ACTIVITY' => [
+            'CREATE'       => 'Rôle créé',
+            'DELETE'       => 'Rôle supprimé',
+            'UPDATE_INFO'  => 'Informations du rôle mises à jour',
+            'UPDATE_FIELD' => 'Champ du rôle {{field}} mis à jour',
+
+            'LABEL' => [
+                'CREATE'       => 'Rôle créé',
+                'DELETE'       => 'Rôle supprimé',
+                'UPDATE_INFO'  => 'Rôle mis à jour',
+                'UPDATE_FIELD' => 'Champ du rôle mis à jour',
+            ],
+        ],
     ],
 
     'SITE_CONFIG' => [

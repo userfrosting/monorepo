@@ -26,8 +26,9 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\MissingRequiredParamException;
+use UserFrosting\Sprinkle\Admin\Log\RoleActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
@@ -56,7 +57,7 @@ class RoleUpdateFieldAction
         protected Config $config,
         protected Cache $cache,
         protected Connection $db,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
     ) {
@@ -147,14 +148,22 @@ class RoleUpdateFieldAction
                 $this->cache->clear();
             } else {
                 $role->$fieldName = $fieldValue; // @phpstan-ignore-line Variable property is ok here.
-                $role->save();
             }
 
             // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for role {$role->name}.", [
-                'type'    => 'role_update_field',
-                'user_id' => $currentUser->id,
-            ]);
+            $this->logger->record(
+                user: $currentUser,
+                type: RoleActivityTypes::UPDATE_FIELD,
+                subject: $role,
+                metadata: [
+                    'field' => $fieldName,
+                    'value' => $fieldValue,
+                ]
+            );
+
+            if ($fieldName !== 'permissions') {
+                $role->save();
+            }
         });
 
         // Add success messages

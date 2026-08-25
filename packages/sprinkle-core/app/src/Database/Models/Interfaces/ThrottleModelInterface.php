@@ -29,6 +29,6 @@ use Carbon\Carbon;
  * @property Carbon      $created_at
  * @property Carbon      $updated_at
  */
-interface ThrottleModelInterface
+interface ThrottleModelInterface extends MorphableModelInterface
 {
 }

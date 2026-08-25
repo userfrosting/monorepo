@@ -83,6 +83,9 @@ vi.mock('@userfrosting/sprinkle-core/stores', () => ({
         getDateTime: () => ({
             toRelative: () => 'relative time'
         })
+    }),
+    useConfigStore: () => ({
+        get: (_key: string, fallback?: unknown) => fallback
     })
 }))
 

@@ -69,6 +69,10 @@ return [
     'THEME_BY'      => 'Thème créé avec',
     'TOS'           => 'Termes et conditions',
 
+    // Locales
+    'en_US'   => 'Anglais',
+    'fr_FR'   => 'Français',
+
     // Actions words
     'ACTIONS'                  => 'Actions',
     'ACTIVATE'                 => 'Autoriser',
@@ -93,6 +97,7 @@ return [
     'EDIT'                     => 'Modifier',
     'ENABLE'                   => 'Activer',
     'ENABLED'                  => 'Activé',
+    'LABEL'                    => 'Libellé',
     'MORE_OPTIONS'             => 'Plus d\'options',
     'NO'                       => 'Non',
     'NONE'                     => 'Aucun',

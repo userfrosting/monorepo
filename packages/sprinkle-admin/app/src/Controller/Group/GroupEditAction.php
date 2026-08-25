@@ -25,8 +25,9 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\GroupException;
+use UserFrosting\Sprinkle\Admin\Log\GroupActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
@@ -55,7 +56,7 @@ class GroupEditAction
         protected Authenticator $authenticator,
         protected Config $config,
         protected Connection $db,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected GroupInterface $groupModel,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
@@ -130,17 +131,24 @@ class GroupEditAction
         // Begin transaction - DB will be rolled back if an exception occurs
         $this->db->transaction(function () use ($data, $group, $currentUser) {
             // Update the user and generate success messages
+            $metadata = [];
             foreach ($data as $name => $value) {
+                $metadata[$name] = [
+                    'old' => $group->getAttribute($name),
+                    'new' => $value,
+                ];
                 $group->setAttribute($name, $value);
             }
 
-            $group->save();
+            // Create activity record while the subject still contains its dirty attributes.
+            $this->logger->record(
+                user: $currentUser,
+                type: GroupActivityTypes::UPDATE_INFO,
+                subject: $group,
+                metadata: $metadata
+            );
 
-            // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} updated details for group {$group->name}.", [
-                'type'    => 'group_update_info',
-                'user_id' => $currentUser->id,
-            ]);
+            $group->save();
         });
 
         return $group;
