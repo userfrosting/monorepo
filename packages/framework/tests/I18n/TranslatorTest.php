@@ -62,6 +62,14 @@ class TranslatorTest extends TestCase
         $this->assertSame($dictionary->getLocale(), $translator->getLocale());
     }
 
+    public function testTranslateYamlAndJsonFiles(): void
+    {
+        $translator = $this->getTranslator();
+
+        $this->assertSame('YAML translation', $translator->translate('FORMAT_YAML'));
+        $this->assertSame('JSON translation', $translator->translate('FORMAT_JSON'));
+    }
+
     /**
      * Test locale with a plural option.
      */
