@@ -16,6 +16,7 @@ use Illuminate\Support\Arr;
 use LogicException;
 use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
 use UserFrosting\Support\Repository\Loader\FileRepositoryLoader;
+use UserFrosting\Support\Repository\Loader\YamlFileLoader;
 use UserFrosting\Support\Repository\Repository;
 use UserFrosting\UniformResourceLocator\ResourceLocatorInterface;
 
@@ -42,14 +43,14 @@ class Dictionary extends Repository implements DictionaryInterface
     /**
      * @param LocaleInterface           $locale
      * @param ResourceLocatorInterface  $locator
-     * @param FileRepositoryLoader|null $fileLoader File loader used to load each dictionary files (default to Array Loader)
+     * @param FileRepositoryLoader|null $fileLoader File loader used to load YAML/JSON dictionary files (default to YAML Loader)
      */
     public function __construct(
         protected LocaleInterface $locale,
         protected ResourceLocatorInterface $locator,
         ?FileRepositoryLoader $fileLoader = null
     ) {
-        $this->fileLoader = $fileLoader ?? new ArrayFileLoader();
+        $this->fileLoader = $fileLoader ?? new YamlFileLoader();
 
         parent::__construct();
     }
@@ -121,10 +122,22 @@ class Dictionary extends Repository implements DictionaryInterface
 
         // Load all files content if files are present
         if (count($files) !== 0) {
-            $loader = $this->getFileLoader();
-            $loader->setPaths($files);
+            $phpFiles = array_filter($files, fn (string $file): bool => pathinfo($file, PATHINFO_EXTENSION) === 'php');
+            $dataFiles = array_diff($files, $phpFiles);
 
-            $dictionary = $loader->load();
+            if (count($phpFiles) !== 0) {
+                $loader = $this->fileLoader instanceof ArrayFileLoader
+                    ? $this->fileLoader
+                    : new ArrayFileLoader();
+                $loader->setPaths($phpFiles);
+                $dictionary = $loader->load();
+            }
+
+            if (count($dataFiles) !== 0) {
+                $loader = $this->getFileLoader();
+                $loader->setPaths($dataFiles);
+                $dictionary = array_replace_recursive($dictionary, $loader->load());
+            }
         }
 
         // Now load dependent dictionaries
@@ -156,9 +169,16 @@ class Dictionary extends Repository implements DictionaryInterface
     {
         // @phpstan-ignore-next-line False positive. ResourceInterface is Stringable.
         return array_filter($files, function ($file) {
-            if ($file->getExtension() === 'php') {
+            $extension = $file->getExtension();
+            if ($extension === 'php') {
                 return (string) $file;
             }
+
+            if (in_array($extension, ['json', 'yaml', 'yml'], true) && pathinfo((string) $file, PATHINFO_FILENAME) !== 'locale') {
+                return (string) $file;
+            }
+
+            return false;
         });
     }
 

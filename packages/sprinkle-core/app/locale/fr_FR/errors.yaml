@@ -1,0 +1,31 @@
+ERROR:
+  '@TRANSLATION': Erreur
+  '400':
+    TITLE: Mauvaise requête
+    DESCRIPTION: Le serveur ne peut pas ou ne veut pas traiter la requête en raison
+      d'une erreur apparente du client.
+  '401':
+    TITLE: Non autorisé
+    DESCRIPTION: La requête nécessite une authentification utilisateur valide.
+  '403':
+    TITLE: Interdit
+    DESCRIPTION: Vous n'êtes pas autorisé à effectuer l'opération demandée.
+  '404':
+    TITLE: Non trouvé
+    DESCRIPTION: La ressource demandée est introuvable.
+  '405':
+    TITLE: Méthode non autorisée
+    DESCRIPTION: La méthode de requête n'est pas supportée pour la ressource demandée.
+  '410':
+    TITLE: Parti
+    DESCRIPTION: La ressource cible n'est plus disponible sur le serveur d'origine.
+  TITLE: Nous avons détecté une grande perturbation dans la Force.
+  DESCRIPTION: Oups, il semble que notre serveur ait fait une erreur. Si vous êtes
+    un administrateur, veuillez vérifier les logs PHP ou UserFrosting.
+  MAIL: Erreur fatale lors de l'envoi du courriel. Contactez votre administrateur.
+    Si vous êtes administrateur, consultez les logs.
+  MISC: Une erreur s'est produite.
+  RATE_LIMIT_EXCEEDED:
+    TITLE: Limite de taux dépassée
+    DESCRIPTION: La limite de taux pour cette action a été dépassée. Vous devez attendre
+      encore {{delay}} secondes avant de pouvoir faire une autre tentative.

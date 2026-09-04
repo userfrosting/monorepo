@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Updated the `WithTestUser` testing trait to use typed service accessors.
+- Converted locale message files from PHP arrays to YAML.
 
 ## [6.0.2](https://github.com/userfrosting/sprinkle-account/compare/6.0.1...6.0.2) - 2026-08-02
 
