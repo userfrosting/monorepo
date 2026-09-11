@@ -135,7 +135,7 @@ return [
     'MANUALLY_ACTIVATED'    => 'Le compte de {{user_name}} a été activé manuellement',
 
     'PERMISSION' => [
-        'NONE' => 'Aucune autorisation',
+        'NONE'             => 'Aucune autorisation',
         1                  => 'Autorisation',
         2                  => 'Autorisations',
 
@@ -185,18 +185,18 @@ return [
         'USERS'               => 'Utilisateurs avec ce rôle',
 
         'ACTIVITY' => [
-            'CREATE'       => 'Rôle créé',
-            'DELETE'       => 'Rôle supprimé',
-            'UPDATE_INFO'  => 'Informations du rôle mises à jour',
+            'CREATE'             => 'Rôle créé',
+            'DELETE'             => 'Rôle supprimé',
+            'UPDATE_INFO'        => 'Informations du rôle mises à jour',
             'UPDATE_PERMISSIONS' => 'Autorisations du rôle ajoutées : <strong>{{added_permissions}}</strong> ; supprimées : <strong>{{removed_permissions}}</strong>',
-            'UPDATE_FIELD' => 'Champ du rôle {{field}} mis à jour',
+            'UPDATE_FIELD'       => 'Champ du rôle {{field}} mis à jour',
 
             'LABEL' => [
-                'CREATE'       => 'Rôle créé',
-                'DELETE'       => 'Rôle supprimé',
-                'UPDATE_INFO'  => 'Rôle mis à jour',
+                'CREATE'             => 'Rôle créé',
+                'DELETE'             => 'Rôle supprimé',
+                'UPDATE_INFO'        => 'Rôle mis à jour',
                 'UPDATE_PERMISSIONS' => 'Autorisations du rôle modifiées',
-                'UPDATE_FIELD' => 'Champ du rôle mis à jour',
+                'UPDATE_FIELD'       => 'Champ du rôle mis à jour',
             ],
         ],
     ],

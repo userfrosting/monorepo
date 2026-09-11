@@ -136,8 +136,8 @@ return [
 
     'PERMISSION' => [
         'NONE' => 'No permission',
-        1 => 'Permission',
-        2 => 'Permissions',
+        1      => 'Permission',
+        2      => 'Permissions',
 
         'ASSIGN'            => [
             '@TRANSLATION' => 'Assign permissions',
@@ -185,18 +185,18 @@ return [
         'USERS'               => 'Users with this role',
 
         'ACTIVITY' => [
-            'CREATE'       => 'Role created',
-            'DELETE'       => 'Role deleted',
-            'UPDATE_INFO'  => 'Role information updated',
+            'CREATE'             => 'Role created',
+            'DELETE'             => 'Role deleted',
+            'UPDATE_INFO'        => 'Role information updated',
             'UPDATE_PERMISSIONS' => 'Role permissions added: <strong>{{added_permissions}}</strong>; removed: <strong>{{removed_permissions}}</strong>',
-            'UPDATE_FIELD' => 'Role field {{field}} updated',
+            'UPDATE_FIELD'       => 'Role field {{field}} updated',
 
             'LABEL' => [
-                'CREATE'       => 'Role created',
-                'DELETE'       => 'Role deleted',
-                'UPDATE_INFO'  => 'Role updated',
+                'CREATE'             => 'Role created',
+                'DELETE'             => 'Role deleted',
+                'UPDATE_INFO'        => 'Role updated',
                 'UPDATE_PERMISSIONS' => 'Role permissions changed',
-                'UPDATE_FIELD' => 'Role field updated',
+                'UPDATE_FIELD'       => 'Role field updated',
             ],
         ],
     ],
