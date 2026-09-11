@@ -12,6 +12,7 @@ namespace UserFrosting\Sprinkle\Admin;
 
 use UserFrosting\Sprinkle\Account\Account;
 use UserFrosting\Sprinkle\Account\Sprinkle\Recipe\ActivityRecipe;
+use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Admin\Log\GroupActivityTypes;
 use UserFrosting\Sprinkle\Admin\Log\RoleActivityTypes;
 use UserFrosting\Sprinkle\Admin\Routes\ActivitiesRoutes;
@@ -59,6 +60,7 @@ class Admin implements SprinkleRecipe, ActivityRecipe
     public function getActivityTypes(): array
     {
         return [
+            AdminAccountActivityTypes::class,
             GroupActivityTypes::class,
             RoleActivityTypes::class,
         ];

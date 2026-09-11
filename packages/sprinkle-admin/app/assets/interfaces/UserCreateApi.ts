@@ -5,7 +5,6 @@ import type { ApiResponse } from '@userfrosting/sprinkle-core/interfaces'
  */
 export interface UserCreateRequest {
     user_name: string
-    group_id: number | null
     first_name: string
     last_name: string
     email: string

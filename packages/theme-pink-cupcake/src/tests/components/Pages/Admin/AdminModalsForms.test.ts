@@ -18,11 +18,14 @@ import RoleForm from '../../../../components/Pages/Admin/Role/RoleForm.vue'
 import UserCreateModal from '../../../../components/Pages/Admin/User/UserCreateModal.vue'
 import UserEditModal from '../../../../components/Pages/Admin/User/UserEditModal.vue'
 import UserDeleteModal from '../../../../components/Pages/Admin/User/UserDeleteModal.vue'
-import UserActivateModal from '../../../../components/Pages/Admin/User/UserActivateModal.vue'
+import UserStatusModal from '../../../../components/Pages/Admin/User/UserStatusModal.vue'
+import UserVerificationModal from '../../../../components/Pages/Admin/User/UserVerificationModal.vue'
 import UserManageRolesModal from '../../../../components/Pages/Admin/User/UserManageRolesModal.vue'
 import UserPasswordModal from '../../../../components/Pages/Admin/User/UserPasswordModal.vue'
 import UserPasswordResetModal from '../../../../components/Pages/Admin/User/UserPasswordResetModal.vue'
 import UserForm from '../../../../components/Pages/Admin/User/UserForm.vue'
+import UserGroupForm from '../../../../components/Pages/Admin/User/UserGroupForm.vue'
+import UserGroupModal from '../../../../components/Pages/Admin/User/UserGroupModal.vue'
 import UserPasswordForm from '../../../../components/Pages/Admin/User/UserPasswordForm.vue'
 
 const { hideMock, modalMock, apiMocks } = vi.hoisted(() => ({
@@ -147,7 +150,6 @@ let groupFormData: Ref<{ slug: string; name: string; description: string; icon: 
 let roleFormData: Ref<{ slug: string; name: string; description: string }>
 let userFormData: Ref<{
     user_name: string
-    group_id: number | null
     first_name: string
     last_name: string
     email: string
@@ -169,7 +171,11 @@ const updateUser = vi.fn()
 const deleteUser = vi.fn()
 const resetUserForm = vi.fn()
 const updateGroups = vi.fn()
-const submitUserUpdate = vi.fn()
+const submitUserStatus = vi.fn()
+const submitUserVerification = vi.fn()
+const submitUserGroup = vi.fn()
+const submitUserRoles = vi.fn()
+const submitUserPassword = vi.fn()
 const fetchUserRoles = vi.fn()
 const fetchRolePermissions = vi.fn()
 const passwordReset = vi.fn()
@@ -236,7 +242,6 @@ beforeEach(() => {
     roleFormData = ref({ slug: '', name: '', description: '' })
     userFormData = ref({
         user_name: '',
-        group_id: 0,
         first_name: '',
         last_name: '',
         email: '',
@@ -260,7 +265,11 @@ beforeEach(() => {
     deleteUser.mockReset().mockResolvedValue(undefined)
     resetUserForm.mockReset()
     updateGroups.mockReset()
-    submitUserUpdate.mockReset().mockResolvedValue(undefined)
+    submitUserStatus.mockReset().mockResolvedValue(undefined)
+    submitUserVerification.mockReset().mockResolvedValue(undefined)
+    submitUserGroup.mockReset().mockResolvedValue(undefined)
+    submitUserRoles.mockReset().mockResolvedValue(undefined)
+    submitUserPassword.mockReset().mockResolvedValue(undefined)
     fetchUserRoles.mockReset()
     fetchRolePermissions.mockReset()
     passwordReset.mockReset()
@@ -300,7 +309,11 @@ beforeEach(() => {
         updateGroups
     })
     apiMocks.useUserUpdateApi.mockReturnValue({
-        submitUserUpdate,
+        submitUserStatus,
+        submitUserVerification,
+        submitUserGroup,
+        submitUserRoles,
+        submitUserPassword,
         apiLoading: ref(false),
         apiError: ref(null)
     })
@@ -439,7 +452,7 @@ describe('admin modal components', () => {
             }
         })
         await createWrapper.get('a').trigger('click')
-        expect(updateGroups).toHaveBeenCalledTimes(1)
+        expect(updateGroups).toHaveBeenCalledTimes(0)
         await createWrapper.get('[data-test="user-create"]').trigger('click')
         expect(createWrapper.emitted('saved')).toHaveLength(1)
         expect(modalMock).toHaveBeenCalledWith('#modal-user-create')
@@ -458,7 +471,7 @@ describe('admin modal components', () => {
             }
         })
         await editWrapper.get('a').trigger('click')
-        expect(updateGroups).toHaveBeenCalledTimes(2)
+        expect(updateGroups).toHaveBeenCalledTimes(0)
         await editWrapper.get('[data-test="user-edit"]').trigger('click')
         expect(editWrapper.emitted('saved')).toHaveLength(1)
         expect(modalMock).toHaveBeenCalledWith('#modal-user-edit-10')
@@ -491,7 +504,7 @@ describe('admin modal components', () => {
         })
         await passwordWrapper.get('[data-test="password-submit"]').trigger('click')
         await flushPromises()
-        expect(submitUserUpdate).toHaveBeenCalledWith('jane', 'password', {
+        expect(submitUserPassword).toHaveBeenCalledWith('jane', {
             password: '',
             passwordc: ''
         })
@@ -519,7 +532,7 @@ describe('admin modal components', () => {
         })
         realPasswordForm.vm.$emit('submit')
         await flushPromises()
-        expect(submitUserUpdate).toHaveBeenCalledWith('jane', 'password', {
+        expect(submitUserPassword).toHaveBeenCalledWith('jane', {
             password: 'new-password',
             passwordc: 'new-password'
         })
@@ -536,7 +549,7 @@ describe('admin modal components', () => {
     })
 
     test('handles user activation state actions and payloads', async () => {
-        const activateWrapper = mount(UserActivateModal, {
+        const verificationWrapper = mount(UserVerificationModal, {
             props: {
                 user: {
                     ...baseUser,
@@ -549,15 +562,15 @@ describe('admin modal components', () => {
                 mocks: { $t: (key: string) => key }
             }
         })
-        expect(activateWrapper.find('a[href="#confirm-user-activate-10"]').exists()).toBe(true)
-        await activateWrapper.get('[data-test="confirm"]').trigger('click')
+        expect(verificationWrapper.find('a[href="#confirm-user-verify-10"]').exists()).toBe(true)
+        await verificationWrapper.get('[data-test="confirm"]').trigger('click')
         await flushPromises()
-        expect(submitUserUpdate).toHaveBeenCalledWith('jane', 'flag_verified', {
+        expect(submitUserVerification).toHaveBeenCalledWith('jane', {
             flag_verified: '1'
         })
-        expect(activateWrapper.emitted('saved')).toHaveLength(1)
+        expect(verificationWrapper.emitted('saved')).toHaveLength(1)
 
-        const disableWrapper = mount(UserActivateModal, {
+        const disableWrapper = mount(UserStatusModal, {
             props: {
                 user: {
                     ...baseUser,
@@ -571,13 +584,13 @@ describe('admin modal components', () => {
             }
         })
         expect(disableWrapper.find('a[href="#confirm-user-disable-10"]').exists()).toBe(true)
-        await disableWrapper.findAll('[data-test="confirm"]')[1].trigger('click')
+        await disableWrapper.get('[data-test="confirm"]').trigger('click')
         await flushPromises()
-        expect(submitUserUpdate).toHaveBeenCalledWith('jane', 'flag_enabled', {
+        expect(submitUserStatus).toHaveBeenCalledWith('jane', {
             flag_enabled: '0'
         })
 
-        const enableWrapper = mount(UserActivateModal, {
+        const enableWrapper = mount(UserStatusModal, {
             props: {
                 user: {
                     ...baseUser,
@@ -591,9 +604,9 @@ describe('admin modal components', () => {
             }
         })
         expect(enableWrapper.find('a[href="#confirm-user-enable-10"]').exists()).toBe(true)
-        await enableWrapper.findAll('[data-test="confirm"]')[2].trigger('click')
+        await enableWrapper.get('[data-test="confirm"]').trigger('click')
         await flushPromises()
-        expect(submitUserUpdate).toHaveBeenCalledWith('jane', 'flag_enabled', {
+        expect(submitUserStatus).toHaveBeenCalledWith('jane', {
             flag_enabled: '1'
         })
     })
@@ -644,7 +657,7 @@ describe('admin modal components', () => {
 
         await userRolesWrapper.get('button.uk-button-primary').trigger('click')
         await flushPromises()
-        expect(submitUserUpdate).toHaveBeenCalledWith('jane', 'roles', {
+        expect(submitUserRoles).toHaveBeenCalledWith('jane', {
             roles: []
         })
         expect(userRolesWrapper.emitted('saved')).toHaveLength(1)
@@ -877,7 +890,6 @@ describe('admin form components', () => {
 
     test('submits user form create and edit and applies default locale for create', async () => {
         const wrapper = mount(UserForm, {
-            props: { groups: [baseGroup] },
             global: {
                 stubs: globalStubs,
                 mocks: { $t: (key: string) => key }
@@ -890,7 +902,6 @@ describe('admin form components', () => {
         await wrapper.get('input[data-test="first_name"]').setValue('New')
         await wrapper.get('input[data-test="last_name"]').setValue('User')
         await wrapper.get('input[data-test="email"]').setValue('new@example.com')
-        await wrapper.get('select[data-test="group"]').setValue('1')
         await wrapper.get('select[data-test="locale"]').setValue('en_US')
         await wrapper.get('form').trigger('submit.prevent')
         await flushPromises()
@@ -898,10 +909,8 @@ describe('admin form components', () => {
 
         const editWrapper = mount(UserForm, {
             props: {
-                groups: [baseGroup],
                 user: {
                     user_name: 'jane',
-                    group_id: 1,
                     first_name: 'Jane',
                     last_name: 'Doe',
                     email: 'jane@example.com',
@@ -925,6 +934,64 @@ describe('admin form components', () => {
         expect(updateUser).toHaveBeenCalledWith('jane', userFormData.value)
     })
 
+    test('submits the separate user group form', async () => {
+        const wrapper = mount(UserGroupForm, {
+            props: { user: baseUser },
+            global: {
+                stubs: globalStubs,
+                mocks: { $t: (key: string) => key }
+            }
+        })
+
+        await wrapper.get('select').setValue('0')
+        await wrapper.get('form').trigger('submit.prevent')
+        await flushPromises()
+
+        expect(submitUserGroup).toHaveBeenCalledWith('jane', { group_id: 0 })
+        expect(wrapper.emitted('success')).toHaveLength(1)
+        expect(updateGroups).toHaveBeenCalledTimes(1)
+    })
+
+    test('syncs group changes and handles group update failures', async () => {
+        const wrapper = mount(UserGroupForm, {
+            props: { user: baseUser },
+            global: {
+                stubs: globalStubs,
+                mocks: { $t: (key: string) => key }
+            }
+        })
+
+        await wrapper.setProps({ user: { ...baseUser, group_id: null } })
+        expect(wrapper.get('select').element).toHaveProperty('value', '0')
+        submitUserGroup.mockRejectedValueOnce(new Error('group update failed'))
+        await wrapper.get('form').trigger('submit.prevent')
+        await flushPromises()
+
+        expect(submitUserGroup).toHaveBeenCalledWith('jane', { group_id: 0 })
+        expect(wrapper.emitted('success')).toBeFalsy()
+    })
+
+    test('closes the group modal and emits saved after success', async () => {
+        const wrapper = mount(UserGroupModal, {
+            props: { user: baseUser },
+            global: {
+                stubs: {
+                    ...globalStubs,
+                    UserGroupForm: {
+                        emits: ['success'],
+                        template: '<button data-test="group-success" @click="$emit(\'success\')" />'
+                    }
+                },
+                mocks: { $t: (key: string) => key }
+            }
+        })
+
+        await wrapper.get('[data-test="group-success"]').trigger('click')
+
+        expect(wrapper.emitted('saved')).toHaveLength(1)
+        expect(modalMock).toHaveBeenCalledWith('#modal-user-group-10')
+    })
+
     test('prevents invalid user submission and swallows create failures', async () => {
         const invalidValidation = makeValidation(false)
         apiMocks.useUserApi.mockReturnValueOnce({
@@ -937,7 +1004,6 @@ describe('admin form components', () => {
         })
 
         const invalidWrapper = mount(UserForm, {
-            props: { groups: [baseGroup] },
             global: { stubs: globalStubs, mocks: { $t: (key: string) => key } }
         })
         await invalidWrapper.get('form').trigger('submit.prevent')
@@ -945,7 +1011,6 @@ describe('admin form components', () => {
 
         createUser.mockRejectedValueOnce(new Error('create failed'))
         const failedWrapper = mount(UserForm, {
-            props: { groups: [baseGroup] },
             global: { stubs: globalStubs, mocks: { $t: (key: string) => key } }
         })
         await failedWrapper.get('form').trigger('submit.prevent')

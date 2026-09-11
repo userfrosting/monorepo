@@ -19,6 +19,7 @@ enum RoleActivityTypes: string implements ActivityTypes
     case CREATE = 'role_create';
     case DELETE = 'role_delete';
     case UPDATE_INFO = 'role_update_info';
+    case UPDATE_PERMISSIONS = 'role_update_permissions';
     case UPDATE_FIELD = 'role_update_field';
 
     /**
@@ -27,11 +28,12 @@ enum RoleActivityTypes: string implements ActivityTypes
     public static function getI18nKey(string $value): ?string
     {
         return match (self::tryFrom($value)) {
-            self::CREATE       => 'ROLE.ACTIVITY.CREATE',
-            self::DELETE       => 'ROLE.ACTIVITY.DELETE',
-            self::UPDATE_INFO  => 'ROLE.ACTIVITY.UPDATE_INFO',
-            self::UPDATE_FIELD => 'ROLE.ACTIVITY.UPDATE_FIELD',
-            default            => null,
+            self::CREATE             => 'ROLE.ACTIVITY.CREATE',
+            self::DELETE             => 'ROLE.ACTIVITY.DELETE',
+            self::UPDATE_INFO        => 'ROLE.ACTIVITY.UPDATE_INFO',
+            self::UPDATE_PERMISSIONS => 'ROLE.ACTIVITY.UPDATE_PERMISSIONS',
+            self::UPDATE_FIELD       => 'ROLE.ACTIVITY.UPDATE_FIELD',
+            default                  => null,
         };
     }
 
@@ -41,11 +43,12 @@ enum RoleActivityTypes: string implements ActivityTypes
     public static function getLabelI18nKey(string $value): ?string
     {
         return match (self::tryFrom($value)) {
-            self::CREATE       => 'ROLE.ACTIVITY.LABEL.CREATE',
-            self::DELETE       => 'ROLE.ACTIVITY.LABEL.DELETE',
-            self::UPDATE_INFO  => 'ROLE.ACTIVITY.LABEL.UPDATE_INFO',
-            self::UPDATE_FIELD => 'ROLE.ACTIVITY.LABEL.UPDATE_FIELD',
-            default            => null,
+            self::CREATE             => 'ROLE.ACTIVITY.LABEL.CREATE',
+            self::DELETE             => 'ROLE.ACTIVITY.LABEL.DELETE',
+            self::UPDATE_INFO        => 'ROLE.ACTIVITY.LABEL.UPDATE_INFO',
+            self::UPDATE_PERMISSIONS => 'ROLE.ACTIVITY.LABEL.UPDATE_PERMISSIONS',
+            self::UPDATE_FIELD       => 'ROLE.ACTIVITY.LABEL.UPDATE_FIELD',
+            default                  => null,
         };
     }
 }

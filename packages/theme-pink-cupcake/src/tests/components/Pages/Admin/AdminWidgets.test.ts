@@ -147,13 +147,21 @@ const global = {
             emits: ['saved'],
             template: '<button data-test="user-edit" @click="$emit(\'saved\')" />'
         },
+        UserGroupModal: {
+            emits: ['saved'],
+            template: '<button data-test="user-group" @click="$emit(\'saved\')" />'
+        },
         UserDeleteModal: {
             emits: ['deleted'],
             template: '<button data-test="user-delete" @click="$emit(\'deleted\')" />'
         },
-        UserActivateModal: {
+        UserStatusModal: {
             emits: ['saved'],
             template: '<button data-test="user-activate" @click="$emit(\'saved\')" />'
+        },
+        UserVerificationModal: {
+            emits: ['saved'],
+            template: '<button data-test="user-verification" @click="$emit(\'saved\')" />'
         },
         UserPasswordModal: { template: '<div data-test="user-password" />' },
         UserPasswordResetModal: { template: '<div data-test="user-password-reset" />' },
@@ -354,7 +362,7 @@ describe('admin widget components', () => {
             global
         })
         await userInfo.get('[data-test="user-edit"]').trigger('click')
-        await userInfo.get('[data-test="user-activate"]').trigger('click')
+        await userInfo.get('[data-test="user-verification"]').trigger('click')
         await userInfo.get('[data-test="user-delete"]').trigger('click')
         expect(userInfo.emitted('updated')).toHaveLength(2)
         expect(push).toHaveBeenCalledWith({ name: 'admin.users' })

@@ -17,41 +17,6 @@ return [
     'ACCOUNT' => [
         '@TRANSLATION' => 'Account',
 
-        'ACTIVITY' => [
-            'CREATE'                  => 'Account created',
-            'DELETE'                  => 'Account deleted',
-            'UPDATE_INFO'             => 'Account information updated',
-            'UPDATE_FIELD'            => 'Account field {{field}} updated',
-            'UPDATE_PROFILE_SETTINGS' => 'Profile updated',
-            'UPDATE_ACCOUNT_SETTINGS' => 'Account settings updated',
-            'UPDATE_EMAIL'            => 'Email updated',
-            'UPDATE_PASSWORD'         => 'Password changed',
-
-            'REGISTER'          => 'User registered',
-            'VERIFIED'          => 'User verified',
-            'PASSWORD_RESET'    => 'Password reset',
-            'LOGGED_IN'         => 'User signed in',
-            'LOGGED_OUT'        => 'User signed out',
-            'PASSWORD_UPGRADED' => 'Password upgraded',
-
-            'LABEL' => [
-                'CREATE'                  => 'Account created',
-                'DELETE'                  => 'Account deleted',
-                'UPDATE_INFO'             => 'Account updated',
-                'UPDATE_FIELD'            => 'Account field updated',
-                'UPDATE_PROFILE_SETTINGS' => 'Profile settings updated',
-                'UPDATE_ACCOUNT_SETTINGS' => 'Account settings updated',
-                'UPDATE_EMAIL'            => 'Email updated',
-                'UPDATE_PASSWORD'         => 'Password changed',
-                'REGISTER'                => 'User registered',
-                'VERIFIED'                => 'User verified',
-                'PASSWORD_RESET'          => 'Password reset',
-                'LOGGED_IN'               => 'User signed in',
-                'LOGGED_OUT'              => 'User signed out',
-                'PASSWORD_UPGRADED'       => 'Password upgraded',
-            ],
-        ],
-
         'EXCEPTION' => [
             'TITLE'       => 'Account Exception',
             'DESCRIPTION' => 'An unspecified error with he account has been encountered.',

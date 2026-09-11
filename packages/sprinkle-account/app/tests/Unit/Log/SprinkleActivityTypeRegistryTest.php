@@ -15,8 +15,6 @@ use UserFrosting\Sprinkle\Account\Log\ActivityTypes;
 use UserFrosting\Sprinkle\Account\Log\SprinkleActivityTypeRegistry;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 use UserFrosting\Sprinkle\Account\Sprinkle\Recipe\ActivityRecipe;
-use UserFrosting\Sprinkle\Admin\Log\GroupActivityTypes;
-use UserFrosting\Sprinkle\Admin\Log\RoleActivityTypes;
 use UserFrosting\Sprinkle\SprinkleManager;
 use UserFrosting\Sprinkle\SprinkleRecipe;
 use UserFrosting\Support\Exception\BadClassNameException;
@@ -47,8 +45,6 @@ class SprinkleActivityTypeRegistryTest extends TestCase
             ->shouldReceive('getActivityTypes')->andReturn([
                 UserActivityTypes::class,
                 AccountActivityTypes::class,
-                GroupActivityTypes::class,
-                RoleActivityTypes::class,
             ])->getMock();
         $nonActivitySprinkle = Mockery::mock(SprinkleRecipe::class);
         /** @var SprinkleManager&Mockery\MockInterface $manager */
@@ -57,15 +53,11 @@ class SprinkleActivityTypeRegistryTest extends TestCase
 
         $registry = new SprinkleActivityTypeRegistry($manager);
 
-        $this->assertCount(21, $registry->all());
-        $this->assertCount(21, $registry->all());
         $this->assertTrue($registry->has(UserActivityTypes::class));
         $this->assertInstanceOf(UserActivityTypes::class, $registry->get(UserActivityTypes::class));
-        $this->assertSame(21, $registry->count());
 
         foreach ([
-            'sign_up'           => ['ACCOUNT.ACTIVITY.REGISTER', 'ACCOUNT.ACTIVITY.LABEL.REGISTER'],
-            'role_update_field' => ['ROLE.ACTIVITY.UPDATE_FIELD', 'ROLE.ACTIVITY.LABEL.UPDATE_FIELD'],
+            'sign_up' => ['ACCOUNT.ACTIVITY.REGISTER', 'ACCOUNT.ACTIVITY.LABEL.REGISTER'],
         ] as $value => [$expectedI18nKey, $expectedLabelI18nKey]) {
             $this->assertSame($expectedI18nKey, $registry->getI18nKey($value));
             $this->assertSame($expectedLabelI18nKey, $registry->getLabelI18nKey($value));
@@ -83,23 +75,11 @@ class SprinkleActivityTypeRegistryTest extends TestCase
                 'password_upgraded' => 'ACCOUNT.ACTIVITY.PASSWORD_UPGRADED',
             ],
             AccountActivityTypes::class => [
-                'account_create'          => 'ACCOUNT.ACTIVITY.CREATE',
-                'account_delete'          => 'ACCOUNT.ACTIVITY.DELETE',
-                'account_update_info'     => 'ACCOUNT.ACTIVITY.UPDATE_INFO',
-                'account_update_field'    => 'ACCOUNT.ACTIVITY.UPDATE_FIELD',
-                'update_profile_settings' => 'ACCOUNT.ACTIVITY.UPDATE_PROFILE_SETTINGS',
-                'update_account_settings' => 'ACCOUNT.ACTIVITY.UPDATE_ACCOUNT_SETTINGS',
-                'update_password'         => 'ACCOUNT.ACTIVITY.UPDATE_PASSWORD',
-            ],
-            GroupActivityTypes::class => [
-                'group_create'      => 'GROUP.ACTIVITY.CREATE',
-                'group_delete'      => 'GROUP.ACTIVITY.DELETE',
-                'group_update_info' => 'GROUP.ACTIVITY.UPDATE_INFO',
-            ],
-            RoleActivityTypes::class => [
-                'role_create'      => 'ROLE.ACTIVITY.CREATE',
-                'role_delete'      => 'ROLE.ACTIVITY.DELETE',
-                'role_update_info' => 'ROLE.ACTIVITY.UPDATE_INFO',
+                'account_create'              => 'ACCOUNT.ACTIVITY.CREATE',
+                'account_delete'              => 'ACCOUNT.ACTIVITY.DELETE',
+                'update_profile_settings'     => 'ACCOUNT.ACTIVITY.UPDATE_PROFILE_SETTINGS',
+                'update_account_settings'     => 'ACCOUNT.ACTIVITY.UPDATE_ACCOUNT_SETTINGS',
+                'update_password'             => 'ACCOUNT.ACTIVITY.UPDATE_PASSWORD',
             ],
         ];
         foreach ($expectedI18nKeys as $activityTypeClass => $expectedKeys) {
@@ -121,23 +101,10 @@ class SprinkleActivityTypeRegistryTest extends TestCase
             AccountActivityTypes::class => [
                 'ACCOUNT.ACTIVITY.LABEL.CREATE',
                 'ACCOUNT.ACTIVITY.LABEL.DELETE',
-                'ACCOUNT.ACTIVITY.LABEL.UPDATE_INFO',
-                'ACCOUNT.ACTIVITY.LABEL.UPDATE_FIELD',
                 'ACCOUNT.ACTIVITY.LABEL.UPDATE_PROFILE_SETTINGS',
                 'ACCOUNT.ACTIVITY.LABEL.UPDATE_ACCOUNT_SETTINGS',
                 'ACCOUNT.ACTIVITY.LABEL.UPDATE_EMAIL',
                 'ACCOUNT.ACTIVITY.LABEL.UPDATE_PASSWORD',
-            ],
-            GroupActivityTypes::class => [
-                'GROUP.ACTIVITY.LABEL.CREATE',
-                'GROUP.ACTIVITY.LABEL.DELETE',
-                'GROUP.ACTIVITY.LABEL.UPDATE_INFO',
-            ],
-            RoleActivityTypes::class => [
-                'ROLE.ACTIVITY.LABEL.CREATE',
-                'ROLE.ACTIVITY.LABEL.DELETE',
-                'ROLE.ACTIVITY.LABEL.UPDATE_INFO',
-                'ROLE.ACTIVITY.LABEL.UPDATE_FIELD',
             ],
         ];
         foreach ($expectedLabelI18nKeys as $activityTypeClass => $expectedKeys) {

@@ -219,7 +219,8 @@ describe('Admin basic views', () => {
             UserCreateModal: { template: '<div data-test="user-create" />' },
             UserEditModal: { template: '<div data-test="user-edit" />' },
             UserDeleteModal: { template: '<div data-test="user-delete" />' },
-            UserActivateModal: { template: '<div data-test="user-activate" />' },
+            UserStatusModal: { template: '<div data-test="user-status" />' },
+            UserVerificationModal: { template: '<div data-test="user-verification" />' },
             UserPasswordModal: { template: '<div data-test="user-password" />' },
             UserPasswordResetModal: { template: '<div data-test="user-password-reset" />' },
             UFLabel: { template: '<div><slot /></div>' },
@@ -303,7 +304,8 @@ describe('Admin basic views', () => {
             UserCreateModal: { template: '<div data-test="user-create" />' },
             UserEditModal: { template: '<div data-test="user-edit" />' },
             UserDeleteModal: { template: '<div data-test="user-delete" />' },
-            UserActivateModal: { template: '<div data-test="user-activate" />' },
+            UserStatusModal: { template: '<div data-test="user-status" />' },
+            UserVerificationModal: { template: '<div data-test="user-verification" />' },
             UserPasswordModal: { template: '<div data-test="user-password" />' },
             UserPasswordResetModal: { template: '<div data-test="user-password-reset" />' },
             UFLabel: { template: '<div><slot /></div>' },
@@ -539,9 +541,14 @@ describe('Admin basic views', () => {
                         emits: ['deleted'],
                         template: '<button data-test="user-delete" @click="$emit(\'deleted\')" />'
                     },
-                    UserActivateModal: {
+                    UserStatusModal: {
                         emits: ['saved'],
                         template: '<button data-test="user-activate" @click="$emit(\'saved\')" />'
+                    },
+                    UserVerificationModal: {
+                        emits: ['saved'],
+                        template:
+                            '<button data-test="user-verification" @click="$emit(\'saved\')" />'
                     },
                     UserPasswordModal: { template: '<div />' },
                     UserPasswordResetModal: { template: '<div />' }

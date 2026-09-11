@@ -137,11 +137,6 @@ class UserCreateAction
         $data['flag_verified'] = true;
         $data['flag_enabled'] = true;
 
-        // If group id is zero, then it's no group
-        if (!isset($data['group_id']) || $data['group_id'] === 0) {
-            $data['group_id'] = null;
-        }
-
         // Now that we check the form, we can try to register the actual user
         $user = new $this->userModel($data);
 

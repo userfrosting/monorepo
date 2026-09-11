@@ -97,7 +97,8 @@ class ActivityRecorderTest extends AccountTestCase
         $activity = $recorder->record(
             user: $user,
             type: TestActivityTypes::TEST_ACTIVITY,
-            subject: $subject
+            subject: $subject,
+            withProperties: true,
         );
 
         $this->assertSame([
@@ -122,7 +123,8 @@ class ActivityRecorderTest extends AccountTestCase
         $activity = $recorder->record(
             user: $user,
             type: TestActivityTypes::TEST_ACTIVITY,
-            subject: $user
+            subject: $user,
+            withProperties: true,
         );
 
         $properties = $activity->properties;

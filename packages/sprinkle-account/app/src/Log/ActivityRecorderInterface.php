@@ -39,11 +39,11 @@ interface ActivityRecorderInterface
      * are derived automatically from the subject's dirty attributes and store
      * their old and new values.
      *
-     * @param UserInterface|null                      $user     The actor responsible for the activity, or null for CLI/unauthenticated actions.
-     * @param BackedEnum                              $type     The action being logged. The type key (eg. `user_created`) will be used to retrieve the activity template and i18n for rendering.
-     * @param array<string, scalar|array<mixed>|null> $metadata Additional placeholders passed to the translator.
-     * @param MorphableModelInterface|null            $context  Optional third related model (polymorphic context).
-     * @param MorphableModelInterface|null            $subject  Model the action is performed on (polymorphic subject).
+     * @param UserInterface|null                      $user           The actor responsible for the activity, or null for CLI/unauthenticated actions.
+     * @param BackedEnum                              $type           The action being logged. The type key (eg. `user_created`) will be used to retrieve the activity template and i18n for rendering.
+     * @param array<string, scalar|array<mixed>|null> $metadata       Additional placeholders passed to the translator.
+     * @param MorphableModelInterface|null            $context        Optional third related model (polymorphic context).
+     * @param MorphableModelInterface|null            $subject        Model the action is performed on (polymorphic subject).
      * @param bool                                    $withProperties Whether to derive changed properties from the subject.
      *
      * @return ActivityInterface
@@ -54,6 +54,6 @@ interface ActivityRecorderInterface
         array $metadata = [],
         ?MorphableModelInterface $context = null,
         ?MorphableModelInterface $subject = null,
-        bool $withProperties = true,
+        bool $withProperties = false,
     ): ActivityInterface;
 }

@@ -3,14 +3,12 @@ import { computed, ref, watch } from 'vue'
 import { useUserApi } from '@userfrosting/sprinkle-admin/composables'
 import { useConfigStore } from '@userfrosting/sprinkle-core/stores'
 import type { UserCreateRequest, UserEditRequest } from '@userfrosting/sprinkle-admin/interfaces'
-import type { GroupInterface } from '@userfrosting/sprinkle-account/interfaces'
 
 /**
  * Props - List of groups for the dropdown, plus optional user object for
  * editing.
  */
 const props = defineProps<{
-    groups: GroupInterface[]
     user?: UserCreateRequest | UserEditRequest
 }>()
 
@@ -46,7 +44,6 @@ watch(
     (user) => {
         if (user) {
             formData.value.user_name = user.user_name
-            formData.value.group_id = user.group_id
             formData.value.first_name = user.first_name
             formData.value.last_name = user.last_name
             formData.value.email = user.email
@@ -114,27 +111,6 @@ const submitForm = async () => {
                         autocomplete="false"
                         v-model="formData.user_name" />
                     <UFFormValidationError :errors="r$.$errors.user_name" />
-                </div>
-            </div>
-
-            <div class="uk-margin">
-                <label class="uk-form-label" for="form-stacked-text">{{ $t('GROUP') }}</label>
-                <div class="uk-inline uk-width-1-1">
-                    <font-awesome-icon class="fa-form-icon" icon="users" fixed-width />
-                    <select
-                        class="uk-input uk-select"
-                        :class="{ 'uk-form-danger': r$.group_id?.$error }"
-                        aria-label="Group"
-                        data-test="group"
-                        tabindex="2"
-                        v-model="formData.group_id">
-                        <option value="0">None</option>
-                        <option disabled="true">-----</option>
-                        <option v-for="group in groups" :key="group.id" :value="group.id">
-                            {{ group.name }}
-                        </option>
-                    </select>
-                    <UFFormValidationError :errors="r$.$errors.group_id" />
                 </div>
             </div>
 

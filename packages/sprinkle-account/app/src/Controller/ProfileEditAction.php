@@ -134,7 +134,8 @@ class ProfileEditAction
             $this->logger->record(
                 user: $currentUser,
                 type: AccountActivityTypes::UPDATE_PROFILE_SETTINGS,
-                subject: $currentUser
+                subject: $currentUser,
+                withProperties: true,
             );
 
             $currentUser->save();

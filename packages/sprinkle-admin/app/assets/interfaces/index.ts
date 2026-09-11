@@ -31,3 +31,9 @@ export type { UserEditRequest, UserEditResponse } from './UserEditApi'
 export type { UserPasswordRequest } from './UserPasswordApi'
 export type { UsersSprunjerResponse } from './UsersApi'
 export type { UserRoleSprunjeResponse } from './UserRolesApi'
+export type {
+    UserStatusRequest,
+    UserVerificationRequest,
+    UserGroupRequest,
+    UserRolesRequest
+} from './UserUpdateApi'

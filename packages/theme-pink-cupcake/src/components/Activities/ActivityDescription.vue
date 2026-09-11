@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { useTranslator } from '@userfrosting/sprinkle-core/stores'
 
-
 interface ActivityProperty {
     old: unknown
     new: unknown

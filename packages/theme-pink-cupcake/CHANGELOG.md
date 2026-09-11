@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Updated the admin user interface to use dedicated forms for profile, group, password, role, status, and verification changes.
+- User creation no longer includes group assignment.
+
 ## [6.0.2](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.1...6.0.2) - 2026-08-02
 
 ### Fixed

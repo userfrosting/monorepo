@@ -30,7 +30,7 @@ class ActivityRecorder implements ActivityRecorderInterface
         array $metadata = [],
         ?MorphableModelInterface $context = null,
         ?MorphableModelInterface $subject = null,
-        bool $withProperties = true,
+        bool $withProperties = false,
     ): Activity {
         $activity = new Activity([
             'ip_address'   => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,

@@ -24,6 +24,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
+use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Admin\Log\GroupActivityTypes;
 use UserFrosting\Sprinkle\Admin\Sprunje\ActivitySprunje;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
@@ -315,7 +316,7 @@ class ActivitySprunjeTest extends AdminTestCase
         /** @var Activity $registered */
         $registered = Activity::factory()->create([
             'user_id'     => $userId,
-            'type'        => AccountActivityTypes::UPDATE_FIELD->value,
+            'type'        => AdminAccountActivityTypes::UPDATE_FIELD->value,
             'metadata'    => ['field' => 'email'],
             'description' => 'Legacy registered description',
         ]);
@@ -483,7 +484,7 @@ class ActivitySprunjeTest extends AdminTestCase
     {
         Activity::factory()->create([
             'user_id'     => $this->users[0]->id,
-            'type'        => AccountActivityTypes::UPDATE_FIELD->value,
+            'type'        => AdminAccountActivityTypes::UPDATE_FIELD->value,
             'metadata'    => ['field' => 'email'],
             'description' => 'Legacy description',
         ]);
@@ -491,7 +492,7 @@ class ActivitySprunjeTest extends AdminTestCase
         /** @var ActivitySprunje */
         $sprunje = $this->getService(ActivitySprunje::class);
         $sprunje->setOptions([
-            'filters' => ['label' => AccountActivityTypes::UPDATE_FIELD->value],
+            'filters' => ['label' => AdminAccountActivityTypes::UPDATE_FIELD->value],
         ]);
         $csv = $sprunje->getCsv()->toString();
 
