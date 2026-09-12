@@ -22,6 +22,7 @@ export type { RoleEditRequest, RoleEditResponse } from './RoleEditApi'
 export type { RoleDeleteResponse } from './RoleDeleteApi'
 export type { RolesSprunjeResponse } from './RolesApi'
 export type { RolePermissionsSprunjeResponse } from './RolePermissionsApi'
+export type { RolePermissionsRequest } from './RoleUpdateApi'
 
 // Users
 export type { UserResponse } from './UserApi'

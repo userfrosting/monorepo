@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Changed
+- Updated role permission management to use a dedicated typed update API.
 - Updated the admin user interface to use dedicated forms for profile, group, password, role, status, and verification changes.
 - User creation no longer includes group assignment.
 

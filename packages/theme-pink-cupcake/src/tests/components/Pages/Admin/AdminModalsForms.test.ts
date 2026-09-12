@@ -179,7 +179,7 @@ const submitUserPassword = vi.fn()
 const fetchUserRoles = vi.fn()
 const fetchRolePermissions = vi.fn()
 const passwordReset = vi.fn()
-const submitRoleUpdate = vi.fn()
+const submitRolePermissions = vi.fn()
 
 const selectedRoles = ref<number[]>([])
 const selectedPermissions = ref<number[]>([])
@@ -273,7 +273,7 @@ beforeEach(() => {
     fetchUserRoles.mockReset()
     fetchRolePermissions.mockReset()
     passwordReset.mockReset()
-    submitRoleUpdate.mockReset().mockResolvedValue(undefined)
+    submitRolePermissions.mockReset().mockResolvedValue(undefined)
 
     apiMocks.useGroupApi.mockReturnValue({
         createGroup,
@@ -333,7 +333,7 @@ beforeEach(() => {
         apiError: ref(null)
     })
     apiMocks.useRoleUpdateApi.mockReturnValue({
-        submitRoleUpdate,
+        submitRolePermissions,
         apiLoading: ref(false),
         apiError: ref(null)
     })
@@ -633,7 +633,7 @@ describe('admin modal components', () => {
 
         await rolePermissionWrapper.get('button.uk-button-primary').trigger('click')
         await flushPromises()
-        expect(submitRoleUpdate).toHaveBeenCalledWith('managers', 'permissions', {
+        expect(submitRolePermissions).toHaveBeenCalledWith('managers', {
             permissions: []
         })
         expect(rolePermissionWrapper.emitted('saved')).toHaveLength(1)
@@ -690,7 +690,7 @@ describe('admin modal components', () => {
     })
 
     test('swallows role permission update failures', async () => {
-        submitRoleUpdate.mockRejectedValueOnce(new Error('Permission update failed'))
+        submitRolePermissions.mockRejectedValueOnce(new Error('Permission update failed'))
 
         const wrapper = mount(RoleManagePermissionModal, {
             props: { role: baseRole },

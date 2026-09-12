@@ -192,16 +192,20 @@ describe('simple admin composables', () => {
         })
     })
 
-    test('useRoleUpdateApi submitRoleUpdate handles success and error', async () => {
-        const { submitRoleUpdate, apiError, apiLoading } = useRoleUpdateApi()
+    test('useRoleUpdateApi submitRolePermissions handles success and error', async () => {
+        const { submitRolePermissions, apiError, apiLoading } = useRoleUpdateApi()
 
         vi.spyOn(axios, 'put').mockResolvedValueOnce({
             data: { title: 'Updated', description: 'ok' }
         } as any)
 
-        await expect(submitRoleUpdate('admin', 'name', { name: 'Admin' })).resolves.toEqual({
+        await expect(submitRolePermissions('admin', { permissions: [1, 2] })).resolves.toEqual({
             title: 'Updated',
             description: 'ok'
+        })
+
+        expect(axios.put).toHaveBeenCalledWith('/api/roles/r/admin/permissions', {
+            permissions: [1, 2]
         })
 
         expect(mockPush).toHaveBeenCalledWith({
@@ -213,7 +217,9 @@ describe('simple admin composables', () => {
         expect(apiLoading.value).toBe(false)
 
         vi.spyOn(axios, 'put').mockRejectedValueOnce({ response: { data: { title: 'Error' } } })
-        await expect(submitRoleUpdate('admin', 'name', { name: 'Admin' })).resolves.toBeUndefined()
+        await expect(submitRolePermissions('admin', { permissions: [] })).rejects.toEqual({
+            title: 'Error'
+        })
         expect(apiError.value).toEqual({ title: 'Error' })
     })
 
@@ -264,11 +270,9 @@ describe('simple admin composables', () => {
             submitUserPassword('alice', { password: 'new-password', passwordc: 'new-password' })
         ).resolves.toEqual(response)
 
-        expect(put).toHaveBeenNthCalledWith(
-            1,
-            '/api/users/u/alice/verification',
-            { flag_verified: '1' }
-        )
+        expect(put).toHaveBeenNthCalledWith(1, '/api/users/u/alice/verification', {
+            flag_verified: '1'
+        })
         expect(put).toHaveBeenNthCalledWith(2, '/api/users/u/alice/group', { group_id: 3 })
         expect(put).toHaveBeenNthCalledWith(3, '/api/users/u/alice/roles', { roles: [1, 2] })
         expect(put).toHaveBeenNthCalledWith(4, '/api/users/u/alice/password', {
