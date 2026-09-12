@@ -142,7 +142,7 @@ class RolePermissionsAction
     }
 
     /**
-     * Authorize the user
+     * Authorize the user.
      *
      * @return UserInterface
      */
