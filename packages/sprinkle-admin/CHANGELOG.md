@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Split role permission updates into a dedicated API action with focused validation and activity tracking.
 - Split administrative user management controllers into dedicated update operations with focused API validation and activity tracking.
 - User creation no longer assigns a group; groups can be managed separately.
+- Converted locale message files from PHP arrays to YAML.
 
 ### Removed
 - Removed the unused generic role field update endpoint in favor of full role updates and dedicated update actions.
