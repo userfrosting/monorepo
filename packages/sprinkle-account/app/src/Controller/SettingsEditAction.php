@@ -133,7 +133,8 @@ class SettingsEditAction
             $this->logger->record(
                 user: $currentUser,
                 type: AccountActivityTypes::UPDATE_PASSWORD,
-                subject: $currentUser
+                subject: $currentUser,
+                withProperties: true,
             );
 
             $currentUser->save();
