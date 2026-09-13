@@ -169,6 +169,11 @@ class Captcha
     /**
      * Allocate a color for the captcha image.
      *
+     * @param \GdImage    $image
+     * @param int<0, 255> $red
+     * @param int<0, 255> $green
+     * @param int<0, 255> $blue
+     *
      * @return int|false
      */
     protected function allocateColor(\GdImage $image, int $red, int $green, int $blue): int|false

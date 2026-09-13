@@ -56,7 +56,7 @@ class CaptchaTest extends TestCase
     {
         /** @var Mockery\MockInterface&Session */
         $session = Mockery::mock(Session::class)->makePartial();
-        $captcha = new class ($session) extends Captcha {
+        $captcha = new class($session) extends Captcha {
             protected function allocateColor(\GdImage $image, int $red, int $green, int $blue): int|false
             {
                 return false;
