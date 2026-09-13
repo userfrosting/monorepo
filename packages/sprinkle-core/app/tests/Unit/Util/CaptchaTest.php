@@ -51,4 +51,20 @@ class CaptchaTest extends TestCase
         $this->assertFalse($captcha->verifyCode('bar'));
         $this->assertTrue($captcha->verifyCode($captcha->getCaptcha()));
     }
+
+    public function testGenerateImageUsesDefaultColorsWhenAllocationFails(): void
+    {
+        /** @var Mockery\MockInterface&Session */
+        $session = Mockery::mock(Session::class)->makePartial();
+        $captcha = new class ($session) extends Captcha {
+            protected function allocateColor(\GdImage $image, int $red, int $green, int $blue): int|false
+            {
+                return false;
+            }
+        };
+
+        $captcha->generateRandomCode();
+
+        $this->assertNotSame('', $captcha->getImage());
+    }
 }

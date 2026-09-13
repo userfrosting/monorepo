@@ -115,6 +115,19 @@ class ThrottlerTest extends CoreTestCase
         $this->assertNull($rules['bar']);
     }
 
+    public function testServiceWithoutConfiguration(): void
+    {
+        $config = Mockery::mock(Config::class)
+            ->shouldReceive('has')->with('throttles')->once()->andReturn(false)
+            ->getMock();
+
+        $this->getContainer()->set(Config::class, $config);
+
+        $throttler = $this->getService(Throttler::class);
+
+        $this->assertSame([], $throttler->getThrottleRules());
+    }
+
     /**
      * @dataProvider invalidConfigurationProvider
      *
@@ -141,16 +154,35 @@ class ThrottlerTest extends CoreTestCase
         return [
             'non-array configuration' => ['invalid'],
             'non-string rule name'    => [[1 => null]],
+            'non-array rule'          => [['test' => 'invalid']],
             'missing rule field'      => [['test' => ['method' => 'ip', 'interval' => 3600]]],
+            'missing method'          => [['test' => ['interval' => 3600, 'delays' => []]]],
+            'missing interval'        => [['test' => ['method' => 'ip', 'delays' => []]]],
+            'missing delays'          => [['test' => ['method' => 'ip', 'interval' => 3600]]],
             'invalid rule field type' => [['test' => [
                 'method'   => 'ip',
                 'interval' => '3600',
                 'delays'   => [1 => 5],
             ]]],
+            'invalid method type' => [['test' => [
+                'method'   => 123,
+                'interval' => 3600,
+                'delays'   => [],
+            ]]],
+            'invalid delays type' => [['test' => [
+                'method'   => 'ip',
+                'interval' => 3600,
+                'delays'   => 'invalid',
+            ]]],
             'invalid delay value'     => [['test' => [
                 'method'   => 'ip',
                 'interval' => 3600,
                 'delays'   => ['attempts' => 5],
+            ]]],
+            'invalid delay attempts' => [['test' => [
+                'method'   => 'ip',
+                'interval' => 3600,
+                'delays'   => [1 => 'five'],
             ]]],
         ];
     }

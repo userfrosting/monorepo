@@ -94,4 +94,16 @@ class AccountExtensionTest extends TestCase
         $result = $view->fetchFromString('{{ current_user }}');
         $this->assertSame('', $result);
     }
+
+    public function testCurrentUserWhenAuthenticatorThrows(): void
+    {
+        /** @var Mockery\MockInterface&Authenticator */
+        $authenticator = Mockery::mock(Authenticator::class)
+            ->shouldReceive('user')->once()->andThrow(new \Exception())
+            ->getMock();
+
+        $extensions = new AccountExtension($authenticator);
+
+        $this->assertNull($extensions->getGlobals()['current_user']);
+    }
 }
