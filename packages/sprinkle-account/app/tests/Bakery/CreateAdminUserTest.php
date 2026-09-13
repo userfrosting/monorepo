@@ -17,6 +17,7 @@ use PDOException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use UserFrosting\Event\EventDispatcher;
 use UserFrosting\Sprinkle\Account\Bakery\CreateAdminUser;
+use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Event\UserCreatedEvent;
 use UserFrosting\Sprinkle\Account\Exceptions\UsernameNotUniqueException;
@@ -40,6 +41,12 @@ class CreateAdminUserTest extends AccountTestCase
     {
         parent::setUp();
         $this->refreshDatabase();
+    }
+
+    public function tearDown(): void
+    {
+        Activity::query()->delete();
+        parent::tearDown();
     }
 
     /**
