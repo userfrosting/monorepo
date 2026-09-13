@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license   https://github.com/userfrosting/sprinkle-account/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Account\Tests\Repository;
+namespace UserFrosting\Sprinkle\Account\Tests\Log;
 
 use PHPUnit\Framework\TestCase;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
