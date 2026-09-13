@@ -172,4 +172,24 @@ class ActivitySprunjeTest extends AdminTestCase
         ]);
         $this->assertEquals(6, $sprunje->getArray()['count_filtered']);
     }
+
+    public function testWithUserOrFilter(): void
+    {
+        /** @var ActivitySprunje */
+        $sprunje = $this->ci->get(ActivitySprunje::class);
+        $sprunje->setOptions([
+            'filters' => [
+                'user' => $this->users[0]->first_name . '||' . $this->users[1]->email, // @phpstan-ignore-line
+            ],
+        ]);
+        $data = $sprunje->getArray();
+
+        $this->assertEquals(6, $data['count']);
+        $this->assertEquals(6, $data['count_filtered']);
+        $this->assertCount(6, $data['rows']); // @phpstan-ignore-line
+        $this->assertSame(
+            [$this->users[0]->id, $this->users[1]->id], // @phpstan-ignore-line
+            array_values(array_unique(array_column($data['rows'], 'user_id'))) // @phpstan-ignore-line
+        );
+    }
 }
