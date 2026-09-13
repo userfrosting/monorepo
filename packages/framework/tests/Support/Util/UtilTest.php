@@ -62,8 +62,8 @@ class UtilTest extends TestCase
                 'value' => 'kept',
             ],
         ], Util::arrayFilterRecursive([
-            'zero' => 0,
-            'empty' => '',
+            'zero'   => 0,
+            'empty'  => '',
             'nested' => [
                 'value' => 'kept',
                 'false' => false,
