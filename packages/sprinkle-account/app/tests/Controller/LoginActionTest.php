@@ -122,6 +122,7 @@ class LoginActionTest extends AccountTestCase
         // Mock Authenticator
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('check')->once()->andReturn(true)
+            ->shouldReceive('user')->once()->andReturn(null)
             ->getMock();
         $this->getContainer()->set(Authenticator::class, $authenticator);
 

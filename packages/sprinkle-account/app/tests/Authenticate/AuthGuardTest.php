@@ -54,6 +54,7 @@ class AuthGuardTest extends AccountTestCase
         // Mock Authenticator
         $authenticator = Mockery::mock(Authenticator::class)
             ->shouldReceive('check')->once()->andReturn(false)
+            ->shouldReceive('user')->andReturn(null)
             ->getMock();
         $this->getContainer()->set(Authenticator::class, $authenticator);
 
