@@ -971,6 +971,31 @@ describe('admin form components', () => {
         expect(wrapper.emitted('success')).toBeFalsy()
     })
 
+    test('initializes a missing group and disables the form while loading', () => {
+        apiMocks.useGroupsApi.mockReturnValueOnce({
+            groups: ref([baseGroup]),
+            loading: ref(true),
+            updateGroups
+        })
+        apiMocks.useUserUpdateApi.mockReturnValueOnce({
+            submitUserGroup,
+            apiLoading: ref(false),
+            apiError: ref(null)
+        })
+
+        const wrapper = mount(UserGroupForm, {
+            props: { user: { ...baseUser, group_id: null } },
+            global: {
+                stubs: globalStubs,
+                mocks: { $t: (key: string) => key }
+            }
+        })
+
+        expect(wrapper.get('select').element).toHaveProperty('value', '0')
+        expect(wrapper.get('select').attributes('disabled')).toBeDefined()
+        expect(wrapper.get('button[type="submit"]').attributes('disabled')).toBeDefined()
+    })
+
     test('closes the group modal and emits saved after success', async () => {
         const wrapper = mount(UserGroupModal, {
             props: { user: baseUser },

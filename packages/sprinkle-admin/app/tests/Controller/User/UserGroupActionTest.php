@@ -56,7 +56,7 @@ class UserGroupActionTest extends AdminTestCase
             ->where('context_id', $oldGroup->id)
             ->first();
         $this->assertNotNull($removedActivity);
-        $this->assertEquals( $oldGroup->id, $removedActivity->context_id);
+        $this->assertEquals($oldGroup->id, $removedActivity->context_id);
         $this->assertSame([], $removedActivity->metadata);
         $this->assertNull($removedActivity->properties);
 
@@ -67,7 +67,7 @@ class UserGroupActionTest extends AdminTestCase
             ->where('context_id', $newGroup->id)
             ->first();
         $this->assertNotNull($addedActivity);
-        $this->assertEquals( $newGroup->id, $addedActivity->context_id);
+        $this->assertEquals($newGroup->id, $addedActivity->context_id);
         $this->assertSame([], $addedActivity->metadata);
         $this->assertNull($addedActivity->properties);
 

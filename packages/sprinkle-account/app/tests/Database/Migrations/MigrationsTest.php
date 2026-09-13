@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Tests\Database\Migrations;
 
+use DateTimeImmutable;
 use Illuminate\Database\Schema\Builder;
+use RuntimeException;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v400\ActivitiesTable;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v610\ActivitiesV2Table;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 
@@ -48,6 +51,51 @@ class MigrationsTest extends AccountTestCase
         // Redo assertions for each (now empty) table
         foreach ($this->tablesProvider() as $table => $columns) {
             $this->assertSame([], $builder->getColumnListing($table));
+        }
+    }
+
+    public function testActivitiesV2MigrationIsIdempotent(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $migration = new ActivitiesV2Table($builder);
+        $migration->up();
+
+        $this->assertTrue($builder->hasColumn('activities', 'context_type'));
+
+        $migrator->rollback();
+    }
+
+    public function testActivitiesV2MigrationRefusesNullUserDowngrade(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $builder->getConnection()->table('activities')->insert([
+            'user_id'     => null,
+            'type'        => 'test',
+            'occurred_at' => new DateTimeImmutable(),
+        ]);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Cannot downgrade activities while NULL user_id values exist.');
+
+        try {
+            (new ActivitiesV2Table($builder))->down();
+        } finally {
+            $builder->getConnection()->table('activities')->delete();
+            $migrator->rollback();
         }
     }
 

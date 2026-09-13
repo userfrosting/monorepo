@@ -503,6 +503,33 @@ class ActivitySprunjeTest extends AdminTestCase
         $this->assertStringContainsString('description', $csv);
         $this->assertStringContainsString('Account field email updated', $csv);
     }
+
+    public function testActivityLabelsAreCached(): void
+    {
+        /** @var ActivityTypeRegistryInterface $registry */
+        $registry = $this->getService(ActivityTypeRegistryInterface::class);
+        /** @var Translator $translator */
+        $translator = $this->getService(Translator::class);
+        $sprunje = new TestableActivitySprunje(new Activity(), $registry, $translator);
+
+        $this->assertSame($sprunje->labels(), $sprunje->labels());
+    }
+
+    public function testActivityLabelsSkipNonBackedEnums(): void
+    {
+        /** @var Mockery\MockInterface&ActivityTypeRegistryInterface $registry */
+        $registry = Mockery::mock(ActivityTypeRegistryInterface::class)
+            ->shouldReceive('all')->once()->andReturn([new stdClass()])
+            ->getMock();
+
+        $sprunje = new TestableActivitySprunje(
+            new Activity(),
+            $registry,
+            Mockery::mock(Translator::class)
+        );
+
+        $this->assertSame([], $sprunje->labels());
+    }
 }
 
 class TestableActivitySprunje extends ActivitySprunje
@@ -515,5 +542,11 @@ class TestableActivitySprunje extends ActivitySprunje
     public function transform(Collection $collection): Collection
     {
         return $this->applyTransformations($collection);
+    }
+
+    /** @return array<string, string> */
+    public function labels(): array
+    {
+        return $this->getActivityLabels();
     }
 }

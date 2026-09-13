@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Tests\Log;
 
+use DateTimeImmutable;
+use Mockery;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
@@ -20,6 +22,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\RoleUsers;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Database\Models\UserVerification;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorder;
 use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
@@ -190,6 +193,56 @@ class ActivityRecorderTest extends AccountTestCase
         $this->assertNull($activity->user);
 
         $activity->delete();
+    }
+
+    public function testNormalizesValuesAndDetectsSensitiveKeys(): void
+    {
+        $recorder = new TestableActivityRecorder();
+        $date = new DateTimeImmutable('2024-01-02T03:04:05+00:00');
+
+        $this->assertSame('2024-01-02T03:04:05+00:00', $recorder->normalize($date));
+        $this->assertSame([
+            'date'  => '2024-01-02T03:04:05+00:00',
+            'value' => 42,
+        ], $recorder->normalize([
+            'date'  => $date,
+            'value' => 42,
+        ]));
+        $this->assertSame('object value', $recorder->normalize(new class() {
+            public function __toString(): string
+            {
+                return 'object value';
+            }
+        }));
+        $this->assertTrue($recorder->sensitive('access_token'));
+        $this->assertTrue($recorder->sensitive('api_secret'));
+        $this->assertFalse($recorder->sensitive('display_name'));
+    }
+
+    public function testIgnoresNonEloquentPropertiesSubject(): void
+    {
+        $subject = Mockery::mock(MorphableModelInterface::class);
+
+        $this->assertNull((new TestableActivityRecorder())->properties($subject));
+    }
+}
+
+class TestableActivityRecorder extends ActivityRecorder
+{
+    public function normalize(mixed $value): mixed
+    {
+        return $this->normalizeValue($value);
+    }
+
+    public function sensitive(string $key): bool
+    {
+        return $this->isSensitive($key);
+    }
+
+    /** @return array<string, array{old: mixed, new: mixed}>|null */
+    public function properties(MorphableModelInterface $subject): ?array
+    {
+        return $this->getProperties($subject);
     }
 }
 

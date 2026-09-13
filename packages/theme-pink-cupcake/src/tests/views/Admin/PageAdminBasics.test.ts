@@ -560,6 +560,89 @@ describe('Admin basic views', () => {
         await users.get('[data-test="user-delete"]').trigger('click')
         await users.get('[data-test="user-activate"]').trigger('click')
 
+        const unverifiedUsers = mount(PageUsers, {
+            global: {
+                mocks: {
+                    $checkAccess: () => true,
+                    $t: (key: string) => key,
+                    $tdate: (v: string) => v
+                },
+                stubs: {
+                    ...commonStubs,
+                    UFSprunjeTable: {
+                        ...actionTableStub,
+                        data() {
+                            return {
+                                sprunjer: { fetch: fetchSpy },
+                                row: {
+                                    id: 1,
+                                    user_name: 'jane',
+                                    full_name: 'Jane Doe',
+                                    email: 'jane@example.com',
+                                    flag_enabled: true,
+                                    flag_verified: false
+                                }
+                            }
+                        }
+                    },
+                    UserCreateModal: { template: '<div />' },
+                    UserEditModal: { template: '<div />' },
+                    UserDeleteModal: { template: '<div />' },
+                    UserStatusModal: { template: '<div />' },
+                    UserVerificationModal: {
+                        emits: ['saved'],
+                        template:
+                            '<button data-test="user-verification" @click="$emit(\'saved\')" />'
+                    },
+                    UserPasswordModal: { template: '<div />' },
+                    UserPasswordResetModal: { template: '<div />' }
+                }
+            }
+        })
+        await unverifiedUsers.get('[data-test="user-verification"]').trigger('click')
+
         expect(fetchSpy).toHaveBeenCalled()
+    })
+
+    test('hides user actions when access is denied and renders verified status', () => {
+        const table = {
+            template: '<div><slot name="body" :row="row" :sprunjer="sprunjer" /></div>',
+            data: () => ({
+                sprunjer: { fetch: vi.fn() },
+                row: {
+                    user_name: 'jane',
+                    full_name: 'Jane Doe',
+                    email: 'jane@example.com',
+                    last_activity: null,
+                    flag_enabled: true,
+                    flag_verified: true
+                }
+            })
+        }
+
+        const wrapper = mount(PageUsers, {
+            global: {
+                mocks: {
+                    $checkAccess: () => false,
+                    $t: (key: string) => key,
+                    $tdate: (value: string) => value
+                },
+                stubs: {
+                    UFCardBox: { template: '<div><slot /></div>' },
+                    UFSprunjeTable: table,
+                    UFSprunjeHeader: { template: '<div><slot /></div>' },
+                    UFSprunjeColumn: { template: '<div><slot /></div>' },
+                    RouterLink: { template: '<a><slot /></a>' },
+                    UFLabel: { template: '<span><slot /></span>' },
+                    'font-awesome-icon': { template: '<span />' }
+                }
+            }
+        })
+
+        expect(wrapper.text()).toContain('VERIFIED')
+        expect(wrapper.find('button').exists()).toBe(true)
+        expect(wrapper.find('[data-test="user-create"]').exists()).toBe(false)
+        expect(wrapper.find('[data-test="user-edit"]').exists()).toBe(false)
+        expect(wrapper.find('[data-test="user-delete"]').exists()).toBe(false)
     })
 })
