@@ -55,6 +55,22 @@ class UtilTest extends TestCase
         $this->assertFalse(Util::stringMatches($patterns, $str));
     }
 
+    public function testArrayFilterRecursiveUsesDefaultCallback(): void
+    {
+        $this->assertSame([
+            'nested' => [
+                'value' => 'kept',
+            ],
+        ], Util::arrayFilterRecursive([
+            'zero' => 0,
+            'empty' => '',
+            'nested' => [
+                'value' => 'kept',
+                'false' => false,
+            ],
+        ]));
+    }
+
     /**
      * @param string $prefix
      * @param string $expectedResult

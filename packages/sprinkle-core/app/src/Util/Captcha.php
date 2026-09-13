@@ -118,7 +118,7 @@ class Captcha
         /** @var array<string, int> $colors */
         $colors = [];
         foreach ($colorDefinitions as $name => [$red, $green, $blue, $default]) {
-            $color = imagecolorallocate($image, $red, $green, $blue);
+            $color = $this->allocateColor($image, $red, $green, $blue);
             if ($color === false) {
                 $color = $default;
             }
@@ -164,6 +164,16 @@ class Captcha
         $this->image = (string) ob_get_clean();
 
         return $this->image;
+    }
+
+    /**
+     * Allocate a color for the captcha image.
+     *
+     * @return int|false
+     */
+    protected function allocateColor(\GdImage $image, int $red, int $green, int $blue): int|false
+    {
+        return imagecolorallocate($image, $red, $green, $blue);
     }
 
     /**

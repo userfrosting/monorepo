@@ -90,6 +90,19 @@ class SiteLocaleTest extends AccountTestCase
         $this->assertSame('fr_FR', $locale->getLocaleIdentifier());
     }
 
+    public function testFallbackWhenAuthenticatorThrows(): void
+    {
+        $authenticator = Mockery::mock(Authenticator::class)
+            ->shouldReceive('user')->once()->andThrow(new \Exception())
+            ->getMock();
+        $this->getContainer()->set(Authenticator::class, $authenticator);
+
+        /** @var SiteLocale */
+        $locale = $this->getService(SiteLocaleInterface::class);
+
+        $this->assertSame('fr_FR', $locale->getLocaleIdentifier());
+    }
+
     /**
      * Will return the USER default locale (en_US)
      */

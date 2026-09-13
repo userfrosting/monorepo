@@ -372,6 +372,16 @@ class DatabaseTest extends TestCase
         $this->assertEquals($expectedTasks, $users->toArray()[0]['assignment_tasks']);
     }
 
+    public function testMorphsToManyUniqueInfersUnderscoredTableName(): void
+    {
+        $relation = (new EloquentTestUser())->morphToManyUnique(
+            related: EloquentTestTask::class,
+            name: 'assignment_task'
+        );
+
+        $this->assertSame('assignment_tasks', $relation->getTable());
+    }
+
     /**
      * testMorphsToManyUniqueWithTertiary
      * @depends testTableCreation
