@@ -44,6 +44,7 @@ class RegisterActionTest extends AccountTestCase
         // Mock user is logged in
         $auth = Mockery::mock(Authenticator::class)
             ->shouldReceive('check')->once()->andReturn(true)
+            ->shouldReceive('user')->once()->andReturn(null)
             ->getMock();
         $this->getContainer()->set(Authenticator::class, $auth);
 

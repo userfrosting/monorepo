@@ -79,7 +79,9 @@ class AccountExtensionTest extends TestCase
     {
         // Define mock Authenticator and register with Container
         /** @var Mockery\MockInterface&Authenticator */
-        $authenticator = Mockery::mock(Authenticator::class);
+        $authenticator = Mockery::mock(Authenticator::class)
+            ->shouldReceive('user')->once()->andReturn(null)
+            ->getMock();
 
         // Create and add to extensions.
         $extensions = new AccountExtension($authenticator);
