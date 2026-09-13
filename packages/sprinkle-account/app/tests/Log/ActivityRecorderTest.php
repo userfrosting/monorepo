@@ -188,6 +188,8 @@ class ActivityRecorderTest extends AccountTestCase
 
         $this->assertNull($activity->user_id);
         $this->assertNull($activity->user);
+
+        $activity->delete();
     }
 }
 

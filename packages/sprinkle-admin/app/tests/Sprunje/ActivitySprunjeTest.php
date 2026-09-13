@@ -369,6 +369,8 @@ class ActivitySprunjeTest extends AdminTestCase
 
         $this->assertArrayHasKey($activity->id, $rowsById);
         $this->assertNull($rowsById[$activity->id]['user']);
+
+        $activity->delete();
     }
 
     public function testConventionFallbackUsesMockedDictionary(): void
