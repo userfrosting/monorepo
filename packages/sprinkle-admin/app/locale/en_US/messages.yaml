@@ -112,6 +112,7 @@ PERMISSION:
   HOOK_CONDITION: Hook/Conditions
   ID: Permission ID
   INFO_PAGE: View and edit permission details.
+  NONE: No permission
   NOT_FOUND: Permission not found
   PAGE: Permissions
   PAGE_DESCRIPTION: A listing of the permissions for your site.  Provides management
@@ -139,6 +140,7 @@ ROLE:
   NAME: Name
   NAME_EXPLAIN: Please enter a name for the role
   NAME_IN_USE: A role named <strong>{{name}}</strong> already exist
+  NONE: No role
   NOT_FOUND: Role not found
   PAGE: Roles
   PAGE_DESCRIPTION: A listing of the roles for your site. Provides management tools

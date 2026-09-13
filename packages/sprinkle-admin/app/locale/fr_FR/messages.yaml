@@ -114,6 +114,7 @@ PERMISSION:
   HOOK_CONDITION: Hook/Conditions
   ID: ID de l'autorisation
   INFO_PAGE: Afficher et modifier les détails des autorisations.
+  NONE: Aucune autorisation
   NOT_FOUND: Autorisation non trouvée
   PAGE: Autorisations
   PAGE_DESCRIPTION: Une liste des autorisations pour votre site. Fournit des outils
@@ -142,6 +143,7 @@ ROLE:
   NAME: Nom du rôle
   NAME_EXPLAIN: Spécifiez le nom du rôle
   NAME_IN_USE: Un rôle nommé <strong>{{name}}</strong> existe déjà
+  NONE: Aucun rôle
   NOT_FOUND: Rôle non trouvé
   PAGE: Rôles
   PAGE_DESCRIPTION: Une liste des rôles de votre site. Fournit des outils de gestion
