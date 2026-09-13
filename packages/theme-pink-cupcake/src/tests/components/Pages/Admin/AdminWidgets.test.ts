@@ -436,7 +436,7 @@ describe('admin widget components', () => {
                 user: {
                     ...adminUserResponse,
                     flag_verified: false,
-                    group: undefined
+                    group: null
                 }
             },
             global: {
