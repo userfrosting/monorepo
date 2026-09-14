@@ -41,9 +41,10 @@ class UserStatusAction extends UserUpdateAction
      * Receive the request, dispatch to the handler, and return the payload to
      * the response.
      *
-     * @param  UserInterface $user
-     * @param  Request       $request
-     * @param  Response      $response
+     * @param UserInterface $user
+     * @param Request       $request
+     * @param Response      $response
+     *
      * @return Response
      */
     public function __invoke(UserInterface $user, Request $request, Response $response): Response
@@ -61,8 +62,9 @@ class UserStatusAction extends UserUpdateAction
     /**
      * Handle the request.
      *
-     * @param  UserInterface $user
-     * @param  Request       $request
+     * @param UserInterface $user
+     * @param Request       $request
+     *
      * @return UserInterface
      */
     protected function handle(UserInterface $user, Request $request): UserInterface
