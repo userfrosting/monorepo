@@ -130,13 +130,7 @@ class RoleEditAction
 
         // Begin transaction - DB will be rolled back if an exception occurs
         $role = $this->db->transaction(function () use ($data, $role, $currentUser) {
-            // Update the user and generate success messages
-            $metadata = [];
             foreach ($data as $name => $value) {
-                $metadata[$name] = [
-                    'old' => $role->getAttribute($name),
-                    'new' => $value,
-                ];
                 $role->setAttribute($name, $value);
             }
 
@@ -145,7 +139,7 @@ class RoleEditAction
                 user: $currentUser,
                 type: RoleActivityTypes::UPDATE_INFO,
                 subject: $role,
-                metadata: $metadata
+                withProperties: true,
             );
 
             $role->save();

@@ -130,13 +130,7 @@ class GroupEditAction
 
         // Begin transaction - DB will be rolled back if an exception occurs
         $this->db->transaction(function () use ($data, $group, $currentUser) {
-            // Update the user and generate success messages
-            $metadata = [];
             foreach ($data as $name => $value) {
-                $metadata[$name] = [
-                    'old' => $group->getAttribute($name),
-                    'new' => $value,
-                ];
                 $group->setAttribute($name, $value);
             }
 
@@ -145,7 +139,7 @@ class GroupEditAction
                 user: $currentUser,
                 type: GroupActivityTypes::UPDATE_INFO,
                 subject: $group,
-                metadata: $metadata
+                withProperties: true,
             );
 
             $group->save();
