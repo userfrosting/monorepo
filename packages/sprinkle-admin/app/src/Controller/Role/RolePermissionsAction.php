@@ -16,7 +16,6 @@ use Illuminate\Cache\Repository as Cache;
 use Illuminate\Database\Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Config\Config;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\RequestSchema\RequestSchemaInterface;
 use UserFrosting\Fortress\Transformer\RequestDataTransformer;
@@ -25,27 +24,22 @@ use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\MissingRequiredParamException;
+use UserFrosting\Sprinkle\Admin\Log\RoleActivityTypes;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
- * Processes the request to update a specific field for an existing role, including permissions.
- *
- * Processes the request from the role update form, checking that:
- * 1. The logged-in user has the necessary permissions to update the putted field(s);
- * 2. The submitted data is valid.
- * This route requires authentication.
- *
- * Request type: PUT
+ * Assigns permissions to an existing role.
  */
-class RoleUpdateFieldAction
+class RolePermissionsAction
 {
     // Request schema for client side form validation
-    protected string $schema = 'schema://requests/role/edit-field.yaml';
+    protected string $schema = 'schema://requests/role/permissions.yaml';
 
     /**
      * Inject dependencies.
@@ -53,10 +47,9 @@ class RoleUpdateFieldAction
     public function __construct(
         protected Translator $translator,
         protected Authenticator $authenticator,
-        protected Config $config,
         protected Cache $cache,
         protected Connection $db,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
         protected RequestDataTransformer $transformer,
         protected ServerSideValidator $validator,
     ) {
@@ -67,17 +60,15 @@ class RoleUpdateFieldAction
      * the response.
      *
      * @param RoleInterface $role     The role to update, injected by middleware.
-     * @param string        $field    The field to update.
      * @param Request       $request
      * @param Response      $response
      */
     public function __invoke(
         RoleInterface $role,
-        string $field,
         Request $request,
         Response $response
     ): Response {
-        $message = $this->handle($role, $field, $request);
+        $message = $this->handle($role, $request);
         $message = $this->translator->translate($message->message, $message->parameters);
         $payload = new ApiResponse($message);
         $response->getBody()->write((string) $payload);
@@ -89,84 +80,80 @@ class RoleUpdateFieldAction
      * Handle the request.
      *
      * @param RoleInterface $role
-     * @param string        $fieldName
      * @param Request       $request
      *
      * @return UserMessage The message to display to the user.
      */
     protected function handle(
         RoleInterface $role,
-        string $fieldName,
         Request $request
     ): UserMessage {
-        // Access-controlled resource - check that current User has permission
-        // to edit the specified field for this user
-        $this->validateAccess($role, $fieldName);
-
-        // Get current user. Won't be null, as AuthGuard prevent it
-        /** @var UserInterface */
-        $currentUser = $this->authenticator->user();
+        // Access-control - check that current User has permission, and get the
+        // current user
+        $currentUser = $this->authorize();
 
         // Get PUT parameters: value
         $put = (array) $request->getParsedBody();
 
         // Make sure data is part of $_PUT data.
-        // Except for roles, which we allows to be empty.
-        if (isset($put[$fieldName])) {
-            $fieldData = $put[$fieldName];
-        } else {
+        if (!array_key_exists('permissions', $put)) {
             $e = new MissingRequiredParamException();
-            $e->setParam($fieldName);
+            $e->setParam('permissions');
 
             throw $e;
         }
-
-        // Create and validate key -> value pair
-        $params = [
-            $fieldName => $fieldData,
-        ];
 
         // Load the request schema
         $schema = $this->getSchema();
 
         // Whitelist and set parameter defaults
-        $data = $this->transformer->transform($schema, $params);
+        $data = $this->transformer->transform($schema, $put);
 
         // Validate request data
         $this->validateData($schema, $data);
 
-        // Get validated and transformed value
-        $fieldValue = $data[$fieldName];
+        $permissionIds = $data['permissions'];
 
-        // Begin transaction - DB will be rolled back if an exception occurs
-        $this->db->transaction(function () use ($fieldName, $fieldValue, $role, $currentUser) {
-            if ($fieldName === 'permissions') {
-                $role->permissions()->sync($fieldValue);
+        $this->db->transaction(function () use ($role, $currentUser, $permissionIds): void {
+            // Prepare data for the activity record
+            $oldPermissions = $role->permissions()->get()->pluck('name', 'id')->all();
+            $newPermissions = Permission::query()->whereKey($permissionIds)->pluck('name', 'id')->all();
+            $addedPermissions = implode(', ', array_values(array_diff_key($newPermissions, $oldPermissions)));
+            $removedPermissions = implode(', ', array_values(array_diff_key($oldPermissions, $newPermissions)));
 
-                // All user's permissions are cached. Clear cache.
-                $this->cache->clear();
-            } else {
-                $role->$fieldName = $fieldValue; // @phpstan-ignore-line Variable property is ok here.
-                $role->save();
-            }
+            // Change data in the database
+            $role->permissions()->sync($permissionIds);
 
-            // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for role {$role->name}.", [
-                'type'    => 'role_update_field',
-                'user_id' => $currentUser->id,
-            ]);
+            // All user's permissions are cached. Clear cache.
+            $this->cache->clear();
+
+            $this->logger->record(
+                user: $currentUser,
+                type: RoleActivityTypes::UPDATE_PERMISSIONS,
+                subject: $role,
+                metadata: [
+                    'added_permissions'   => $addedPermissions !== '' ? $addedPermissions : $this->translator->translate('PERMISSION.NONE'),
+                    'removed_permissions' => $removedPermissions !== '' ? $removedPermissions : $this->translator->translate('PERMISSION.NONE'),
+                ],
+            );
         });
 
-        // Add success messages
-        if ($fieldName === 'permissions') {
-            return new UserMessage('ROLE.PERMISSIONS_UPDATED', [
-                'name' => $role->name,
-            ]);
-        } else {
-            return new UserMessage('ROLE.UPDATED', [
-                'name' => $role->name,
-            ]);
+        return new UserMessage('ROLE.PERMISSIONS_UPDATED', ['name' => $role->name]);
+    }
+
+    /**
+     * Authorize the user.
+     *
+     * @return UserInterface
+     */
+    protected function authorize(): UserInterface
+    {
+        if (!$this->authenticator->checkAccess('update_role_field')) {
+            throw new ForbiddenException();
         }
+
+        /** @var UserInterface */
+        return $this->authenticator->user();
     }
 
     /**
@@ -176,9 +163,7 @@ class RoleUpdateFieldAction
      */
     protected function getSchema(): RequestSchemaInterface
     {
-        $schema = new RequestSchema($this->schema);
-
-        return $schema;
+        return new RequestSchema($this->schema);
     }
 
     /**
@@ -195,18 +180,6 @@ class RoleUpdateFieldAction
             $e->addErrors($errors);
 
             throw $e;
-        }
-    }
-
-    /**
-     * Validate access to the page.
-     *
-     * @throws ForbiddenException
-     */
-    protected function validateAccess(RoleInterface $role, string $fieldName): void
-    {
-        if (!$this->authenticator->checkAccess('update_role_field')) {
-            throw new ForbiddenException();
         }
     }
 }

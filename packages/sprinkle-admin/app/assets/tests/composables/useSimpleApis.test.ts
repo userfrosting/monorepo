@@ -192,16 +192,20 @@ describe('simple admin composables', () => {
         })
     })
 
-    test('useRoleUpdateApi submitRoleUpdate handles success and error', async () => {
-        const { submitRoleUpdate, apiError, apiLoading } = useRoleUpdateApi()
+    test('useRoleUpdateApi submitRolePermissions handles success and error', async () => {
+        const { submitRolePermissions, apiError, apiLoading } = useRoleUpdateApi()
 
         vi.spyOn(axios, 'put').mockResolvedValueOnce({
             data: { title: 'Updated', description: 'ok' }
         } as any)
 
-        await expect(submitRoleUpdate('admin', 'name', { name: 'Admin' })).resolves.toEqual({
+        await expect(submitRolePermissions('admin', { permissions: [1, 2] })).resolves.toEqual({
             title: 'Updated',
             description: 'ok'
+        })
+
+        expect(axios.put).toHaveBeenCalledWith('/api/roles/r/admin/permissions', {
+            permissions: [1, 2]
         })
 
         expect(mockPush).toHaveBeenCalledWith({
@@ -213,18 +217,20 @@ describe('simple admin composables', () => {
         expect(apiLoading.value).toBe(false)
 
         vi.spyOn(axios, 'put').mockRejectedValueOnce({ response: { data: { title: 'Error' } } })
-        await expect(submitRoleUpdate('admin', 'name', { name: 'Admin' })).resolves.toBeUndefined()
+        await expect(submitRolePermissions('admin', { permissions: [] })).rejects.toEqual({
+            title: 'Error'
+        })
         expect(apiError.value).toEqual({ title: 'Error' })
     })
 
-    test('useUserUpdateApi submitUserUpdate handles success and error', async () => {
-        const { submitUserUpdate, apiError, apiLoading } = useUserUpdateApi()
+    test('useUserUpdateApi submitUserStatus handles success and error', async () => {
+        const { submitUserStatus, apiError, apiLoading } = useUserUpdateApi()
 
         vi.spyOn(axios, 'put').mockResolvedValueOnce({
             data: { title: 'Updated', description: 'ok' }
         } as any)
 
-        await expect(submitUserUpdate('alice', 'name', { first_name: 'Alice' })).resolves.toEqual({
+        await expect(submitUserStatus('alice', { flag_enabled: '1' })).resolves.toEqual({
             title: 'Updated',
             description: 'ok'
         })
@@ -238,10 +244,43 @@ describe('simple admin composables', () => {
         expect(apiLoading.value).toBe(false)
 
         vi.spyOn(axios, 'put').mockRejectedValueOnce({ response: { data: { title: 'Error' } } })
-        await expect(
-            submitUserUpdate('alice', 'name', { first_name: 'Alice' })
-        ).resolves.toBeUndefined()
+        await expect(submitUserStatus('alice', { flag_enabled: '1' })).rejects.toEqual({
+            title: 'Error'
+        })
         expect(apiError.value).toEqual({ title: 'Error' })
+    })
+
+    test('useUserUpdateApi submits verification, group, roles, and password updates', async () => {
+        const {
+            submitUserVerification,
+            submitUserGroup,
+            submitUserRoles,
+            submitUserPassword,
+            apiLoading
+        } = useUserUpdateApi()
+        const response = { title: 'Updated', description: 'ok' }
+        const put = vi.spyOn(axios, 'put').mockResolvedValue({ data: response } as any)
+
+        await expect(submitUserVerification('alice', { flag_verified: '1' })).resolves.toEqual(
+            response
+        )
+        await expect(submitUserGroup('alice', { group_id: 3 })).resolves.toEqual(response)
+        await expect(submitUserRoles('alice', { roles: [1, 2] })).resolves.toEqual(response)
+        await expect(
+            submitUserPassword('alice', { password: 'new-password', passwordc: 'new-password' })
+        ).resolves.toEqual(response)
+
+        expect(put).toHaveBeenNthCalledWith(1, '/api/users/u/alice/verification', {
+            flag_verified: '1'
+        })
+        expect(put).toHaveBeenNthCalledWith(2, '/api/users/u/alice/group', { group_id: 3 })
+        expect(put).toHaveBeenNthCalledWith(3, '/api/users/u/alice/roles', { roles: [1, 2] })
+        expect(put).toHaveBeenNthCalledWith(4, '/api/users/u/alice/password', {
+            password: 'new-password',
+            passwordc: 'new-password'
+        })
+        expect(mockPush).toHaveBeenCalledTimes(4)
+        expect(apiLoading.value).toBe(false)
     })
 
     test('useUserPasswordResetApi passwordReset handles success and error', async () => {

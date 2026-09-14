@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
 
@@ -61,7 +62,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  * @method        $this forRole(int|RoleInterface $role)
  * @method static $this forRole(int|RoleInterface $role)
  */
-interface UserInterface
+interface UserInterface extends MorphableModelInterface
 {
     /**
      * Allows you to get the full name of the user using `$user->full_name`.

@@ -20,9 +20,9 @@ use UserFrosting\Sprinkle\Admin\Controller\Role\RoleApi;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleCreateAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleDeleteAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleEditAction;
+use UserFrosting\Sprinkle\Admin\Controller\Role\RolePermissionsAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RolePermissionsSprunje;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RolesSprunje;
-use UserFrosting\Sprinkle\Admin\Controller\Role\RoleUpdateFieldAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleUsersSprunje;
 use UserFrosting\Sprinkle\Admin\Middlewares\RoleInjector;
 use UserFrosting\Sprinkle\Core\Middlewares\NoCache;
@@ -47,7 +47,7 @@ class RolesRoutes implements RouteDefinitionInterface
             $group->post('', RoleCreateAction::class);
             $group->put('/r/{slug}', RoleEditAction::class)
                   ->add(RoleInjector::class);
-            $group->put('/r/{slug}/{field}', RoleUpdateFieldAction::class)
+            $group->put('/r/{slug}/permissions', RolePermissionsAction::class)
                   ->add(RoleInjector::class);
         })->add(AuthGuard::class)->add(NoCache::class);
     }

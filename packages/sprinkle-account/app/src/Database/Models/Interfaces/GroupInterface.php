@@ -14,6 +14,7 @@ namespace UserFrosting\Sprinkle\Account\Database\Models\Interfaces;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -32,7 +33,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @property \DateTimeImmutable                   $updated_at
  * @property Collection<int, UserInterface&Model> $users
  */
-interface GroupInterface
+interface GroupInterface extends MorphableModelInterface
 {
     /**
      * Users which belong to this group.

@@ -22,9 +22,9 @@ const { role } = defineProps<{
  * Methods - Fetch permissions, selected, fetch method and submit the form.
  */
 const { loading, selected, fetch } = useRolePermissionsApi()
-const { submitRoleUpdate } = useRoleUpdateApi()
+const { submitRolePermissions } = useRoleUpdateApi()
 const submitForm = () => {
-    submitRoleUpdate(role.slug, 'permissions', { permissions: selected.value })
+    submitRolePermissions(role.slug, { permissions: selected.value })
         .then(() => {
             // Emit the saved event
             emits('saved')

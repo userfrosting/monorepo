@@ -1,0 +1,11 @@
+---
+flag_enabled:
+  validators:
+    required:
+      label: "&STATUS"
+      message: VALIDATE.REQUIRED
+    member_of:
+      values:
+      - '0'
+      - '1'
+      message: VALIDATE.BOOLEAN

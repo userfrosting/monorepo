@@ -21,8 +21,9 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Admin\Exceptions\GroupException;
+use UserFrosting\Sprinkle\Admin\Log\GroupActivityTypes;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 use UserFrosting\Support\Message\UserMessage;
 
@@ -49,7 +50,7 @@ class GroupDeleteAction
         protected Authenticator $authenticator,
         protected Config $config,
         protected Connection $db,
-        protected UserActivityLogger $userActivityLogger,
+        protected ActivityRecorderInterface $logger,
     ) {
     }
 
@@ -113,10 +114,11 @@ class GroupDeleteAction
             $group->delete();
 
             // Create activity record
-            $this->userActivityLogger->info("User {$currentUser->user_name} deleted group {$group->name}.", [
-                'type'    => 'group_delete',
-                'user_id' => $currentUser->id,
-            ]);
+            $this->logger->record(
+                user: $currentUser,
+                type: GroupActivityTypes::DELETE,
+                subject: $group
+            );
         });
 
         return new UserMessage('GROUP.DELETION_SUCCESSFUL', [

@@ -1,0 +1,9 @@
+---
+group_id:
+  validators:
+    required:
+      label: "&GROUP"
+      message: VALIDATE.REQUIRED
+    integer:
+      label: "&GROUP"
+      message: VALIDATE.INTEGER

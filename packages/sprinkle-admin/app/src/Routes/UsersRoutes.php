@@ -21,11 +21,15 @@ use UserFrosting\Sprinkle\Admin\Controller\User\UserApi;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserCreateAction;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserDeleteAction;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserEditAction;
+use UserFrosting\Sprinkle\Admin\Controller\User\UserGroupAction;
+use UserFrosting\Sprinkle\Admin\Controller\User\UserPasswordAction;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserPasswordResetAction;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserPermissionSprunje;
+use UserFrosting\Sprinkle\Admin\Controller\User\UserRolesAction;
 use UserFrosting\Sprinkle\Admin\Controller\User\UserRoleSprunje;
 use UserFrosting\Sprinkle\Admin\Controller\User\UsersSprunjeAction;
-use UserFrosting\Sprinkle\Admin\Controller\User\UserUpdateFieldAction;
+use UserFrosting\Sprinkle\Admin\Controller\User\UserStatusAction;
+use UserFrosting\Sprinkle\Admin\Controller\User\UserVerificationAction;
 use UserFrosting\Sprinkle\Admin\Middlewares\UserInjector;
 use UserFrosting\Sprinkle\Core\Middlewares\NoCache;
 
@@ -59,9 +63,21 @@ class UsersRoutes implements RouteDefinitionInterface
             $group->put('/u/{user_name}', UserEditAction::class)
                   ->add(UserInjector::class)
                   ->setName('api.users.edit');
-            $group->put('/u/{user_name}/{field}', UserUpdateFieldAction::class)
+            $group->put('/u/{user_name}/status', UserStatusAction::class)
                   ->add(UserInjector::class)
-                  ->setName('api.users.update-field');
+                  ->setName('api.users.status');
+            $group->put('/u/{user_name}/verification', UserVerificationAction::class)
+                  ->add(UserInjector::class)
+                  ->setName('api.users.verification');
+            $group->put('/u/{user_name}/group', UserGroupAction::class)
+                  ->add(UserInjector::class)
+                  ->setName('api.users.group');
+            $group->put('/u/{user_name}/roles', UserRolesAction::class)
+                  ->add(UserInjector::class)
+                  ->setName('api.users.roles');
+            $group->put('/u/{user_name}/password', UserPasswordAction::class)
+                  ->add(UserInjector::class)
+                  ->setName('api.users.password');
         })->add(AuthGuard::class)->add(NoCache::class);
     }
 }

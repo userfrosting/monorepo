@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { ActivityDescription } from '../../components/Activities'
+</script>
+
 <template>
     <UFCardBox>
         <UFSprunjeTable
@@ -7,7 +11,7 @@
             <template #header>
                 <UFSprunjeHeader sort="occurred_at">{{ $t('ACTIVITY.TIME') }}</UFSprunjeHeader>
                 <UFSprunjeHeader sort="user">{{ $t('USER') }}</UFSprunjeHeader>
-                <UFSprunjeHeader sort="description">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
+                <UFSprunjeHeader sort="label">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
             <template #body="{ row }">
@@ -25,13 +29,13 @@
                         </RouterLink>
                     </strong>
                     <div class="uk-text-meta">{{ row.user.email }}</div>
+                    <div class="uk-text-meta">{{ row.ip_address }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn v-else>
                     <i>{{ $t('USER.DELETED') }}</i>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <div>{{ row.description }}</div>
-                    <div class="uk-text-meta">{{ row.ip_address }}</div>
+                    <ActivityDescription :activity="row" />
                 </UFSprunjeColumn>
             </template>
         </UFSprunjeTable>

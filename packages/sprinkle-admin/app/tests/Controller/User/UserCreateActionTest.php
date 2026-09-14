@@ -15,7 +15,6 @@ namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Config\Config;
-use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
@@ -106,99 +105,7 @@ class UserCreateActionTest extends AdminTestCase
         $user = User::where('email', 'foo@bar.com')->first();
         $this->assertSame('foo', $user['user_name']);
         $this->assertSame('en_US', $user['locale']);
-    }
-
-    public function testPostForGroup(): void
-    {
-        /** @var Group */
-        $group = Group::factory()->create();
-
-        /** @var User */
-        $user = User::factory()->for($group)->create();
-        $this->actAsUser($user, permissions: ['create_user']);
-
-        /** @var Config */
-        $config = $this->getService(Config::class);
-
-        // Force locale config.
-        $config->set('site.registration.user_defaults.locale', 'en_US');
-        $config->set('site.locales.available', ['en_US' => true]);
-
-        /** @var Mockery\MockInterface&Mailer */
-        $mailer = Mockery::mock(Mailer::class)
-            ->makePartial()
-            ->shouldReceive('send')->once()
-            ->getMock();
-        $this->getContainer()->set(Mailer::class, $mailer);
-
-        // Set post payload
-        $data = [
-            'user_name'  => 'foo',
-            'first_name' => 'Foo',
-            'last_name'  => 'Bar',
-            'email'      => 'foo@bar.com',
-            'group_id'   => $group->id,
-        ];
-
-        // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/api/users', $data);
-        $response = $this->handleRequest($request);
-
-        // Assert response status & body
-        $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure(['title', 'description'], $response);
-
-        // Make sure the user is added to the db by querying it
-        /** @var User */
-        $user = User::where('email', 'foo@bar.com')->first();
-        $this->assertSame($group->id, $user->group?->id);
-        $this->assertSame('en_US', $user['locale']); // Locale will be default :)
-    }
-
-    public function testPostForNoGroup(): void
-    {
-        /** @var User */
-        $user = User::factory()->create();
-        $this->actAsUser($user, isMaster: true);
-
-        /** @var Config */
-        $config = $this->getService(Config::class);
-
-        // Force locale config.
-        $config->set('site.registration.user_defaults.locale', 'en_US');
-        $config->set('site.locales.available', ['en_US' => true]);
-
-        /** @var Mockery\MockInterface&Mailer */
-        $mailer = Mockery::mock(Mailer::class)
-            ->makePartial()
-            ->shouldReceive('send')->once()
-            ->getMock();
-        $this->getContainer()->set(Mailer::class, $mailer);
-
-        // Set post payload
-        $data = [
-            'user_name'  => 'foo',
-            'first_name' => 'Foo',
-            'last_name'  => 'Bar',
-            'email'      => 'foo@bar.com',
-            'locale'     => 'en_US',
-            'group_id'   => 0,
-        ];
-
-        // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/api/users', $data);
-        $response = $this->handleRequest($request);
-
-        // Assert response status & body
-        $this->assertResponseStatus(200, $response);
-        $this->assertJsonStructure(['title', 'description'], $response);
-
-        // Make sure the user is added to the db by querying it
-        /** @var User */
-        $user = User::where('email', 'foo@bar.com')->first();
-        $this->assertSame('foo', $user['user_name']);
-        $this->assertSame('en_US', $user['locale']);
-        $this->assertNull($user->group?->id);
+        $this->assertNull($user->group_id);
     }
 
     public function testPostForFailedValidation(): void

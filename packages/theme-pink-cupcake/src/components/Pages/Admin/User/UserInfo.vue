@@ -4,9 +4,11 @@ import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import type { UserResponse } from '@userfrosting/sprinkle-admin/interfaces'
 import UserEditModal from './UserEditModal.vue'
 import UserDeleteModal from './UserDeleteModal.vue'
-import UserActivateModal from './UserActivateModal.vue'
+import UserStatusModal from './UserStatusModal.vue'
+import UserVerificationModal from './UserVerificationModal.vue'
 import UserPasswordModal from './UserPasswordModal.vue'
 import UserPasswordResetModal from './UserPasswordResetModal.vue'
+import UserGroupModal from './UserGroupModal.vue'
 
 const router = useRouter()
 const { user } = defineProps<{
@@ -72,6 +74,11 @@ const emits = defineEmits(['updated'])
                     @saved="emits('updated')"
                     v-if="$checkAccess('update_user_field')"
                     class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-primary uk-button-small" />
+                <UserGroupModal
+                    :user="user"
+                    @saved="emits('updated')"
+                    v-if="$checkAccess('update_user_field')"
+                    class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-default uk-button-small" />
                 <UserPasswordModal
                     :user="user"
                     v-if="$checkAccess('update_user_field')"
@@ -80,10 +87,15 @@ const emits = defineEmits(['updated'])
                     :user="user"
                     v-if="$checkAccess('update_user_field')"
                     class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-default uk-button-small" />
-                <UserActivateModal
+                <UserVerificationModal
                     :user="user"
                     @saved="emits('updated')"
-                    v-if="$checkAccess('update_user_field')"
+                    v-if="$checkAccess('update_user_field') && !user.flag_verified"
+                    class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-default uk-button-small" />
+                <UserStatusModal
+                    :user="user"
+                    @saved="emits('updated')"
+                    v-if="$checkAccess('update_user_field') && user.flag_verified"
                     class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-default uk-button-small" />
                 <UserDeleteModal
                     :user="user"

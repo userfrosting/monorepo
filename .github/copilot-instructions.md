@@ -223,7 +223,7 @@ These **must** be run before committing code, from the root of the monorepo:
 
 ## Changelog Guidelines
 
-**Every change must include a changelog update** — do this automatically, without waiting to be asked:
+Before committing, **every change must include a changelog update**. Once a change is completed, ask the user if he wants to update the changelog. If yes, follow these steps:
 
 1. Update the relevant `packages/*/CHANGELOG.md` file(s) for affected packages
 2. Add entries under the `## [Unreleased]` section

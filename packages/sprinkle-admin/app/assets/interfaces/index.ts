@@ -22,6 +22,7 @@ export type { RoleEditRequest, RoleEditResponse } from './RoleEditApi'
 export type { RoleDeleteResponse } from './RoleDeleteApi'
 export type { RolesSprunjeResponse } from './RolesApi'
 export type { RolePermissionsSprunjeResponse } from './RolePermissionsApi'
+export type { RolePermissionsRequest } from './RoleUpdateApi'
 
 // Users
 export type { UserResponse } from './UserApi'
@@ -31,3 +32,9 @@ export type { UserEditRequest, UserEditResponse } from './UserEditApi'
 export type { UserPasswordRequest } from './UserPasswordApi'
 export type { UsersSprunjerResponse } from './UsersApi'
 export type { UserRoleSprunjeResponse } from './UserRolesApi'
+export type {
+    UserStatusRequest,
+    UserVerificationRequest,
+    UserGroupRequest,
+    UserRolesRequest
+} from './UserUpdateApi'

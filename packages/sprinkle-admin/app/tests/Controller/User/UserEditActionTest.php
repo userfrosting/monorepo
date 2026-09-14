@@ -14,8 +14,10 @@ namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Config\Config;
+use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
+use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
@@ -95,7 +97,6 @@ class UserEditActionTest extends AdminTestCase
         // Create a second user, to be edited.
         /** @var User */
         $userToEdit = User::factory()->create();
-
         // Set post payload
         $data = [
             'user_name'  => 'foo',
@@ -103,7 +104,6 @@ class UserEditActionTest extends AdminTestCase
             'last_name'  => 'Bar',
             'email'      => 'foo@bar.com',
             'locale'     => 'en_US',
-            'group_id'   => 0,
         ];
 
         // Create request with method and url and fetch response
@@ -123,7 +123,13 @@ class UserEditActionTest extends AdminTestCase
         $editedUser = User::find($userToEdit->id);
         $this->assertSame('foo', $editedUser->user_name);
         $this->assertSame('foo@bar.com', $editedUser->email);
-        $this->assertNull($editedUser->group_id);
+        /** @var Activity|null $infoActivity */
+        $infoActivity = Activity::query()
+            ->where('type', AdminAccountActivityTypes::UPDATE_INFO->value)
+            ->where('subject_id', $userToEdit->id)
+            ->first();
+        $this->assertNotNull($infoActivity);
+        $this->assertIsArray($infoActivity->properties);
     }
 
     public function testPageForEditMasterUser(): void

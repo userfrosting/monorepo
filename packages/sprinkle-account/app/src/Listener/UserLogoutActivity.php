@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\Listener;
 
 use UserFrosting\Sprinkle\Account\Event\UserLoggedOutEvent;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 
 /**
@@ -22,16 +22,17 @@ use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 class UserLogoutActivity
 {
     public function __construct(
-        protected UserActivityLoggerInterface $logger,
+        protected ActivityRecorderInterface $logger,
     ) {
     }
 
     public function __invoke(UserLoggedOutEvent $event): void
     {
-        // Add a sign in activity (time is automatically set by database)
-        $this->logger->info("User {$event->user->user_name} signed out.", [
-            'type'    => UserActivityTypes::LOGGED_OUT,
-            'user_id' => $event->user->id,
-        ]);
+        // Add a sign out activity (time is automatically set by database)
+        $this->logger->record(
+            user: $event->user,
+            type: UserActivityTypes::LOGGED_OUT,
+            subject: $event->user
+        );
     }
 }

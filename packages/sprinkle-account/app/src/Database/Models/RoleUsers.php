@@ -13,14 +13,14 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use UserFrosting\Sprinkle\Core\Database\Models\Model;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 
 /**
  * Represents a the User-Role many-to-many relationship intermediate table.
  *
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class RoleUsers extends Pivot
+class RoleUsers extends Pivot implements MorphableModelInterface
 {
     /**
      * @var string The name of the table for the current model.

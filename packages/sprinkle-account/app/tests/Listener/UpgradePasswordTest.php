@@ -15,8 +15,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Event\UserAuthenticatedEvent;
 use UserFrosting\Sprinkle\Account\Listener\UpgradePassword;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLogger;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorder;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 
 /**
@@ -45,19 +45,17 @@ class UpgradePasswordTest extends AccountTestCase
 
     public function testUpgrade(): void
     {
-        /** @var Mockery\MockInterface&UserActivityLogger */
-        $logger = Mockery::mock(UserActivityLogger::class)
-            ->shouldReceive('debug')->once()
+        /** @var Mockery\MockInterface&ActivityRecorderInterface */
+        $logger = Mockery::mock(ActivityRecorder::class)
+            ->shouldReceive('record')->once()
             ->getMock();
-        $this->getContainer()->set(UserActivityLoggerInterface::class, $logger);
+        $this->getContainer()->set(ActivityRecorderInterface::class, $logger);
 
         /** @var User */
         $user = Mockery::mock(User::class)
             ->shouldReceive('getAttribute')->with('password')->once()->andReturn('87e995bde9ebdc73fc58cc75a9fadc4ae630d8207650fbe94e148ccc8058d5de5')
             ->shouldReceive('setAttribute')->with('password', 'MyPassword')->once()
             ->shouldReceive('save')->once()
-            ->shouldReceive('getAttribute')->with('user_name')->once()->andReturn('My Username')
-            ->shouldReceive('getAttribute')->with('id')->once()->andReturn(1)
             ->getMock();
 
         // Create event

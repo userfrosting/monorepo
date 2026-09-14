@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Added activity logging for profile changes.
+
 ### New Feature
 - Added MorphMapProvider for Eloquent polymorphic type aliases.
 

@@ -64,9 +64,3 @@ locale:
       max: 10
       domain: server
       message: VALIDATE.LENGTH_RANGE
-group_id:
-  validators:
-    integer:
-      label: "&GROUP"
-      domain: server
-      message: VALIDATE.INTEGER

@@ -29,7 +29,7 @@ const listableOptions = (column: string) => {
 <template>
     <h3 class="uk-heading-divider">{{ $t('SPRUNJE.FILTERS') }}</h3>
     <dl class="uk-description-list" v-for="(column, index) in filterable" :key="index">
-        <dt>{{ $t(column) }}</dt>
+        <dt>{{ $t(column === 'label' ? 'LABEL' : column) }}</dt>
         <dd>
             <select v-if="isListable(column)" v-model="filters[column]" class="uk-select">
                 <option value=""></option>
