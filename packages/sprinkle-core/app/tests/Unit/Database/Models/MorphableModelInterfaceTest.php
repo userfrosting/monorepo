@@ -18,7 +18,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\MigrationTable;
 use UserFrosting\Sprinkle\Core\Database\Models\Session;
 use UserFrosting\Sprinkle\Core\Database\Models\Throttle;
 
-class ActivitySubjectInterfaceTest extends TestCase
+class MorphableModelInterfaceTest extends TestCase
 {
     public function testBuiltinModelsImplementActivitySubjectInterface(): void
     {
