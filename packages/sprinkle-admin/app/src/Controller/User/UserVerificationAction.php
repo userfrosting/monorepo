@@ -36,7 +36,35 @@ class UserVerificationAction extends UserUpdateAction
         parent::__construct($translator, $authenticator, $config, $transformer, $validator);
     }
 
+    /**
+     * Receive the request, dispatch to the handler, and return the payload to
+     * the response.
+     *
+     * @param  UserInterface $user
+     * @param  Request       $request
+     * @param  Response      $response
+     * @return Response
+     */
     public function __invoke(UserInterface $user, Request $request, Response $response): Response
+    {
+        $user = $this->handle($user, $request);
+
+        $message = new UserMessage(
+            $user->flag_verified === true ? 'MANUALLY_ACTIVATED' : 'DETAILS_UPDATED',
+            ['user_name' => $user->user_name]
+        );
+
+        return $this->respond($response, $message);
+    }
+
+    /**
+     * Handle the request.
+     *
+     * @param  UserInterface $user
+     * @param  Request       $request
+     * @return UserInterface
+     */
+    protected function handle(UserInterface $user, Request $request): UserInterface
     {
         $currentUser = $this->authorize($user, 'update_user_field');
         $data = $this->transform($this->getSchema(), $request);
@@ -54,11 +82,6 @@ class UserVerificationAction extends UserUpdateAction
             $user->save();
         });
 
-        $message = new UserMessage(
-            $verified === '1' ? 'MANUALLY_ACTIVATED' : 'DETAILS_UPDATED',
-            ['user_name' => $user->user_name]
-        );
-
-        return $this->respond($response, $message);
+        return $user;
     }
 }

@@ -36,7 +36,33 @@ class UserGroupAction extends UserUpdateAction
         parent::__construct($translator, $authenticator, $config, $transformer, $validator);
     }
 
+    /**
+     * Receive the request, dispatch to the handler, and return the payload to
+     * the response.
+     *
+     * @param  UserInterface $user
+     * @param  Request       $request
+     * @param  Response      $response
+     * @return Response
+     */
     public function __invoke(UserInterface $user, Request $request, Response $response): Response
+    {
+        $this->handle($user, $request);
+
+        return $this->respond(
+            $response,
+            new UserMessage('DETAILS_UPDATED', ['user_name' => $user->user_name])
+        );
+    }
+
+    /**
+     * Handle the request.
+     *
+     * @param  UserInterface $user
+     * @param  Request       $request
+     * @return UserInterface
+     */
+    protected function handle(UserInterface $user, Request $request): UserInterface
     {
         $currentUser = $this->authorize($user, 'update_user_field');
         $data = $this->transform($this->getSchema(), $request);
@@ -76,9 +102,6 @@ class UserGroupAction extends UserUpdateAction
             $user->save();
         });
 
-        return $this->respond(
-            $response,
-            new UserMessage('DETAILS_UPDATED', ['user_name' => $user->user_name])
-        );
+        return $user;
     }
 }
