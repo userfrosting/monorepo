@@ -115,11 +115,16 @@ class RolePermissionsAction
         $permissionIds = $data['permissions'];
 
         $this->db->transaction(function () use ($role, $currentUser, $permissionIds): void {
-            // Prepare data for the activity record
-            $oldPermissions = $role->permissions()->get()->pluck('name', 'id')->all();
-            $newPermissions = Permission::query()->whereKey($permissionIds)->pluck('name', 'id')->all();
-            $addedPermissions = implode(', ', array_values(array_diff_key($newPermissions, $oldPermissions)));
-            $removedPermissions = implode(', ', array_values(array_diff_key($oldPermissions, $newPermissions)));
+            /** @var \Illuminate\Database\Eloquent\Collection<int, Permission> $newPermissions */
+            $newPermissions = Permission::query()->whereKey($permissionIds)->get();
+            $newPermissions = $newPermissions->keyBy('id');
+            /** @var \Illuminate\Database\Eloquent\Collection<int, Permission> $oldPermissions */
+            $oldPermissions = $role->permissions()->get();
+            $oldPermissions = $oldPermissions->keyBy('id');
+
+            // Determine which permissions have been added and which have been removed.
+            $addedPermissions = $newPermissions->diffKeys($oldPermissions);
+            $removedPermissions = $oldPermissions->diffKeys($newPermissions);
 
             // Change data in the database
             $role->permissions()->sync($permissionIds);
@@ -127,15 +132,23 @@ class RolePermissionsAction
             // All user's permissions are cached. Clear cache.
             $this->cache->clear();
 
-            $this->logger->record(
-                user: $currentUser,
-                type: RoleActivityTypes::UPDATE_PERMISSIONS,
-                subject: $role,
-                metadata: [
-                    'added_permissions'   => $addedPermissions !== '' ? $addedPermissions : $this->translator->translate('PERMISSION.NONE'),
-                    'removed_permissions' => $removedPermissions !== '' ? $removedPermissions : $this->translator->translate('PERMISSION.NONE'),
-                ],
-            );
+            foreach ($addedPermissions as $permission) {
+                $this->logger->record(
+                    user: $currentUser,
+                    type: RoleActivityTypes::ADD_PERMISSION,
+                    context: $permission,
+                    subject: $role,
+                );
+            }
+
+            foreach ($removedPermissions as $permission) {
+                $this->logger->record(
+                    user: $currentUser,
+                    type: RoleActivityTypes::REMOVE_PERMISSION,
+                    context: $permission,
+                    subject: $role,
+                );
+            }
         });
 
         return new UserMessage('ROLE.PERMISSIONS_UPDATED', ['name' => $role->name]);

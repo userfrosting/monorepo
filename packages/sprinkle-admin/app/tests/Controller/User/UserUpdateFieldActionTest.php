@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
+use Illuminate\Database\Eloquent\Collection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
@@ -243,9 +244,8 @@ class UserUpdateFieldActionTest extends AdminTestCase
         /** @var User */
         $user = User::factory()->create();
         $this->actAsUser($user, permissions: ['update_user_role']);
-        $oldRoles = $user->roles->pluck('name')->implode(', ');
 
-        /** @var Role */
+        /** @var Collection<int, Role> $roles */
         $roles = Role::factory()->count(2)->create();
 
         /*
@@ -276,13 +276,18 @@ class UserUpdateFieldActionTest extends AdminTestCase
         $user->refresh();
         $this->assertCount(2, $user->roles);
 
-        /** @var Activity|null $activity */
-        $activity = Activity::query()->where('type', AdminAccountActivityTypes::UPDATE_ROLES->value)->where('subject_id', $user->id)->first();
-        $this->assertNotNull($activity);
-        $metadata = $activity->metadata;
-        $this->assertIsArray($metadata);
-        $this->assertSame($roles[0]->name . ', ' . $roles[1]->name, $metadata['added_roles']);
-        $this->assertSame($oldRoles, $metadata['removed_roles']);
+        $activities = Activity::query()
+            ->where('type', AdminAccountActivityTypes::ADD_ROLE->value)
+            ->where('subject_id', $user->id)
+            ->get();
+        assert($activities instanceof Collection);
+        $activity = $activities->first();
+        assert($activity instanceof Activity);
+        $this->assertCount(2, $activities);
+        $this->assertEqualsCanonicalizing(
+            $roles->pluck('id')->all(),
+            $activities->pluck('context_id')->all()
+        );
         $this->assertNull($activity->properties);
     }
 
@@ -292,7 +297,9 @@ class UserUpdateFieldActionTest extends AdminTestCase
         $user = User::factory()->create();
         $this->actAsUser($user, permissions: ['update_user_role']);
         $this->assertCount(1, $user->roles); // Default role above.
-        $oldRoles = $user->roles->pluck('name')->implode(', ');
+        $role = $user->roles->first();
+        $this->assertNotNull($role);
+        $roleId = $role->id;
 
         // Create request with method and url and fetch response
         // uf-collection will pass no data when removing all roles_id.
@@ -310,13 +317,15 @@ class UserUpdateFieldActionTest extends AdminTestCase
         $user->refresh();
         $this->assertCount(0, $user->roles);
 
-        /** @var Activity|null $activity */
-        $activity = Activity::query()->where('type', AdminAccountActivityTypes::UPDATE_ROLES->value)->where('subject_id', $user->id)->first();
-        $this->assertNotNull($activity);
-        $metadata = $activity->metadata;
-        $this->assertIsArray($metadata);
-        $this->assertSame('No role', $metadata['added_roles']);
-        $this->assertSame($oldRoles, $metadata['removed_roles']);
+        $activities = Activity::query()
+            ->where('type', AdminAccountActivityTypes::REMOVE_ROLE->value)
+            ->where('subject_id', $user->id)
+            ->get();
+        assert($activities instanceof Collection);
+        $activity = $activities->first();
+        assert($activity instanceof Activity);
+        $this->assertCount(1, $activities);
+        $this->assertSame((string) $roleId, $activity->context_id);
         $this->assertNull($activity->properties);
     }
 

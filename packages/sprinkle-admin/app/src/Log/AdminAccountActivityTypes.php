@@ -19,7 +19,8 @@ enum AdminAccountActivityTypes: string implements ActivityTypes
     case UPDATE_INFO = 'account_update_info';
     case ADD_TO_GROUP = 'account_add_to_group';
     case REMOVE_FROM_GROUP = 'account_remove_from_group';
-    case UPDATE_ROLES = 'account_update_roles';
+    case ADD_ROLE = 'account_add_role';
+    case REMOVE_ROLE = 'account_remove_role';
     case UPDATE_FIELD = 'account_update_field';
     case ENABLE = 'account_enable';
     case DISABLE = 'account_disable';
@@ -35,7 +36,8 @@ enum AdminAccountActivityTypes: string implements ActivityTypes
             self::UPDATE_INFO       => 'ACCOUNT.ACTIVITY.UPDATE_INFO',
             self::ADD_TO_GROUP      => 'ACCOUNT.ACTIVITY.ADD_TO_GROUP',
             self::REMOVE_FROM_GROUP => 'ACCOUNT.ACTIVITY.REMOVE_FROM_GROUP',
-            self::UPDATE_ROLES      => 'ACCOUNT.ACTIVITY.UPDATE_ROLES',
+            self::ADD_ROLE          => 'ACCOUNT.ACTIVITY.ADD_ROLE',
+            self::REMOVE_ROLE       => 'ACCOUNT.ACTIVITY.REMOVE_ROLE',
             self::UPDATE_FIELD      => 'ACCOUNT.ACTIVITY.UPDATE_FIELD',
             self::ENABLE            => 'ACCOUNT.ACTIVITY.ENABLE',
             self::DISABLE           => 'ACCOUNT.ACTIVITY.DISABLE',
@@ -54,7 +56,8 @@ enum AdminAccountActivityTypes: string implements ActivityTypes
             self::UPDATE_INFO       => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_INFO',
             self::ADD_TO_GROUP      => 'ACCOUNT.ACTIVITY.LABEL.ADD_TO_GROUP',
             self::REMOVE_FROM_GROUP => 'ACCOUNT.ACTIVITY.LABEL.REMOVE_FROM_GROUP',
-            self::UPDATE_ROLES      => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_ROLES',
+            self::ADD_ROLE          => 'ACCOUNT.ACTIVITY.LABEL.ADD_ROLE',
+            self::REMOVE_ROLE       => 'ACCOUNT.ACTIVITY.LABEL.REMOVE_ROLE',
             self::UPDATE_FIELD      => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_FIELD',
             self::ENABLE            => 'ACCOUNT.ACTIVITY.LABEL.ENABLE',
             self::DISABLE           => 'ACCOUNT.ACTIVITY.LABEL.DISABLE',

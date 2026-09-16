@@ -14,7 +14,8 @@ ACCOUNT:
     UPDATE_INFO: Informations du compte mises à jour
     ADD_TO_GROUP: Compte ajouté au groupe <strong>{{context.name}}</strong>
     REMOVE_FROM_GROUP: Compte retiré du groupe <strong>{{context.name}}</strong>
-    UPDATE_ROLES: 'Rôles du compte ajoutés : <strong>{{added_roles}}</strong> ; supprimés : <strong>{{removed_roles}}</strong>'
+    ADD_ROLE: L'utilisateur <strong>{{subject.full_name}}</strong> a été ajouté au rôle <strong>{{context.name}}</strong>
+    REMOVE_ROLE: L'utilisateur <strong>{{subject.full_name}}</strong> a été retiré du rôle <strong>{{context.name}}</strong>
     UPDATE_FIELD: Champ du compte {{field}} mis à jour
     ENABLE: Compte activé
     DISABLE: Compte désactivé
@@ -36,7 +37,8 @@ ACCOUNT:
       UPDATE_INFO: Compte mis à jour
       ADD_TO_GROUP: Compte ajouté au groupe
       REMOVE_FROM_GROUP: Compte retiré du groupe
-      UPDATE_ROLES: Rôles du compte modifiés
+      ADD_ROLE: Compte ajouté au rôle
+      REMOVE_ROLE: Compte retiré du rôle
       UPDATE_FIELD: Champ du compte mis à jour
       ENABLE: Compte activé
       DISABLE: Compte désactivé
@@ -157,13 +159,15 @@ ROLE:
     CREATE: Rôle créé
     DELETE: Rôle supprimé
     UPDATE_INFO: Informations du rôle mises à jour
-    UPDATE_PERMISSIONS: 'Autorisations du rôle ajoutées : <strong>{{added_permissions}}</strong> ; supprimées : <strong>{{removed_permissions}}</strong>'
+    ADD_PERMISSION: Le rôle <strong>{{subject.name}}</strong> a obtenu la permission <strong>{{context.name}}</strong>
+    REMOVE_PERMISSION: Le rôle <strong>{{subject.name}}</strong> a perdu la permission <strong>{{context.name}}</strong>
     UPDATE_FIELD: Champ du rôle {{field}} mis à jour
     LABEL:
       CREATE: Rôle créé
       DELETE: Rôle supprimé
       UPDATE_INFO: Rôle mis à jour
-      UPDATE_PERMISSIONS: Autorisations du rôle modifiées
+      ADD_PERMISSION: Permission accordée au rôle
+      REMOVE_PERMISSION: Permission retirée du rôle
       UPDATE_FIELD: Champ du rôle mis à jour
 SITE_CONFIG:
   '@TRANSLATION': Configuration du site

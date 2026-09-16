@@ -72,23 +72,38 @@ class UserRolesAction extends UserUpdateAction
         $roleIds = $data['roles'];
 
         $this->db->transaction(function () use ($user, $currentUser, $roleIds): void {
-            $oldRoles = $user->roles()->get()->pluck('name', 'id')->all();
-            $newRoles = Role::query()->whereKey($roleIds)->pluck('name', 'id')->all();
-            $addedRoles = implode(', ', array_values(array_diff_key($newRoles, $oldRoles)));
-            $removedRoles = implode(', ', array_values(array_diff_key($oldRoles, $newRoles)));
+            /** @var \Illuminate\Database\Eloquent\Collection<int, Role> $oldRoles */
+            $oldRoles = $user->roles()->get();
+            $oldRoles = $oldRoles->keyBy('id');
+
+            /** @var \Illuminate\Database\Eloquent\Collection<int, Role> $newRoles */
+            $newRoles = Role::query()->whereKey($roleIds)->get();
+            $newRoles = $newRoles->keyBy('id');
+
+            // Determine which roles have been added and which have been removed.
+            $addedRoles = $newRoles->diffKeys($oldRoles);
+            $removedRoles = $oldRoles->diffKeys($newRoles);
+
             $user->roles()->sync($roleIds);
             $user->forgetCache();
 
-            $this->logger->record(
-                user: $currentUser,
-                type: AdminAccountActivityTypes::UPDATE_ROLES,
-                subject: $user,
-                metadata: [
-                    'added_roles'   => $addedRoles !== '' ? $addedRoles : $this->translator->translate('ROLE.NONE'),
-                    'removed_roles' => $removedRoles !== '' ? $removedRoles : $this->translator->translate('ROLE.NONE'),
-                ],
-                withProperties: false,
-            );
+            foreach ($addedRoles as $role) {
+                $this->logger->record(
+                    user: $currentUser,
+                    type: AdminAccountActivityTypes::ADD_ROLE,
+                    context: $role,
+                    subject: $user,
+                );
+            }
+
+            foreach ($removedRoles as $role) {
+                $this->logger->record(
+                    user: $currentUser,
+                    type: AdminAccountActivityTypes::REMOVE_ROLE,
+                    context: $role,
+                    subject: $user,
+                );
+            }
         });
 
         return $user;

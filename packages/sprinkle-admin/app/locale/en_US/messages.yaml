@@ -14,7 +14,8 @@ ACCOUNT:
     UPDATE_INFO: Account information updated
     ADD_TO_GROUP: Account added to group <strong>{{context.name}}</strong>
     REMOVE_FROM_GROUP: Account removed from group <strong>{{context.name}}</strong>
-    UPDATE_ROLES: 'Account roles added: <strong>{{added_roles}}</strong>; removed: <strong>{{removed_roles}}</strong>'
+    ADD_ROLE: User <strong>{{subject.full_name}}</strong> added to role <strong>{{context.name}}</strong>
+    REMOVE_ROLE: User <strong>{{subject.full_name}}</strong> removed from role <strong>{{context.name}}</strong>
     UPDATE_FIELD: Account field {{field}} updated
     ENABLE: Account enabled
     DISABLE: Account disabled
@@ -36,7 +37,8 @@ ACCOUNT:
       UPDATE_INFO: Account updated
       ADD_TO_GROUP: Account added to group
       REMOVE_FROM_GROUP: Account removed from group
-      UPDATE_ROLES: Account roles changed
+      ADD_ROLE: Account added to role
+      REMOVE_ROLE: Account removed from role
       UPDATE_FIELD: Account field updated
       ENABLE: Account enabled
       DISABLE: Account disabled
@@ -154,13 +156,15 @@ ROLE:
     CREATE: Role created
     DELETE: Role deleted
     UPDATE_INFO: Role information updated
-    UPDATE_PERMISSIONS: 'Role permissions added: <strong>{{added_permissions}}</strong>; removed: <strong>{{removed_permissions}}</strong>'
+    ADD_PERMISSION: Role <strong>{{subject.name}}</strong> granted permission <strong>{{context.name}}</strong>
+    REMOVE_PERMISSION: Role <strong>{{subject.name}}</strong> revoked permission <strong>{{context.name}}</strong>
     UPDATE_FIELD: Role field {{field}} updated
     LABEL:
       CREATE: Role created
       DELETE: Role deleted
       UPDATE_INFO: Role updated
-      UPDATE_PERMISSIONS: Role permissions changed
+      ADD_PERMISSION: Role granted permission
+      REMOVE_PERMISSION: Role revoked permission
       UPDATE_FIELD: Role field updated
 SITE_CONFIG:
   '@TRANSLATION': Site configuration

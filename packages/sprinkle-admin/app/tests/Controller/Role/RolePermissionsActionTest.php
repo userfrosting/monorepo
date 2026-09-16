@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\Role;
 
+use Illuminate\Database\Eloquent\Collection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
@@ -89,7 +90,7 @@ class RolePermissionsActionTest extends AdminTestCase
         /** @var Role */
         $role = Role::factory()->create();
 
-        /** @var Permission */
+        /** @var Collection<int, Permission> $permissions */
         $permissions = Permission::factory()->count(2)->create();
 
         /*
@@ -119,16 +120,18 @@ class RolePermissionsActionTest extends AdminTestCase
         $role->refresh();
         $this->assertCount(2, $role->permissions);
 
-        /** @var Activity|null $activity */
-        $activity = Activity::query()
-            ->where('type', RoleActivityTypes::UPDATE_PERMISSIONS->value)
+        $activities = Activity::query()
+            ->where('type', RoleActivityTypes::ADD_PERMISSION->value)
             ->where('subject_id', $role->id)
-            ->first();
-        $this->assertNotNull($activity);
-        $metadata = $activity->metadata;
-        $this->assertIsArray($metadata);
-        $this->assertSame($permissions[0]->name . ', ' . $permissions[1]->name, $metadata['added_permissions']);
-        $this->assertSame('No permission', $metadata['removed_permissions']);
+            ->get();
+        assert($activities instanceof Collection);
+        $activity = $activities->first();
+        assert($activity instanceof Activity);
+        $this->assertCount(2, $activities);
+        $this->assertEqualsCanonicalizing(
+            $permissions->pluck('id')->all(),
+            $activities->pluck('context_id')->all()
+        );
         $this->assertNull($activity->properties);
     }
 
@@ -166,6 +169,9 @@ class RolePermissionsActionTest extends AdminTestCase
         /** @var Role */
         $role = Role::factory()->has(Permission::factory())->create();
         $this->assertCount(1, $role->permissions);
+        $permission = $role->permissions->first();
+        $this->assertNotNull($permission);
+        $permissionId = $permission->id;
 
         $request = $this->createJsonRequest(
             'PUT',
@@ -183,16 +189,15 @@ class RolePermissionsActionTest extends AdminTestCase
         $role->refresh();
         $this->assertCount(0, $role->permissions);
 
-        /** @var Activity|null $activity */
-        $activity = Activity::query()
-            ->where('type', RoleActivityTypes::UPDATE_PERMISSIONS->value)
+        $activities = Activity::query()
+            ->where('type', RoleActivityTypes::REMOVE_PERMISSION->value)
             ->where('subject_id', $role->id)
-            ->first();
-        $this->assertNotNull($activity);
-        $metadata = $activity->metadata;
-        $this->assertIsArray($metadata);
-        $this->assertSame('No permission', $metadata['added_permissions']);
-        $this->assertNotSame('No permission', $metadata['removed_permissions']);
+            ->get();
+        assert($activities instanceof Collection);
+        $activity = $activities->first();
+        assert($activity instanceof Activity);
+        $this->assertCount(1, $activities);
+        $this->assertSame((string) $permissionId, $activity->context_id);
         $this->assertNull($activity->properties);
     }
 
