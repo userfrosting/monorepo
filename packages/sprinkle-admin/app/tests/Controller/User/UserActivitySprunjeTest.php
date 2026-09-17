@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
@@ -91,5 +92,26 @@ class UserActivitySprunjeTest extends AdminTestCase
         // Assert response status & body
         $this->assertResponseStatus(200, $response);
         $this->assertNotEmpty((string) $response->getBody());
+    }
+
+    public function testPageOnlyReturnsActivitiesForSelectedUser(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        /** @var User */
+        $otherUser = User::factory()->create();
+        /** @var Activity */
+        $selectedActivity = Activity::factory()->for($user)->create();
+        Activity::factory()->for($otherUser)->create();
+        $this->actAsUser($user, permissions: ['view_user_activities']);
+
+        $request = $this->createRequest('GET', '/api/users/u/' . $user->user_name . '/activities');
+        $response = $this->handleRequest($request);
+        $payload = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertResponseStatus(200, $response);
+        $activityIds = array_column($payload['rows'], 'id');
+        $this->assertContains($selectedActivity->getKey(), $activityIds);
+        $this->assertNotContains(Activity::where('user_id', $otherUser->id)->value('id'), $activityIds);
     }
 }

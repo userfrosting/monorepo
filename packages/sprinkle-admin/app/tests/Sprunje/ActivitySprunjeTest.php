@@ -21,6 +21,8 @@ use stdClass;
 use UserFrosting\I18n\DictionaryInterface;
 use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
@@ -78,6 +80,218 @@ class ActivitySprunjeTest extends AdminTestCase
         ], $data['listable']['label']); // @phpstan-ignore-line
         $this->assertContains('label', $data['sortable']); // @phpstan-ignore-line
         $this->assertContains('label', $data['filterable']); // @phpstan-ignore-line
+    }
+
+    public function testActivityTargetConstraints(): void
+    {
+        /** @var User $user */
+        $user = $this->users[0];
+        /** @var User $otherUser */
+        $otherUser = $this->users[1];
+        /** @var Role $role */
+        $role = Role::create([
+            'slug'        => 'activity_role',
+            'name'        => 'Activity Role',
+            'description' => 'Activity role.',
+        ]);
+        /** @var Group $group */
+        $group = Group::create([
+            'slug'        => 'activity_group',
+            'name'        => 'Activity Group',
+            'description' => 'Activity group.',
+        ]);
+
+        /** @var Activity $matching */
+        $matching = Activity::factory()->create([
+            'user_id'       => $user->id,
+            'type'          => AccountActivityTypes::CREATE->value,
+            'context_type'  => $role->getMorphClass(),
+            'context_id'    => $role->getKey(),
+            'subject_type'  => $group->getMorphClass(),
+            'subject_id'    => $group->getKey(),
+        ]);
+        /** @var Activity $otherActivity */
+        $otherActivity = Activity::factory()->create([
+            'user_id'      => $otherUser->id,
+            'type'         => AccountActivityTypes::DELETE->value,
+            'context_type' => $group->getMorphClass(),
+            'context_id'   => $group->getKey(),
+            'subject_type' => $role->getMorphClass(),
+            'subject_id'   => $role->getKey(),
+        ]);
+
+        /** @var ActivityTypeRegistryInterface $registry */
+        $registry = $this->getService(ActivityTypeRegistryInterface::class);
+        /** @var Translator $translator */
+        $translator = $this->getService(Translator::class);
+
+        /** @var ActivitySprunje */
+        $sprunje = new ActivitySprunje(new Activity(), $registry, $translator);
+        $sprunje->forUser($user)
+            ->forType(AccountActivityTypes::CREATE->value)
+            ->forContext($role)
+            ->forSubject($group);
+        $data = $sprunje->getArray();
+
+        $this->assertSame(1, $data['count']);
+        $this->assertSame([$matching->id], array_column($data['rows'], 'id')); // @phpstan-ignore-line
+
+        /** @var ActivitySprunje */
+        $explicitTargetSprunje = new ActivitySprunje(new Activity(), $registry, $translator);
+        $explicitTargetSprunje->forContext($group->getMorphClass(), $group->getKey());
+        $explicitData = $explicitTargetSprunje->getArray();
+
+        $this->assertSame(1, $explicitData['count_filtered']);
+        $this->assertSame([$otherActivity->id], array_column($explicitData['rows'], 'id')); // @phpstan-ignore-line
+    }
+
+    public function testUserOrContextConstraint(): void
+    {
+        /** @var User $user */
+        $user = $this->users[0];
+        /** @var User $otherUser */
+        $otherUser = $this->users[1];
+
+        /** @var Activity $madeByUser */
+        $madeByUser = Activity::factory()->create([
+            'user_id' => $user->id,
+            'type'    => 'user_or_context_test',
+        ]);
+        /** @var Activity $forUser */
+        $forUser = Activity::factory()->create([
+            'user_id'       => $otherUser->id,
+            'context_type'  => $user->getMorphClass(),
+            'context_id'    => $user->getKey(),
+            'type'          => 'user_or_context_test',
+        ]);
+        /** @var Activity $forSubject */
+        $forSubject = Activity::factory()->create([
+            'user_id'       => $otherUser->id,
+            'subject_type'  => $user->getMorphClass(),
+            'subject_id'    => $user->getKey(),
+            'type'          => 'user_or_context_test',
+        ]);
+        Activity::factory()->create([
+            'user_id' => $otherUser->id,
+            'type'    => 'user_or_context_test',
+        ]);
+
+        /** @var ActivityTypeRegistryInterface $registry */
+        $registry = $this->getService(ActivityTypeRegistryInterface::class);
+        /** @var Translator $translator */
+        $translator = $this->getService(Translator::class);
+        $sprunje = new ActivitySprunje(new Activity(), $registry, $translator);
+        $sprunje->forType('user_or_context_test')->forAny(user: $user, context: $user);
+        $data = $sprunje->getArray();
+
+        $this->assertSame(2, $data['count_filtered']);
+        $this->assertEqualsCanonicalizing(
+            [$madeByUser->id, $forUser->id],
+            array_column($data['rows'], 'id')
+        ); // @phpstan-ignore-line
+
+        $allTargetsSprunje = new ActivitySprunje(new Activity(), $registry, $translator);
+        $allTargetsSprunje->forType('user_or_context_test')->forAny(
+            user: $user,
+            context: $user,
+            subject: $user,
+        );
+        $allTargetsData = $allTargetsSprunje->getArray();
+
+        $this->assertSame(3, $allTargetsData['count_filtered']);
+        $this->assertEqualsCanonicalizing(
+            [$madeByUser->id, $forUser->id, $forSubject->id],
+            array_column($allTargetsData['rows'], 'id')
+        ); // @phpstan-ignore-line
+    }
+
+    public function testForAnySupportsEachTargetIndependently(): void
+    {
+        /** @var User $user */
+        $user = $this->users[0];
+        /** @var Role $role */
+        $role = Role::create([
+            'slug'        => 'any_role',
+            'name'        => 'Any Role',
+            'description' => 'Any role.',
+        ]);
+        /** @var Group $group */
+        $group = Group::create([
+            'slug'        => 'any_group',
+            'name'        => 'Any Group',
+            'description' => 'Any group.',
+        ]);
+
+        /** @var ActivityTypeRegistryInterface $registry */
+        $registry = $this->getService(ActivityTypeRegistryInterface::class);
+        /** @var Translator $translator */
+        $translator = $this->getService(Translator::class);
+
+        /** @var Activity $userActivity */
+        $userActivity = Activity::factory()->create(['user_id' => $user->id]);
+        /** @var Activity $contextActivity */
+        $contextActivity = Activity::factory()->create([
+            'context_type' => $role->getMorphClass(),
+            'context_id'   => $role->getKey(),
+        ]);
+        /** @var Activity $subjectActivity */
+        $subjectActivity = Activity::factory()->create([
+            'subject_type' => $group->getMorphClass(),
+            'subject_id'   => $group->getKey(),
+        ]);
+
+        $empty = new ActivitySprunje(new Activity(), $registry, $translator);
+        $this->assertSame(9, $empty->forAny()->getArray()['count']);
+
+        $scalarUser = new ActivitySprunje(new Activity(), $registry, $translator);
+        $this->assertSame(4, $scalarUser->forAny(user: $user->id)->getArray()['count_filtered']);
+
+        $contextOnly = new ActivitySprunje(new Activity(), $registry, $translator);
+        $this->assertSame([$contextActivity->id], array_column(
+            $contextOnly->forAny(context: $role)->getArray()['rows'],
+            'id'
+        )); // @phpstan-ignore-line
+
+        $subjectOnly = new ActivitySprunje(new Activity(), $registry, $translator);
+        $this->assertSame([$subjectActivity->id], array_column(
+            $subjectOnly->forAny(subject: $group)->getArray()['rows'],
+            'id'
+        )); // @phpstan-ignore-line
+
+        $this->assertContains($userActivity->id, array_column(
+            $scalarUser->forAny(user: $user->id)->getArray()['rows'],
+            'id'
+        )); // @phpstan-ignore-line
+    }
+
+    public function testMorphTargetRequiresKeyWhenTypeIsProvided(): void
+    {
+        /** @var ActivityTypeRegistryInterface $registry */
+        $registry = $this->getService(ActivityTypeRegistryInterface::class);
+        /** @var Translator $translator */
+        $translator = $this->getService(Translator::class);
+        $sprunje = new ActivitySprunje(new Activity(), $registry, $translator);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $sprunje->forContext('role');
+    }
+
+    public function testMorphTargetCannotCombineModelAndKey(): void
+    {
+        /** @var Role $role */
+        $role = Role::create([
+            'slug'        => 'invalid_role',
+            'name'        => 'Invalid Role',
+            'description' => 'Invalid role.',
+        ]);
+        /** @var ActivityTypeRegistryInterface $registry */
+        $registry = $this->getService(ActivityTypeRegistryInterface::class);
+        /** @var Translator $translator */
+        $translator = $this->getService(Translator::class);
+        $sprunje = new ActivitySprunje(new Activity(), $registry, $translator);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $sprunje->forSubject($role, $role->getKey());
     }
 
     public function testWithPagination(): void

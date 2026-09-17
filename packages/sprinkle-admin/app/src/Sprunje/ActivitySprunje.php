@@ -18,10 +18,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 use UserFrosting\I18n\DictionaryInterface;
 use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
@@ -58,6 +61,162 @@ class ActivitySprunje extends Sprunje
         protected Translator $translator,
     ) {
         parent::__construct();
+    }
+
+    /**
+     * Limit the results to a specific activity type.
+     *
+     * @param string $type
+     *
+     * @return static
+     */
+    public function forType(string $type): static
+    {
+        return $this->extendQuery(function ($query) use ($type) {
+            return $query->where('activities.type', $type);
+        });
+    }
+
+    /**
+     * Limit the results to activities performed by a user.
+     *
+     * @param UserInterface|int $user
+     *
+     * @return static
+     */
+    public function forUser(UserInterface|int $user): static
+    {
+        $userId = $user instanceof UserInterface ? $user->getKey() : $user;
+
+        return $this->extendQuery(function ($query) use ($userId) {
+            return $query->where('activities.user_id', $userId);
+        });
+    }
+
+    /**
+     * Limit the results to activities associated with a context.
+     *
+     * @param MorphableModelInterface|string $context A model or its morph type.
+     * @param int|string|null                $key     The model key when using a morph type.
+     *
+     * @throws InvalidArgumentException If a morph type is provided without a key.
+     * @return static
+     */
+    public function forContext(MorphableModelInterface|string $context, int|string|null $key = null): static
+    {
+        [$type, $id] = $this->resolveMorphTarget($context, $key);
+
+        return $this->extendQuery(function ($query) use ($type, $id) {
+            return $query
+                ->where('activities.context_type', $type)
+                ->where('activities.context_id', $id);
+        });
+    }
+
+    /**
+     * Limit the results to activities associated with a subject.
+     *
+     * @param MorphableModelInterface|string $subject A model or its morph type.
+     * @param int|string|null                $key     The model key when using a morph type.
+     *
+     * @throws InvalidArgumentException If a morph type is provided without a key.
+     * @return static
+     */
+    public function forSubject(MorphableModelInterface|string $subject, int|string|null $key = null): static
+    {
+        [$type, $id] = $this->resolveMorphTarget($subject, $key);
+
+        return $this->extendQuery(function ($query) use ($type, $id) {
+            return $query
+                ->where('activities.subject_type', $type)
+                ->where('activities.subject_id', $id);
+        });
+    }
+
+    /**
+     * Limit the results to activities matching any supplied target.
+     *
+     * @param UserInterface|int|null       $user
+     * @param MorphableModelInterface|null $context
+     * @param MorphableModelInterface|null $subject
+     *
+     * @return static
+     */
+    public function forAny(
+        UserInterface|int|null $user = null,
+        ?MorphableModelInterface $context = null,
+        ?MorphableModelInterface $subject = null,
+    ): static {
+        if ($user === null && $context === null && $subject === null) {
+            return $this;
+        }
+
+        $userId = $user instanceof UserInterface ? $user->getKey() : $user;
+
+        return $this->extendQuery(function ($query) use ($userId, $context, $subject) {
+            return $query->where(function ($query) use ($userId, $context, $subject) {
+                $hasCondition = false;
+
+                if ($userId !== null) {
+                    $query->where('activities.user_id', $userId);
+                    $hasCondition = true;
+                }
+
+                if ($context !== null) {
+                    $contextQuery = function ($query) use ($context) {
+                        $query
+                            ->where('activities.context_type', $context->getMorphClass())
+                            ->where('activities.context_id', $context->getKey());
+                    };
+                    if ($hasCondition) {
+                        $query->orWhere($contextQuery);
+                    } else {
+                        $query->where($contextQuery);
+                    }
+                    $hasCondition = true;
+                }
+
+                if ($subject !== null) {
+                    $subjectQuery = function ($query) use ($subject) {
+                        $query
+                            ->where('activities.subject_type', $subject->getMorphClass())
+                            ->where('activities.subject_id', $subject->getKey());
+                    };
+                    if ($hasCondition) {
+                        $query->orWhere($subjectQuery);
+                    } else {
+                        $query->where($subjectQuery);
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * Resolve a polymorphic model or explicit type/key pair.
+     *
+     * @param MorphableModelInterface|string $target
+     * @param int|string|null                $key
+     *
+     * @throws InvalidArgumentException  If the target key is missing or non-scalar.
+     * @return array{string, int|string}
+     */
+    protected function resolveMorphTarget(MorphableModelInterface|string $target, int|string|null $key): array
+    {
+        if ($target instanceof MorphableModelInterface) {
+            if ($key !== null) {
+                throw new InvalidArgumentException('A model target cannot be combined with an explicit key.');
+            }
+
+            $key = $target->getKey();
+            $target = $target->getMorphClass();
+        }
+
+        if ($key === null) {
+            throw new InvalidArgumentException('A polymorphic target requires both a type and a key.');
+        }
+
+        return [$target, $key];
     }
 
     /**
