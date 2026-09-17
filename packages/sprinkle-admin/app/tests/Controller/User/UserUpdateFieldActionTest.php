@@ -325,7 +325,7 @@ class UserUpdateFieldActionTest extends AdminTestCase
         $activity = $activities->first();
         assert($activity instanceof Activity);
         $this->assertCount(1, $activities);
-        $this->assertSame((string) $roleId, $activity->context_id);
+        $this->assertEquals((string) $roleId, $activity->context_id);
         $this->assertNull($activity->properties);
     }
 
