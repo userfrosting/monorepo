@@ -100,6 +100,7 @@ class ActivitySprunje extends Sprunje
      * @param int|string|null                $key     The model key when using a morph type.
      *
      * @throws InvalidArgumentException If a morph type is provided without a key.
+     *
      * @return static
      */
     public function forContext(MorphableModelInterface|string $context, int|string|null $key = null): static
@@ -120,6 +121,7 @@ class ActivitySprunje extends Sprunje
      * @param int|string|null                $key     The model key when using a morph type.
      *
      * @throws InvalidArgumentException If a morph type is provided without a key.
+     *
      * @return static
      */
     public function forSubject(MorphableModelInterface|string $subject, int|string|null $key = null): static
@@ -198,7 +200,8 @@ class ActivitySprunje extends Sprunje
      * @param MorphableModelInterface|string $target
      * @param int|string|null                $key
      *
-     * @throws InvalidArgumentException  If the target key is missing or non-scalar.
+     * @throws InvalidArgumentException If the target key is missing or non-scalar.
+     *
      * @return array{string, int|string}
      */
     protected function resolveMorphTarget(MorphableModelInterface|string $target, int|string|null $key): array
