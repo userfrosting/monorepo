@@ -14,9 +14,11 @@ namespace UserFrosting\Sprinkle\Account\Tests\Database\Migrations;
 
 use DateTimeImmutable;
 use Illuminate\Database\Schema\Builder;
-use RuntimeException;
+use UserFrosting\Sprinkle\Account\Database\Factories\UserFactory;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v400\ActivitiesTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v610\ActivitiesV2Table;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 
@@ -72,7 +74,7 @@ class MigrationsTest extends AccountTestCase
         $migrator->rollback();
     }
 
-    public function testActivitiesV2MigrationRefusesNullUserDowngrade(): void
+    public function testActivitiesV2MigrationRemovesNullUserActivitiesOnDowngrade(): void
     {
         /** @var Builder */
         $builder = $this->getService(Builder::class);
@@ -88,11 +90,19 @@ class MigrationsTest extends AccountTestCase
             'occurred_at' => new DateTimeImmutable(),
         ]);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Cannot downgrade activities while NULL user_id values exist.');
+        (new DefaultGroups())->run();
+        /** @var User $user */
+        $user = UserFactory::new()->create();
+        $builder->getConnection()->table('activities')->insert([
+            'user_id'     => $user->id,
+            'type'        => 'test',
+            'occurred_at' => new DateTimeImmutable(),
+        ]);
 
         try {
             (new ActivitiesV2Table($builder))->down();
+            $this->assertSame(1, $builder->getConnection()->table('activities')->count());
+            $this->assertSame($user->id, $builder->getConnection()->table('activities')->value('user_id'));
         } finally {
             $builder->getConnection()->table('activities')->delete();
             $migrator->rollback();

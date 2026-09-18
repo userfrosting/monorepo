@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v610;
 
 use Illuminate\Database\Schema\Blueprint;
-use RuntimeException;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
@@ -58,9 +57,8 @@ class ActivitiesV2Table extends Migration
     public function down(): void
     {
         if ($this->schema->hasColumn('activities', 'context_type')) {
-            if ($this->schema->getConnection()->table('activities')->whereNull('user_id')->exists()) {
-                throw new RuntimeException('Cannot downgrade activities while NULL user_id values exist.');
-            }
+            // Activities without a user cannot be represented by the pre-v6.1 schema.
+            $this->schema->getConnection()->table('activities')->whereNull('user_id')->delete();
 
             $this->schema->withoutForeignKeyConstraints(function () {
                 $this->schema->table('activities', function (Blueprint $table) {
