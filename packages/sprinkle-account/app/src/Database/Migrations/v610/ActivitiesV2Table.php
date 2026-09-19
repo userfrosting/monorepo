@@ -35,15 +35,10 @@ class ActivitiesV2Table extends Migration
     {
         if (!$this->schema->hasColumn('activities', 'context_type')) {
             $this->schema->table('activities', function (Blueprint $table) {
-                $table->string('context_type', 100)->nullable();
-                $table->char('context_id', 36)->nullable();
-                $table->string('subject_type', 100)->nullable();
-                $table->char('subject_id', 36)->nullable();
+                $table->nullableMorphs('context');
+                $table->nullableMorphs('subject');
                 $table->json('metadata')->nullable();
                 $table->json('properties')->nullable();
-
-                $table->index(['context_type', 'context_id']);
-                $table->index(['subject_type', 'subject_id']);
 
                 // Make user_id nullable to support activities that are not associated with a user (eg. system activities).
                 $table->unsignedInteger('user_id')->nullable()->change();

@@ -72,6 +72,8 @@ class Activity extends Model implements ActivityInterface
      */
     protected $casts = [
         'user_id'     => 'integer',
+        'context_id'  => 'integer',
+        'subject_id'  => 'integer',
         'metadata'    => 'array',
         'properties'  => 'array',
         'occurred_at' => 'datetime',

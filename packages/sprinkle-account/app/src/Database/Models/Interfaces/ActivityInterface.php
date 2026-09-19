@@ -35,9 +35,9 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @property string                    $description  @deprecated 6.1
  * @property UserInterface|null        $user
  * @property string|null               $context_type
- * @property string|null               $context_id
+ * @property int|null                  $context_id
  * @property string|null               $subject_type
- * @property string|null               $subject_id
+ * @property int|null                  $subject_id
  * @property array<string, mixed>|null $metadata
  * @property array<string, mixed>|null $properties
  * @property-read UserInterface|null   $user

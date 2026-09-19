@@ -72,13 +72,13 @@ class ActivityRecorderTest extends AccountTestCase
             subject: $subject
         );
 
-        $this->assertEquals($user->id, $activity->user?->id);
-        $this->assertEquals($context->id, $activity->context_id);
-        $this->assertEquals($subject->id, $activity->subject_id);
-        $this->assertEquals('role', $activity->context_type);
-        $this->assertEquals('group', $activity->subject_type);
-        $this->assertEquals($context->id, $activity->context->id);
-        $this->assertEquals($subject->id, $activity->subject->id);
+        $this->assertSame($user->id, $activity->user?->id);
+        $this->assertSame($context->id, $activity->context_id);
+        $this->assertSame($subject->id, $activity->subject_id);
+        $this->assertSame('role', $activity->context_type);
+        $this->assertSame('group', $activity->subject_type);
+        $this->assertSame($context->id, $activity->context->id);
+        $this->assertSame($subject->id, $activity->subject->id);
         $this->assertSame('TEST_ACTIVITY', $activity->type);
         $this->assertSame($metadata, $activity->metadata);
         $this->assertNull($activity->properties);

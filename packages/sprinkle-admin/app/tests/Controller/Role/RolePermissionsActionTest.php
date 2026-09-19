@@ -197,7 +197,7 @@ class RolePermissionsActionTest extends AdminTestCase
         $activity = $activities->first();
         assert($activity instanceof Activity);
         $this->assertCount(1, $activities);
-        $this->assertEquals((string) $permissionId, $activity->context_id);
+        $this->assertSame($permissionId, $activity->context_id);
         $this->assertNull($activity->properties);
     }
 
