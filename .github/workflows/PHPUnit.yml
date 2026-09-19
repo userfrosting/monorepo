@@ -19,7 +19,7 @@ jobs:
     name: PHPUnit - PHP ${{ matrix.php_versions }} - Memory SQLite
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -29,7 +29,7 @@ jobs:
         coverage: xdebug
         tools: pecl, composer
 
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@v7
       with:
         node-version: 24
 
@@ -51,7 +51,7 @@ jobs:
       
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./_meta/coverage.xml
@@ -59,7 +59,7 @@ jobs:
 
     - name: Upload test results to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         report_type: 'test_results'
@@ -85,7 +85,7 @@ jobs:
       DB_NAME: userfrosting
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -95,7 +95,7 @@ jobs:
         coverage: xdebug
         tools: pecl, composer
 
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@v7
       with:
         node-version: 24
     
@@ -134,7 +134,7 @@ jobs:
     
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./_meta/coverage.xml
@@ -142,7 +142,7 @@ jobs:
 
     - name: Upload test results to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         report_type: 'test_results'
@@ -168,7 +168,7 @@ jobs:
       DB_NAME: userfrosting
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -178,7 +178,7 @@ jobs:
         coverage: xdebug
         tools: pecl, composer
 
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@v7
       with:
         node-version: 24
     
@@ -210,7 +210,7 @@ jobs:
     
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./_meta/coverage.xml
@@ -218,7 +218,7 @@ jobs:
 
     - name: Upload test results to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         report_type: 'test_results'
@@ -241,7 +241,7 @@ jobs:
       DB_NAME: database.sqlite
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -251,7 +251,7 @@ jobs:
         coverage: xdebug
         tools: pecl, composer
 
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@v7
       with:
         node-version: 24
     
@@ -276,7 +276,7 @@ jobs:
     
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./_meta/coverage.xml
@@ -284,7 +284,7 @@ jobs:
 
     - name: Upload test results to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         report_type: 'test_results'
@@ -309,7 +309,7 @@ jobs:
       DB_NAME: userfrosting
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@v2
@@ -326,7 +326,7 @@ jobs:
         postgresql user: 'userfrosting'
         postgresql password: 'password'
 
-    - uses: actions/setup-node@v6
+    - uses: actions/setup-node@v7
       with:
         node-version: 24
 
@@ -348,7 +348,7 @@ jobs:
     
     - name: Upload coverage to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./_meta/coverage.xml
@@ -356,7 +356,7 @@ jobs:
 
     - name: Upload test results to Codecov
       if: github.event_name != 'schedule' && !cancelled()
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v7
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         report_type: 'test_results'
@@ -379,7 +379,7 @@ jobs:
 #       DB_NAME: database.sqlite
 
 #     steps:
-#     - uses: actions/checkout@v4
+#     - uses: actions/checkout@v7
     
 #     - name: Setup PHP, with composer and extensions
 #       uses: shivammathur/setup-php@v2
@@ -389,7 +389,7 @@ jobs:
 #         coverage: xdebug
 #         tools: pecl, composer
 
-#     - uses: actions/setup-node@v3
+#     - uses: actions/setup-node@v7
 #       with:
 #         node-version: 24
     
@@ -411,7 +411,7 @@ jobs:
 #         vendor/bin/phpunit
     
 #     - name: Upload coverage to Codecov
-#       uses: codecov/codecov-action@v5
+#       uses: codecov/codecov-action@v7
 #       with:
 #         token: ${{ secrets.CODECOV_TOKEN }}
 #         files: ./_meta/coverage.xml
@@ -419,7 +419,8 @@ jobs:
 
 # - name: Upload test results to Codecov
 # if: ${{ !cancelled() }}
-# uses: codecov/test-results-action@v1
+# uses: codecov/codecov-action@v7
 # with:
 #   files: ./_meta/junit.xml
+#.  report_type: test_results
 #   token: ${{ secrets.CODECOV_TOKEN }}
