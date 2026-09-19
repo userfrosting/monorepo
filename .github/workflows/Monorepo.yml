@@ -15,7 +15,7 @@ jobs:
         # Execute this workflow job only on the main repository.
         if: github.repository == 'userfrosting/monorepo'
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
               with:
                   persist-credentials: false
                   fetch-depth: 0
