@@ -83,6 +83,9 @@ vi.mock('@userfrosting/sprinkle-core/stores', () => ({
         getDateTime: () => ({
             toRelative: () => 'relative time'
         })
+    }),
+    useConfigStore: () => ({
+        get: (_key: string, fallback?: unknown) => fallback
     })
 }))
 
@@ -144,13 +147,21 @@ const global = {
             emits: ['saved'],
             template: '<button data-test="user-edit" @click="$emit(\'saved\')" />'
         },
+        UserGroupModal: {
+            emits: ['saved'],
+            template: '<button data-test="user-group" @click="$emit(\'saved\')" />'
+        },
         UserDeleteModal: {
             emits: ['deleted'],
             template: '<button data-test="user-delete" @click="$emit(\'deleted\')" />'
         },
-        UserActivateModal: {
+        UserStatusModal: {
             emits: ['saved'],
             template: '<button data-test="user-activate" @click="$emit(\'saved\')" />'
+        },
+        UserVerificationModal: {
+            emits: ['saved'],
+            template: '<button data-test="user-verification" @click="$emit(\'saved\')" />'
         },
         UserPasswordModal: { template: '<div data-test="user-password" />' },
         UserPasswordResetModal: { template: '<div data-test="user-password-reset" />' },
@@ -351,9 +362,10 @@ describe('admin widget components', () => {
             global
         })
         await userInfo.get('[data-test="user-edit"]').trigger('click')
-        await userInfo.get('[data-test="user-activate"]').trigger('click')
+        await userInfo.get('[data-test="user-group"]').trigger('click')
+        await userInfo.get('[data-test="user-verification"]').trigger('click')
         await userInfo.get('[data-test="user-delete"]').trigger('click')
-        expect(userInfo.emitted('updated')).toHaveLength(2)
+        expect(userInfo.emitted('updated')).toHaveLength(3)
         expect(push).toHaveBeenCalledWith({ name: 'admin.users' })
         expect(userInfo.text()).toContain('UNVERIFIED')
 
@@ -416,5 +428,47 @@ describe('admin widget components', () => {
         expect(fullAccess.text()).toContain('VERIFIED')
         expect(fullAccess.text()).toContain('DISABLED')
         expect(fullAccess.text()).toContain('NONE')
+    })
+
+    test('hides user controls without update or delete access', async () => {
+        const wrapper = mount(UserInfo, {
+            props: {
+                user: {
+                    ...adminUserResponse,
+                    flag_verified: false,
+                    group: null
+                }
+            },
+            global: {
+                ...global,
+                mocks: {
+                    ...global.mocks,
+                    $checkAccess: (permission: string) => permission === 'view_user_field'
+                }
+            }
+        })
+
+        expect(wrapper.find('[data-test="meta"]').exists()).toBe(true)
+        expect(wrapper.find('.uk-description-list').exists()).toBe(true)
+        expect(wrapper.find('[data-test="user-edit"]').exists()).toBe(false)
+        expect(wrapper.find('[data-test="user-delete"]').exists()).toBe(false)
+        expect(wrapper.text()).toContain('NONE')
+    })
+
+    test('emits updated from status and verification modal events', async () => {
+        const verified = mount(UserInfo, {
+            props: { user: { ...adminUserResponse, flag_verified: true } },
+            global
+        })
+        await verified.get('[data-test="user-activate"]').trigger('click')
+
+        const unverified = mount(UserInfo, {
+            props: { user: { ...adminUserResponse, flag_verified: false } },
+            global
+        })
+        await unverified.get('[data-test="user-verification"]').trigger('click')
+
+        expect(verified.emitted('updated')).toHaveLength(1)
+        expect(unverified.emitted('updated')).toHaveLength(1)
     })
 })

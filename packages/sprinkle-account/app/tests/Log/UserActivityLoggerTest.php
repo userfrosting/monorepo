@@ -20,6 +20,9 @@ use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
+/**
+ * @deprecated 6.1
+ */
 final class UserActivityLoggerTest extends AccountTestCase
 {
     use RefreshDatabase;
@@ -55,7 +58,7 @@ final class UserActivityLoggerTest extends AccountTestCase
         $this->assertSame('User did a test', $activity->description);
         $this->assertSame('test', $activity->type);
         $this->assertSame($user->id, $activity->user_id);
-        $this->assertSame($user->id, $activity->user->id);
+        $this->assertSame($user->id, $activity->user?->id);
     }
 
     public function testLoggerWithNoDefaultData(): void

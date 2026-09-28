@@ -1,4 +1,25 @@
 ---
+user_name:
+  validators:
+    length:
+      label: "&USERNAME"
+      min: 1
+      max: 50
+      message: VALIDATE.LENGTH_RANGE
+    no_leading_whitespace:
+      label: "&USERNAME"
+      message: VALIDATE.NO_LEAD_WS
+    no_trailing_whitespace:
+      label: "&USERNAME"
+      message: VALIDATE.NO_TRAIL_WS
+    required:
+      label: "&USERNAME"
+      message: VALIDATE.REQUIRED
+    username:
+      label: "&USERNAME"
+      message: VALIDATE.USERNAME
+  transformations:
+  - trim
 first_name:
   validators:
     length:
@@ -29,8 +50,3 @@ locale:
       min: 1
       max: 10
       message: VALIDATE.LENGTH_RANGE
-group_id:
-  validators:
-    integer:
-      label: "&GROUP"
-      message: VALIDATE.INTEGER

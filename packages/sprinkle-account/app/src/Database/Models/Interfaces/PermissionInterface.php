@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
 
@@ -39,7 +40,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  * @method        $this notForRole(int|RoleInterface $role)
  * @method static $this notForRole(int|RoleInterface $role)
  */
-interface PermissionInterface
+interface PermissionInterface extends MorphableModelInterface
 {
     /**
      * Get a list of roles to which this permission is assigned.

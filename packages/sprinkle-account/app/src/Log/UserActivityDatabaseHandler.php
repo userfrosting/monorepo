@@ -21,6 +21,8 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
 
 /**
  * Monolog handler for storing user activities to the database.
+ *
+ * @deprecated 6.1 Use ActivityRecorder instead
  */
 class UserActivityDatabaseHandler extends AbstractProcessingHandler
 {
@@ -52,6 +54,9 @@ class UserActivityDatabaseHandler extends AbstractProcessingHandler
      */
     protected function write(LogRecord $record): void
     {
+        // Trigger deprecation warning
+        trigger_error('UserActivityLogger/UserActivityLoggerInterface is deprecated since UserFrosting 6.1 and will be removed in 6.2. Use ActivityRecorder instead.', E_USER_DEPRECATED);
+
         if (!is_array($record['context']) || !isset($record['context']['user_id'])) {
             throw new LogicException('UserActivityLogger requires a `user_id` to be set in the context.');
         }

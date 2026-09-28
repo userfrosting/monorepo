@@ -12,6 +12,8 @@ DOWNLOAD:
 EMAIL:
   '@TRANSLATION': Email
   YOUR: Your email address
+en_US: English
+fr_FR: French
 LOCALE:
   '@TRANSLATION': Locale
 PAGINATION:

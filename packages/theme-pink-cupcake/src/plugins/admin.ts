@@ -33,7 +33,6 @@ import {
     RoleManagePermissionModal,
     RolePermissions,
     RoleUsers,
-    UserActivateModal,
     UserActivities,
     UserCreateModal,
     UserDeleteModal,
@@ -45,7 +44,9 @@ import {
     UserPasswordModal,
     UserPasswordResetModal,
     UserPermissions,
-    UserRoles
+    UserRoles,
+    UserStatusModal,
+    UserVerificationModal
 } from '../components/Pages/Admin'
 
 /**
@@ -87,7 +88,6 @@ export default {
             .component('UFAdminRoleManagePermissionModal', RoleManagePermissionModal)
             .component('UFAdminRolePermissions', RolePermissions)
             .component('UFAdminRoleUsers', RoleUsers)
-            .component('UFAdminUserActivateModal', UserActivateModal)
             .component('UFAdminUserActivities', UserActivities)
             .component('UFAdminUserCreateModal', UserCreateModal)
             .component('UFAdminUserDeleteModal', UserDeleteModal)
@@ -100,6 +100,8 @@ export default {
             .component('UFAdminUserPasswordResetModal', UserPasswordResetModal)
             .component('UFAdminUserPermissions', UserPermissions)
             .component('UFAdminUserRoles', UserRoles)
+            .component('UFAdminUserStatusModal', UserStatusModal)
+            .component('UFAdminUserVerificationModal', UserVerificationModal)
     }
 }
 
@@ -139,7 +141,6 @@ declare module 'vue' {
         UFAdminRoleManagePermissionModal: typeof RoleManagePermissionModal
         UFAdminRolePermissions: typeof RolePermissions
         UFAdminRoleUsers: typeof RoleUsers
-        UFAdminUserActivateModal: typeof UserActivateModal
         UFAdminUserActivities: typeof UserActivities
         UFAdminUserCreateModal: typeof UserCreateModal
         UFAdminUserDeleteModal: typeof UserDeleteModal
@@ -152,5 +153,7 @@ declare module 'vue' {
         UFAdminUserPasswordResetModal: typeof UserPasswordResetModal
         UFAdminUserPermissions: typeof UserPermissions
         UFAdminUserRoles: typeof UserRoles
+        UFAdminUserStatusModal: typeof UserStatusModal
+        UFAdminUserVerificationModal: typeof UserVerificationModal
     }
 }

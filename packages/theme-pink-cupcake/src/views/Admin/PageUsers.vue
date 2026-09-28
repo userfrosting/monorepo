@@ -3,7 +3,8 @@ import { Severity } from '@userfrosting/sprinkle-core/interfaces'
 import UserCreateModal from '../../components/Pages/Admin/User/UserCreateModal.vue'
 import UserEditModal from '../../components/Pages/Admin/User/UserEditModal.vue'
 import UserDeleteModal from '../../components/Pages/Admin/User/UserDeleteModal.vue'
-import UserActivateModal from '../../components/Pages/Admin/User/UserActivateModal.vue'
+import UserStatusModal from '../../components/Pages/Admin/User/UserStatusModal.vue'
+import UserVerificationModal from '../../components/Pages/Admin/User/UserVerificationModal.vue'
 import UserPasswordModal from '../../components/Pages/Admin/User/UserPasswordModal.vue'
 import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswordResetModal.vue'
 </script>
@@ -102,10 +103,15 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                                     class="uk-drop-close" />
                             </li>
                             <li>
-                                <UserActivateModal
+                                <UserVerificationModal
                                     :user="row"
                                     @saved="sprunjer.fetch()"
-                                    v-if="$checkAccess('update_user_field')"
+                                    v-if="$checkAccess('update_user_field') && !row.flag_verified"
+                                    class="uk-drop-close" />
+                                <UserStatusModal
+                                    :user="row"
+                                    @saved="sprunjer.fetch()"
+                                    v-if="$checkAccess('update_user_field') && row.flag_verified"
                                     class="uk-drop-close" />
                             </li>
                             <li>

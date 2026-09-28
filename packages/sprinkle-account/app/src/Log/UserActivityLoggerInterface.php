@@ -16,6 +16,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Monolog alias for dependency injection.
+ *
+ * @deprecated 6.1 Use ActivityRecorder instead
  */
 interface UserActivityLoggerInterface extends LoggerInterface
 {

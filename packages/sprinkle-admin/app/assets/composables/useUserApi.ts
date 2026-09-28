@@ -39,7 +39,6 @@ import { useAlertsStore } from '@userfrosting/sprinkle-core/stores'
 export function useUserApi() {
     const defaultFormData = (): UserCreateRequest => ({
         user_name: '',
-        group_id: 0,
         first_name: '',
         last_name: '',
         email: '',

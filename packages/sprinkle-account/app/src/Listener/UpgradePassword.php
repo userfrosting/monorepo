@@ -14,7 +14,7 @@ namespace UserFrosting\Sprinkle\Account\Listener;
 
 use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
 use UserFrosting\Sprinkle\Account\Event\UserAuthenticatedEvent;
-use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
 
 /**
@@ -24,7 +24,7 @@ class UpgradePassword
 {
     public function __construct(
         protected Hasher $hasher,
-        protected UserActivityLoggerInterface $logger,
+        protected ActivityRecorderInterface $logger,
     ) {
     }
 
@@ -39,10 +39,11 @@ class UpgradePassword
             $event->user->save(); // Save changes
 
             // Add a sign in activity (time is automatically set by database)
-            $this->logger->debug("User {$event->user->user_name} outdated password hash has been automatically updated to modern hashing.", [
-                'type'    => UserActivityTypes::PASSWORD_UPGRADED,
-                'user_id' => $event->user->id,
-            ]);
+            $this->logger->record(
+                user: $event->user,
+                type: UserActivityTypes::PASSWORD_UPGRADED,
+                subject: $event->user
+            );
         }
     }
 }

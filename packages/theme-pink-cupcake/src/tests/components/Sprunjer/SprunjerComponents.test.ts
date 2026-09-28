@@ -210,6 +210,26 @@ describe('sprunjer components', () => {
         expect(filters.value.status).toBe('enabled')
     })
 
+    test('translates the label filter heading and renders plain filters', () => {
+        const filters = ref<Record<string, string>>({ label: '' })
+        const data = ref({
+            filterable: ['label'],
+            listable: {}
+        })
+
+        const wrapper = mount(SprunjeFilters, {
+            global: {
+                mocks: { $t: (key: string) => key },
+                provide: { sprunjer: { filters, data } },
+                stubs: fontAwesomeStub
+            }
+        })
+
+        expect(wrapper.find('dt').text()).toBe('LABEL')
+        expect(wrapper.find('input[placeholder="label"]').exists()).toBe(true)
+        expect(wrapper.find('select').exists()).toBe(false)
+    })
+
     test('updates page and page size from paginator controls', async () => {
         const sprunjer = {
             size: ref<number | string>(10),

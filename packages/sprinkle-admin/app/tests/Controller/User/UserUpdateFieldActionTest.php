@@ -12,11 +12,15 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
+use Illuminate\Database\Eloquent\Collection;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Config\Config;
+use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
+use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
@@ -77,7 +81,11 @@ class UserUpdateFieldActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertJsonResponse('Validation error', $response, 'title');
-        $this->assertJsonResponse('Please specify a value for <strong>password</strong>.', $response, 'description');
+        $this->assertJsonResponse(
+            'Please specify a value for <strong>Password</strong>. Password must be between 8 and 25 characters in length. Please specify a value for <strong>Confirm password</strong>. Your password and confirmation password must match. Confirm password must be between 8 and 25 characters in length.',
+            $response,
+            'description'
+        );
         $this->assertResponseStatus(400, $response);
     }
 
@@ -125,6 +133,16 @@ class UserUpdateFieldActionTest extends AdminTestCase
             'title'       => 'Account details updated for user <strong>' . $userToEdit->user_name . '</strong>',
             'description' => '',
         ], $response);
+
+        /** @var Activity|null $activity */
+        $activity = Activity::query()
+            ->where('type', AccountActivityTypes::UPDATE_PASSWORD->value)
+            ->where('subject_id', $userToEdit->id)
+            ->first();
+        $this->assertNotNull($activity);
+        $this->assertIsArray($activity->metadata);
+        $this->assertArrayNotHasKey('password', $activity->metadata);
+        $this->assertNull($activity->properties);
     }
 
     public function testPostForPasswordWithoutConfirmation(): void
@@ -158,7 +176,7 @@ class UserUpdateFieldActionTest extends AdminTestCase
 
         // Create request with method and url and fetch response
         $data = ['flag_enabled' => '1'];
-        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $user->user_name . '/flag_enabled', $data);
+        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $user->user_name . '/status', $data);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -167,6 +185,11 @@ class UserUpdateFieldActionTest extends AdminTestCase
             'title'       => 'Account for user <strong>' . $user->user_name . '</strong> has been successfully enabled.',
             'description' => '',
         ], $response);
+
+        $this->assertNotNull(Activity::query()
+            ->where('type', AdminAccountActivityTypes::ENABLE->value)
+            ->where('subject_id', $user->id)
+            ->first());
     }
 
     public function testPostForDisabled(): void
@@ -181,7 +204,7 @@ class UserUpdateFieldActionTest extends AdminTestCase
 
         // Create request with method and url and fetch response
         $data = ['flag_enabled' => '0'];
-        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $userToEdit->user_name . '/flag_enabled', $data);
+        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $userToEdit->user_name . '/status', $data);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -200,7 +223,7 @@ class UserUpdateFieldActionTest extends AdminTestCase
 
         // Create request with method and url and fetch response
         $data = ['flag_verified' => '1'];
-        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $user->user_name . '/flag_verified', $data);
+        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $user->user_name . '/verification', $data);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -209,15 +232,20 @@ class UserUpdateFieldActionTest extends AdminTestCase
             'title'       => $user->user_name . "'s account has been manually activated",
             'description' => '',
         ], $response);
+
+        $this->assertNotNull(Activity::query()
+            ->where('type', AdminAccountActivityTypes::VERIFY->value)
+            ->where('subject_id', $user->id)
+            ->first());
     }
 
     public function testPostForRole(): void
     {
         /** @var User */
         $user = User::factory()->create();
-        $this->actAsUser($user, permissions: ['update_user_field']);
+        $this->actAsUser($user, permissions: ['update_user_role']);
 
-        /** @var Role */
+        /** @var Collection<int, Role> $roles */
         $roles = Role::factory()->count(2)->create();
 
         /*
@@ -247,14 +275,31 @@ class UserUpdateFieldActionTest extends AdminTestCase
         // Make sure the user has the new roles.
         $user->refresh();
         $this->assertCount(2, $user->roles);
+
+        $activities = Activity::query()
+            ->where('type', AdminAccountActivityTypes::ADD_ROLE->value)
+            ->where('subject_id', $user->id)
+            ->get();
+        assert($activities instanceof Collection);
+        $activity = $activities->first();
+        assert($activity instanceof Activity);
+        $this->assertCount(2, $activities);
+        $this->assertEqualsCanonicalizing(
+            $roles->pluck('id')->all(),
+            $activities->pluck('context_id')->all()
+        );
+        $this->assertNull($activity->properties);
     }
 
     public function testPostForRemovingRoles(): void
     {
         /** @var User */
         $user = User::factory()->create();
-        $this->actAsUser($user, permissions: ['update_user_field']);
+        $this->actAsUser($user, permissions: ['update_user_role']);
         $this->assertCount(1, $user->roles); // Default role above.
+        $role = $user->roles->first();
+        $this->assertNotNull($role);
+        $roleId = $role->id;
 
         // Create request with method and url and fetch response
         // uf-collection will pass no data when removing all roles_id.
@@ -271,6 +316,17 @@ class UserUpdateFieldActionTest extends AdminTestCase
         // Make sure the user has the new roles.
         $user->refresh();
         $this->assertCount(0, $user->roles);
+
+        $activities = Activity::query()
+            ->where('type', AdminAccountActivityTypes::REMOVE_ROLE->value)
+            ->where('subject_id', $user->id)
+            ->get();
+        assert($activities instanceof Collection);
+        $activity = $activities->first();
+        assert($activity instanceof Activity);
+        $this->assertCount(1, $activities);
+        $this->assertSame($roleId, $activity->context_id);
+        $this->assertNull($activity->properties);
     }
 
     public function testPageForFailedValidation(): void
@@ -284,8 +340,14 @@ class UserUpdateFieldActionTest extends AdminTestCase
         $userToEdit = User::factory()->create();
 
         // Create request with method and url and fetch response
-        $data = ['email' => 'notAndEmail'];
-        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $userToEdit->user_name . '/email', $data);
+        $data = [
+            'user_name'  => $userToEdit->user_name,
+            'first_name' => $userToEdit->first_name,
+            'last_name'  => $userToEdit->last_name,
+            'email'      => 'notAndEmail',
+            'locale'     => $userToEdit->locale,
+        ];
+        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $userToEdit->user_name, $data);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -308,8 +370,14 @@ class UserUpdateFieldActionTest extends AdminTestCase
         $config->set('reserved_user_ids.master', $userToEdit->id);
 
         // Create request with method and url and fetch response
-        $data = ['email' => 'notAndEmail'];
-        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $userToEdit->user_name . '/email', $data);
+        $data = [
+            'user_name'  => $userToEdit->user_name,
+            'first_name' => $userToEdit->first_name,
+            'last_name'  => $userToEdit->last_name,
+            'email'      => 'notAndEmail',
+            'locale'     => $userToEdit->locale,
+        ];
+        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $userToEdit->user_name, $data);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -325,7 +393,7 @@ class UserUpdateFieldActionTest extends AdminTestCase
 
         // Create request with method and url and fetch response
         $data = ['flag_enabled' => '0'];
-        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $user->user_name . '/flag_enabled', $data);
+        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $user->user_name . '/status', $data);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -341,7 +409,7 @@ class UserUpdateFieldActionTest extends AdminTestCase
 
         // Create request with method and url and fetch response
         $data = ['flag_enabled' => '0'];
-        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $user->user_name . '/flag_enabled', $data);
+        $request = $this->createJsonRequest('PUT', '/api/users/u/' . $user->user_name . '/status', $data);
         $response = $this->handleRequest($request);
 
         // Assert response status & body

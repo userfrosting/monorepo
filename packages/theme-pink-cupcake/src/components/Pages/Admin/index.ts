@@ -16,7 +16,6 @@ import RoleInfo from './Role/RoleInfo.vue'
 import RoleManagePermissionModal from './Role/RoleManagePermissionModal.vue'
 import RolePermissions from './Role/RolePermissions.vue'
 import RoleUsers from './Role/RoleUsers.vue'
-import UserActivateModal from './User/UserActivateModal.vue'
 import UserActivities from './User/UserActivities.vue'
 import UserCreateModal from './User/UserCreateModal.vue'
 import UserDeleteModal from './User/UserDeleteModal.vue'
@@ -29,6 +28,8 @@ import UserPasswordModal from './User/UserPasswordModal.vue'
 import UserPasswordResetModal from './User/UserPasswordResetModal.vue'
 import UserPermissions from './User/UserPermissions.vue'
 import UserRoles from './User/UserRoles.vue'
+import UserStatusModal from './User/UserStatusModal.vue'
+import UserVerificationModal from './User/UserVerificationModal.vue'
 
 export {
     DashboardActivities,
@@ -49,7 +50,6 @@ export {
     RoleManagePermissionModal,
     RolePermissions,
     RoleUsers,
-    UserActivateModal,
     UserActivities,
     UserCreateModal,
     UserDeleteModal,
@@ -61,5 +61,7 @@ export {
     UserPasswordModal,
     UserPasswordResetModal,
     UserPermissions,
-    UserRoles
+    UserRoles,
+    UserStatusModal,
+    UserVerificationModal
 }

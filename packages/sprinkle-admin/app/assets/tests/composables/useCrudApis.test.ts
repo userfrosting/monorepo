@@ -228,7 +228,6 @@ describe('CRUD admin composables', () => {
 
         expect(api.formData.value).toEqual({
             user_name: '',
-            group_id: 0,
             first_name: '',
             last_name: '',
             email: '',
@@ -243,7 +242,6 @@ describe('CRUD admin composables', () => {
         } as any)
         await api.createUser({
             user_name: 'alice',
-            group_id: 1,
             first_name: 'Alice',
             last_name: 'Doe',
             email: 'alice@example.com',
@@ -255,7 +253,6 @@ describe('CRUD admin composables', () => {
         } as any)
         await api.updateUser('alice', {
             user_name: 'alice',
-            group_id: 1,
             first_name: 'Alice',
             last_name: 'Doe',
             email: 'alice@example.com',
@@ -287,7 +284,6 @@ describe('CRUD admin composables', () => {
         api.resetForm()
         expect(api.formData.value).toEqual({
             user_name: '',
-            group_id: 0,
             first_name: '',
             last_name: '',
             email: '',
@@ -305,7 +301,6 @@ describe('CRUD admin composables', () => {
         await expect(
             api.createUser({
                 user_name: 'x',
-                group_id: 1,
                 first_name: 'x',
                 last_name: 'x',
                 email: 'x@x.com',
@@ -319,7 +314,6 @@ describe('CRUD admin composables', () => {
         await expect(
             api.updateUser('alice', {
                 user_name: 'alice',
-                group_id: 1,
                 first_name: 'x',
                 last_name: 'x',
                 email: 'x@x.com',

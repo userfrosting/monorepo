@@ -158,6 +158,7 @@ REGISTRATION:
 REMEMBER_ME: Se souvenir de moi!
 TOS_AGREEMENT: En créant un compte avec {{site_title}}, vous acceptez les termes et
   conditions.
+USER_NAME: '{{&USERNAME}}'
 USERNAME:
   '@TRANSLATION': Nom d'utilisateur
   CHOOSE: Choisissez un nom d'utilisateur unique

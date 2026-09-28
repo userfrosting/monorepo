@@ -12,8 +12,13 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Tests\Database\Migrations;
 
+use DateTimeImmutable;
 use Illuminate\Database\Schema\Builder;
+use UserFrosting\Sprinkle\Account\Database\Factories\UserFactory;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v400\ActivitiesTable;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v610\ActivitiesV2Table;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 
@@ -51,6 +56,59 @@ class MigrationsTest extends AccountTestCase
         }
     }
 
+    public function testActivitiesV2MigrationIsIdempotent(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $migration = new ActivitiesV2Table($builder);
+        $migration->up();
+
+        $this->assertTrue($builder->hasColumn('activities', 'context_type'));
+
+        $migrator->rollback();
+    }
+
+    public function testActivitiesV2MigrationRemovesNullUserActivitiesOnDowngrade(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $builder->getConnection()->table('activities')->insert([
+            'user_id'     => null,
+            'type'        => 'test',
+            'occurred_at' => new DateTimeImmutable(),
+        ]);
+
+        (new DefaultGroups())->run();
+        /** @var User $user */
+        $user = UserFactory::new()->create();
+        $builder->getConnection()->table('activities')->insert([
+            'user_id'     => $user->id,
+            'type'        => 'test',
+            'occurred_at' => new DateTimeImmutable(),
+        ]);
+
+        try {
+            (new ActivitiesV2Table($builder))->down();
+            $this->assertSame(1, $builder->getConnection()->table('activities')->count());
+            $this->assertSame($user->id, $builder->getConnection()->table('activities')->value('user_id'));
+        } finally {
+            $builder->getConnection()->table('activities')->delete();
+            $migrator->rollback();
+        }
+    }
+
     /** @return array<string, string[]> */
     public function tablesProvider(): array
     {
@@ -62,6 +120,12 @@ class MigrationsTest extends AccountTestCase
                 'occurred_at',
                 'type',
                 'user_id',
+                'context_id',
+                'context_type',
+                'subject_id',
+                'subject_type',
+                'metadata',
+                'properties',
             ],
             'groups'           => [
                 'id',

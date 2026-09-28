@@ -1,0 +1,8 @@
+---
+roles:
+  validators:
+    required:
+      label: "&ROLE"
+      message: VALIDATE.REQUIRED
+    array:
+      message: VALIDATE.ARRAY

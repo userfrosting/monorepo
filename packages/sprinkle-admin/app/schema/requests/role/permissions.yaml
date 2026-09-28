@@ -1,0 +1,5 @@
+permissions:
+  validators:
+    array:
+      label: "permissions"
+      message: VALIDATE.ARRAY

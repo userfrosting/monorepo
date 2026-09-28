@@ -16,6 +16,7 @@ use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use UserFrosting\Routes\RouteDefinitionInterface;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
+use UserFrosting\Sprinkle\Admin\Controller\Group\GroupActivitySprunje;
 use UserFrosting\Sprinkle\Admin\Controller\Group\GroupApi;
 use UserFrosting\Sprinkle\Admin\Controller\Group\GroupCreateAction;
 use UserFrosting\Sprinkle\Admin\Controller\Group\GroupDeleteAction;
@@ -41,6 +42,8 @@ class GroupsRoute implements RouteDefinitionInterface
             $group->delete('/g/{slug}', GroupDeleteAction::class)
                   ->add(GroupInjector::class);
             $group->get('/g/{slug}/users', GroupUsersSprunje::class)
+                  ->add(GroupInjector::class);
+            $group->get('/g/{slug}/activities', GroupActivitySprunje::class)
                   ->add(GroupInjector::class);
             $group->post('', GroupCreateAction::class);
             $group->put('/g/{slug}', GroupEditAction::class)
