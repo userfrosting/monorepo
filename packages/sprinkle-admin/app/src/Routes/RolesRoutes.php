@@ -16,6 +16,7 @@ use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use UserFrosting\Routes\RouteDefinitionInterface;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
+use UserFrosting\Sprinkle\Admin\Controller\Role\RoleActivitySprunje;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleApi;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleCreateAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleDeleteAction;
@@ -41,6 +42,8 @@ class RolesRoutes implements RouteDefinitionInterface
                   ->add(RoleInjector::class);
             $group->get('', RolesSprunje::class);
             $group->get('/r/{slug}/permissions', RolePermissionsSprunje::class)
+                  ->add(RoleInjector::class);
+            $group->get('/r/{slug}/activities', RoleActivitySprunje::class)
                   ->add(RoleInjector::class);
             $group->get('/r/{slug}/users', RoleUsersSprunje::class)
                   ->add(RoleInjector::class);

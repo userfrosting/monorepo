@@ -5,6 +5,7 @@ import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { usePermissionApi } from '@userfrosting/sprinkle-admin/composables'
 import PermissionInfo from '../../components/Pages/Admin/Permission/PermissionInfo.vue'
 import PermissionUsers from '../../components/Pages/Admin/Permission/PermissionUsers.vue'
+import PermissionActivities from '../../components/Pages/Admin/Permission/PermissionActivities.vue'
 
 /**
  * Variables and composables
@@ -35,7 +36,14 @@ watch(
                 <PermissionInfo :permission="permission" />
             </div>
             <div class="uk-width-2-3@l">
-                <PermissionUsers :id="$route.params.id.toString()" />
+                <div class="uk-child-width-1-1" uk-grid>
+                    <div>
+                        <PermissionUsers :id="$route.params.id.toString()" />
+                    </div>
+                    <div>
+                        <PermissionActivities :slug="$route.params.id.toString()" />
+                    </div>
+                </div>
             </div>
         </div>
     </template>

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ActivityDescription } from '../../../Activities'
 
-const { user_name } = defineProps<{
-    user_name: string
+const { slug } = defineProps<{
+    slug: string
 }>()
 </script>
 
 <template>
     <UFCardBox :title="$t('ACTIVITY', 2)">
         <UFSprunjeTable
-            v-if="user_name !== ''"
-            :dataUrl="'/api/users/u/' + user_name + '/activities'"
+            v-if="slug !== ''"
+            :dataUrl="'/api/groups/g/' + slug + '/activities'"
             :defaultSorts="{ occurred_at: 'desc' }">
             <template #header>
                 <UFSprunjeHeader sort="occurred_at">{{ $t('ACTIVITY.TIME') }}</UFSprunjeHeader>
