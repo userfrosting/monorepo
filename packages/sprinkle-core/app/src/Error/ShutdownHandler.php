@@ -119,7 +119,7 @@ class ShutdownHandler
     /**
      * Build an error response of the appropriate type as determined by the request's Accept header.
      *
-     * @param (string|int)[] $error
+     * @param array{type: int, message: string, file: string, line: int} $error
      *
      * @return string
      */
@@ -140,7 +140,7 @@ class ShutdownHandler
     /**
      * Build an error response of the appropriate type as determined by the request's Accept header.
      *
-     * @param (string|int)[] $error
+     * @param array{type: int, message: string, file: string, line: int} $error
      *
      * @return string
      */
@@ -161,7 +161,7 @@ class ShutdownHandler
     /**
      * Build an HTML error page from an error string.
      *
-     * @param (string|int)[] $error
+     * @param array{type: int, message: string, file: string, line: int} $error
      *
      * @return string
      */
@@ -191,7 +191,7 @@ class ShutdownHandler
     /**
      * Build the error message string.
      *
-     * @param (string|int)[] $error
+     * @param array{type: int, message: string, file: string, line: int} $error
      *
      * @return string
      */
