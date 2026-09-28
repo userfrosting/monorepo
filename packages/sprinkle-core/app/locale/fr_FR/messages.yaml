@@ -13,6 +13,8 @@ DOWNLOAD:
 EMAIL:
   '@TRANSLATION': Courriel
   YOUR: Votre adresse courriel
+en_US: Anglais
+fr_FR: Français
 LOCALE:
   '@TRANSLATION': Langue
 PAGINATION:
