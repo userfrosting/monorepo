@@ -31,7 +31,7 @@ class ShutdownHandlerTest extends TestCase
     use MockeryPHPUnitIntegration;
     use CustomAssertionsTrait;
 
-    /** @var (string|int)[] $error */
+    /** @var array{type: int, message: string, file: string, line: int} $error */
     public static array $error = [
         'type'    => E_ERROR,
         'message' => 'Undefined variable: a',
