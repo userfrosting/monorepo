@@ -14,8 +14,8 @@ namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionInterface;
-use Illuminate\Session\DatabaseSessionHandler;
 use UserFrosting\Config\Config;
+use UserFrosting\Session\DatabaseSessionHandler;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Database\Models\Session as SessionTable;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
@@ -84,6 +84,9 @@ class SessionDatabaseHandlerTest extends TestCase
         // Read session
         // https://github.com/laravel/framework/blob/10.x/src/Illuminate/Session/DatabaseSessionHandler.php#L86-L101
         $this->assertSame('foo', $handler->read($session_id));
+
+        $this->assertTrue($handler->validateId($session_id));
+        $this->assertTrue($handler->updateTimestamp($session_id, 'updated'));
 
         // Check manually that the file has been written
         $this->assertNotEquals(0, SessionTable::count());

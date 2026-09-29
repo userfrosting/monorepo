@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 - [Framework] The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 
+## [6.0.3](https://github.com/userfrosting/monorepo/compare/6.0.2...6.0.3) - 2026-09-28
+
+### Changed
+- Use timestamp-aware file and database session handlers to avoid rewriting unchanged sessions (partial fix for [#64](https://github.com/userfrosting/monorepo/issues/64)).
+
 ## [6.0.2](https://github.com/userfrosting/monorepo/compare/6.0.1...6.0.2) - 2026-08-02
 
 ### Changed
