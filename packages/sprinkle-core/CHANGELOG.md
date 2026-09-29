@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.0.3](https://github.com/userfrosting/sprinkle-core/compare/6.0.2...6.0.3) - 2026-09-28
+
 ### Changed
 - Use timestamp-aware file and database session handlers to avoid rewriting unchanged sessions.
 

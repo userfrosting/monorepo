@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [6.0.3](https://github.com/userfrosting/framework/compare/6.0.2...6.0.3) - 2026-09-28
+
 ### Added
 - Add timestamp-aware file and database session handlers for PHP lazy session writes.
 
