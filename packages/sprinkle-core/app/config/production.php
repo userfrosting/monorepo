@@ -43,6 +43,19 @@ return [
             'ttl' => 3600,
         ],
     ],
+
+    /*
+    * ----------------------------------------------------------------------
+    * CSRF middleware settings
+    * ----------------------------------------------------------------------
+    * In production, the cookie should be secure and CSRF protection should be enabled.
+    */
+    'csrf' => [
+        'cookie' => [
+            'secure' => env('CSRF_COOKIE_SECURE', true),
+        ],
+    ],
+
     /*
      * Turn off debug logs
      */

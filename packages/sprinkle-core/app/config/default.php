@@ -106,14 +106,12 @@ return [
     * ----------------------------------------------------------------------
     * CSRF middleware settings
     * ----------------------------------------------------------------------
-    * See https://github.com/slimphp/Slim-Csrf
     * Note : CSRF Middleware should only be disabled for dev or debug purposes.
     */
     'csrf' => [
         'enabled'          => env('CSRF_ENABLED', true),
         'name'             => 'csrf',
         'secret'           => env('CSRF_SECRET', ''),
-        'storage_limit'    => 200,
         'strength'         => 16,
         'persistent_token' => true,
         'cookie'           => [
