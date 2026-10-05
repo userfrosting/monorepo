@@ -112,9 +112,19 @@ return [
     'csrf' => [
         'enabled'          => env('CSRF_ENABLED', true),
         'name'             => 'csrf',
+        'secret'           => env('CSRF_SECRET', ''),
         'storage_limit'    => 200,
         'strength'         => 16,
         'persistent_token' => true,
+        'cookie'           => [
+            'name'      => env('CSRF_COOKIE_NAME', 'uf_csrf'),
+            'path'      => '/',
+            'domain'    => env('CSRF_COOKIE_DOMAIN', ''),
+            'secure'    => env('CSRF_COOKIE_SECURE', false),
+            'http_only' => true,
+            'same_site' => env('CSRF_COOKIE_SAMESITE', 'Lax'),
+            'max_age'   => 0,
+        ],
         'blacklist'        => [
             // A list of url paths to ignore CSRF checks on
             // URL paths will be matched against each regular expression in this list.

@@ -80,6 +80,30 @@ class BakeCommandTest extends TestCase
         // Assert some output
         $this->assertSame(1, $commandTester->getStatusCode());
     }
+
+    public function testCoreSetupCommandsAreAggregatedBeforeDiagnostics(): void
+    {
+        $listener = new BakeCommandListenerCaptureStub();
+        /** @var Mockery\MockInterface&ListenerProviderInterface */
+        $provider = Mockery::mock(ListenerProviderInterface::class)
+            ->shouldReceive('getListenersForEvent')->andReturn([$listener])
+            ->getMock();
+        $eventDispatcher = new EventDispatcher($provider);
+        $ci = ContainerStub::create();
+        $ci->set(EventDispatcherInterface::class, $eventDispatcher);
+
+        /** @var BakeCommand */
+        $command = $ci->get(BakeCommand::class);
+
+        $app = new Application();
+        $app->add($command);
+        $app->add(new StubCommand());
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['command' => 'bake']);
+
+        $this->assertSame(0, $commandTester->getStatusCode());
+        $this->assertSame(['setup:db', 'setup:mail', 'setup:csrf-secret'], array_slice($listener->commands, 0, 3));
+    }
 }
 
 class BakeCommandListenerStub
@@ -95,6 +119,18 @@ class BakeCommandListenerStubFail
     public function __invoke(BakeCommandEvent $event): void
     {
         $event->setCommands(['fail']);
+    }
+}
+
+class BakeCommandListenerCaptureStub
+{
+    /** @var string[] */
+    public array $commands = [];
+
+    public function __invoke(BakeCommandEvent $event): void
+    {
+        $this->commands = $event->getCommands();
+        $event->setCommands(['stub']);
     }
 }
 

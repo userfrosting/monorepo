@@ -52,12 +52,13 @@ use UserFrosting\Sprinkle\Core\Bakery\SeedCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SeedListCommand;
 use UserFrosting\Sprinkle\Core\Bakery\ServeCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SetupCommand;
+use UserFrosting\Sprinkle\Core\Bakery\SetupCsrfSecretCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SetupDbCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SetupEnvCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SetupMailCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SprinkleListCommand;
 use UserFrosting\Sprinkle\Core\Bakery\TestMailCommand;
-use UserFrosting\Sprinkle\Core\Csrf\CsrfGuardMiddleware;
+use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 use UserFrosting\Sprinkle\Core\Database\Migrations\v400\SessionsTable;
 use UserFrosting\Sprinkle\Core\Database\Migrations\v400\ThrottlesTable;
 use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerMiddleware;
@@ -173,6 +174,7 @@ class Core implements
             SeedListCommand::class,
             ServeCommand::class,
             SetupCommand::class,
+            SetupCsrfSecretCommand::class,
             SetupDbCommand::class,
             SetupEnvCommand::class,
             SetupMailCommand::class,
@@ -242,7 +244,7 @@ class Core implements
     {
         return [
             ServerRequestMiddleware::class,
-            CsrfGuardMiddleware::class,
+            CsrfGuard::class,
             SessionMiddleware::class,
             URIMiddleware::class,
             FilePermissionMiddleware::class,

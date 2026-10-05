@@ -7,12 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
+
 ### Fixed
 - Validate throttling configuration before creating throttle rules.
 
 ### Changed
 - Updated the `RefreshDatabase` testing trait to use the typed application container accessor.
 - Converted locale message files from PHP arrays to YAML.
+- CSRF tokens are now signed double-submit cookies instead of session-backed tokens; configure `CSRF_SECRET` in the environment.
 
 ## [6.0.3](https://github.com/userfrosting/sprinkle-core/compare/6.0.2...6.0.3) - 2026-09-28
 
