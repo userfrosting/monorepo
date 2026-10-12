@@ -15,8 +15,4 @@ namespace UserFrosting\Sprinkle\Account\Util;
 final class CaptchaProfiles
 {
     public const REGISTRATION = 'account.registration';
-
-    private function __construct()
-    {
-    }
 }
