@@ -13,14 +13,17 @@ namespace UserFrosting\Sprinkle\Account\Tests\Controller;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
+use Psr\Http\Message\ServerRequestInterface;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
+use UserFrosting\Sprinkle\Account\Util\CaptchaProfiles;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
-use UserFrosting\Sprinkle\Core\Util\Captcha;
+use UserFrosting\Sprinkle\Core\Util\CaptchaFactoryInterface;
+use UserFrosting\Sprinkle\Core\Util\CaptchaInterface;
 
 /**
  * Tests RegisterAction
@@ -134,14 +137,14 @@ class RegisterActionTest extends AccountTestCase
     public function testRegister(): void
     {
         $this->setMasterUser();
-        $captcha = $this->getCaptcha();
+        $captcha = $this->getCode();
         $this->forceLocaleConfig();
         $this->setRequireEmailVerification(false);
 
         // Set POST data
         $data = [
             'spiderbro'     => 'http://',
-            'captcha'       => $captcha->getCaptcha(),
+            'captcha'       => $captcha->getCode(),
             'user_name'     => 'RegisteredUser',
             'first_name'    => 'Testing',
             'last_name'     => 'Register',
@@ -152,7 +155,7 @@ class RegisterActionTest extends AccountTestCase
         ];
 
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/register', $data);
+        $request = $this->withCaptchaCookie($this->createJsonRequest('POST', '/account/register', $data), $captcha);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -170,14 +173,14 @@ class RegisterActionTest extends AccountTestCase
     public function testRegisterWithFailedValidation(): void
     {
         $this->setMasterUser();
-        $captcha = $this->getCaptcha();
+        $captcha = $this->getCode();
         $this->forceLocaleConfig();
         $this->setRequireEmailVerification(false);
 
         // Set POST data
         $data = [
             'spiderbro'     => 'http://',
-            'captcha'       => $captcha->getCaptcha(),
+            'captcha'       => $captcha->getCode(),
             'user_name'     => 'RegisteredUser',
             'first_name'    => 'Testing',
             'last_name'     => 'Register',
@@ -188,7 +191,7 @@ class RegisterActionTest extends AccountTestCase
         ];
 
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/register', $data);
+        $request = $this->withCaptchaCookie($this->createJsonRequest('POST', '/account/register', $data), $captcha);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -210,14 +213,14 @@ class RegisterActionTest extends AccountTestCase
         $this->getContainer()->set(Mailer::class, $mailer);
 
         $this->setMasterUser();
-        $captcha = $this->getCaptcha();
+        $captcha = $this->getCode();
         $this->forceLocaleConfig();
         $this->setRequireEmailVerification(true);
 
         // Set POST data
         $data = [
             'spiderbro'     => 'http://',
-            'captcha'       => $captcha->getCaptcha(),
+            'captcha'       => $captcha->getCode(),
             'user_name'     => 'RegisteredUser',
             'first_name'    => 'Testing',
             'last_name'     => 'Register',
@@ -228,7 +231,7 @@ class RegisterActionTest extends AccountTestCase
         ];
 
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/register', $data);
+        $request = $this->withCaptchaCookie($this->createJsonRequest('POST', '/account/register', $data), $captcha);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -248,14 +251,14 @@ class RegisterActionTest extends AccountTestCase
         $this->getContainer()->set(Mailer::class, $mailer);
 
         $this->setMasterUser();
-        $captcha = $this->getCaptcha();
+        $captcha = $this->getCode();
         $this->forceLocaleConfig();
         $this->setRequireEmailVerification(true);
 
         // Set POST data
         $data = [
             'spiderbro'     => 'http://',
-            'captcha'       => $captcha->getCaptcha(),
+            'captcha'       => $captcha->getCode(),
             'user_name'     => 'RegisteredUser',
             'first_name'    => 'Testing',
             'last_name'     => 'Register',
@@ -266,7 +269,7 @@ class RegisterActionTest extends AccountTestCase
         ];
 
         // Create request with method and url and fetch response
-        $request = $this->createJsonRequest('POST', '/account/register', $data);
+        $request = $this->withCaptchaCookie($this->createJsonRequest('POST', '/account/register', $data), $captcha);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -305,19 +308,23 @@ class RegisterActionTest extends AccountTestCase
     /**
      * Create captcha and init random code.
      *
-     * @return Captcha
+     * @return CaptchaInterface
      */
-    protected function getCaptcha(): Captcha
+    protected function getCode(): CaptchaInterface
     {
-        /** @var Config */
-        $config = $this->getService(Config::class);
-
-        /** @var Captcha */
-        $captcha = $this->getService(Captcha::class);
-        $captcha->setKey(strval($config->get('session.keys.captcha')));
-        $captcha->generateRandomCode();
+        /** @var CaptchaFactoryInterface */
+        $factory = $this->getService(CaptchaFactoryInterface::class);
+        $captcha = $factory->forProfile(CaptchaProfiles::REGISTRATION);
+        $captcha->generate();
 
         return $captcha;
+    }
+
+    protected function withCaptchaCookie(ServerRequestInterface $request, CaptchaInterface $captcha): ServerRequestInterface
+    {
+        $cookieName = $captcha->getCookieName();
+
+        return $request->withCookieParams([$cookieName => $captcha->getChallengeId()]);
     }
 
     /**

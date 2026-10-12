@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Implemented new registration captcha. The captcha challenges are now stored in the cache with an opaque cookie instead of PHP session state.
+- Renamed `CaptchaAction` to `RegistrationCaptchaAction`.
+
 ### New Feature
 - Added MorphMapProvider for Eloquent polymorphic type aliases.
 

@@ -16,11 +16,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Sprinkle\Core\Util\DeterminesContentTypeTrait;
 
 /**
- * Implements the captcha for user registration.
+ * Tests for the DeterminesContentTypeTrait.
  */
 class DeterminesContentTypeTraitTest extends TestCase
 {
