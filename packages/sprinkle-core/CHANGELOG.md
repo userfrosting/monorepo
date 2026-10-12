@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated the `RefreshDatabase` testing trait to use the typed application container accessor.
 - Converted locale message files from PHP arrays to YAML.
 - CSRF tokens are now signed double-submit cookies instead of session-backed tokens; configure `CSRF_SECRET` in the environment.
+- Refactored the Captcha implementation to use the cache service instead of the session service :
+  - Captcha storage now uses the shared cache instead of PHP session state to avoid race conditions ([Monorepo#64](https://github.com/userfrosting/monorepo/issues/64)).
+  - Introduce a Captcha Factory for creating captcha instances. Each generated captcha now uses a distinct profile, making it easier to manage multiple captcha configurations simultaneously.
+  - Expose the reusable captcha factory service through `CaptchaInterface`.
+  - Consolidate generic captcha defaults under the Core `captcha` configuration.
+  - Added `CaptchaInterface` to define the contract for captcha implementations.
+  - Added `CaptchaProfile` class to structure captcha configurations.
 
 ## [6.0.3](https://github.com/userfrosting/sprinkle-core/compare/6.0.2...6.0.3) - 2026-09-28
 

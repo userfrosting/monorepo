@@ -104,6 +104,38 @@ return [
 
     /*
     * ----------------------------------------------------------------------
+    * Captcha Config
+    * ----------------------------------------------------------------------
+    * Generic captcha defaults.
+    * - `ttl` is the time-to-live for the captcha in seconds.
+    * - `max_attempts` is the maximum number of allowed attempts.
+    * - `lock_seconds` is the cache lock lease duration in seconds. Prevent race conditions during verification.
+    * - `cookie` contains the settings for the captcha cookie.
+    *   - `path` is the path on the server in which the cookie will be available on.
+    *   - `domain` is the domain that the cookie is available to.
+    *   - `secure` indicates that the cookie should only be transmitted over a secure HTTPS connection.
+    *   - `http_only` indicates that the cookie is accessible only through the HTTP protocol.
+    *   - `same_site` controls the cross-site request behavior of the cookie.
+    *   - `max_age` is the maximum age of the cookie in seconds.
+    */
+    'captcha' => [
+        'defaults' => [
+            'ttl'          => 300,
+            'max_attempts' => 5,
+            'lock_seconds' => 5,
+            'cookie'       => [
+                'path'      => '/',
+                'domain'    => '',
+                'secure'    => env('CAPTCHA_COOKIE_SECURE', false),
+                'http_only' => true,
+                'same_site' => env('CAPTCHA_COOKIE_SAMESITE', 'Lax'),
+                'max_age'   => 0,
+            ],
+        ],
+    ],
+
+    /*
+    * ----------------------------------------------------------------------
     * CSRF middleware settings
     * ----------------------------------------------------------------------
     * Note : CSRF Middleware should only be disabled for dev or debug purposes.

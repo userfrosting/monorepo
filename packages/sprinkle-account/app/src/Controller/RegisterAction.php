@@ -23,7 +23,6 @@ use UserFrosting\Fortress\RequestSchema\RequestSchemaInterface;
 use UserFrosting\Fortress\Transformer\RequestDataTransformer;
 use UserFrosting\Fortress\Validator\ServerSideValidator;
 use UserFrosting\I18n\Translator;
-use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\EmailVerificationProvider;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
@@ -31,13 +30,14 @@ use UserFrosting\Sprinkle\Account\Event\UserCreatedEvent;
 use UserFrosting\Sprinkle\Account\Exceptions\RegistrationException;
 use UserFrosting\Sprinkle\Account\Log\UserActivityLoggerInterface;
 use UserFrosting\Sprinkle\Account\Log\UserActivityTypes;
+use UserFrosting\Sprinkle\Account\Util\CaptchaProfiles;
 use UserFrosting\Sprinkle\Account\Validators\UserValidation;
 use UserFrosting\Sprinkle\Core\Exceptions\ValidationException;
 use UserFrosting\Sprinkle\Core\I18n\SiteLocale;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottlerDelayException;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
-use UserFrosting\Sprinkle\Core\Util\Captcha;
+use UserFrosting\Sprinkle\Core\Util\CaptchaFactoryInterface;
 
 /**
  * Processes an new account registration request.
@@ -75,7 +75,7 @@ class RegisterAction
         protected Config $config,
         protected Connection $db,
         protected EventDispatcherInterface $eventDispatcher,
-        protected Session $session,
+        protected CaptchaFactoryInterface $captchaFactory,
         protected SiteLocale $locale,
         protected Throttler $throttler,
         protected UserActivityLoggerInterface $logger,
@@ -143,7 +143,7 @@ class RegisterAction
         $data = $this->validateLocale($data);
 
         // Check captcha
-        $this->checkCaptcha($data);
+        $this->checkCaptcha($request, $data);
 
         // Validate request data
         $this->validateData($schema, $data);
@@ -302,14 +302,15 @@ class RegisterAction
      *
      * @throws RegistrationException If captcha fails.
      */
-    protected function checkCaptcha(array $data): void
+    protected function checkCaptcha(Request $request, array $data): void
     {
         if ($this->config->get('site.registration.captcha') === true) {
-            $key = strval($this->config->get('session.keys.captcha'));
-            $captcha = new Captcha($this->session, $key);
-            if (!isset($data['captcha']) || !$captcha->verifyCode(strval($data['captcha']))) {
+            $captcha = $this->captchaFactory->forProfile(CaptchaProfiles::REGISTRATION);
+            $cookieName = $captcha->getCookieName();
+            $challengeId = $request->getCookieParams()[$cookieName] ?? null;
+            if (!is_string($challengeId) || !isset($data['captcha']) || !$captcha->verifyCode(strval($data['captcha']), $challengeId)) {
                 $e = new RegistrationException('Failed Captcha');
-                $e->setDescription('CAPTCHA.FAIL'); // 400 error ?
+                $e->setDescription('CAPTCHA.FAIL');
 
                 throw $e;
             }

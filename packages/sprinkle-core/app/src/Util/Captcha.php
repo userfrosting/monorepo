@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Core\Util;
 
-use UserFrosting\Session\Session;
+use Illuminate\Cache\Repository as Cache;
+use Illuminate\Contracts\Cache\LockProvider;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Implements the captcha for user registration.
+ * Implements a cache-backed captcha profile.
  */
-class Captcha
+class Captcha implements CaptchaInterface
 {
     /**
      * @var string The randomly generated captcha code.
@@ -30,49 +32,65 @@ class Captcha
     protected string $image = '';
 
     /**
+     * @var string The opaque challenge ID associated with the captcha.
+     */
+    protected string $challengeId = '';
+
+    /**
+     * @var string The alphabet used to generate the captcha code.
+     */
+    protected string $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+    /**
      * Create a new captcha.
      *
-     * @param Session $session We use the session object so that the hashed captcha token will automatically appear in the session.
-     * @param string  $key
+     * @param Cache          $cache
+     * @param CaptchaProfile $profile The resolved captcha profile.
      */
     public function __construct(
-        protected Session $session,
-        protected string $key = 'captcha'
+        protected Cache $cache,
+        protected CaptchaProfile $profile,
     ) {
     }
 
     /**
-     * Generates a new captcha for the user registration form.
+     * This generates a random 5-character captcha and stores its password hash
+     * in the cache. Also, generates the corresponding captcha image.
      *
-     * This generates a random 5-character captcha and stores it in the session
-     * with an md5 hash. Also, generates the corresponding captcha image.
+     * {@inheritDoc}
      */
-    public function generateRandomCode(): void
+    public function generate(): string
     {
-        $md5_hash = md5((string) rand(0, 99999));
-        $this->code = substr($md5_hash, 25, 5);
-        $enc = md5($this->code);
+        $this->code = '';
+        for ($i = 0; $i < 5; $i++) {
+            $this->code .= $this->alphabet[random_int(0, strlen($this->alphabet) - 1)];
+        }
 
-        // Store the generated captcha value to the session
-        $this->session->set($this->key, $enc);
+        $this->challengeId = bin2hex(random_bytes(32));
+        $hash = password_hash($this->code, PASSWORD_DEFAULT);
+
+        $expiresAt = time() + $this->getTtl();
+        $this->cache->put($this->cacheKey($this->challengeId), [
+            'hash'       => $hash,
+            'attempts'   => 0,
+            'expires_at' => $expiresAt,
+        ], $this->getTtl());
 
         $this->generateImage();
+
+        return $this->challengeId;
     }
 
     /**
-     * Returns the captcha code.
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function getCaptcha(): string
+    public function getCode(): string
     {
         return $this->code;
     }
 
     /**
-     * Returns the captcha image.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getImage(): string
     {
@@ -80,16 +98,116 @@ class Captcha
     }
 
     /**
-     * Check that the specified code, when hashed, matches the code in the session.
-     * Also, stores the specified code in the session with an md5 hash.
-     *
-     * @param string $code
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public function verifyCode(string $code): bool
+    public function getChallengeId(): string
     {
-        return md5($code) === $this->session->get($this->key, []);
+        return $this->challengeId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCookieName(): string
+    {
+        return $this->profile->cookieName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function withCookie(ResponseInterface $response): ResponseInterface
+    {
+        $parts = [$this->getCookieName() . '=' . $this->challengeId];
+        $parts[] = 'Path=' . $this->profile->cookiePath;
+        $domain = $this->profile->cookieDomain;
+        if ($domain !== '') {
+            $parts[] = 'Domain=' . $domain;
+        }
+        if ($this->profile->cookieSecure) {
+            $parts[] = 'Secure';
+        }
+        if ($this->profile->cookieHttpOnly) {
+            $parts[] = 'HttpOnly';
+        }
+        $maxAge = $this->profile->cookieMaxAge;
+        if ($maxAge > 0) {
+            $parts[] = 'Max-Age=' . $maxAge;
+        }
+        $sameSite = $this->profile->cookieSameSite;
+        if ($sameSite !== '') {
+            $parts[] = 'SameSite=' . $sameSite;
+        }
+
+        return $response->withAddedHeader('Set-Cookie', implode('; ', $parts));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function verifyCode(string $code, ?string $challengeId = null): bool
+    {
+        // If no challenge ID is provided, use the current challenge ID.
+        // If still empty, verification cannot proceed.
+        $challengeId = $challengeId ?? $this->challengeId;
+        if ($challengeId === '') {
+            return false;
+        }
+
+        // Acquire a lock for the current challenge ID to prevent race conditions on the same challenge.
+        $store = $this->cache->getStore();
+        if (!$store instanceof LockProvider) {
+            return false;
+        }
+        $lock = $store->lock($this->lockKey($challengeId), $this->getLockSeconds());
+        if ($lock->get() !== true) {
+            return false;
+        }
+
+        try {
+            $key = $this->cacheKey($challengeId);
+            $record = $this->cache->get($key);
+            if (!is_array($record) || !isset($record['hash'], $record['attempts'], $record['expires_at'])) {
+                return false;
+            }
+
+            // Check if the captcha has expired before proceeding with verification.
+            $expiresAt = (int) $record['expires_at'];
+            if ($expiresAt <= time()) {
+                $this->cache->forget($key);
+
+                return false;
+            }
+
+            // Ensure that the number of attempts and the hash are valid before proceeding.
+            $attempts = (int) $record['attempts'];
+            $hash = $record['hash'];
+            if ($attempts >= $this->getMaxAttempts() || !is_string($hash)) {
+                $this->cache->forget($key);
+
+                return false;
+            }
+
+            // Verify the provided code against the stored hash.
+            if (!password_verify($code, $hash)) {
+                $attempts++;
+                if ($attempts >= $this->getMaxAttempts()) {
+                    $this->cache->forget($key);
+                } else {
+                    $record['attempts'] = $attempts;
+                    $this->cache->put($key, $record, max(1, $expiresAt - time()));
+                }
+
+                return false;
+            }
+
+            // If the code is correct, remove the captcha from the cache.
+            $this->cache->forget($key);
+
+            return true;
+        } finally {
+            $lock->release();
+        }
     }
 
     /**
@@ -182,22 +300,54 @@ class Captcha
     }
 
     /**
-     * Get the value of key.
+     * Get the cache store key for the current challenge ID.
+     *
+     * @param string $challengeId The opaque challenge identifier.
+     *
+     * @return string The cache store key.
      */
-    public function getKey(): string
+    protected function cacheKey(string $challengeId): string
     {
-        return $this->key;
+        return $this->profile->key . ':' . hash('sha256', $challengeId);
     }
 
     /**
-     * Set the value of key.
+     * Get the cache store lock key for the current challenge ID.
      *
-     * @return static
+     * @param string $challengeId The opaque challenge identifier.
+     *
+     * @return string The cache store lock key.
      */
-    public function setKey(string $key): static
+    protected function lockKey(string $challengeId): string
     {
-        $this->key = $key;
+        return $this->profile->key . ':lock:' . hash('sha256', $challengeId);
+    }
 
-        return $this;
+    /**
+     * @return int The time-to-live (TTL) for the captcha in seconds.
+     */
+    protected function getTtl(): int
+    {
+        return $this->profile->ttl;
+    }
+
+    /**
+     * Get the maximum number of allowed attempts for the captcha.
+     *
+     * @return int The maximum number of allowed attempts.
+     */
+    protected function getMaxAttempts(): int
+    {
+        return $this->profile->maxAttempts;
+    }
+
+    /**
+     * Get the lease duration for the cache store lock used during verification.
+     *
+     * @return int The cache lock lease duration in seconds.
+     */
+    protected function getLockSeconds(): int
+    {
+        return $this->profile->lockSeconds;
     }
 }

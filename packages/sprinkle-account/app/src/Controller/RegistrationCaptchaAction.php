@@ -14,26 +14,25 @@ namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Config\Config;
-use UserFrosting\Session\Session;
-use UserFrosting\Sprinkle\Core\Util\Captcha;
+use UserFrosting\Sprinkle\Account\Util\CaptchaProfiles;
+use UserFrosting\Sprinkle\Core\Util\CaptchaFactoryInterface;
+use UserFrosting\Sprinkle\Core\Util\CaptchaInterface;
 
 /**
- * Generate a random captcha, store it to the session, and return the captcha image.
+ * Generate a registration captcha and return the captcha image.
  *
  * Middleware: none
  * Route: /account/captcha
  * Route Name: account.captcha
  * Request type: GET
  */
-class CaptchaAction
+class RegistrationCaptchaAction
 {
     /**
      * Inject dependencies.
      */
     public function __construct(
-        protected Session $session,
-        protected Config $config,
+        protected CaptchaFactoryInterface $captchaFactory,
     ) {
     }
 
@@ -46,26 +45,23 @@ class CaptchaAction
      */
     public function __invoke(Request $request, Response $response): Response
     {
-        $payload = $this->handle($request);
-        $response->getBody()->write($payload);
+        $captcha = $this->handle();
+        $response->getBody()->write($captcha->getImage());
+        $response = $response->withStatus(200)->withHeader('Content-Type', 'image/png');
 
-        return $response->withStatus(200)
-                        ->withHeader('Content-Type', 'image/png;base64');
+        return $captcha->withCookie($response);
     }
 
     /**
      * Handle the request and return the payload.
      *
-     * @param Request $request
-     *
-     * @return string
+     * @return CaptchaInterface
      */
-    protected function handle(Request $request): string
+    protected function handle(): CaptchaInterface
     {
-        $key = $this->config->getString('session.keys.captcha', 'account.captcha');
-        $captcha = new Captcha($this->session, $key);
-        $captcha->generateRandomCode();
+        $captcha = $this->captchaFactory->forProfile(CaptchaProfiles::REGISTRATION);
+        $captcha->generate();
 
-        return $captcha->getImage();
+        return $captcha;
     }
 }

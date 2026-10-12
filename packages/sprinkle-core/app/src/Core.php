@@ -75,6 +75,7 @@ use UserFrosting\Sprinkle\Core\Middlewares\URIMiddleware;
 use UserFrosting\Sprinkle\Core\Routes\ApiRoutes;
 use UserFrosting\Sprinkle\Core\Routes\ContentRoutes;
 use UserFrosting\Sprinkle\Core\ServicesProvider\CacheService;
+use UserFrosting\Sprinkle\Core\ServicesProvider\CaptchaService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\ConfigService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\DatabaseService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\ErrorHandlerService;
@@ -215,6 +216,7 @@ class Core implements
     {
         return [
             CacheService::class,
+            CaptchaService::class,
             ConfigService::class,
             DatabaseService::class,
             ErrorHandlerService::class,
