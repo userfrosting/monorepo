@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+### Fixed
+- [Cache] TaggableFileStore : Locks now work with the taggable file store and preserve its configured key separator.
+
 ### Changed
 - The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - Locale dictionaries now support YAML and JSON files; PHP array files remain supported as a deprecated compatibility feature.

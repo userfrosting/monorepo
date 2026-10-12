@@ -91,6 +91,15 @@ class TaggableFileDriverTest extends TestCase
         $this->assertInstanceOf(TaggedFileCache::class, $cache); // @phpstan-ignore-line
     }
 
+    public function testLockCanBeAcquiredAndReleased(): void
+    {
+        $store = new TaggableFileStore($this->file, $this->path, '~|~');
+        $lock = $store->lock(uniqid('lock-', true), 5);
+
+        $this->assertTrue($lock->get());
+        $this->assertTrue($lock->release());
+    }
+
     public function testFlushOldTagDeletesTagFolders(): void
     {
         /** @var Filesystem&\Mockery\MockInterface */
