@@ -2,6 +2,7 @@ BUILT_WITH_UF: Created with <a href="http://www.userfrosting.com">UserFrosting</
 CAPTCHA:
   '@TRANSLATION': Captcha
   FAIL: You did not enter the captcha code correctly.
+  REFRESH: Generate a new captcha
   SPECIFY: Enter the captcha
   VERIFY: Verify the captcha
 COPYRIGHT: Copyright {{year}}

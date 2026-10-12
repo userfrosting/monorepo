@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Validate throttling configuration before creating throttle rules.
 
 ### Changed
+- Added translations for refreshing a CAPTCHA challenge.
 - Updated the `RefreshDatabase` testing trait to use the typed application container accessor.
 - Converted locale message files from PHP arrays to YAML.
 - CSRF tokens are now signed double-submit cookies instead of session-backed tokens; configure `CSRF_SECRET` in the environment.

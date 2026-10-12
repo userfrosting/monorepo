@@ -147,7 +147,18 @@ describe('FormRegister.vue', () => {
         expect(wrapper.find('input[data-test="passwordc"]').exists()).toBe(true)
         expect(wrapper.find('select[data-test="locale"]').exists()).toBe(true)
         expect(wrapper.find('input[data-test="captcha"]').exists()).toBe(true)
+        expect(wrapper.find('button[data-test="captcha-refresh"]').exists()).toBe(true)
         expect(wrapper.find('button[data-test="submit"]').exists()).toBe(true)
+    })
+
+    test('refreshes the captcha and clears the current answer', async () => {
+        await wrapper.find('input[data-test="captcha"]').setValue('old-answer')
+        const captchaImage = wrapper.find('[data-test="captcha-image"]')
+
+        await wrapper.find('button[data-test="captcha-refresh"]').trigger('click')
+
+        expect(captchaImage.attributes('src')).toMatch(/^captcha\.png\?refresh=\d+$/)
+        expect(wrapper.vm.formData.captcha).toBe('')
     })
 
     test('shows available locales', () => {

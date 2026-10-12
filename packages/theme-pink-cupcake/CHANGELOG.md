@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Add a button to generate a new CAPTCHA during registration.
+
 ## [6.0.3](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.2...6.0.3) - 2026-09-28
 - No changes.
 
