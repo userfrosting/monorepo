@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
 - [Framework] The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - [Core] CSRF tokens are now signed double-submit cookies instead of session-backed tokens; Added `CSRF_SECRET` in environment var to define the secret key used for signing.
 - [Core] Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
