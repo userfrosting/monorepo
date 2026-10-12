@@ -39,7 +39,7 @@ class Captcha implements CaptchaInterface
     /**
      * @var string The alphabet used to generate the captcha code.
      */
-    protected string $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    protected string $alphabet = 'abcdefghjklmnpqrstuvwxyz23456789';
 
     /**
      * Create a new captcha.
