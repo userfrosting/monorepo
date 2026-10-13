@@ -17,5 +17,5 @@ EXPOSE 5173
 # Add node_modules/.bin to PATH
 ENV PATH=/app/node_modules/.bin:$PATH
 
-# Install dependencies from the mounted project before running Vite.
-CMD ["sh", "-c", "npm install && exec npx --workspace=userfrosting vite"]
+# Install dependencies, then run the monorepo Vite config from the project root.
+CMD ["sh", "-c", "npm install && exec npm run vite:dev"]

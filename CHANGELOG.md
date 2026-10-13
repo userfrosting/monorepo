@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- [Docker] Run the frontend from the monorepo root so Vite resolves workspace source exports for HMR.
+- [Monorepo] Fix the root Vite dev entrypoint path so dependency scanning resolves the app entry.
 - [Docker] Bind development service ports to IPv4 and IPv6 loopback and wait for MySQL health before starting the app.
 - [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
 - [Framework] The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
