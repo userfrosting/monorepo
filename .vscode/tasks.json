@@ -143,6 +143,26 @@
             "command": "docker-compose up -d"
         },
         {
+            "label": "Docker - Open Mailpit",
+            "type": "shell",
+            "command": "open",
+            "args": [
+                "http://localhost:8025"
+            ],
+            "linux": {
+                "command": "xdg-open"
+            },
+            "windows": {
+                "command": "cmd",
+                "args": [
+                    "/c",
+                    "start",
+                    "",
+                    "http://localhost:8025"
+                ]
+            }
+        },
+        {
             "label": "Docker - Down",
             "type": "shell",
             "command": "docker-compose down"
