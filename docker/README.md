@@ -26,6 +26,7 @@ Second, initialize a new UserFrosting project:
    ```bash
    docker-compose up -d
    ```
+   The Vue frontend installs dependencies from the current package files when its container starts. Its `node_modules` directory is stored separately from the host's, so changes to the lockfile are picked up on the next container start.
 6. Set some directory permissions (your may have to enter your root password):
    ```bash
    sudo chown -R $USER: .
@@ -77,15 +78,21 @@ To start containers again, change to your userfrosting directory and run:
 docker-compose up -d
 ```
 
-**Purge docker containers to start over**
+**Reset the database and containers**
 
-If you need to purge your docker containers (this will not delete any source file or sprinkle, but will empty the database), run:
+To stop the containers but keep the database volume, run:
 
 ```bash
 docker-compose down --remove-orphans
 ```
 
-And then start the installation process again.
+To also delete the persisted database and start with a clean database, add `--volumes`:
+
+```bash
+docker-compose down --remove-orphans --volumes
+```
+
+This permanently removes the database data and Docker-managed frontend dependency volume; the frontend reinstalls its dependencies when it starts again. Source files and sprinkles are not deleted.
 
 **This is not (yet) meant for production!**
 

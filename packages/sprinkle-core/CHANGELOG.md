@@ -7,13 +7,29 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
+
 ### Fixed
 - Validate throttling configuration before creating throttle rules.
 
 ### Changed
 - Added `MorphableModelInterface` to the shared model contract. Used to represent an Eloquent model that can be used as a polymorphic relation target, i.e. a Model that provides `getKey` and `getMorphClass` methods. Required for type validation since Eloquent doesn't provide a shared `Model` interface, so our dynamic model interfaces (e.g. `UserInterface`, `GroupInterface`, etc.) don't extend the base Eloquent `Model` class.
+- Added translations for refreshing a CAPTCHA challenge.
 - Updated the `RefreshDatabase` testing trait to use the typed application container accessor.
 - Converted locale message files from PHP arrays to YAML.
+- CSRF tokens are now signed double-submit cookies instead of session-backed tokens; configure `CSRF_SECRET` in the environment.
+- Refactored the Captcha implementation to use the cache service instead of the session service :
+  - Captcha storage now uses the shared cache instead of PHP session state to avoid race conditions ([Monorepo#64](https://github.com/userfrosting/monorepo/issues/64)).
+  - Introduce a Captcha Factory for creating captcha instances. Each generated captcha now uses a distinct profile, making it easier to manage multiple captcha configurations simultaneously.
+  - Expose the reusable captcha factory service through `CaptchaFactoryInterface` and the captcha instances through `CaptchaInterface`.
+  - Consolidate generic captcha defaults under the Core `captcha` configuration.
+  - Added `CaptchaProfile` class to structure captcha configurations.
+
+## [6.0.3](https://github.com/userfrosting/sprinkle-core/compare/6.0.2...6.0.3) - 2026-09-28
+
+### Changed
+- Use timestamp-aware file and database session handlers to avoid rewriting unchanged sessions.
 
 ## [6.0.2](https://github.com/userfrosting/sprinkle-core/compare/6.0.1...6.0.2) - 2026-08-02
 

@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Converted locale message files from PHP arrays to YAML.
 
+### Fixed
+- [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
+- [Docker] Apply the standalone MySQL configuration and remove the duplicate PHP `memory_limit` setting.
+- [Docker] Bind development service ports to IPv4 and IPv6 loopback, wait for MySQL health, and clarify database-volume reset behavior.
+
+## [6.0.3](https://github.com/userfrosting/UserFrosting/compare/6.0.2...6.0.3) - 2026-09-28
+- No changes.
+
 ## [6.0.2](https://github.com/userfrosting/UserFrosting/compare/6.0.1...6.0.2) - 2026-08-02
 - No changes.
 

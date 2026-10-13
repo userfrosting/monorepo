@@ -41,7 +41,7 @@ export default defineConfig({
         manifest: true,
         rollupOptions: {
             input: {
-                main: 'packages/skeleton/app/assets/main.ts'
+                main: 'main.ts'
             }
         }
     },

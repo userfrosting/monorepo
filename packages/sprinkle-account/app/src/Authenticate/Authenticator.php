@@ -186,7 +186,6 @@ class Authenticator
         $this->user = $user;
 
         // Generate new CSRF token for the new session
-        $this->csrf->removeTokenFromStorage($this->csrf->getTokenName() ?? '');
         $this->csrf->generateToken();
 
         // Set auth mode
@@ -243,8 +242,6 @@ class Authenticator
         $this->session->regenerateId(true);
 
         // Generate new CSRF token for the new session
-        $storage = null;
-        $this->csrf->setStorage($storage);
         $this->csrf->generateToken();
 
         // Dispatch logged out event.

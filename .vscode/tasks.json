@@ -125,8 +125,7 @@
                 "vendor/bin/php-cs-fixer fix --config packages/framework/.php-cs-fixer.php &&",
                 "vendor/bin/php-cs-fixer fix --config packages/sprinkle-account/.php-cs-fixer.php &&",
                 "vendor/bin/php-cs-fixer fix --config packages/sprinkle-admin/.php-cs-fixer.php &&",
-                "vendor/bin/php-cs-fixer fix --config packages/sprinkle-core/.php-cs-fixer.php &&",
-                "vendor/bin/php-cs-fixer fix --config packages/skeleton/.php-cs-fixer.headers.php"
+                "vendor/bin/php-cs-fixer fix --config packages/sprinkle-core/.php-cs-fixer.php &&"
             ],
         },
 
@@ -142,6 +141,26 @@
             "label": "Docker - Up",
             "type": "shell",
             "command": "docker-compose up -d"
+        },
+        {
+            "label": "Docker - Open Mailpit",
+            "type": "shell",
+            "command": "open",
+            "args": [
+                "http://localhost:8025"
+            ],
+            "linux": {
+                "command": "xdg-open"
+            },
+            "windows": {
+                "command": "cmd",
+                "args": [
+                    "/c",
+                    "start",
+                    "",
+                    "http://localhost:8025"
+                ]
+            }
         },
         {
             "label": "Docker - Down",

@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated the admin user interface to use dedicated forms for profile, group, password, role, status, and verification changes.
 - User creation no longer includes group assignment.
 
+### Added
+- Add a button to generate a new CAPTCHA during registration. Refresh the CAPTCHA when registration validation or submission fails.
+
+## [6.0.3](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.2...6.0.3) - 2026-09-28
+- No changes.
+
 ## [6.0.2](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.1...6.0.2) - 2026-08-02
 
 ### Fixed

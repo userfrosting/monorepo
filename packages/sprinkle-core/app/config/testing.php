@@ -26,6 +26,7 @@ return [
      */
     'csrf' => [
         'enabled' => false,
+        'secret'  => 'test-csrf-secret',
     ],
 
     /*

@@ -1,8 +1,8 @@
 ---
-agent: agent
+name: release
 description: Guide through the UserFrosting 6 monorepo release process
+disable-model-invocation: true
 ---
-
 # UserFrosting 6 Release Process
 
 Execute a full release of the UserFrosting 6 monorepo autonomously. Follow each step in order. **Execute every step yourself — do not show commands and ask the user to run them.** If any step fails, abort immediately and report the full error output. After every commit, tag, release, and publish, verify the remote state before continuing. Only stop to ask the user for input at Step 2 (version confirmation) and Step 9 (NPM login verification).

@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Session\FileSessionHandler;
 use PHPUnit\Framework\TestCase;
+use UserFrosting\Session\FileSessionHandler;
 use UserFrosting\Session\Session;
 
 /**
@@ -62,6 +62,10 @@ class SessionFileHandlerTest extends TestCase
         // read() ==> return $this->files->get($path, true);
         $this->assertSame('foo', $handler->read($session_id));
 
+        $this->assertTrue($handler->validateId($session_id));
+        $this->assertTrue($handler->updateTimestamp($session_id, 'updated'));
+        $this->assertSame('foo', $handler->read($session_id));
+
         // Check manually that the file has been written
         $this->assertTrue($fs->exists($session_file));
         $this->assertSame('foo', $fs->get($session_file));
@@ -73,6 +77,65 @@ class SessionFileHandlerTest extends TestCase
 
         // Check filesystem to make sure it's gone
         $this->assertFalse($fs->exists($session_file));
+    }
+
+    public function testUnchangedConcurrentSessionPreservesUpdate(): void
+    {
+        if (!function_exists('pcntl_fork')) {
+            $this->markTestSkipped('The pcntl extension is required for this test.');
+        }
+
+        $fs = new Filesystem();
+        $session_id = 'timestamp' . bin2hex(random_bytes(16));
+        $session_file = $this->testSessionDir . '/' . $session_id;
+        $fs->delete($session_file);
+
+        $handler = new FileSessionHandler($fs, $this->testSessionDir, 120);
+        $this->assertTrue($handler->write($session_id, 'seed|s:4:"base";'));
+
+        $control = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, 0);
+        if ($control === false) {
+            $fs->delete($session_file);
+            $this->fail('Unable to create the process control socket.');
+        }
+
+        $reader_pid = pcntl_fork();
+        if ($reader_pid === -1) {
+            fclose($control[0]);
+            fclose($control[1]);
+            $fs->delete($session_file);
+            $this->fail('Unable to fork the unchanged session request.');
+        }
+
+        if ($reader_pid === 0) {
+            fclose($control[0]);
+
+            $session = new Session(new FileSessionHandler($fs, $this->testSessionDir, 120), []);
+            session_id($session_id);
+            $session->start();
+            fwrite($control[1], 'r');
+
+            usleep(500000);
+            session_write_close();
+            fclose($control[1]);
+
+            exit(0);
+        }
+
+        fclose($control[1]);
+        $this->assertSame('r', fread($control[0], 1));
+
+        $updated_handler = new FileSessionHandler($fs, $this->testSessionDir, 120);
+        $this->assertTrue($updated_handler->write($session_id, 'updated|s:7:"updated";'));
+
+        fclose($control[0]);
+        pcntl_waitpid($reader_pid, $reader_status);
+
+        $stored = $handler->read($session_id);
+        $fs->delete($session_file);
+
+        $this->assertSame(0, pcntl_wexitstatus($reader_status));
+        $this->assertSame('updated|s:7:"updated";', $stored);
     }
 
     /**

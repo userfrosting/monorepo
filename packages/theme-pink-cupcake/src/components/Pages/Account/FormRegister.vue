@@ -34,14 +34,25 @@ const {
 const router = useRouter()
 const code = ref<string>('')
 const displayVerification = ref(false)
+let captchaRefreshKey = Date.now()
+const captchaImageUrl = ref(`${captchaUrl()}`)
 
 /**
  * Methods - Submit the form to the API and handle the response.
  */
+const refreshCaptcha = () => {
+    captchaRefreshKey += 1
+    captchaImageUrl.value = `${captchaUrl()}?refresh=${captchaRefreshKey}`
+    formData.value.captcha = ''
+}
+
 const submitForm = async () => {
     // Make sure validation is up to date
     const isValid = await r$.$validate()
-    if (!isValid.valid) return
+    if (!isValid.valid) {
+        refreshCaptcha()
+        return
+    }
 
     await submitRegistration(formData.value)
         .then(() => {
@@ -49,7 +60,9 @@ const submitForm = async () => {
             // TODO : Only if email verification is required?
             displayVerification.value = true
         })
-        .catch(() => {})
+        .catch(() => {
+            refreshCaptcha()
+        })
 }
 
 async function sendVerification() {
@@ -253,7 +266,20 @@ onMounted(async () => {
                             <UFFormValidationError :errors="r$.captcha.$errors" />
                         </div>
                         <div class="uk-width-1-3@s">
-                            <img :src="captchaUrl()" id="captcha" data-target="#r-form-captcha" />
+                            <img
+                                :src="captchaImageUrl"
+                                id="captcha"
+                                data-test="captcha-image"
+                                data-target="#r-form-captcha"
+                                :alt="$t('CAPTCHA')" />
+                            <button
+                                class="uk-button uk-button-default uk-button-small"
+                                type="button"
+                                data-test="captcha-refresh"
+                                :uk-tooltip="$t('CAPTCHA.REFRESH')"
+                                @click="refreshCaptcha">
+                                <font-awesome-icon :icon="['fas', 'arrows-rotate']" />
+                            </button>
                         </div>
                     </div>
                 </div>

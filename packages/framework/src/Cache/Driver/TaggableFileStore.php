@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace UserFrosting\Cache\Driver;
 
+use Illuminate\Cache\FileLock;
 use Illuminate\Cache\FileStore;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
@@ -48,6 +49,17 @@ class TaggableFileStore extends FileStore
     {
         $this->separator = $separator;
         parent::__construct($files, $directory);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function lock($name, $seconds = 0, $owner = null)
+    {
+        $directory = $this->lockDirectory ?? $this->directory;
+        $this->ensureCacheDirectoryExists($directory);
+
+        return new FileLock(new TaggableFileStore($this->files, $directory, $this->separator), $name, $seconds, $owner);
     }
 
     /**

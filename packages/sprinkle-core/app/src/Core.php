@@ -52,12 +52,13 @@ use UserFrosting\Sprinkle\Core\Bakery\SeedCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SeedListCommand;
 use UserFrosting\Sprinkle\Core\Bakery\ServeCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SetupCommand;
+use UserFrosting\Sprinkle\Core\Bakery\SetupCsrfSecretCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SetupDbCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SetupEnvCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SetupMailCommand;
 use UserFrosting\Sprinkle\Core\Bakery\SprinkleListCommand;
 use UserFrosting\Sprinkle\Core\Bakery\TestMailCommand;
-use UserFrosting\Sprinkle\Core\Csrf\CsrfGuardMiddleware;
+use UserFrosting\Sprinkle\Core\Csrf\CsrfGuard;
 use UserFrosting\Sprinkle\Core\Database\Migrations\v400\SessionsTable;
 use UserFrosting\Sprinkle\Core\Database\Migrations\v400\ThrottlesTable;
 use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerMiddleware;
@@ -74,6 +75,7 @@ use UserFrosting\Sprinkle\Core\Middlewares\URIMiddleware;
 use UserFrosting\Sprinkle\Core\Routes\ApiRoutes;
 use UserFrosting\Sprinkle\Core\Routes\ContentRoutes;
 use UserFrosting\Sprinkle\Core\ServicesProvider\CacheService;
+use UserFrosting\Sprinkle\Core\ServicesProvider\CaptchaService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\ConfigService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\DatabaseService;
 use UserFrosting\Sprinkle\Core\ServicesProvider\ErrorHandlerService;
@@ -173,6 +175,7 @@ class Core implements
             SeedListCommand::class,
             ServeCommand::class,
             SetupCommand::class,
+            SetupCsrfSecretCommand::class,
             SetupDbCommand::class,
             SetupEnvCommand::class,
             SetupMailCommand::class,
@@ -213,6 +216,7 @@ class Core implements
     {
         return [
             CacheService::class,
+            CaptchaService::class,
             ConfigService::class,
             DatabaseService::class,
             ErrorHandlerService::class,
@@ -242,7 +246,7 @@ class Core implements
     {
         return [
             ServerRequestMiddleware::class,
-            CsrfGuardMiddleware::class,
+            CsrfGuard::class,
             SessionMiddleware::class,
             URIMiddleware::class,
             FilePermissionMiddleware::class,

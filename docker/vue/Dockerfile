@@ -11,17 +11,11 @@ RUN apt-get update && apt-get install -y \
   make \
   && rm -rf /var/lib/apt/lists/*
 
-# Copy package files first to leverage Docker cache
-COPY package*.json ./
-
-# Install dependencies locally
-RUN npm install
-
 # Expose Vite dev port
 EXPOSE 5173
 
 # Add node_modules/.bin to PATH
 ENV PATH=/app/node_modules/.bin:$PATH
 
-# Default command: run Vite dev server
-CMD ["npx", "--workspace=userfrosting", "vite"]
+# Install dependencies, then run the monorepo Vite config from the project root.
+CMD ["sh", "-c", "npm install && exec npm run vite:dev"]

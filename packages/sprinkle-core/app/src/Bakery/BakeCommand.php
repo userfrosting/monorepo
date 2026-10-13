@@ -33,6 +33,7 @@ final class BakeCommand extends Command
     protected array $commands = [
         'setup:db',
         'setup:mail',
+        'setup:csrf-secret',
         'debug',
         'migrate',
         'assets:build',
