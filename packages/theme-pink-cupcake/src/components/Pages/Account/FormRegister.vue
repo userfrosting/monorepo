@@ -49,7 +49,10 @@ const refreshCaptcha = () => {
 const submitForm = async () => {
     // Make sure validation is up to date
     const isValid = await r$.$validate()
-    if (!isValid.valid) return
+    if (!isValid.valid) {
+        refreshCaptcha()
+        return
+    }
 
     await submitRegistration(formData.value)
         .then(() => {
@@ -57,7 +60,9 @@ const submitForm = async () => {
             // TODO : Only if email verification is required?
             displayVerification.value = true
         })
-        .catch(() => {})
+        .catch(() => {
+            refreshCaptcha()
+        })
 }
 
 async function sendVerification() {

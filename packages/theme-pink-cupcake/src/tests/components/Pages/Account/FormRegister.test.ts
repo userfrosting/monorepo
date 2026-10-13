@@ -268,19 +268,30 @@ describe('FormRegister.vue', () => {
     })
 
     test('does not switch to verification form when validation is invalid', async () => {
+        await wrapper.find('input[data-test="captcha"]').setValue('old-answer')
+        const captchaImage = wrapper.find('[data-test="captcha-image"]')
+        const previousCaptchaUrl = captchaImage.attributes('src')
         wrapper.vm.r$.$validate.mockResolvedValueOnce({ valid: false })
         await wrapper.find('form').trigger('submit.prevent')
         await flushPromises()
+
         expect(wrapper.find('form[data-test="verificationForm"]').exists()).toBe(false)
+        expect(captchaImage.attributes('src')).not.toBe(previousCaptchaUrl)
+        expect(wrapper.vm.formData.captcha).toBe('')
     })
 
     test('does not switch to verification form when registration fails', async () => {
+        await wrapper.find('input[data-test="captcha"]').setValue('old-answer')
+        const captchaImage = wrapper.find('[data-test="captcha-image"]')
+        const previousCaptchaUrl = captchaImage.attributes('src')
         mockSubmitRegistration.mockRejectedValueOnce(new Error('registration failed'))
         await wrapper.find('form').trigger('submit.prevent')
         await flushPromises()
 
         expect(wrapper.find('form[data-test="verificationForm"]').exists()).toBe(false)
         expect(mockSubmitRegistration).toHaveBeenCalled()
+        expect(captchaImage.attributes('src')).not.toBe(previousCaptchaUrl)
+        expect(wrapper.vm.formData.captcha).toBe('')
     })
 
     test('shows verification error and supports try-again navigation', async () => {

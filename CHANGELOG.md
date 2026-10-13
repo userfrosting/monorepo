@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Framework] The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - [Core] CSRF tokens are now signed double-submit cookies instead of session-backed tokens; Added `CSRF_SECRET` in environment var to define the secret key used for signing.
 - [Core] Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
+- [Core] Refactored the Captcha implementation to use the cache service instead of the session service :
+  - Captcha storage now uses the shared cache instead of PHP session state to avoid race conditions ([Monorepo#64](https://github.com/userfrosting/monorepo/issues/64)).
+  - Introduce a Captcha Factory for creating captcha instances. Each generated captcha now uses a distinct profile, making it easier to manage multiple captcha configurations simultaneously.
+  - Expose the reusable captcha factory service through `CaptchaFactoryInterface` and the captcha instances through `CaptchaInterface`.
+  - Consolidate generic captcha defaults under the Core `captcha` configuration.
+  - Added `CaptchaProfile` class to structure captcha configurations.
+- [Pink-Cupcake] Add a button to generate a new CAPTCHA during registration. Refresh the CAPTCHA when registration validation or submission fails.
 
 ## [6.0.3](https://github.com/userfrosting/monorepo/compare/6.0.2...6.0.3) - 2026-09-28
 
