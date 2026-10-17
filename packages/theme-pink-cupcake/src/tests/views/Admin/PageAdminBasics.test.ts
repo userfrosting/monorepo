@@ -218,6 +218,7 @@ describe('Admin basic views', () => {
             RoleManagePermissionModal: { template: '<div data-test="role-manage" />' },
             UserCreateModal: { template: '<div data-test="user-create" />' },
             UserEditModal: { template: '<div data-test="user-edit" />' },
+            UserGroupModal: { template: '<div data-test="user-group" />' },
             UserDeleteModal: { template: '<div data-test="user-delete" />' },
             UserStatusModal: { template: '<div data-test="user-status" />' },
             UserVerificationModal: { template: '<div data-test="user-verification" />' },
@@ -303,6 +304,7 @@ describe('Admin basic views', () => {
             RoleManagePermissionModal: { template: '<div data-test="role-manage" />' },
             UserCreateModal: { template: '<div data-test="user-create" />' },
             UserEditModal: { template: '<div data-test="user-edit" />' },
+            UserGroupModal: { template: '<div data-test="user-group" />' },
             UserDeleteModal: { template: '<div data-test="user-delete" />' },
             UserStatusModal: { template: '<div data-test="user-status" />' },
             UserVerificationModal: { template: '<div data-test="user-verification" />' },
@@ -327,6 +329,7 @@ describe('Admin basic views', () => {
         expect(withAccess.text()).toContain('DISABLED')
         expect(withAccess.text()).toContain('UNVERIFIED')
         expect(withAccess.find('[data-test="user-create"]').exists()).toBe(true)
+        expect(withAccess.find('[data-test="user-group"]').exists()).toBe(true)
 
         const noCreateAccess = mount(PageRoles, {
             global: {
@@ -537,6 +540,10 @@ describe('Admin basic views', () => {
                         emits: ['saved'],
                         template: '<button data-test="user-edit" @click="$emit(\'saved\')" />'
                     },
+                    UserGroupModal: {
+                        emits: ['saved'],
+                        template: '<button data-test="user-group" @click="$emit(\'saved\')" />'
+                    },
                     UserDeleteModal: {
                         emits: ['deleted'],
                         template: '<button data-test="user-delete" @click="$emit(\'deleted\')" />'
@@ -557,6 +564,7 @@ describe('Admin basic views', () => {
         })
         await users.get('[data-test="user-create"]').trigger('click')
         await users.get('[data-test="user-edit"]').trigger('click')
+        await users.get('[data-test="user-group"]').trigger('click')
         await users.get('[data-test="user-delete"]').trigger('click')
         await users.get('[data-test="user-activate"]').trigger('click')
 
@@ -587,6 +595,7 @@ describe('Admin basic views', () => {
                     },
                     UserCreateModal: { template: '<div />' },
                     UserEditModal: { template: '<div />' },
+                    UserGroupModal: { template: '<div />' },
                     UserDeleteModal: { template: '<div />' },
                     UserStatusModal: { template: '<div />' },
                     UserVerificationModal: {

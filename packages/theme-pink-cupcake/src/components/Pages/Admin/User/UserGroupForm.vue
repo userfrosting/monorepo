@@ -1,18 +1,23 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useGroupsApi, useUserUpdateApi } from '@userfrosting/sprinkle-admin/composables'
 import type { UserGroupRequest } from '@userfrosting/sprinkle-admin/interfaces'
 import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
 
+/**
+ * Props, emits, etc.
+ */
 const props = defineProps<{
     user: UserInterface
 }>()
-
 const emits = defineEmits(['success'])
 const formData = ref<UserGroupRequest>({ group_id: props.user.group_id ?? 0 })
 const { groups, loading: groupsLoading, updateGroups } = useGroupsApi()
 const { submitUserGroup, apiLoading } = useUserUpdateApi()
 
+/**
+ * Watchers
+ */
 watch(
     () => props.user,
     (user) => {
@@ -21,8 +26,14 @@ watch(
     { immediate: true }
 )
 
-onMounted(() => updateGroups())
+/**
+ * Expose the updateGroups method to the parent component.
+ */
+defineExpose({ updateGroups })
 
+/**
+ * Method to submit the form.
+ */
 const submitForm = async () => {
     try {
         await submitUserGroup(props.user.user_name, formData.value)

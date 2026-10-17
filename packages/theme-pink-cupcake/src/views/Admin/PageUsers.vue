@@ -7,6 +7,7 @@ import UserStatusModal from '../../components/Pages/Admin/User/UserStatusModal.v
 import UserVerificationModal from '../../components/Pages/Admin/User/UserVerificationModal.vue'
 import UserPasswordModal from '../../components/Pages/Admin/User/UserPasswordModal.vue'
 import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswordResetModal.vue'
+import UserGroupModal from '../../components/Pages/Admin/User/UserGroupModal.vue'
 </script>
 
 <template>
@@ -85,6 +86,13 @@ import UserPasswordResetModal from '../../components/Pages/Admin/User/UserPasswo
                             </li>
                             <li>
                                 <UserEditModal
+                                    :user="row"
+                                    @saved="sprunjer.fetch()"
+                                    v-if="$checkAccess('update_user_field')"
+                                    class="uk-drop-close" />
+                            </li>
+                            <li>
+                                <UserGroupModal
                                     :user="row"
                                     @saved="sprunjer.fetch()"
                                     v-if="$checkAccess('update_user_field')"
