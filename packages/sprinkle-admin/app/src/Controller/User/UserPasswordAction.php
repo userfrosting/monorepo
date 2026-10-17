@@ -13,8 +13,8 @@ use UserFrosting\Fortress\Validator\ServerSideValidator;
 use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
-use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
+use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
@@ -78,7 +78,7 @@ class UserPasswordAction extends UserUpdateAction
             $user->password = $data['password'];
             $this->logger->record(
                 user: $currentUser,
-                type: AccountActivityTypes::UPDATE_PASSWORD,
+                type: AdminAccountActivityTypes::CHANGED_PASSWORD,
                 subject: $user,
             );
             $user->save();

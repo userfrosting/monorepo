@@ -25,6 +25,8 @@ ACCOUNT:
     UPDATE_PROFILE_SETTINGS: L'utilisateur a mis à jour ses paramètres de profil
     UPDATE_EMAIL: L'utilisateur a mis à jour son adresse email
     UPDATE_PASSWORD: L'utilisateur a modifié son mot de passe
+    CHANGED_PASSWORD: Mot de passe de <strong>{{subject.full_name}}</strong> modifié
+    FORCE_PASSWORD_RESET: Réinitialisation forcée du mot de passe de <strong>{{subject.full_name}}</strong>
     REGISTER: L'utilisateur a créé son compte
     VERIFIED: L'utilisateur a vérifié son compte
     PASSWORD_RESET: L'utilisateur a réinitialisé son mot de passe
@@ -46,6 +48,8 @@ ACCOUNT:
       UPDATE_PROFILE_SETTINGS: Paramètres du profil mis à jour
       UPDATE_EMAIL: Email mis à jour
       UPDATE_PASSWORD: Mot de passe modifié
+      CHANGED_PASSWORD: Mot de passe modifié par un administrateur
+      FORCE_PASSWORD_RESET: Réinitialisation forcée du mot de passe par un administrateur
       REGISTER: Utilisateur inscrit
       VERIFIED: Utilisateur vérifié
       PASSWORD_RESET: Mot de passe réinitialisé

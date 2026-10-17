@@ -25,6 +25,8 @@ ACCOUNT:
     UPDATE_PROFILE_SETTINGS: User updated their profile settings
     UPDATE_EMAIL: User updated their email address
     UPDATE_PASSWORD: User updated their password
+    CHANGED_PASSWORD: User's <strong>{{subject.full_name}}</strong> password changed
+    FORCE_PASSWORD_RESET: Password reset forced for <strong>{{subject.full_name}}</strong>
     REGISTER: User registered their account
     VERIFIED: User verified their account
     PASSWORD_RESET: User reset their password
@@ -46,6 +48,8 @@ ACCOUNT:
       UPDATE_PROFILE_SETTINGS: Profile settings updated
       UPDATE_EMAIL: Email updated
       UPDATE_PASSWORD: Password changed
+      CHANGED_PASSWORD: Password changed by an administrator
+      FORCE_PASSWORD_RESET: Password reset forced by an administrator
       REGISTER: User registered
       VERIFIED: User verified
       PASSWORD_RESET: Password reset

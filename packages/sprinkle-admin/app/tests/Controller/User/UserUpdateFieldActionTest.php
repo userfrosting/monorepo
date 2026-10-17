@@ -18,7 +18,6 @@ use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
-use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
 use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
@@ -136,7 +135,7 @@ class UserUpdateFieldActionTest extends AdminTestCase
 
         /** @var Activity|null $activity */
         $activity = Activity::query()
-            ->where('type', AccountActivityTypes::UPDATE_PASSWORD->value)
+            ->where('type', AdminAccountActivityTypes::CHANGED_PASSWORD->value)
             ->where('subject_id', $userToEdit->id)
             ->first();
         $this->assertNotNull($activity);
