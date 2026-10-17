@@ -172,12 +172,12 @@ class ActivityTest extends AccountTestCase
         $this->assertSame($subject->id, $activity->subject->id);
     }
 
-    public function testComposedDescriptionLoadsTrashedContextAndSubject(): void
+    public function testComposedDescriptionLoadsTrashedUserContextAndSubject(): void
     {
-        /** @var Role */
-        $context = Role::factory()->create();
-        /** @var Group */
-        $subject = Group::factory()->create();
+        /** @var User */
+        $context = User::factory()->create();
+        /** @var User */
+        $subject = User::factory()->create();
 
         /** @var Activity */
         $activity = Activity::create([
