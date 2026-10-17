@@ -13,12 +13,16 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Account\Tests\Database\Models;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
+use UserFrosting\I18n\DictionaryInterface;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
@@ -166,6 +170,44 @@ class ActivityTest extends AccountTestCase
         $this->assertSame('group', $activity->subject_type);
         $this->assertSame($context->id, $activity->context->id);
         $this->assertSame($subject->id, $activity->subject->id);
+    }
+
+    public function testComposedDescriptionLoadsTrashedContextAndSubject(): void
+    {
+        /** @var Role */
+        $context = Role::factory()->create();
+        /** @var Group */
+        $subject = Group::factory()->create();
+
+        /** @var Activity */
+        $activity = Activity::create([
+            'context_type' => $context->getMorphClass(),
+            'context_id'   => $context->getKey(),
+            'subject_type' => $subject->getMorphClass(),
+            'subject_id'   => $subject->getKey(),
+            'type'         => AccountActivityTypes::CREATE->value,
+        ]);
+
+        $context->delete();
+        $subject->delete();
+
+        $activityTypeRegistry = $this->createMock(ActivityTypeRegistryInterface::class);
+        $activityTypeRegistry->method('getI18nKey')
+            ->with(AccountActivityTypes::CREATE->value)
+            ->willReturn('ACCOUNT.ACTIVITY.CREATE');
+
+        $dictionary = $this->createMock(DictionaryInterface::class);
+        $dictionary->method('has')
+            ->with('ACCOUNT.ACTIVITY.CREATE')
+            ->willReturn(true);
+
+        $translator = $this->createMock(Translator::class);
+        $translator->method('getDictionary')->willReturn($dictionary);
+
+        $activity->getComposedDescription($activityTypeRegistry, $translator);
+
+        $this->assertSame($context->getKey(), $activity->context->getKey());
+        $this->assertSame($subject->getKey(), $activity->subject->getKey());
     }
 
     public function testNoLastActivity(): void

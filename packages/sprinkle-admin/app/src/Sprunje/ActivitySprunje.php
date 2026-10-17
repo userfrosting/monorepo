@@ -15,6 +15,7 @@ namespace UserFrosting\Sprinkle\Admin\Sprunje;
 use BackedEnum;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
@@ -400,7 +401,10 @@ class ActivitySprunje extends Sprunje
         $query = $this->activityModel->joinUser();
 
         return $query
-            ->with(['context', 'subject']);
+            ->with([
+                'context' => fn (MorphTo $relation) => $relation->withTrashed(),
+                'subject' => fn (MorphTo $relation) => $relation->withTrashed(),
+            ]);
     }
 
     /**

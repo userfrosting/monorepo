@@ -28,6 +28,7 @@ use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
 use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Admin\Log\GroupActivityTypes;
+use UserFrosting\Sprinkle\Admin\Log\RoleActivityTypes;
 use UserFrosting\Sprinkle\Admin\Sprunje\ActivitySprunje;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
@@ -80,6 +81,91 @@ class ActivitySprunjeTest extends AdminTestCase
         ], $data['listable']['label']); // @phpstan-ignore-line
         $this->assertContains('label', $data['sortable']); // @phpstan-ignore-line
         $this->assertContains('label', $data['filterable']); // @phpstan-ignore-line
+    }
+
+    public function testDeletedSubjectDescriptionsUseTrashedModels(): void
+    {
+        /** @var User */
+        $user = User::factory()->create([
+            'first_name' => 'Deleted',
+            'last_name'  => 'User',
+        ]);
+        /** @var Group */
+        $group = Group::factory()->create(['name' => 'Deleted Group']);
+        /** @var Role */
+        $role = Role::factory()->create(['name' => 'Deleted Role']);
+        /** @var Activity $userDelete */
+        $userDelete = Activity::factory()->create([
+            'type'         => AccountActivityTypes::DELETE->value,
+            'subject_type' => $user->getMorphClass(),
+            'subject_id'   => $user->getKey(),
+        ]);
+        /** @var Activity $groupDelete */
+        $groupDelete = Activity::factory()->create([
+            'type'         => GroupActivityTypes::DELETE->value,
+            'subject_type' => $group->getMorphClass(),
+            'subject_id'   => $group->getKey(),
+        ]);
+        /** @var Activity $roleDelete */
+        $roleDelete = Activity::factory()->create([
+            'type'         => RoleActivityTypes::DELETE->value,
+            'subject_type' => $role->getMorphClass(),
+            'subject_id'   => $role->getKey(),
+        ]);
+        $user->delete();
+        $group->delete();
+        $role->delete();
+
+        /** @var ActivitySprunje */
+        $sprunje = $this->getService(ActivitySprunje::class);
+        $rows = $sprunje->getArray()['rows'];
+        $descriptions = [];
+        foreach ($rows as $row) {
+            $descriptions[$row['id']] = $row['description'];
+        }
+
+        $this->assertSame('User <strong>Deleted User</strong> deleted', $descriptions[$userDelete->id]);
+        $this->assertSame('Group <strong>Deleted Group</strong> deleted', $descriptions[$groupDelete->id]);
+        $this->assertSame('Role <strong>Deleted Role</strong> deleted', $descriptions[$roleDelete->id]);
+    }
+
+    public function testActivityRetainsTrashedGroupAndRoleSubjects(): void
+    {
+        /** @var Group */
+        $group = Group::factory()->create(['name' => 'Deleted Group']);
+        /** @var Role */
+        $role = Role::factory()->create(['name' => 'Deleted Role']);
+
+        /** @var Activity */
+        $groupActivity = Activity::factory()->create([
+            'type'         => GroupActivityTypes::UPDATE_INFO->value,
+            'context_type' => $role->getMorphClass(),
+            'context_id'   => $role->getKey(),
+            'subject_type' => $group->getMorphClass(),
+            'subject_id'   => $group->getKey(),
+        ]);
+        /** @var Activity */
+        $roleActivity = Activity::factory()->create([
+            'type'         => RoleActivityTypes::UPDATE_INFO->value,
+            'context_type' => $group->getMorphClass(),
+            'context_id'   => $group->getKey(),
+            'subject_type' => $role->getMorphClass(),
+            'subject_id'   => $role->getKey(),
+        ]);
+        $group->delete();
+        $role->delete();
+
+        /** @var ActivitySprunje */
+        $sprunje = $this->getService(ActivitySprunje::class);
+        $rowsById = [];
+        foreach ($sprunje->getArray()['rows'] as $row) {
+            $rowsById[$row['id']] = $row;
+        }
+
+        $this->assertSame('Deleted Role', $rowsById[$groupActivity->id]['context']['name']);
+        $this->assertSame('Deleted Group', $rowsById[$groupActivity->id]['subject']['name']);
+        $this->assertSame('Deleted Group', $rowsById[$roleActivity->id]['context']['name']);
+        $this->assertSame('Deleted Role', $rowsById[$roleActivity->id]['subject']['name']);
     }
 
     public function testActivityTargetConstraints(): void

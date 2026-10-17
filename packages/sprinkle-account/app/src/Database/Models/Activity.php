@@ -149,7 +149,10 @@ class Activity extends Model implements ActivityInterface
         }
 
         // Load the context and subject relations if they are not already loaded.
-        $this->loadMissing(['context', 'subject']);
+        $this->loadMissing([
+            'context' => fn (MorphTo $relation) => $relation->withTrashed(),
+            'subject' => fn (MorphTo $relation) => $relation->withTrashed(),
+        ]);
 
         // Prepare the placeholders for the translation, including context and subject.
         $placeholders = $this->getAttribute('metadata');
