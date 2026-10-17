@@ -949,7 +949,7 @@ describe('admin form components', () => {
 
         expect(submitUserGroup).toHaveBeenCalledWith('jane', { group_id: 0 })
         expect(wrapper.emitted('success')).toHaveLength(1)
-        expect(updateGroups).toHaveBeenCalledTimes(1)
+        expect(updateGroups).not.toHaveBeenCalled()
     })
 
     test('syncs group changes and handles group update failures', async () => {
@@ -1015,6 +1015,27 @@ describe('admin form components', () => {
 
         expect(wrapper.emitted('saved')).toHaveLength(1)
         expect(modalMock).toHaveBeenCalledWith('#modal-user-group-10')
+    })
+
+    test('loads groups when the user group modal is shown', async () => {
+        const wrapper = mount(UserGroupModal, {
+            props: { user: baseUser },
+            global: {
+                stubs: {
+                    ...globalStubs,
+                    UFModal: {
+                        emits: ['show'],
+                        template:
+                            '<div><button data-test="show" @click="$emit(\'show\')" /><slot /></div>'
+                    }
+                },
+                mocks: { $t: (key: string) => key }
+            }
+        })
+
+        await wrapper.get('[data-test="show"]').trigger('click')
+
+        expect(updateGroups).toHaveBeenCalledTimes(1)
     })
 
     test('prevents invalid user submission and swallows create failures', async () => {

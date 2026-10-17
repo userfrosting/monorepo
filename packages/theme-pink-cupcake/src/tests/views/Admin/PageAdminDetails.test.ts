@@ -101,6 +101,7 @@ describe('Admin detail views', () => {
                 stubs: {
                     GroupInfo: true,
                     GroupUsers: true,
+                    GroupActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -115,6 +116,7 @@ describe('Admin detail views', () => {
                 stubs: {
                     PermissionInfo: { template: '<div data-test="permission-info" />' },
                     PermissionUsers: { template: '<div data-test="permission-users" />' },
+                    PermissionActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -139,6 +141,7 @@ describe('Admin detail views', () => {
                 stubs: {
                     PermissionInfo: true,
                     PermissionUsers: true,
+                    PermissionActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -267,6 +270,7 @@ describe('Admin detail views', () => {
                 stubs: {
                     GroupInfo: { template: '<div data-test="group-info" />' },
                     GroupUsers: { template: '<div data-test="group-users" />' },
+                    GroupActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -283,6 +287,7 @@ describe('Admin detail views', () => {
                     RoleInfo: { template: '<div data-test="role-info" />' },
                     RoleUsers: { template: '<div data-test="role-users" />' },
                     RolePermissions: { template: '<div data-test="role-permissions" />' },
+                    RoleActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -300,6 +305,7 @@ describe('Admin detail views', () => {
                     RoleInfo: true,
                     RoleUsers: true,
                     RolePermissions: { template: '<div data-test="role-permissions" />' },
+                    RoleActivities: true,
                     UFErrorPage: true
                 }
             }
