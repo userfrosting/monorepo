@@ -11,8 +11,8 @@ import { ActivityDescription } from '../../../Activities'
             hideFilters
             hideDownload>
             <template #header>
-                <UFSprunjeHeader>{{ $t('USER') }}</UFSprunjeHeader>
-                <UFSprunjeHeader>{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
+                <UFSprunjeHeader>{{ $t('ACTIVITY.BY') }}</UFSprunjeHeader>
+                <UFSprunjeHeader>{{ $t('ACTIVITY.DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
             <template #body="{ row }">

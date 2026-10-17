@@ -25,8 +25,8 @@ defineExpose({ refresh })
             :defaultSorts="{ occurred_at: 'desc' }">
             <template #header>
                 <UFSprunjeHeader sort="occurred_at">{{ $t('ACTIVITY.TIME') }}</UFSprunjeHeader>
-                <UFSprunjeHeader sort="user">{{ $t('USER') }}</UFSprunjeHeader>
-                <UFSprunjeHeader sort="label">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
+                <UFSprunjeHeader sort="user">{{ $t('ACTIVITY.BY') }}</UFSprunjeHeader>
+                <UFSprunjeHeader sort="label">{{ $t('ACTIVITY.DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
             <template #body="{ row }">

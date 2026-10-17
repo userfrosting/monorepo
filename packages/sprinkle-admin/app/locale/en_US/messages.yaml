@@ -7,6 +7,8 @@ ACTIVITY:
   PAGE: Activities
   PAGE_DESCRIPTION: A listing of user activities
   TIME: Activity Time
+  BY: Performed by
+  DESCRIPTION: Description
 ACCOUNT:
   ACTIVITY:
     CREATE: User <strong>{{subject.full_name}}</strong> created
