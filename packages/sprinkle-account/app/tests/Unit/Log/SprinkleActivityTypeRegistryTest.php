@@ -78,7 +78,6 @@ class SprinkleActivityTypeRegistryTest extends TestCase
                 'account_create'              => 'ACCOUNT.ACTIVITY.CREATE',
                 'account_delete'              => 'ACCOUNT.ACTIVITY.DELETE',
                 'update_profile_settings'     => 'ACCOUNT.ACTIVITY.UPDATE_PROFILE_SETTINGS',
-                'update_account_settings'     => 'ACCOUNT.ACTIVITY.UPDATE_ACCOUNT_SETTINGS',
                 'update_password'             => 'ACCOUNT.ACTIVITY.UPDATE_PASSWORD',
             ],
         ];
@@ -102,7 +101,6 @@ class SprinkleActivityTypeRegistryTest extends TestCase
                 'ACCOUNT.ACTIVITY.LABEL.CREATE',
                 'ACCOUNT.ACTIVITY.LABEL.DELETE',
                 'ACCOUNT.ACTIVITY.LABEL.UPDATE_PROFILE_SETTINGS',
-                'ACCOUNT.ACTIVITY.LABEL.UPDATE_ACCOUNT_SETTINGS',
                 'ACCOUNT.ACTIVITY.LABEL.UPDATE_EMAIL',
                 'ACCOUNT.ACTIVITY.LABEL.UPDATE_PASSWORD',
             ],

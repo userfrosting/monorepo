@@ -17,7 +17,6 @@ enum AccountActivityTypes: string implements ActivityTypes
     case CREATE = 'account_create';
     case DELETE = 'account_delete';
     case UPDATE_PROFILE_SETTINGS = 'update_profile_settings';
-    case UPDATE_ACCOUNT_SETTINGS = 'update_account_settings';
     case UPDATE_EMAIL = 'update_email';
     case UPDATE_PASSWORD = 'update_password';
 
@@ -30,7 +29,6 @@ enum AccountActivityTypes: string implements ActivityTypes
             self::CREATE                  => 'ACCOUNT.ACTIVITY.CREATE',
             self::DELETE                  => 'ACCOUNT.ACTIVITY.DELETE',
             self::UPDATE_PROFILE_SETTINGS => 'ACCOUNT.ACTIVITY.UPDATE_PROFILE_SETTINGS',
-            self::UPDATE_ACCOUNT_SETTINGS => 'ACCOUNT.ACTIVITY.UPDATE_ACCOUNT_SETTINGS',
             self::UPDATE_EMAIL            => 'ACCOUNT.ACTIVITY.UPDATE_EMAIL',
             self::UPDATE_PASSWORD         => 'ACCOUNT.ACTIVITY.UPDATE_PASSWORD',
             default                       => null,
@@ -46,7 +44,6 @@ enum AccountActivityTypes: string implements ActivityTypes
             self::CREATE                  => 'ACCOUNT.ACTIVITY.LABEL.CREATE',
             self::DELETE                  => 'ACCOUNT.ACTIVITY.LABEL.DELETE',
             self::UPDATE_PROFILE_SETTINGS => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_PROFILE_SETTINGS',
-            self::UPDATE_ACCOUNT_SETTINGS => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_ACCOUNT_SETTINGS',
             self::UPDATE_EMAIL            => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_EMAIL',
             self::UPDATE_PASSWORD         => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_PASSWORD',
             default                       => null,

@@ -9,20 +9,18 @@ ACTIVITY:
   TIME: Activity Time
 ACCOUNT:
   ACTIVITY:
-    CREATE: Account created for <strong>{{subject.full_name}}</strong>
-    DELETE: Account deleted
-    UPDATE_INFO: Account information updated
-    ADD_TO_GROUP: Account added to group <strong>{{context.name}}</strong>
-    REMOVE_FROM_GROUP: Account removed from group <strong>{{context.name}}</strong>
+    CREATE: User <strong>{{subject.full_name}}</strong> created
+    DELETE: User <strong>{{subject.full_name}}</strong> deleted
+    UPDATE_INFO: <strong>{{subject.full_name}}</strong> account information updated
+    ADD_TO_GROUP: User <strong>{{subject.full_name}}</strong> added to group <strong>{{context.name}}</strong>
+    REMOVE_FROM_GROUP: User <strong>{{subject.full_name}}</strong> removed from group <strong>{{context.name}}</strong>
     ADD_ROLE: User <strong>{{subject.full_name}}</strong> added to role <strong>{{context.name}}</strong>
     REMOVE_ROLE: User <strong>{{subject.full_name}}</strong> removed from role <strong>{{context.name}}</strong>
-    UPDATE_FIELD: Account field {{field}} updated
-    ENABLE: Account enabled
-    DISABLE: Account disabled
-    VERIFY: Account verified
-    UNVERIFY: Account unverified
+    ENABLE: User <strong>{{subject.full_name}}</strong> enabled
+    DISABLE: User <strong>{{subject.full_name}}</strong> disabled
+    VERIFY: User <strong>{{subject.full_name}}</strong> verified
+    UNVERIFY: User <strong>{{subject.full_name}}</strong> unverified
     UPDATE_PROFILE_SETTINGS: Profile updated
-    UPDATE_ACCOUNT_SETTINGS: Account settings updated
     UPDATE_EMAIL: Email updated
     UPDATE_PASSWORD: Password changed
     REGISTER: User registered
@@ -39,13 +37,11 @@ ACCOUNT:
       REMOVE_FROM_GROUP: Account removed from group
       ADD_ROLE: Account added to role
       REMOVE_ROLE: Account removed from role
-      UPDATE_FIELD: Account field updated
       ENABLE: Account enabled
       DISABLE: Account disabled
       VERIFY: Account verified
       UNVERIFY: Account unverified
       UPDATE_PROFILE_SETTINGS: Profile settings updated
-      UPDATE_ACCOUNT_SETTINGS: Account settings updated
       UPDATE_EMAIL: Email updated
       UPDATE_PASSWORD: Password changed
       REGISTER: User registered
@@ -97,9 +93,9 @@ GROUP:
   UPDATE: Details updated for group <strong>{{name}}</strong>
   USERS: Users in this group
   ACTIVITY:
-    CREATE: Group created
-    DELETE: Group deleted
-    UPDATE_INFO: Group information updated
+    CREATE: Group <strong>{{subject.name}}</strong> created
+    DELETE: Group <strong>{{subject.name}}</strong> deleted
+    UPDATE_INFO: Group <strong>{{subject.name}}</strong> information updated
     LABEL:
       CREATE: Group created
       DELETE: Group deleted
@@ -153,19 +149,17 @@ ROLE:
   UPDATED: Details updated for role <strong>{{name}}</strong>
   USERS: Users with this role
   ACTIVITY:
-    CREATE: Role created
-    DELETE: Role deleted
-    UPDATE_INFO: Role information updated
+    CREATE: Role <strong>{{subject.name}}</strong> created
+    DELETE: Role <strong>{{subject.name}}</strong> deleted
+    UPDATE_INFO: Role <strong>{{subject.name}}</strong> information updated
     ADD_PERMISSION: Role <strong>{{subject.name}}</strong> granted permission <strong>{{context.name}}</strong>
     REMOVE_PERMISSION: Role <strong>{{subject.name}}</strong> revoked permission <strong>{{context.name}}</strong>
-    UPDATE_FIELD: Role field {{field}} updated
     LABEL:
       CREATE: Role created
       DELETE: Role deleted
       UPDATE_INFO: Role updated
       ADD_PERMISSION: Role granted permission
       REMOVE_PERMISSION: Role revoked permission
-      UPDATE_FIELD: Role field updated
 SITE_CONFIG:
   '@TRANSLATION': Site configuration
   CACHE:

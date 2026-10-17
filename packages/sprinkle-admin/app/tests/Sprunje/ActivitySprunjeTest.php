@@ -529,10 +529,11 @@ class ActivitySprunjeTest extends AdminTestCase
         $userId = $this->users[0]->id;
         /** @var Activity $registered */
         $registered = Activity::factory()->create([
-            'user_id'     => $userId,
-            'type'        => AdminAccountActivityTypes::UPDATE_FIELD->value,
-            'metadata'    => ['field' => 'email'],
-            'description' => 'Legacy registered description',
+            'user_id'       => $userId,
+            'subject_type'  => $this->users[1]->getMorphClass(),
+            'subject_id'    => $this->users[1]->getKey(),
+            'type'          => AdminAccountActivityTypes::UPDATE_INFO->value,
+            'description'   => 'Legacy registered description',
         ]);
         /** @var Activity $legacy */
         $legacy = Activity::factory()->create([
@@ -556,8 +557,8 @@ class ActivitySprunjeTest extends AdminTestCase
             $rowsById[$row['id']] = $row;
         }
 
-        $this->assertSame('Account field email updated', $rowsById[$registered->id]['description']);
-        $this->assertSame('Account field updated', $rowsById[$registered->id]['label']);
+        $this->assertStringContainsString('account information updated', $rowsById[$registered->id]['description']);
+        $this->assertSame('Account updated', $rowsById[$registered->id]['label']);
         $this->assertSame('Legacy description', $rowsById[$legacy->id]['description']);
         $this->assertSame('unregistered_event', $rowsById[$legacy->id]['label']);
         $this->assertSame('unknown_event', $rowsById[$raw->id]['description']);
@@ -699,23 +700,24 @@ class ActivitySprunjeTest extends AdminTestCase
     public function testCsvIncludesLabelAndTranslatedDescription(): void
     {
         Activity::factory()->create([
-            'user_id'     => $this->users[0]->id,
-            'type'        => AdminAccountActivityTypes::UPDATE_FIELD->value,
-            'metadata'    => ['field' => 'email'],
-            'description' => 'Legacy description',
+            'user_id'       => $this->users[0]->id,
+            'subject_type'  => $this->users[1]->getMorphClass(),
+            'subject_id'    => $this->users[1]->getKey(),
+            'type'          => AdminAccountActivityTypes::UPDATE_INFO->value,
+            'description'   => 'Legacy description',
         ]);
 
         /** @var ActivitySprunje */
         $sprunje = $this->getService(ActivitySprunje::class);
         $sprunje->setOptions([
-            'filters' => ['label' => AdminAccountActivityTypes::UPDATE_FIELD->value],
+            'filters' => ['label' => AdminAccountActivityTypes::UPDATE_INFO->value],
         ]);
         $csv = $sprunje->getCsv()->toString();
 
         $this->assertStringContainsString('label', $csv);
-        $this->assertStringContainsString('Account field updated', $csv);
+        $this->assertStringContainsString('Account updated', $csv);
         $this->assertStringContainsString('description', $csv);
-        $this->assertStringContainsString('Account field email updated', $csv);
+        $this->assertStringContainsString('account information updated', $csv);
     }
 
     public function testActivityLabelsAreCached(): void

@@ -21,7 +21,6 @@ enum AdminAccountActivityTypes: string implements ActivityTypes
     case REMOVE_FROM_GROUP = 'account_remove_from_group';
     case ADD_ROLE = 'account_add_role';
     case REMOVE_ROLE = 'account_remove_role';
-    case UPDATE_FIELD = 'account_update_field';
     case ENABLE = 'account_enable';
     case DISABLE = 'account_disable';
     case VERIFY = 'account_verify';
@@ -38,7 +37,6 @@ enum AdminAccountActivityTypes: string implements ActivityTypes
             self::REMOVE_FROM_GROUP => 'ACCOUNT.ACTIVITY.REMOVE_FROM_GROUP',
             self::ADD_ROLE          => 'ACCOUNT.ACTIVITY.ADD_ROLE',
             self::REMOVE_ROLE       => 'ACCOUNT.ACTIVITY.REMOVE_ROLE',
-            self::UPDATE_FIELD      => 'ACCOUNT.ACTIVITY.UPDATE_FIELD',
             self::ENABLE            => 'ACCOUNT.ACTIVITY.ENABLE',
             self::DISABLE           => 'ACCOUNT.ACTIVITY.DISABLE',
             self::VERIFY            => 'ACCOUNT.ACTIVITY.VERIFY',
@@ -58,7 +56,6 @@ enum AdminAccountActivityTypes: string implements ActivityTypes
             self::REMOVE_FROM_GROUP => 'ACCOUNT.ACTIVITY.LABEL.REMOVE_FROM_GROUP',
             self::ADD_ROLE          => 'ACCOUNT.ACTIVITY.LABEL.ADD_ROLE',
             self::REMOVE_ROLE       => 'ACCOUNT.ACTIVITY.LABEL.REMOVE_ROLE',
-            self::UPDATE_FIELD      => 'ACCOUNT.ACTIVITY.LABEL.UPDATE_FIELD',
             self::ENABLE            => 'ACCOUNT.ACTIVITY.LABEL.ENABLE',
             self::DISABLE           => 'ACCOUNT.ACTIVITY.LABEL.DISABLE',
             self::VERIFY            => 'ACCOUNT.ACTIVITY.LABEL.VERIFY',
