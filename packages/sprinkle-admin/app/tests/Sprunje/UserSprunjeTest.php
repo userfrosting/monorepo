@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
+use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
@@ -81,6 +83,109 @@ class UserSprunjeTest extends AdminTestCase
                 ['value' => 'disabled', 'text' => 'Disabled'],
             ]
         ], $data['listable']);
+    }
+
+    public function testLastActivityHasComposedDescription(): void
+    {
+        /** @var User */
+        $user = $this->users[0]; // @phpstan-ignore-line
+        Activity::factory()->create([
+            'user_id'      => $user->id,
+            'subject_type' => $user->getMorphClass(),
+            'subject_id'   => $user->id,
+            'type'         => AccountActivityTypes::CREATE->value,
+            'occurred_at'  => new \DateTime('2023-05-15'),
+            'description'  => 'Legacy description',
+        ]);
+
+        /** @var UserSprunje */
+        $sprunje = $this->getService(UserSprunje::class);
+        $data = $sprunje->getArray();
+
+        $activityDescription = null;
+        foreach ($data['rows'] as $row) {
+            if (!is_array($row) || ($row['id'] ?? null) !== $user->id) {
+                continue;
+            }
+
+            $lastActivity = $row['last_activity'] ?? null;
+            if (is_array($lastActivity)) {
+                $activityDescription = $lastActivity['description'] ?? null;
+            }
+        }
+
+        $this->assertSame('User <strong>First 0 Name 0</strong> created', $activityDescription);
+    }
+
+    public function testLastActivityCompositionSkipsUsersWithoutActivities(): void
+    {
+        $user = User::factory()->create([
+            'user_name' => 'no_activity',
+        ]);
+        $this->assertInstanceOf(User::class, $user);
+
+        $userModel = new class() extends User {
+            public function getLastActivityAttribute(): ?Activity
+            {
+                if ($this->user_name === 'invalid_activity_id') {
+                    $activity = new Activity();
+                    $activity->setAttribute('id', null);
+
+                    return $activity;
+                }
+
+                return parent::getLastActivityAttribute();
+            }
+        };
+        $invalidActivityUser = User::factory()->create([
+            'user_name'  => 'invalid_activity_id',
+            'first_name' => 'Invalid',
+            'last_name'  => 'Activity',
+            'email'      => 'invalid-activity@example.com',
+        ]);
+        $this->assertInstanceOf(User::class, $invalidActivityUser);
+
+        $sprunje = new UserSprunje(
+            $userModel,
+            new Activity(),
+            $this->getService(ActivityTypeRegistryInterface::class),
+            $this->getService(\UserFrosting\I18n\Translator::class),
+        );
+        $rows = $sprunje->getArray()['rows'];
+
+        $inactiveRow = null;
+        $invalidActivityRow = null;
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            if (($row['id'] ?? null) === $user->getKey()) {
+                $inactiveRow = $row;
+            }
+            if (($row['id'] ?? null) === $invalidActivityUser->getKey()) {
+                $invalidActivityRow = $row;
+            }
+        }
+
+        $this->assertIsArray($inactiveRow);
+        $this->assertNull($inactiveRow['last_activity']);
+        $this->assertIsArray($invalidActivityRow);
+        $this->assertNull($invalidActivityRow['last_activity']['id']);
+    }
+
+    public function testLastActivityCompositionReturnsEarlyWhenNoActivitiesExist(): void
+    {
+        Activity::query()->delete();
+
+        /** @var UserSprunje */
+        $sprunje = $this->getService(UserSprunje::class);
+        $data = $sprunje->getArray();
+
+        $this->assertCount(3, $data['rows']);
+        foreach ($data['rows'] as $row) {
+            $this->assertIsArray($row);
+            $this->assertNull($row['last_activity'] ?? null);
+        }
     }
 
     public function testWithPagination(): void

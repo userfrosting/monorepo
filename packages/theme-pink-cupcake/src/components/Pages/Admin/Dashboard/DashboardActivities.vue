@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { ActivityDescription } from '../../../Activities'
+</script>
+
 <template>
     <UFCardBox :title="$t('ACTIVITY.LATEST')">
         <UFSprunjeTable
@@ -7,8 +11,8 @@
             hideFilters
             hideDownload>
             <template #header>
-                <UFSprunjeHeader>{{ $t('USER') }}</UFSprunjeHeader>
-                <UFSprunjeHeader>{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
+                <UFSprunjeHeader>{{ $t('ACTIVITY.BY') }}</UFSprunjeHeader>
+                <UFSprunjeHeader>{{ $t('ACTIVITY.DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
             <template #body="{ row }">
@@ -23,14 +27,14 @@
                         </RouterLink>
                     </strong>
                     <div class="uk-text-meta">{{ row.user.email }}</div>
+                    <div class="uk-text-meta">{{ row.ip_address }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn v-else>
                     <i>{{ $t('USER.DELETED') }}</i>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <div>{{ row.description }}</div>
+                    <ActivityDescription :activity="row" />
                     <div class="uk-text-meta">{{ $tdate(row.occurred_at) }}</div>
-                    <div class="uk-text-meta">{{ row.ip_address }}</div>
                 </UFSprunjeColumn>
             </template>
         </UFSprunjeTable>

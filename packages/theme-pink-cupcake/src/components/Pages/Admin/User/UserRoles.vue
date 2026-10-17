@@ -2,9 +2,25 @@
 import type { UserInterface } from '@userfrosting/sprinkle-account/interfaces'
 import UserManageRolesModal from './UserManageRolesModal.vue'
 
+/**
+ * Emits
+ */
+const emits = defineEmits(['updated'])
+
+/**
+ * Props
+ */
 const { user } = defineProps<{
     user: UserInterface
 }>()
+
+/**
+ * Methods - Action to take when roles are updated
+ */
+const rolesUpdated = (fetch: () => void) => {
+    fetch()
+    emits('updated')
+}
 </script>
 
 <template>
@@ -17,7 +33,7 @@ const { user } = defineProps<{
             <template #actions="{ sprunjer }">
                 <UserManageRolesModal
                     :user="user"
-                    @saved="sprunjer.fetch()"
+                    @saved="rolesUpdated(sprunjer.fetch)"
                     v-if="$checkAccess('update_user_role')"
                     class="uk-button uk-button-default uk-width-1-1 uk-width-auto@s" />
             </template>

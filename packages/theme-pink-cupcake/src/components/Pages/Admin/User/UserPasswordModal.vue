@@ -39,13 +39,13 @@ watch(
 /**
  * API - Use the user edit API.
  */
-const { submitUserUpdate } = useUserUpdateApi()
+const { submitUserPassword } = useUserUpdateApi()
 
 /**
  * Methods - Submit the form to the API and handle the response.
  */
 const submitForm = () => {
-    submitUserUpdate(props.user.user_name, 'password', formData.value).then(() => {
+    submitUserPassword(props.user.user_name, formData.value).then(() => {
         // Close the modal
         UIkit.modal('#modal-user-password-' + props.user.id).hide()
     })

@@ -18,7 +18,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use UserFrosting\I18n\Translator;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
@@ -50,9 +52,68 @@ class UserSprunje extends Sprunje
 
     public function __construct(
         protected UserInterface $userModel,
+        protected ActivityInterface $activityModel,
+        protected ActivityTypeRegistryInterface $activityTypeRegistry,
         protected Translator $translator,
     ) {
         parent::__construct();
+    }
+
+    /**
+     * Add the composed activity description to each user's last activity.
+     *
+     * @return array<string, mixed>
+     */
+    public function getArray(): array
+    {
+        $data = parent::getArray();
+        $activityIds = [];
+
+        // Collect all activity IDs from the last_activity field to efficiently
+        // load them in a single query.
+        foreach ($data['rows'] as $index => $row) {
+            if (!is_array($row) || !is_array($row['last_activity'] ?? null)) {
+                continue;
+            }
+
+            $id = $row['last_activity']['id'] ?? null;
+            if (is_int($id) || (is_string($id) && ctype_digit($id))) {
+                $activityIds[] = (int) $id;
+            }
+        }
+
+        // If no activity IDs were collected, return early.
+        if ($activityIds === []) {
+            return $data;
+        }
+
+        // Load all activities corresponding to the collected IDs, including
+        // their context and subject relations.
+        $activities = $this->activityModel->newQuery()
+            ->with(['context', 'subject'])
+            ->findMany(array_unique($activityIds))
+            ->keyBy('id');
+
+        // Attach the composed activity description to each user's last activity.
+        foreach ($data['rows'] as $index => $row) {
+            if (!is_array($row) || !is_array($row['last_activity'] ?? null)) {
+                continue;
+            }
+
+            $id = $row['last_activity']['id'] ?? null;
+            $activityId = is_int($id) || (is_string($id) && ctype_digit($id))
+                ? (int) $id
+                : null;
+            $activity = $activityId === null ? null : $activities->get($activityId);
+            if ($activity instanceof ActivityInterface) {
+                $data['rows'][$index]['last_activity']['description'] = $activity->getComposedDescription(
+                    $this->activityTypeRegistry,
+                    $this->translator
+                );
+            }
+        }
+
+        return $data;
     }
 
     /**

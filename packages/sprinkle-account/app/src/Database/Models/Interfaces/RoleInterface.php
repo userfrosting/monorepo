@@ -14,6 +14,7 @@ namespace UserFrosting\Sprinkle\Account\Database\Models\Interfaces;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -33,7 +34,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @method        $this forUser(int|UserInterface $user)
  * @method static $this forUser(int|UserInterface $user)
  */
-interface RoleInterface
+interface RoleInterface extends MorphableModelInterface
 {
     /**
      * Get a list of permissions assigned to this role.
