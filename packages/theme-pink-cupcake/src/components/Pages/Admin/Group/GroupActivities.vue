@@ -1,15 +1,26 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { ActivityDescription } from '../../../Activities'
+import type SprunjeTable from '../../../Sprunjer/SprunjeTable.vue'
 
 const { slug } = defineProps<{
     slug: string
 }>()
+
+const activityTable = ref<InstanceType<typeof SprunjeTable> | null>(null)
+
+function refresh() {
+    activityTable.value?.fetch()
+}
+
+defineExpose({ refresh })
 </script>
 
 <template>
     <UFCardBox :title="$t('ACTIVITY', 2)">
         <UFSprunjeTable
             v-if="slug !== ''"
+            ref="activityTable"
             :dataUrl="'/api/groups/g/' + slug + '/activities'"
             :defaultSorts="{ occurred_at: 'desc' }">
             <template #header>

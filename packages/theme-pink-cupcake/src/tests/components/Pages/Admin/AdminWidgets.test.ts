@@ -1,12 +1,15 @@
 import { describe, expect, test, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { defineComponent, h, onMounted } from 'vue'
 import DashboardActivities from '../../../../components/Pages/Admin/Dashboard/DashboardActivities.vue'
 import DashboardRecentUsers from '../../../../components/Pages/Admin/Dashboard/DashboardRecentUsers.vue'
+import GroupActivities from '../../../../components/Pages/Admin/Group/GroupActivities.vue'
 import GroupInfo from '../../../../components/Pages/Admin/Group/GroupInfo.vue'
 import GroupUsers from '../../../../components/Pages/Admin/Group/GroupUsers.vue'
 import PermissionInfo from '../../../../components/Pages/Admin/Permission/PermissionInfo.vue'
 import PermissionUsers from '../../../../components/Pages/Admin/Permission/PermissionUsers.vue'
 import RoleInfo from '../../../../components/Pages/Admin/Role/RoleInfo.vue'
+import RoleActivities from '../../../../components/Pages/Admin/Role/RoleActivities.vue'
 import RolePermissions from '../../../../components/Pages/Admin/Role/RolePermissions.vue'
 import RoleUsers from '../../../../components/Pages/Admin/Role/RoleUsers.vue'
 import UserInfo from '../../../../components/Pages/Admin/User/UserInfo.vue'
@@ -354,6 +357,7 @@ describe('admin widget components', () => {
         expect(roleUsers.find('[data-test="sprunje-table"]').exists()).toBe(true)
         expect(rolePermissions.find('[data-test="sprunje-table"]').exists()).toBe(true)
         await rolePermissions.get('[data-test="role-manage"]').trigger('click')
+        expect(rolePermissions.emitted('updated')).toHaveLength(1)
 
         const userInfo = mount(UserInfo, {
             props: {
@@ -384,6 +388,89 @@ describe('admin widget components', () => {
         expect(userPermissions.find('[data-test="sprunje-table"]').exists()).toBe(true)
         expect(userRoles.find('[data-test="sprunje-table"]').exists()).toBe(true)
         await userRoles.get('[data-test="user-manage-roles"]').trigger('click')
+        expect(userRoles.emitted('updated')).toHaveLength(1)
+    })
+
+    test('refreshes user activities when its refresh method is called', async () => {
+        let tableMounts = 0
+        const fetch = vi.fn()
+        const refreshTableStub = defineComponent({
+            setup(_, { expose }) {
+                expose({ fetch })
+                onMounted(() => tableMounts++)
+
+                return () => h('div', { 'data-test': 'sprunje-table' })
+            }
+        })
+        const wrapper = mount(UserActivities, {
+            props: { user_name: 'jane' },
+            global: {
+                ...global,
+                stubs: {
+                    ...global.stubs,
+                    UFSprunjeTable: refreshTableStub
+                }
+            }
+        })
+
+        expect(tableMounts).toBe(1)
+        wrapper.vm.refresh()
+
+        expect(fetch).toHaveBeenCalledOnce()
+        expect(tableMounts).toBe(1)
+
+        await wrapper.setProps({ user_name: '' })
+        wrapper.vm.refresh()
+
+        expect(fetch).toHaveBeenCalledOnce()
+    })
+
+    test('refreshes group and role activities with the Sprunjer fetch method', () => {
+        const fetch = vi.fn()
+        const refreshTableStub = defineComponent({
+            setup(_, { expose, slots }) {
+                expose({ fetch })
+
+                const sprunjer = { fetch }
+                return () =>
+                    h('div', { 'data-test': 'sprunje-table' }, [
+                        slots.header?.({ sprunjer }),
+                        slots.body?.({ row: mockTableRow, sprunjer })
+                    ])
+            }
+        })
+        const activitiesGlobal = {
+            ...global,
+            stubs: {
+                ...global.stubs,
+                UFSprunjeTable: refreshTableStub
+            }
+        }
+        const groupActivities = mount(GroupActivities, {
+            props: { slug: 'admins' },
+            global: activitiesGlobal
+        })
+        const roleActivities = mount(RoleActivities, {
+            props: { slug: 'admins' },
+            global: activitiesGlobal
+        })
+        const emptyGroupActivities = mount(GroupActivities, {
+            props: { slug: '' },
+            global: activitiesGlobal
+        })
+        const emptyRoleActivities = mount(RoleActivities, {
+            props: { slug: '' },
+            global: activitiesGlobal
+        })
+
+        groupActivities.vm.refresh()
+        roleActivities.vm.refresh()
+        emptyGroupActivities.vm.refresh()
+        emptyRoleActivities.vm.refresh()
+
+        expect(fetch).toHaveBeenCalledTimes(2)
+        expect(emptyGroupActivities.find('[data-test="sprunje-table"]').exists()).toBe(false)
+        expect(emptyRoleActivities.find('[data-test="sprunje-table"]').exists()).toBe(false)
     })
 
     test('renders user info fallback branches and access gating', () => {

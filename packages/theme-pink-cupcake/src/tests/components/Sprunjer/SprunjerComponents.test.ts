@@ -375,6 +375,9 @@ describe('sprunjer components', () => {
         expect(wrapper.find('[data-test="cell"]').exists()).toBe(true)
         expect(wrapper.find('[data-test="search"]').exists()).toBe(true)
         expect(wrapper.find('[data-test="named-filters"]').exists()).toBe(true)
+        expect(wrapper.vm.fetch).toBe(sprunjer.fetch)
+        wrapper.vm.fetch()
+        expect(sprunjer.fetch).toHaveBeenCalledOnce()
 
         await wrapper.get('a.uk-button').trigger('click')
         expect(wrapper.find('[data-test="filters"]').exists()).toBe(true)

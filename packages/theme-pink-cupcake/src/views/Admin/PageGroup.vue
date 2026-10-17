@@ -25,6 +25,7 @@ const group = ref<GroupResponse>({
     users_count: 0
 })
 const { fetchGroup, apiError } = useGroupApi()
+const groupActivities = ref<InstanceType<typeof GroupActivities> | null>(null)
 
 /**
  * Methods - Fetch group
@@ -34,6 +35,7 @@ function fetch() {
         group.value = fetchedGroup
         page.title = group.value.name
     })
+    groupActivities.value?.refresh()
 }
 
 /**
@@ -61,7 +63,9 @@ watch(
                         <GroupUsers :slug="$route.params.slug.toString()" />
                     </div>
                     <div>
-                        <GroupActivities :slug="$route.params.slug.toString()" />
+                        <GroupActivities
+                            :slug="$route.params.slug.toString()"
+                            ref="groupActivities" />
                     </div>
                 </div>
             </div>

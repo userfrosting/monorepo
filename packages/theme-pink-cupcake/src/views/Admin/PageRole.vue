@@ -25,6 +25,7 @@ const role = ref<RoleResponse>({
     users_count: 0
 })
 const { fetchRole, apiError } = useRoleApi()
+const roleActivities = ref<InstanceType<typeof RoleActivities> | null>(null)
 
 /**
  * Methods - Fetch group
@@ -34,6 +35,7 @@ function fetch() {
         role.value = fetchedRole
         page.title = role.value.name
     })
+    roleActivities.value?.refresh()
 }
 
 /**
@@ -61,10 +63,10 @@ watch(
                         <RoleUsers :slug="role.slug" />
                     </div>
                     <div v-if="$checkAccess('view_role_field')">
-                        <RolePermissions :role="role" />
+                        <RolePermissions :role="role" @updated="roleActivities?.refresh()" />
                     </div>
                     <div v-if="$checkAccess('view_role_field')">
-                        <RoleActivities :slug="role.slug" />
+                        <RoleActivities :slug="role.slug" ref="roleActivities" />
                     </div>
                 </div>
             </div>
