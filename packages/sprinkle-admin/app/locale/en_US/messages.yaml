@@ -22,15 +22,15 @@ ACCOUNT:
     DISABLE: User <strong>{{subject.full_name}}</strong> disabled
     VERIFY: User <strong>{{subject.full_name}}</strong> verified
     UNVERIFY: User <strong>{{subject.full_name}}</strong> unverified
-    UPDATE_PROFILE_SETTINGS: Profile updated
-    UPDATE_EMAIL: Email updated
-    UPDATE_PASSWORD: Password changed
-    REGISTER: User registered
-    VERIFIED: User verified
-    PASSWORD_RESET: Password reset
+    UPDATE_PROFILE_SETTINGS: User updated their profile settings
+    UPDATE_EMAIL: User updated their email address
+    UPDATE_PASSWORD: User updated their password
+    REGISTER: User registered their account
+    VERIFIED: User verified their account
+    PASSWORD_RESET: User reset their password
     LOGGED_IN: User signed in
     LOGGED_OUT: User signed out
-    PASSWORD_UPGRADED: Password upgraded
+    PASSWORD_UPGRADED: User's password upgraded
     LABEL:
       CREATE: Account created
       DELETE: Account deleted

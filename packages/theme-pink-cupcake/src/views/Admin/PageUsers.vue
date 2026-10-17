@@ -42,7 +42,7 @@ import UserGroupModal from '../../components/Pages/Admin/User/UserGroupModal.vue
                     <div class="uk-text-meta">{{ row.email }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn v-if="row.last_activity">
-                    <div>{{ row.last_activity.description }}</div>
+                    <div v-html="row.last_activity.description"></div>
                     <div class="uk-text-meta">{{ $tdate(row.last_activity.occurred_at) }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn v-else>

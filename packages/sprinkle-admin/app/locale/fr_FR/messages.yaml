@@ -22,15 +22,15 @@ ACCOUNT:
     DISABLE: Utilisateur <strong>{{subject.full_name}}</strong> désactivé
     VERIFY: Utilisateur <strong>{{subject.full_name}}</strong> vérifié
     UNVERIFY: Utilisateur <strong>{{subject.full_name}}</strong> non vérifié
-    UPDATE_PROFILE_SETTINGS: Profil mis à jour
-    UPDATE_EMAIL: Email mis à jour
-    UPDATE_PASSWORD: Mot de passe modifié
-    REGISTER: Utilisateur inscrit
-    VERIFIED: Utilisateur vérifié
-    PASSWORD_RESET: Mot de passe réinitialisé
+    UPDATE_PROFILE_SETTINGS: L'utilisateur a mis à jour ses paramètres de profil
+    UPDATE_EMAIL: L'utilisateur a mis à jour son adresse email
+    UPDATE_PASSWORD: L'utilisateur a modifié son mot de passe
+    REGISTER: L'utilisateur a créé son compte
+    VERIFIED: L'utilisateur a vérifié son compte
+    PASSWORD_RESET: L'utilisateur a réinitialisé son mot de passe
     LOGGED_IN: Utilisateur connecté
     LOGGED_OUT: Utilisateur déconnecté
-    PASSWORD_UPGRADED: Mot de passe amélioré
+    PASSWORD_UPGRADED: Le mot de passe de l'utilisateur a été amélioré
     LABEL:
       CREATE: Compte créé
       DELETE: Compte supprimé

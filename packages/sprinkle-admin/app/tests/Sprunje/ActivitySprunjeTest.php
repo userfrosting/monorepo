@@ -566,6 +566,18 @@ class ActivitySprunjeTest extends AdminTestCase
         $this->assertArrayNotHasKey('metadata', $rowsById[$registered->id]);
     }
 
+    public function testTransformationsRejectModelsThatAreNotActivities(): void
+    {
+        $sprunje = new TestableActivitySprunje(
+            new Activity(),
+            $this->getService(ActivityTypeRegistryInterface::class),
+            $this->getService(Translator::class),
+        );
+        $this->expectException(\UnexpectedValueException::class);
+
+        $sprunje->transform(new Collection([new Group()]));
+    }
+
     public function testActorlessActivityIsVisible(): void
     {
         /** @var Activity */
@@ -684,7 +696,7 @@ class ActivitySprunjeTest extends AdminTestCase
 
         /** @var Mockery\MockInterface&Translator $translator */
         $translator = Mockery::mock(Translator::class)
-            ->shouldReceive('getDictionary')->once()->andReturn($dictionary)
+            ->shouldReceive('getDictionary')->twice()->andReturn($dictionary)
             ->shouldReceive('translate')->once()->with('TEST.DESCRIPTION', [
                 'context' => null,
                 'subject' => null,

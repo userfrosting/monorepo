@@ -18,9 +18,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Database\Factories\ActivityFactory;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
+use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -110,6 +112,55 @@ class Activity extends Model implements ActivityInterface
     public function getDescriptionAttribute(?string $value): string
     {
         return $value ?? '';
+    }
+
+    /**
+     * Compose the localized activity description, including context and subject placeholders.
+     *
+     * @param ActivityTypeRegistryInterface $activityTypeRegistry
+     * @param Translator                    $translator
+     *
+     * @return string The composed localized activity description.
+     */
+    public function getComposedDescription(
+        ActivityTypeRegistryInterface $activityTypeRegistry,
+        Translator $translator,
+    ): string {
+        $type = (string) $this->getAttribute('type');
+        $dictionary = $translator->getDictionary();
+        $i18nKey = $activityTypeRegistry->getI18nKey($type);
+
+        // If the activity type does not have a registered i18n key, fall back
+        // to the legacy convention-based key.
+        if ($i18nKey === null || !$dictionary->has($i18nKey)) {
+            $conventionKey = 'ACTIVITY.TYPE.' . $type;
+            $i18nKey = $dictionary->has($conventionKey)
+                ? $conventionKey
+                : null;
+        }
+
+        // If no i18n key could be determined, fall back to the raw description or type.
+        if ($i18nKey === null) {
+            $description = $this->getAttribute('description');
+
+            return is_string($description) && $description !== ''
+                ? $description
+                : $type;
+        }
+
+        // Load the context and subject relations if they are not already loaded.
+        $this->loadMissing(['context', 'subject']);
+
+        // Prepare the placeholders for the translation, including context and subject.
+        $placeholders = $this->getAttribute('metadata');
+        if (!is_array($placeholders)) {
+            $placeholders = [];
+        }
+        $placeholders['context'] = $this->getRelationValue('context');
+        $placeholders['subject'] = $this->getRelationValue('subject');
+
+        // Translate the activity description using the determined i18n key and placeholders.
+        return $translator->translate($i18nKey, $placeholders);
     }
 
     /**

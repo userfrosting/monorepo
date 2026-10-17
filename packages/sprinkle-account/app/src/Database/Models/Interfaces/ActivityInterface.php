@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use UserFrosting\I18n\Translator;
+use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
@@ -64,6 +66,19 @@ interface ActivityInterface extends MorphableModelInterface
      * Get the model this activity was performed on.
      */
     public function subject(): MorphTo;
+
+    /**
+     * Compose the localized activity description, including context and subject placeholders.
+     *
+     * @param ActivityTypeRegistryInterface $activityTypeRegistry
+     * @param Translator                    $translator
+     *
+     * @return string The composed localized activity description.
+     */
+    public function getComposedDescription(
+        ActivityTypeRegistryInterface $activityTypeRegistry,
+        Translator $translator,
+    ): string;
 
     /**
      * Scope a query to only include specific type.

@@ -232,6 +232,12 @@ class ActivitySprunje extends Sprunje
     protected function applyTransformations(Collection $collection): Collection
     {
         return $collection->each(function (Model $activity): void {
+            if (!$activity instanceof ActivityInterface) {
+                throw new \UnexpectedValueException('ActivitySprunje rows must implement ActivityInterface.');
+            }
+
+            // If the activity has no associated user, set the relation to null.
+            // Otherwise, load the associated user, including trashed users.
             if ($activity->getAttribute('user_id') === null) {
                 $activity->setRelation('user', null);
             } else {
@@ -242,39 +248,15 @@ class ActivitySprunje extends Sprunje
                 ]);
             }
 
+            // Translate the activity type into a human-readable label.
             $type = (string) $activity->getAttribute('type');
             $activity->setAttribute('label', $this->getActivityLabel($type));
 
-            $i18nKey = $this->activityTypeRegistry->getI18nKey($type);
-            $dictionary = $this->getDictionary();
-
-            if ($i18nKey === null || !$dictionary->has($i18nKey)) {
-                $conventionKey = 'ACTIVITY.TYPE.' . $type;
-                $i18nKey = $dictionary->has($conventionKey)
-                    ? $conventionKey
-                    : null;
-            }
-
-            if ($i18nKey !== null) {
-                $placeholders = $activity->getAttribute('metadata');
-                if (!is_array($placeholders)) {
-                    $placeholders = [];
-                }
-                $placeholders['context'] = $activity->getRelationValue('context');
-                $placeholders['subject'] = $activity->getRelationValue('subject');
-
-                $activity->setAttribute(
-                    'description',
-                    $this->translator->translate($i18nKey, $placeholders)
-                );
-
-                return;
-            }
-
-            $description = $activity->getAttribute('description');
-            if (!is_string($description) || $description === '') {
-                $activity->setAttribute('description', $type);
-            }
+            // Compose the human-readable description for the activity.
+            $activity->setAttribute(
+                'description',
+                $activity->getComposedDescription($this->activityTypeRegistry, $this->translator)
+            );
         });
     }
 
