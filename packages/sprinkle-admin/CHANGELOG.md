@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Changed
+- Recorded administrative changes to users, groups, roles, and permissions in the activity history, and added the corresponding activity sprunjes for each entity.
 - Split role permission updates into a dedicated API action with focused validation and activity tracking.
 - Split administrative user management controllers into dedicated update operations with focused API validation and activity tracking.
 - User creation no longer assigns a group; groups can be managed separately.

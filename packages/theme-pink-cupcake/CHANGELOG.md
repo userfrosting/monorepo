@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Updated role permission management to use a dedicated typed update API.
-- Updated the admin user interface to use dedicated forms for profile, group, password, role, status, and verification changes.
-- User creation no longer includes group assignment.
+- Split admin user controls into dedicated forms and dialogs for profile details, group assignment, roles, passwords, account status, and email verification. Group assignment can be managed independently from user creation and profile edits.
+- Expanded activity history across the dashboard, activity list, and user, group, role, and permission pages. Entries show translated descriptions, changed values, the acting user, timestamps, and IP addresses; detail-page feeds refresh after updates.
+- Added each user's latest activity description to the admin user list.
+- Split `UserActivateModal` into separate activation and email-verification dialogs.
 
 ### Added
 - Add a button to generate a new CAPTCHA during registration. Refresh the CAPTCHA when registration validation or submission fails.

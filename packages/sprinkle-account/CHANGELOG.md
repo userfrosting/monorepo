@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Introduced typed activity recording with registered activity types, richer metadata, and polymorphic subjects, backed by a new activity database table schema. All activities are now recorded using this new structure via the ActivityRecorder service.
+
 ### Changed
-- Added activity logging for profile changes.
+- Expanded activity logging to cover profile changes and additional account workflows.
 - Implemented new registration captcha. The captcha challenges are now stored in the cache with an opaque cookie instead of PHP session state.
 - Renamed `CaptchaAction` to `RegistrationCaptchaAction`.
 

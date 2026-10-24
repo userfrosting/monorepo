@@ -6,11 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- [Dev Experience] Add a VS Code task to open the Docker Mailpit UI.
-- [Docker] Run the frontend from the monorepo root so Vite resolves workspace source exports for HMR.
-- [Monorepo] Fix the root Vite dev entrypoint path so dependency scanning resolves the app entry.
-- [Docker] Bind development service ports to IPv4 and IPv6 loopback and wait for MySQL health before starting the app.
-- [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
+- Introduce new extensible activity recording with richer records and polymorphic subjects across account and administration workflows.
+- [Admin] Split user and role mutations into focused typed APIs, with group membership managed independently from the user edit.
+- [Pink-Cupcake] Added contextual, translated activity history for user, group, role, and permission pages.
+- [Monorepo] Docker: Add a VS Code task to open the Docker Mailpit UI.
+- [Monorepo] Docker: Run the frontend from the monorepo root so Vite resolves workspace source exports for HMR.
+- [Monorepo + Core] Vite: Fix the root Vite dev entrypoint path so dependency scanning resolves the app entry.
+- [Monorepo + Core] Docker: Bind development service ports to IPv4 and IPv6 loopback and wait for MySQL health before starting the app.
+- [Monorepo + Core] Docker: Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
 - [Framework] The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - [Core] CSRF tokens are now signed double-submit cookies instead of session-backed tokens; Added `CSRF_SECRET` in environment var to define the secret key used for signing.
 - [Core] Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
