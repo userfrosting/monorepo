@@ -22,9 +22,9 @@ const { user } = defineProps<{
  * Methods - Fetch roles, fetch user's roles and submit the form.
  */
 const { loading, selected, fetch } = useUserRolesApi()
-const { submitUserUpdate } = useUserUpdateApi()
+const { submitUserRoles } = useUserUpdateApi()
 const submitForm = () => {
-    submitUserUpdate(user.user_name, 'roles', { roles: selected.value }).then(() => {
+    submitUserRoles(user.user_name, { roles: selected.value }).then(() => {
         // Emit the saved event
         emits('saved')
 

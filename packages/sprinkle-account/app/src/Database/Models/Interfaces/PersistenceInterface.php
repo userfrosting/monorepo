@@ -16,6 +16,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\MorphableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -37,7 +38,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @method        $this notExpired()
  * @method static $this notExpired()
  */
-interface PersistenceInterface
+interface PersistenceInterface extends MorphableModelInterface
 {
     /**
      * Relation with the user table.

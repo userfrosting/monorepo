@@ -7,6 +7,58 @@ ACTIVITY:
   PAGE: Activités
   PAGE_DESCRIPTION: Une liste des activités des utilisateurs
   TIME: Date de l'activité
+  BY: Réalisé par
+  DESCRIPTION: Description
+ACCOUNT:
+  ACTIVITY:
+    CREATE: Utilisateur <strong>{{subject.full_name}}</strong> créé
+    DELETE: Utilisateur <strong>{{subject.full_name}}</strong> supprimé
+    UPDATE_INFO: Informations de l'utilisateur <strong>{{subject.full_name}}</strong> mises à jour
+    ADD_TO_GROUP: Utilisateur <strong>{{subject.full_name}}</strong> ajouté au groupe <strong>{{context.name}}</strong>
+    REMOVE_FROM_GROUP: Utilisateur <strong>{{subject.full_name}}</strong> retiré du groupe <strong>{{context.name}}</strong>
+    ADD_ROLE: Utilisateur <strong>{{subject.full_name}}</strong> ajouté au rôle <strong>{{context.name}}</strong>
+    REMOVE_ROLE: Utilisateur <strong>{{subject.full_name}}</strong> retiré du rôle <strong>{{context.name}}</strong>
+    ENABLE: Utilisateur <strong>{{subject.full_name}}</strong> activé
+    DISABLE: Utilisateur <strong>{{subject.full_name}}</strong> désactivé
+    VERIFY: Utilisateur <strong>{{subject.full_name}}</strong> vérifié
+    UNVERIFY: Utilisateur <strong>{{subject.full_name}}</strong> non vérifié
+    UPDATE_PROFILE_SETTINGS: L'utilisateur a mis à jour ses paramètres de profil
+    UPDATE_EMAIL: L'utilisateur a mis à jour son adresse email
+    UPDATE_PASSWORD: L'utilisateur a modifié son mot de passe
+    CHANGED_PASSWORD: Mot de passe de <strong>{{subject.full_name}}</strong> modifié
+    FORCE_PASSWORD_RESET: Réinitialisation forcée du mot de passe de <strong>{{subject.full_name}}</strong>
+    REGISTER: L'utilisateur a créé son compte
+    VERIFIED: L'utilisateur a vérifié son compte
+    PASSWORD_RESET: L'utilisateur a réinitialisé son mot de passe
+    LOGGED_IN: Utilisateur connecté
+    LOGGED_OUT: Utilisateur déconnecté
+    PASSWORD_UPGRADED: Le mot de passe de l'utilisateur a été amélioré
+    LABEL:
+      CREATE: Compte créé
+      DELETE: Compte supprimé
+      UPDATE_INFO: Compte mis à jour
+      ADD_TO_GROUP: Compte ajouté au groupe
+      REMOVE_FROM_GROUP: Compte retiré du groupe
+      ADD_ROLE: Compte ajouté au rôle
+      REMOVE_ROLE: Compte retiré du rôle
+      ENABLE: Compte activé
+      DISABLE: Compte désactivé
+      VERIFY: Compte vérifié
+      UNVERIFY: Compte non vérifié
+      UPDATE_PROFILE_SETTINGS: Paramètres du profil mis à jour
+      UPDATE_EMAIL: Email mis à jour
+      UPDATE_PASSWORD: Mot de passe modifié
+      CHANGED_PASSWORD: Mot de passe modifié par un administrateur
+      FORCE_PASSWORD_RESET: Réinitialisation forcée du mot de passe par un administrateur
+      REGISTER: Utilisateur inscrit
+      VERIFIED: Utilisateur vérifié
+      PASSWORD_RESET: Mot de passe réinitialisé
+      LOGGED_IN: Utilisateur connecté
+      LOGGED_OUT: Utilisateur déconnecté
+      PASSWORD_UPGRADED: Mot de passe amélioré
+ADMIN:
+  ACTIVITY:
+    CACHE_CLEARED: Cache du site vidé
 ADMIN_PANEL: Panneau d'admin
 DASHBOARD: Tableau de bord
 DELETE_MASTER: Vous ne pouvez pas supprimer le compte principal !
@@ -48,6 +100,14 @@ GROUP:
     pour éditer et supprimer des groupes.
   UPDATE: Les détails du groupe <strong>{{name}}</strong> ont été enregistrés
   USERS: Utilisateurs dans ce groupe
+  ACTIVITY:
+    CREATE: Groupe <strong>{{subject.name}}</strong> créé
+    DELETE: Groupe <strong>{{subject.name}}</strong> supprimé
+    UPDATE_INFO: Informations du groupe <strong>{{subject.name}}</strong> mises à jour
+    LABEL:
+      CREATE: Groupe créé
+      DELETE: Groupe supprimé
+      UPDATE_INFO: Groupe mis à jour
 MANUALLY_ACTIVATED: Le compte de {{user_name}} a été activé manuellement
 PERMISSION:
   '1': Autorisation
@@ -58,6 +118,7 @@ PERMISSION:
   HOOK_CONDITION: Hook/Conditions
   ID: ID de l'autorisation
   INFO_PAGE: Afficher et modifier les détails des autorisations.
+  NONE: Aucune autorisation
   NOT_FOUND: Autorisation non trouvée
   PAGE: Autorisations
   PAGE_DESCRIPTION: Une liste des autorisations pour votre site. Fournit des outils
@@ -86,6 +147,7 @@ ROLE:
   NAME: Nom du rôle
   NAME_EXPLAIN: Spécifiez le nom du rôle
   NAME_IN_USE: Un rôle nommé <strong>{{name}}</strong> existe déjà
+  NONE: Aucun rôle
   NOT_FOUND: Rôle non trouvé
   PAGE: Rôles
   PAGE_DESCRIPTION: Une liste des rôles de votre site. Fournit des outils de gestion
@@ -95,6 +157,18 @@ ROLE:
   UPDATE: Mettre à jour les rôles
   UPDATED: Détails mis à jour pour le rôle <strong>{{name}}</strong>
   USERS: Utilisateurs avec ce rôle
+  ACTIVITY:
+    CREATE: Rôle <strong>{{subject.name}}</strong> créé
+    DELETE: Rôle <strong>{{subject.name}}</strong> supprimé
+    UPDATE_INFO: Informations du rôle <strong>{{subject.name}}</strong> mises à jour
+    ADD_PERMISSION: Le rôle <strong>{{subject.name}}</strong> a obtenu la permission <strong>{{context.name}}</strong>
+    REMOVE_PERMISSION: Le rôle <strong>{{subject.name}}</strong> a perdu la permission <strong>{{context.name}}</strong>
+    LABEL:
+      CREATE: Rôle créé
+      DELETE: Rôle supprimé
+      UPDATE_INFO: Rôle mis à jour
+      ADD_PERMISSION: Permission accordée au rôle
+      REMOVE_PERMISSION: Permission retirée du rôle
 SITE_CONFIG:
   '@TRANSLATION': Configuration du site
   CACHE:

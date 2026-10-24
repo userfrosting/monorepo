@@ -35,6 +35,14 @@ const user = ref<UserResponse>({
 const { apiError, fetchUser } = useUserApi()
 
 /**
+ * Binding to the UserActivities instance for refreshing activities.
+ */
+const userActivities = ref<InstanceType<typeof UserActivities> | null>(null)
+function refreshUserActivities() {
+    userActivities.value?.refresh()
+}
+
+/**
  * Methods - Fetch user
  */
 function fetch() {
@@ -42,6 +50,7 @@ function fetch() {
         user.value = fetchedUser
         page.title = user.value.full_name
     })
+    refreshUserActivities()
 }
 
 /**
@@ -66,13 +75,13 @@ watch(
             <div class="uk-width-2-3@l">
                 <div class="uk-child-width-1-1" uk-grid>
                     <div v-if="$checkAccess('view_user_roles')">
-                        <UserRoles :user="user" />
+                        <UserRoles :user="user" @updated="refreshUserActivities()" />
                     </div>
                     <div v-if="$checkAccess('view_user_permissions')">
                         <UserPermissions :user_name="user.user_name" />
                     </div>
                     <div v-if="$checkAccess('view_user_activities')">
-                        <UserActivities :user_name="user.user_name" />
+                        <UserActivities :user_name="user.user_name" ref="userActivities" />
                     </div>
                 </div>
             </div>

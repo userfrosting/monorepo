@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref } from 'vue'
+import { defineComponent, h, ref } from 'vue'
 import PageGroup from '../../../views/Admin/PageGroup.vue'
 import PagePermission from '../../../views/Admin/PagePermission.vue'
 import PageRole from '../../../views/Admin/PageRole.vue'
@@ -59,6 +59,14 @@ describe('Admin detail views', () => {
     })
 
     test('PageGroup fetches group, updates page title, and renders child panels', async () => {
+        const refreshActivities = vi.fn()
+        const GroupActivitiesStub = defineComponent({
+            setup(_, { expose }) {
+                expose({ refresh: refreshActivities })
+
+                return () => h('div', { 'data-test': 'group-activities' })
+            }
+        })
         const wrapper = mount(PageGroup, {
             global: {
                 mocks: { $checkAccess: () => true, $route: route },
@@ -69,6 +77,7 @@ describe('Admin detail views', () => {
                             '<button data-test="group-info" @click="$emit(\'groupUpdated\')" />'
                     },
                     GroupUsers: { template: '<div data-test="group-users" />' },
+                    GroupActivities: GroupActivitiesStub,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -83,6 +92,7 @@ describe('Admin detail views', () => {
         expect(wrapper.find('[data-test="group-users"]').exists()).toBe(true)
         await wrapper.get('[data-test="group-info"]').trigger('click')
         expect(fetchGroup).toHaveBeenCalledTimes(2)
+        expect(refreshActivities).toHaveBeenCalledOnce()
 
         groupError.value = { status: 404 }
         const errorWrapper = mount(PageGroup, {
@@ -91,6 +101,7 @@ describe('Admin detail views', () => {
                 stubs: {
                     GroupInfo: true,
                     GroupUsers: true,
+                    GroupActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -105,6 +116,7 @@ describe('Admin detail views', () => {
                 stubs: {
                     PermissionInfo: { template: '<div data-test="permission-info" />' },
                     PermissionUsers: { template: '<div data-test="permission-users" />' },
+                    PermissionActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -129,6 +141,7 @@ describe('Admin detail views', () => {
                 stubs: {
                     PermissionInfo: true,
                     PermissionUsers: true,
+                    PermissionActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -137,6 +150,14 @@ describe('Admin detail views', () => {
     })
 
     test('PageRole fetches role and supports error branch', async () => {
+        const refreshActivities = vi.fn()
+        const RoleActivitiesStub = defineComponent({
+            setup(_, { expose }) {
+                expose({ refresh: refreshActivities })
+
+                return () => h('div', { 'data-test': 'role-activities' })
+            }
+        })
         const wrapper = mount(PageRole, {
             global: {
                 mocks: { $checkAccess: () => true },
@@ -146,7 +167,12 @@ describe('Admin detail views', () => {
                         template: '<button data-test="role-info" @click="$emit(\'updated\')" />'
                     },
                     RoleUsers: { template: '<div data-test="role-users" />' },
-                    RolePermissions: { template: '<div data-test="role-permissions" />' },
+                    RolePermissions: {
+                        emits: ['updated'],
+                        template:
+                            '<button data-test="role-permissions" @click="$emit(\'updated\')" />'
+                    },
+                    RoleActivities: RoleActivitiesStub,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -159,6 +185,9 @@ describe('Admin detail views', () => {
         expect(wrapper.find('[data-test="role-info"]').exists()).toBe(true)
         await wrapper.get('[data-test="role-info"]').trigger('click')
         expect(fetchRole).toHaveBeenCalledTimes(2)
+        expect(refreshActivities).toHaveBeenCalledOnce()
+        await wrapper.get('[data-test="role-permissions"]').trigger('click')
+        expect(refreshActivities).toHaveBeenCalledTimes(2)
 
         roleError.value = { status: 500 }
         const errorWrapper = mount(PageRole, {
@@ -168,6 +197,7 @@ describe('Admin detail views', () => {
                     RoleInfo: true,
                     RoleUsers: true,
                     RolePermissions: true,
+                    RoleActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -176,17 +206,28 @@ describe('Admin detail views', () => {
     })
 
     test('PageUser fetches user and supports error branch', async () => {
+        const refreshActivities = vi.fn()
+        const UserActivitiesStub = defineComponent({
+            setup(_, { expose }) {
+                expose({ refresh: refreshActivities })
+
+                return () => h('div', { 'data-test': 'user-activities' })
+            }
+        })
         const wrapper = mount(PageUser, {
             global: {
                 mocks: { $checkAccess: () => true },
                 stubs: {
                     UserInfo: {
                         emits: ['updated'],
-                        template: '<button data-test="user-info" @click="$emit(\'updated\')" />'
+                        template: `<button data-test="user-info" @click="$emit('updated')" />`
                     },
-                    UserRoles: { template: '<div data-test="user-roles" />' },
+                    UserRoles: {
+                        emits: ['updated'],
+                        template: '<button data-test="user-roles" @click="$emit(\'updated\')" />'
+                    },
                     UserPermissions: { template: '<div data-test="user-permissions" />' },
-                    UserActivities: { template: '<div data-test="user-activities" />' },
+                    UserActivities: UserActivitiesStub,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -199,6 +240,9 @@ describe('Admin detail views', () => {
         expect(wrapper.find('[data-test="user-info"]').exists()).toBe(true)
         await wrapper.get('[data-test="user-info"]').trigger('click')
         expect(fetchUser).toHaveBeenCalledTimes(2)
+        expect(refreshActivities).toHaveBeenCalledTimes(1)
+        await wrapper.get('[data-test="user-roles"]').trigger('click')
+        expect(refreshActivities).toHaveBeenCalledTimes(2)
 
         userError.value = { status: 403 }
         const errorWrapper = mount(PageUser, {
@@ -226,6 +270,7 @@ describe('Admin detail views', () => {
                 stubs: {
                     GroupInfo: { template: '<div data-test="group-info" />' },
                     GroupUsers: { template: '<div data-test="group-users" />' },
+                    GroupActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -242,6 +287,7 @@ describe('Admin detail views', () => {
                     RoleInfo: { template: '<div data-test="role-info" />' },
                     RoleUsers: { template: '<div data-test="role-users" />' },
                     RolePermissions: { template: '<div data-test="role-permissions" />' },
+                    RoleActivities: true,
                     UFErrorPage: { template: '<div data-test="error-page" />' }
                 }
             }
@@ -259,6 +305,7 @@ describe('Admin detail views', () => {
                     RoleInfo: true,
                     RoleUsers: true,
                     RolePermissions: { template: '<div data-test="role-permissions" />' },
+                    RoleActivities: true,
                     UFErrorPage: true
                 }
             }

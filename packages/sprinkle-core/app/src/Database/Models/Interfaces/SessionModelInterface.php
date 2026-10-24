@@ -29,6 +29,6 @@ use Carbon\Carbon;
  * @property string      $payload
  * @property Carbon      $last_activity
  */
-interface SessionModelInterface
+interface SessionModelInterface extends MorphableModelInterface
 {
 }

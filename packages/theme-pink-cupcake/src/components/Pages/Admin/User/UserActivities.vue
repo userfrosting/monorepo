@@ -1,18 +1,36 @@
 <script setup lang="ts">
-const { user_name } = defineProps<{
+import { ref } from 'vue'
+import { ActivityDescription } from '../../../Activities'
+import type SprunjeTable from '../../../Sprunjer/SprunjeTable.vue'
+
+/**
+ * Props
+ */
+const props = defineProps<{
     user_name: string
 }>()
+
+/**
+ * Binding to the SprunjeTable instance for refreshing activities.
+ */
+const activityTable = ref<InstanceType<typeof SprunjeTable> | null>(null)
+function refresh() {
+    activityTable.value?.fetch()
+}
+defineExpose({ refresh })
 </script>
 
 <template>
     <UFCardBox :title="$t('ACTIVITY', 2)">
         <UFSprunjeTable
-            v-if="user_name !== ''"
-            :dataUrl="'/api/users/u/' + user_name + '/activities'"
+            v-if="props.user_name !== ''"
+            ref="activityTable"
+            :dataUrl="'/api/users/u/' + props.user_name + '/activities'"
             :defaultSorts="{ occurred_at: 'desc' }">
             <template #header>
                 <UFSprunjeHeader sort="occurred_at">{{ $t('ACTIVITY.TIME') }}</UFSprunjeHeader>
-                <UFSprunjeHeader sort="description">{{ $t('DESCRIPTION') }}</UFSprunjeHeader>
+                <UFSprunjeHeader sort="user">{{ $t('ACTIVITY.BY') }}</UFSprunjeHeader>
+                <UFSprunjeHeader sort="label">{{ $t('ACTIVITY.DESCRIPTION') }}</UFSprunjeHeader>
             </template>
 
             <template #body="{ row }">
@@ -20,8 +38,20 @@ const { user_name } = defineProps<{
                     <div>{{ $tdate(row.occurred_at) }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
-                    <div>{{ row.description }}</div>
+                    <strong>
+                        <RouterLink
+                            :to="{
+                                name: 'admin.user',
+                                params: { user_name: row.user.user_name }
+                            }">
+                            {{ row.user.full_name }} ({{ row.user.user_name }})
+                        </RouterLink>
+                    </strong>
+                    <div class="uk-text-meta">{{ row.user.email }}</div>
                     <div class="uk-text-meta">{{ row.ip_address }}</div>
+                </UFSprunjeColumn>
+                <UFSprunjeColumn>
+                    <ActivityDescription :activity="row" />
                 </UFSprunjeColumn>
             </template>
         </UFSprunjeTable>

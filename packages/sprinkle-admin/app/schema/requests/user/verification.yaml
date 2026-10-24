@@ -1,0 +1,11 @@
+---
+flag_verified:
+  validators:
+    required:
+      label: "&VERIFICATION"
+      message: VALIDATE.REQUIRED
+    member_of:
+      values:
+      - '0'
+      - '1'
+      message: VALIDATE.BOOLEAN

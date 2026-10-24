@@ -43,6 +43,11 @@ const sprunjer = useSprunjer(() => dataUrl, defaultSorts, defaultFilters, defaul
 const { rows, loading } = sprunjer
 
 /**
+ * Expose the fetch method of the sprunjer instance to the parent component.
+ */
+defineExpose({ fetch: sprunjer.fetch })
+
+/**
  * Provide sprunjer to children components
  */
 provide('sprunjer', sprunjer)

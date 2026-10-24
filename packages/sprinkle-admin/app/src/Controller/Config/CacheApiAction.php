@@ -18,6 +18,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorder;
+use UserFrosting\Sprinkle\Admin\Log\AdminActivityTypes;
 use UserFrosting\Sprinkle\Core\Bakery\ClearCacheCommand;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
@@ -33,6 +35,7 @@ class CacheApiAction
         protected Translator $translator,
         protected Authenticator $authenticator,
         protected ClearCacheCommand $clearCacheCommand,
+        protected ActivityRecorder $logger,
     ) {
     }
 
@@ -49,6 +52,12 @@ class CacheApiAction
         $this->clearCacheCommand->clearIlluminateCache();
         $this->clearCacheCommand->clearTwigCache();
         $this->clearCacheCommand->clearRouterCache();
+
+        // Log activity
+        $this->logger->record(
+            user: $this->authenticator->user(),
+            type: AdminActivityTypes::CACHE_CLEARED,
+        );
 
         // Message
         $message = $this->translator->translate('SITE_CONFIG.CACHE.CLEARED');
