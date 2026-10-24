@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Monorepo] Fix the root Vite dev entrypoint path so dependency scanning resolves the app entry.
 - [Docker] Bind development service ports to IPv4 and IPv6 loopback and wait for MySQL health before starting the app.
 - [Docker] Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
+- [Monorepo + Skeleton] **Docker**: Updated Docker setup to use PHP 8.5.
 - [Framework] The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - [Core] CSRF tokens are now signed double-submit cookies instead of session-backed tokens; Added `CSRF_SECRET` in environment var to define the secret key used for signing.
 - [Core] Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
