@@ -20,6 +20,8 @@ use UserFrosting\I18n\Translator;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Exceptions\ForbiddenException;
+use UserFrosting\Sprinkle\Account\Log\ActivityRecorderInterface;
+use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Util\ApiResponse;
 
@@ -46,6 +48,7 @@ class UserPasswordResetAction
         protected Twig $twig,
         protected Config $config,
         protected Mailer $mailer,
+        protected ActivityRecorderInterface $logger,
     ) {
     }
 
@@ -104,5 +107,11 @@ class UserPasswordResetAction
     {
         $user->password_last_set = null;
         $user->save();
+
+        $this->logger->record(
+            user: $this->authenticator->user(),
+            type: AdminAccountActivityTypes::FORCE_PASSWORD_RESET,
+            subject: $user,
+        );
     }
 }

@@ -5,6 +5,7 @@ import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { useGroupApi } from '@userfrosting/sprinkle-admin/composables'
 import GroupInfo from '../../components/Pages/Admin/Group/GroupInfo.vue'
 import GroupUsers from '../../components/Pages/Admin/Group/GroupUsers.vue'
+import GroupActivities from '../../components/Pages/Admin/Group/GroupActivities.vue'
 import type { GroupResponse } from '@userfrosting/sprinkle-admin/interfaces'
 
 /**
@@ -24,6 +25,7 @@ const group = ref<GroupResponse>({
     users_count: 0
 })
 const { fetchGroup, apiError } = useGroupApi()
+const groupActivities = ref<InstanceType<typeof GroupActivities> | null>(null)
 
 /**
  * Methods - Fetch group
@@ -33,6 +35,7 @@ function fetch() {
         group.value = fetchedGroup
         page.title = group.value.name
     })
+    groupActivities.value?.refresh()
 }
 
 /**
@@ -55,7 +58,16 @@ watch(
                 <GroupInfo :group="group" @groupUpdated="fetch()" />
             </div>
             <div class="uk-width-2-3@l" v-if="$checkAccess('view_group_field')">
-                <GroupUsers :slug="$route.params.slug.toString()" />
+                <div class="uk-child-width-1-1" uk-grid>
+                    <div>
+                        <GroupUsers :slug="$route.params.slug.toString()" />
+                    </div>
+                    <div>
+                        <GroupActivities
+                            :slug="$route.params.slug.toString()"
+                            ref="groupActivities" />
+                    </div>
+                </div>
             </div>
         </div>
     </template>

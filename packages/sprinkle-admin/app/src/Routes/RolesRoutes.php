@@ -16,13 +16,14 @@ use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use UserFrosting\Routes\RouteDefinitionInterface;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
+use UserFrosting\Sprinkle\Admin\Controller\Role\RoleActivitySprunje;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleApi;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleCreateAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleDeleteAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleEditAction;
+use UserFrosting\Sprinkle\Admin\Controller\Role\RolePermissionsAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RolePermissionsSprunje;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RolesSprunje;
-use UserFrosting\Sprinkle\Admin\Controller\Role\RoleUpdateFieldAction;
 use UserFrosting\Sprinkle\Admin\Controller\Role\RoleUsersSprunje;
 use UserFrosting\Sprinkle\Admin\Middlewares\RoleInjector;
 use UserFrosting\Sprinkle\Core\Middlewares\NoCache;
@@ -42,12 +43,14 @@ class RolesRoutes implements RouteDefinitionInterface
             $group->get('', RolesSprunje::class);
             $group->get('/r/{slug}/permissions', RolePermissionsSprunje::class)
                   ->add(RoleInjector::class);
+            $group->get('/r/{slug}/activities', RoleActivitySprunje::class)
+                  ->add(RoleInjector::class);
             $group->get('/r/{slug}/users', RoleUsersSprunje::class)
                   ->add(RoleInjector::class);
             $group->post('', RoleCreateAction::class);
             $group->put('/r/{slug}', RoleEditAction::class)
                   ->add(RoleInjector::class);
-            $group->put('/r/{slug}/{field}', RoleUpdateFieldAction::class)
+            $group->put('/r/{slug}/permissions', RolePermissionsAction::class)
                   ->add(RoleInjector::class);
         })->add(AuthGuard::class)->add(NoCache::class);
     }

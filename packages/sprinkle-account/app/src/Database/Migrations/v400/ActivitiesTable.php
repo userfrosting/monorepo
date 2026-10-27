@@ -16,7 +16,7 @@ use Illuminate\Database\Schema\Blueprint;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
- * Sessions table migration
+ * Activities table migration
  * Version 4.0.0.
  */
 class ActivitiesTable extends Migration

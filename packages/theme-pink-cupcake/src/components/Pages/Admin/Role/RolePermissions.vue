@@ -2,9 +2,16 @@
 import RoleManagePermissionModal from './RoleManagePermissionModal.vue'
 import type { RoleInterface } from '@userfrosting/sprinkle-account/interfaces'
 
+const emits = defineEmits(['updated'])
+
 const { role } = defineProps<{
     role: RoleInterface
 }>()
+
+const permissionsUpdated = (fetch: () => void) => {
+    fetch()
+    emits('updated')
+}
 </script>
 
 <template>
@@ -13,7 +20,7 @@ const { role } = defineProps<{
             <template #actions="{ sprunjer }">
                 <RoleManagePermissionModal
                     :role="role"
-                    @saved="sprunjer.fetch()"
+                    @saved="permissionsUpdated(sprunjer.fetch)"
                     class="uk-button uk-button-default uk-width-1-1 uk-width-auto@s" />
             </template>
 

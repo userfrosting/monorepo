@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
+use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 
@@ -62,11 +64,13 @@ class UserPasswordActionTest extends AdminTestCase
     public function testPost(): void
     {
         /** @var User */
+        $admin = User::factory()->create();
+        /** @var User */
         $user = User::factory()->create([
             'first_name' => 'Kelly',
             'last_name'  => 'Reilly'
         ]);
-        $this->actAsUser($user, permissions: ['update_user_field']);
+        $this->actAsUser($admin, permissions: ['update_user_field']);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/api/users/u/' . $user->user_name . '/password-reset');
@@ -78,5 +82,12 @@ class UserPasswordActionTest extends AdminTestCase
             'title'       => '<strong>Kelly Reilly</strong>\'s password has been reset.',
             'description' => '',
         ], $response);
+
+        $activity = Activity::query()
+            ->where('type', AdminAccountActivityTypes::FORCE_PASSWORD_RESET->value)
+            ->where('user_id', $admin->id)
+            ->where('subject_id', $user->id)
+            ->first();
+        $this->assertNotNull($activity);
     }
 }

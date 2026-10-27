@@ -52,9 +52,7 @@ class UserActivitySprunje
         // GET parameters and pass to Sprunje
         $params = $request->getQueryParams();
         $this->sprunje->setOptions($params);
-        $this->sprunje->extendQuery(function ($query) use ($user) {
-            return $query->where('user_id', $user->id);
-        });
+        $this->sprunje->forAny(user: $user, context: $user, subject: $user);
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
