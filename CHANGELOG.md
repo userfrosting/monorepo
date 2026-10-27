@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- [Docker] Configure Compose project names and host ports through a dedicated top-level Docker `.env` file copied from `docker/.env.example`, making it easier for separate instances to use isolated resources. Use Compose's standard `COMPOSE_PROJECT_NAME` to override the container project name if needed.
 - [Dev Experience] Add a VS Code task to open the Docker Mailpit UI.
 - [Docker] Run the frontend from the monorepo root so Vite resolves workspace source exports for HMR.
 - [Monorepo] Fix the root Vite dev entrypoint path so dependency scanning resolves the app entry.
