@@ -2,82 +2,79 @@
 
 This Docker configuration is for developing UserFrosting in the monorepo only. It includes development services and is not a production deployment configuration. For the Skeleton app's development and production options, see the [Skeleton Docker guide](../packages/skeleton/docker/README.md).
 
-> You can find the complete version of thi guide at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
+> You can find the complete version of this guide at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
+
+## Installation
+
+### Prerequisites
 
 First, install [Docker Compose or Docker Desktop](https://docs.docker.com/compose/install/).
 
+### Initial Setup
 Second, initialize a new UserFrosting project:
-
-1. Get UserFrosting repository : 
-   ```bash
-   git clone https://github.com/userfrosting/monorepo.git UFMonorepo
-   ```
-2. Change to the new directory : 
-   ```bash
-   cd UFMonorepo
-   ```
-3. Copy the default env file : 
-   ```bash
-   cp docker/.env.example .env
-   cp packages/skeleton/app/.env.docker packages/skeleton/app/.env
-   ```
-   > [!NOTE]
-   > The `.env` file (copied from `docker/.env.example`) define `COMPOSE_PROJECT_NAME`, which defines the containers, images, networks, and volumes names. If it is unset, Compose uses the checkout directory name instead.
-   >
-   > The default host ports are `8080` (HTTP), `5173` (Vite), `8503` (MySQL), `1025` (SMTP), and `8025` (Mailpit). Override them in `.env` when running multiple checkouts.
-   >
-   > Compose passes the database settings from `MYSQL_*` in this file to the PHP app, keeping its connection credentials synchronized with MySQL.
-   >
-   > Use this to run parallel instances of UserFrosting with isolated resources.
-4. Build all the Docker containers:
-   ```bash
-   docker compose build --no-cache
-   ```
-5. Start all the containers:
-   ```bash
-   docker compose up -d
-   ```
-   The Vue frontend installs dependencies from the current package files when its container starts. Its `node_modules` directory is stored separately from the host's, so changes to the lockfile are picked up on the next container start.
-6. Set some directory permissions (your may have to enter your root password):
-   ```bash
-   sudo chown -R $USER: .
-   sudo chmod 777 packages/skeleton/app/{logs,cache,sessions}
-   ```
-7. Install all composer modules used in UserFrosting:
-   ```bash
-   docker compose exec app composer update
-   ```
-8. Install UserFrosting (database configuration and migrations, creation of admin user, ...). You'll need to provide info to create the admin user.
-   ```bash
-   docker compose exec app php bakery bake
-   ```
-9. Restart Vue Container now that Bakery installed frontend assets:
-    ```bash
-    docker compose restart vue-frontend
-    ```
-
-Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrosting homepage!
-
-> All calls to Bakery commands need to be prefixed by `docker compose`,  since they need to run on the containers, not your computer. For example:
-> `docker compose exec app php bakery ...`.
-
-**You can paste these into a bash file and execute it!**
 
 ```bash
 git clone https://github.com/userfrosting/monorepo.git UFMonorepo
-cd UFMonorepo
-cp packages/skeleton/app/.env.docker packages/skeleton/app/.env
-cp docker/.env.example .env
-docker compose build --no-cache
-docker compose up -d
-sudo chown -R $USER: .
-sudo chmod 777 packages/skeleton/app/{logs,cache,sessions}
-docker compose exec app composer update
-docker compose exec app php bakery bake
-docker compose restart vue-frontend
 ```
 
-**Start / stop containers**
+Change to the new directory: 
+
+```bash
+cd UFMonorepo
+```
+
+Copy the default env file:
+
+```bash
+cp docker/.env.example .env
+cp packages/skeleton/app/.env.docker packages/skeleton/app/.env
+```
+
+> [!TIP]
+> The `.env` file (copied from `docker/.env.example`) can define `COMPOSE_PROJECT_NAME`, which defines the containers, images, networks, and volumes names. If it is unset, Compose uses the checkout directory name instead. You can set it to a unique value to avoid conflicts with other projects or branch checkouts.
+> 
+> The same can be done for other environment variables such as database credentials or service ports.
+
+> [!NOTE]
+> Compose passes the database settings from `MYSQL_*` environment variables in this file to the PHP app, keeping its connection credentials synchronized with MySQL. No need to manually configure the database connection in the app, especially in the app `.env` file.
+
+Set some directory permissions (you may have to enter your root password):
+
+```bash
+sudo chown -R $USER: .
+sudo chmod 777 packages/skeleton/app/{logs,cache,sessions}
+```
+
+### Build and Start Containers
+
+Build all the Docker containers, and start them:
+```bash
+docker compose up -d --build
+```
+
+> [!NOTE]
+> At this point, the Docker containers are built and running, but setup is not yet complete. You still need to install Composer modules and run the Bakery commands to set up UserFrosting. Otherwise the UI will not function correctly, including showing a white page.
+
+### Install Composer Modules
+
+Install all Composer modules used in UserFrosting:
+
+```bash
+docker compose exec app composer install
+```
+
+### Install UserFrosting
+
+Install UserFrosting (database migrations, creation of admin user, ...) using the Bake command. You'll need to provide info to create the admin user.
+
+```bash
+docker compose exec app php bakery bake
+```
+
+Now visit [http://localhost:8080](http://localhost:8080) to see your UserFrosting homepage!
+
+## Using the Docker Environment
+### Start / stop containers
 
 If you need to stop the UserFrosting docker containers, just change to your userfrosting directory and run:
 
@@ -91,28 +88,56 @@ To start containers again, change to your userfrosting directory and run:
 docker compose up -d
 ```
 
-**Reset the database and containers**
+### Running Bakery Commands
 
-To stop the containers but keep the database volume, run:
+All calls to Bakery commands need to be prefixed by `docker compose`,  since they need to run on the containers, not your computer. For example:
+
+```bash
+docker compose exec app php bakery ...
+```
+
+### Updating Frontend Dependencies
+
+The `app` and `vue-frontend` containers share a Docker-managed `node_modules` volume, separate from your host's `node_modules`. The Vue frontend waits for the dependencies to be installed by Bakery before starting Vite. On a fresh setup, `docker compose exec app php bakery bake` installs the locked dependencies as part of setup.
+
+To install dependencies from the current lockfile, run:
+
+```bash
+docker compose exec app php bakery assets:install
+```
+
+To update dependencies and the lockfile, run:
+
+```bash
+docker compose exec app php bakery assets:update
+```
+
+After changing dependencies, restart the Vue dev server to ensure it reloads them:
+
+```bash
+docker compose restart vue-frontend
+```
+
+> [!NOTE]
+> Vue Hot Module Replacement (HMR) is enabled and will automatically reload the frontend when changes are detected in the source files. No need to restart the Vue dev server manually when editing source files.
+
+### Using Mailpit
+
+Mailpit is used to capture outgoing emails from the application. You can access the Mailpit web interface at [http://localhost:8025](http://localhost:8025) to view and manage emails sent by UserFrosting.
+
+### Reset the database and containers
+
+To remove the containers while keeping the database and frontend dependency volumes, run:
 
 ```bash
 docker compose down --remove-orphans
 ```
 
-To also delete the persisted database and start with a clean database, add `--volumes`:
+To also delete the persisted database and frontend dependency volumes and start with a clean slate, add `--volumes`:
 
 ```bash
 docker compose down --remove-orphans --volumes
 ```
 
-This permanently removes the database data and Docker-managed frontend dependency volume; the frontend reinstalls its dependencies when it starts again. Source files and sprinkles are not deleted.
-
-**This is not (yet) meant for production!**
-
-You may be tempted to run with this in production but this setup has not been security-hardened. For example:
-
-- Database is exposed on port 8503 by default so you can access MySQL using your favorite client at localhost:8503. However, the way Docker exposes this actually bypasses common firewalls like `ufw` so this should not be exposed in production.
-- Database credentials are hard-coded so obviously not secure.
-- File permissions may be more open than necessary.
-- HTTPS not implemented fully
-- It just hasn't been thoroughly tested in the capacity of being a production system.
+> [!WARNING]
+> This permanently removes the database data volume. Source files and sprinkles are not deleted.
