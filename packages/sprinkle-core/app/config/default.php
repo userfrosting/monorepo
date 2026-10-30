@@ -77,10 +77,10 @@ return [
     * redis are used on the same server.
     */
     'cache' => [
-        'driver'     => 'file', // Supported drivers : `file`, `memcached`, `redis`, `array`
+        'driver'     => env('CACHE_DRIVER', 'file'), // Supported drivers : `file`, `memcached`, `redis`, `array`
         'prefix'     => 'userfrosting',
         'memcached'  => [
-            'host'   => '127.0.0.1',
+            'host'   => env('MEMCACHED_HOST', '127.0.0.1'),
             'port'   => 11211,
             'weight' => 100,
         ],

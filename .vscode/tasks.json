@@ -135,12 +135,12 @@
         {
             "label": "Docker - Build",
             "type": "shell",
-            "command": "docker-compose build --no-cache"
+            "command": "docker compose build --no-cache"
         },
         {
             "label": "Docker - Up",
             "type": "shell",
-            "command": "docker-compose up -d"
+            "command": "docker compose up -d"
         },
         {
             "label": "Docker - Open Mailpit",
@@ -165,37 +165,37 @@
         {
             "label": "Docker - Down",
             "type": "shell",
-            "command": "docker-compose down"
+            "command": "docker compose down"
         },
         {
             "label": "Docker - Composer Update",
             "type": "shell",
-            "command": "docker-compose exec app composer update"
+            "command": "docker compose exec app composer update"
         },
         {
             "label": "Docker - Bakery Bake",
             "type": "shell",
-            "command": "docker-compose exec app php bakery bake"
+            "command": "docker compose exec app php bakery bake"
         },
         {
             "label": "Docker - PHPUnit",
             "type": "shell",
-            "command": "docker-compose exec app vendor/bin/phpunit"
+            "command": "docker compose exec app vendor/bin/phpunit"
         },
         {
             "label": "Docker - PHP CS Fixer",
             "type": "shell",
-            "command": "docker-compose exec app vendor/bin/php-cs-fixer fix"
+            "command": "docker compose exec app vendor/bin/php-cs-fixer fix"
         },
         {
             "label": "Docker - PHPStan",
             "type": "shell",
-            "command": "docker-compose exec app vendor/bin/phpstan analyse"
+            "command": "docker compose exec app vendor/bin/phpstan analyse"
         },
         {
             "label": "Docker - Shell (App)",
             "type": "shell",
-            "command": "docker-compose exec app bash"
+            "command": "docker compose exec app bash"
         }
     ]
 }

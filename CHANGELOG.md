@@ -6,26 +6,31 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Introduce new extensible activity recording with richer records and polymorphic subjects across account and administration workflows.
-- [Admin] Split user and role mutations into focused typed APIs, with group membership managed independently from the user edit.
-- [Pink-Cupcake] Added contextual, translated activity history for user, group, role, and permission pages.
-- [Monorepo] **Docker**: Add a VS Code task to open the Docker Mailpit UI.
-- [Monorepo] **Docker**: Run the frontend from the monorepo root so Vite resolves workspace source exports for HMR.
-- [Monorepo + Skeleton] **Vite**: Fix the root Vite dev entrypoint path so dependency scanning resolves the app entry.
-- [Monorepo + Skeleton] **Docker**: Bind development service ports to IPv4 and IPv6 loopback and wait for MySQL health before starting the app.
-- [Monorepo + Skeleton] **Docker**: Install frontend dependencies at container startup in Docker-managed storage, independently from host `node_modules`.
-- [Monorepo + Skeleton] **Docker**: Configure Compose project names and host ports through a dedicated top-level Docker `.env` file copied from `docker/.env.example`, making it easier for separate instances to use isolated resources. Use Compose's standard `COMPOSE_PROJECT_NAME` to override the container project name if needed.
-- [Monorepo + Skeleton] **Docker**: Updated Docker setup to use PHP 8.5.
-- [Framework] The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
-- [Core] CSRF tokens are now signed double-submit cookies instead of session-backed tokens; Added `CSRF_SECRET` in environment var to define the secret key used for signing.
-- [Core] Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
-- [Core] Refactored the Captcha implementation to use the cache service instead of the session service :
-  - Captcha storage now uses the shared cache instead of PHP session state to avoid race conditions ([Monorepo#64](https://github.com/userfrosting/monorepo/issues/64)).
-  - Introduce a Captcha Factory for creating captcha instances. Each generated captcha now uses a distinct profile, making it easier to manage multiple captcha configurations simultaneously.
-  - Expose the reusable captcha factory service through `CaptchaFactoryInterface` and the captcha instances through `CaptchaInterface`.
-  - Consolidate generic captcha defaults under the Core `captcha` configuration.
-  - Added `CaptchaProfile` class to structure captcha configurations.
-- [Pink-Cupcake] Add a button to generate a new CAPTCHA during registration. Refresh the CAPTCHA when registration validation or submission fails.
+- **Account + Admin**
+  - Introduce extensible activity recording with richer records and polymorphic subjects across account and administration workflows.
+- **Admin**
+  - Split user and role mutations into focused typed APIs, with group membership managed independently from the user edit.
+- **Pink-Cupcake**
+  - Add contextual, translated activity history for user, group, role, and permission pages.
+  - Add a button to generate a new CAPTCHA during registration and refresh it when registration validation or submission fails.
+- **Docker**
+  - **Monorepo**: Keep Compose development-only; run Vite from the repository root for workspace HMR; pass MySQL settings to PHP; start Nginx after Vite; and add a VS Code task for Mailpit.
+  - **Skeleton**: Add development and production Compose configurations, with production providing built assets, Memcached, private MySQL, and separate production app settings.
+  - Fix the Vite development entrypoint to enabled HMR in develop mode. 
+  - Update to PHP 8.5
+  - Install frontend dependencies at startup in Docker-managed `node_modules` volume.
+- **Framework**
+  - The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
+- **Core**
+  - Added `CACHE_DRIVER` & `MEMCACHED_HOST` environment variables, defaulting to file cache and `127.0.0.1` respectively. These allow configuring the cache driver and Memcached host for Docker deployments and non-Docker production environments.
+  - CSRF tokens are now signed double-submit cookies instead of session-backed tokens; add `CSRF_SECRET` to the environment to define the signing key.
+  - Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
+  - Refactor CAPTCHA to use the cache service instead of the session service:
+    - Store CAPTCHA data in the shared cache to avoid race conditions ([Monorepo#64](https://github.com/userfrosting/monorepo/issues/64)).
+    - Add a `CaptchaFactory` for creating instances with distinct profiles.
+    - Expose the factory through `CaptchaFactoryInterface` and instances through `CaptchaInterface`.
+    - Consolidate generic CAPTCHA defaults under the Core `captcha` configuration.
+    - Add `CaptchaProfile` to structure CAPTCHA configurations.
 
 ## [6.0.3](https://github.com/userfrosting/monorepo/compare/6.0.2...6.0.3) - 2026-09-28
 

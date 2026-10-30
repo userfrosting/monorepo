@@ -1,4 +1,6 @@
-# Docker Development Environment
+# Monorepo Docker Development Environment
+
+This Docker configuration is for developing UserFrosting in the monorepo only. It includes development services and is not a production deployment configuration. For the Skeleton app's development and production options, see the [Skeleton Docker guide](../packages/skeleton/docker/README.md).
 
 > You can find the complete version of thi guide at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
 
@@ -23,6 +25,8 @@ Second, initialize a new UserFrosting project:
    > The `.env` file (copied from `docker/.env.example`) define `COMPOSE_PROJECT_NAME`, which defines the containers, images, networks, and volumes names. If it is unset, Compose uses the checkout directory name instead.
    >
    > The default host ports are `8080` (HTTP), `5173` (Vite), `8503` (MySQL), `1025` (SMTP), and `8025` (Mailpit). Override them in `.env` when running multiple checkouts.
+   >
+   > Compose passes the database settings from `MYSQL_*` in this file to the PHP app, keeping its connection credentials synchronized with MySQL.
    >
    > Use this to run parallel instances of UserFrosting with isolated resources.
 4. Build all the Docker containers:
