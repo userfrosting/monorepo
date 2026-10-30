@@ -35,27 +35,27 @@
 
 ## Setup
 
-1. Clone this repo
+1. Clone this repository:
    ```
    git clone https://github.com/userfrosting/monorepo.git
    ```
-2. Run Composer
+2. Install the Composer dependencies:
    ```
    composer install
    ```
-3. Run Bake
+3. Run Bake to set up the application:
+   ```
+   php bakery bake
+   ```
+4. Start the PHP and Vite servers in two separate terminals:
    ```
    php bakery serve
    ```
-4. Run at the same time the PHP server and the Vite server is **two terminals**:
    ```
    php bakery assets:vite
    ```
-   ```
-   php bakery serve
-   ```
 
-   ...or use the VSCode `==> Serve` pre-configured task.
+   Alternatively, use the preconfigured VSCode `==> Serve` task.
 
 The app will be available at [http://localhost:8080](http://localhost:8080).
 
@@ -65,8 +65,8 @@ The app will be available at [http://localhost:8080](http://localhost:8080).
 
 ## Composer
 
-The monorepo is managed by [Monorepo-builder](https://github.com/symplify/monorepo-builder) on the Composer side.   
-It's important to edit the individual package `composer.json`, not the root one. After each update, run this command.
+The Composer side of the monorepo is managed by [Monorepo Builder](https://github.com/symplify/monorepo-builder).
+Always edit the individual packages' `composer.json` files, not the root file. After each update, run:
 
 ```
 vendor/bin/monorepo-builder merge
@@ -74,11 +74,13 @@ vendor/bin/monorepo-builder merge
 
 ## Release
    
-To release a new version, for example `6.0`, run this command. Composer will be updated, as well as NPM and a git tag will be pushed using the local user :
+To release a new version, such as `6.0`, run:
 
 ```
 vendor/bin/monorepo-builder release 6.0
 ```
+
+This updates the Composer and npm package versions and creates a Git tag.
 
 Or:
 
@@ -86,10 +88,10 @@ Or:
 vendor/bin/monorepo-builder release patch
 ```
 
-You can use `minor` and `major` too.
+You can also use `minor` or `major`.
 
 
-To publish the packages to NPM repo : 
+To publish the packages to the npm registry:
 
 ```
 npm publish --access public --workspaces
