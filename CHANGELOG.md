@@ -16,9 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - **Docker**
   - **Monorepo**: Keep Compose development-only; run Vite from the repository root for workspace HMR; pass MySQL settings to PHP; start Nginx after Vite; and add a VS Code task for Mailpit.
   - **Skeleton**: Add development and production Compose configurations, with production providing built assets, Memcached, private MySQL, and separate production app settings.
+  - **Monorepo**: Share a Docker-managed `node-modules` volume between the app and Vue containers; have Bakery install dependencies and wait for them before starting Vite.
   - Fix the Vite development entrypoint to enabled HMR in develop mode. 
   - Update to PHP 8.5
-  - Install frontend dependencies at startup in Docker-managed `node_modules` volume.
 - **Framework**
   - The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - **Core**
