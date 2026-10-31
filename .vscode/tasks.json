@@ -163,9 +163,9 @@
             }
         },
         {
-            "label": "Docker - Down",
+            "label": "Docker - Stop",
             "type": "shell",
-            "command": "docker compose down"
+            "command": "docker compose stop"
         },
         {
             "label": "Docker - Composer Update",
