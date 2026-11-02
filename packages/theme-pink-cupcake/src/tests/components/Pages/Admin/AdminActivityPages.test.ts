@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import GroupActivities from '../../../../components/Pages/Admin/Group/GroupActivities.vue'
 import PermissionActivities from '../../../../components/Pages/Admin/Permission/PermissionActivities.vue'
 import RoleActivities from '../../../../components/Pages/Admin/Role/RoleActivities.vue'
+import UserActivities from '../../../../components/Pages/Admin/User/UserActivities.vue'
 
 const row = {
     occurred_at: '2024-01-01T12:00:00Z',
@@ -55,6 +56,21 @@ const global = {
     stubs
 }
 
+const deletedUserGlobal = {
+    ...global,
+    stubs: {
+        ...stubs,
+        UFSprunjeTable: {
+            ...stubs.UFSprunjeTable,
+            data: () => ({ row: { ...row, user: undefined } })
+        },
+        ActivityDescription: {
+            props: ['activity'],
+            template: '<span data-test="description">{{ activity.occurred_at }}</span>'
+        }
+    }
+}
+
 const components = [
     {
         component: GroupActivities,
@@ -95,5 +111,41 @@ describe('admin activity pages', () => {
 
         expect(wrapper.find('[data-test="card"]').exists()).toBe(true)
         expect(wrapper.find('[data-test="table"]').exists()).toBe(false)
+    })
+
+    test.each(components)('renders deleted-user activity for $url', ({ component }) => {
+        const wrapper = mount(component, {
+            props: { slug: 'admins' },
+            global: deletedUserGlobal
+        })
+
+        expect(wrapper.text()).toContain('USER.DELETED')
+        expect(wrapper.find('[data-test="user-link"]').exists()).toBe(false)
+        expect(wrapper.find('[data-test="description"]').text()).toBe(row.occurred_at)
+    })
+
+    test('renders user activity table', () => {
+        const wrapper = mount(UserActivities, {
+            props: { user_name: 'jane' },
+            global
+        })
+
+        const table = wrapper.get('[data-test="table"]')
+        expect(table.attributes('data-url')).toBe('/api/users/u/jane/activities')
+        expect(table.attributes('data-default-sorts')).toBe('{"occurred_at":"desc"}')
+        expect(wrapper.findAll('[data-test="header"]')).toHaveLength(3)
+        expect(wrapper.find('[data-test="description"]').text()).toBe('Jane Doe')
+        expect(wrapper.find('[data-test="user-link"]').attributes('data-user')).toBe('jane')
+    })
+
+    test('renders deleted-user activity for a user', () => {
+        const wrapper = mount(UserActivities, {
+            props: { user_name: 'jane' },
+            global: deletedUserGlobal
+        })
+
+        expect(wrapper.text()).toContain('USER.DELETED')
+        expect(wrapper.find('[data-test="user-link"]').exists()).toBe(false)
+        expect(wrapper.find('[data-test="description"]').text()).toBe(row.occurred_at)
     })
 })

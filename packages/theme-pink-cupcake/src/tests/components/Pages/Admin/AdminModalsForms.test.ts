@@ -814,6 +814,20 @@ describe('admin form components', () => {
         await flushPromises()
         expect(createRole).not.toHaveBeenCalled()
 
+        const createWrapper = mount(RoleForm, {
+            global: {
+                stubs: globalStubs,
+                mocks: { $t: (key: string) => key }
+            }
+        })
+        await createWrapper.get('input[data-test="name"]').setValue('New Role')
+        await createWrapper.get('form').trigger('submit.prevent')
+        await flushPromises()
+        expect(roleFormData.value.name).toBe('New Role')
+        expect(createRole).toHaveBeenCalledWith(roleFormData.value)
+        expect(createWrapper.emitted('success')).toEqual([[undefined]])
+        expect(resetRoleForm).toHaveBeenCalledOnce()
+
         const validWrapper = mount(RoleForm, {
             props: { role: baseRole },
             global: {
@@ -856,6 +870,9 @@ describe('admin form components', () => {
         })
         await createWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
+        await flushPromises()
+        expect(createRole).toHaveBeenCalledOnce()
+        await expect(createRole.mock.results[0].value).rejects.toThrow('create failed')
         expect(createWrapper.emitted('success')).toBeFalsy()
 
         const updateWrapper = mount(RoleForm, {
@@ -867,6 +884,9 @@ describe('admin form components', () => {
         })
         await updateWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
+        await flushPromises()
+        expect(updateRole).toHaveBeenCalledOnce()
+        await expect(updateRole.mock.results[0].value).rejects.toThrow('update failed')
         expect(updateWrapper.emitted('success')).toBeFalsy()
     })
 
