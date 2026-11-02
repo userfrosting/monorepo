@@ -46,11 +46,39 @@ describe('CRUD admin composables', () => {
         api.formData.value.name = 'My Group'
         await nextTick()
         expect(api.formData.value.slug).toBe('my-group')
+        expect(api.slugLocked.value).toBe(true)
+
+        api.formData.value.slug = 'custom-team'
+        api.formData.value.name = 'Custom Group'
+        await nextTick()
+        expect(api.formData.value.slug).toBe('custom-team')
+        expect(api.slugLocked.value).toBe(false)
+
+        api.formData.value.name = 'Renamed Custom Group'
+        await nextTick()
+        expect(api.formData.value.slug).toBe('custom-team')
+
+        api.slugLocked.value = true
+        api.formData.value.slug = 'renamed-custom-group'
+        await nextTick()
+        expect(api.slugLocked.value).toBe(true)
+
+        api.formData.value.name = 'Group With Generated Slug'
+        await nextTick()
+        expect(api.formData.value.slug).toBe('group-with-generated-slug')
 
         api.slugLocked.value = false
-        api.formData.value.name = 'Changed Name'
+        api.formData.value.name = 'Name Change While Unlocked'
         await nextTick()
-        expect(api.formData.value.slug).toBe('my-group')
+        expect(api.formData.value.slug).toBe('group-with-generated-slug')
+
+        api.formData.value.slug = 'custom-team'
+        await nextTick()
+        api.slugLocked.value = true
+        api.formData.value.name = 'Renamed Custom Group Again'
+        await nextTick()
+        expect(api.formData.value.slug).toBe('custom-team')
+        expect(api.slugLocked.value).toBe(false)
 
         vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: { slug: 'admins' } } as any)
         await expect(api.fetchGroup('admins')).resolves.toEqual({ slug: 'admins' })
@@ -145,11 +173,39 @@ describe('CRUD admin composables', () => {
         api.formData.value.name = 'Site Admin'
         await nextTick()
         expect(api.formData.value.slug).toBe('site-admin')
+        expect(api.slugLocked.value).toBe(true)
+
+        api.formData.value.slug = 'custom-managers'
+        api.formData.value.name = 'Custom Role'
+        await nextTick()
+        expect(api.formData.value.slug).toBe('custom-managers')
+        expect(api.slugLocked.value).toBe(false)
+
+        api.formData.value.name = 'Renamed Custom Role'
+        await nextTick()
+        expect(api.formData.value.slug).toBe('custom-managers')
+
+        api.slugLocked.value = true
+        api.formData.value.slug = 'renamed-custom-role'
+        await nextTick()
+        expect(api.slugLocked.value).toBe(true)
+
+        api.formData.value.name = 'Role With Generated Slug'
+        await nextTick()
+        expect(api.formData.value.slug).toBe('role-with-generated-slug')
 
         api.slugLocked.value = false
-        api.formData.value.name = 'Changed Name'
+        api.formData.value.name = 'Name Change While Unlocked'
         await nextTick()
-        expect(api.formData.value.slug).toBe('site-admin')
+        expect(api.formData.value.slug).toBe('role-with-generated-slug')
+
+        api.formData.value.slug = 'custom-managers'
+        await nextTick()
+        api.slugLocked.value = true
+        api.formData.value.name = 'Renamed Custom Role Again'
+        await nextTick()
+        expect(api.formData.value.slug).toBe('custom-managers')
+        expect(api.slugLocked.value).toBe(false)
 
         vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: { slug: 'admin' } } as any)
         await expect(api.fetchRole('admin')).resolves.toEqual({ slug: 'admin' })

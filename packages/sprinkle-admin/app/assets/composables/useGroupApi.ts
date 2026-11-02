@@ -146,9 +146,24 @@ export function useGroupApi() {
     }
 
     watch(
-        () => formData.value.name,
-        (name) => {
-            if (slugLocked.value) {
+        () => [formData.value.name, formData.value.slug] as const,
+        ([name, currentSlug], [previousName, previousSlug]) => {
+            if (!slugLocked.value) return
+
+            // If the slug has changed, check if it still matches the slugified
+            // name. If not, unlock the slug. Used when editing a group with a
+            // custom slug.
+            if (currentSlug !== previousSlug) {
+                if (currentSlug !== slug(name)) {
+                    slugLocked.value = false
+                }
+
+                return
+            }
+
+            if (previousSlug !== slug(previousName)) {
+                slugLocked.value = false
+            } else {
                 formData.value.slug = slug(name)
             }
         }

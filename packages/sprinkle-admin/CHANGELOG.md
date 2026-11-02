@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Automatically unlock custom group and role slugs in edit forms so name changes do not replace them.
+
 ### Changed
 - Recorded administrative changes to users, groups, roles, and permissions in the activity history, and added the corresponding activity sprunjes for each entity.
 - Split role permission updates into a dedicated API action with focused validation and activity tracking.
