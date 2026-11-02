@@ -192,7 +192,7 @@ class GroupCreateAction
      */
     protected function validateGroupSlug(string $slug): void
     {
-        $group = $this->groupModel->where('slug', $slug)->first();
+        $group = $this->groupModel::withTrashed()->where('slug', $slug)->first();
         if ($group !== null) {
             $e = new GroupException();
             $message = new UserMessage('SLUG_IN_USE', ['slug' => $slug]);

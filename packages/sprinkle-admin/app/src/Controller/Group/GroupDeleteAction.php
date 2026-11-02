@@ -97,7 +97,7 @@ class GroupDeleteAction
 
         // Check if there are any users in this group
         // @phpstan-ignore-next-line False negative from Laravel
-        if ($group->users()->count() > 0) {
+        if ($group->users()->withTrashed()->count() > 0) {
             $e = new GroupException();
             $message = new UserMessage('GROUP.NOT_EMPTY', $group->toArray());
             $e->setDescription($message);

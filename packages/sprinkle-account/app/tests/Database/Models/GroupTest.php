@@ -67,6 +67,11 @@ class GroupTest extends AccountTestCase
 
         // Assert new state
         $this->assertSame(0, Group::count());
+        $this->assertSame(1, Group::withTrashed()->count());
+        $this->assertTrue($fetchedGroup->trashed());
+
+        $fetchedGroup->restore();
+        $this->assertSame(1, Group::count());
     }
 
     public function testUserRelation(): void

@@ -28,9 +28,11 @@ class DefaultGroups implements SeedInterface
         $groups = $this->getGroups();
 
         foreach ($groups as $group) {
-            // Don't save if already exist
-            if (Group::where('slug', $group->slug)->first() === null) {
+            $existingGroup = Group::withTrashed()->where('slug', $group->slug)->first();
+            if (!$existingGroup instanceof Group) {
                 $group->save();
+            } elseif ($existingGroup->trashed()) {
+                $existingGroup->restore();
             }
         }
     }

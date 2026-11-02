@@ -64,6 +64,11 @@ class RoleTest extends AccountTestCase
 
         // Assert new state
         $this->assertSame(0, Role::count());
+        $this->assertSame(1, Role::withTrashed()->count());
+        $this->assertTrue($fetched->trashed());
+
+        $fetched->restore();
+        $this->assertSame(1, Role::count());
     }
 
     public function testUserRelation(): void

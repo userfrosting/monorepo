@@ -35,8 +35,18 @@ class DefaultRolesTest extends AccountTestCase
         // Apply seed
         $seed = new DefaultRoles();
         $seed->run();
+        $seed->run();
 
         // Assert new table state
         $this->assertCount(3, Role::all());
+
+        $role = Role::where('slug', 'user')->firstOrFail();
+        $role->delete();
+        $seed->run();
+
+        $this->assertCount(3, Role::all());
+        $restoredRole = Role::withTrashed()->where('slug', 'user')->first();
+        $this->assertInstanceOf(Role::class, $restoredRole);
+        $this->assertFalse($restoredRole->trashed());
     }
 }

@@ -23,6 +23,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @mixin \Illuminate\Database\Eloquent\Builder
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
+ * @method static \Illuminate\Database\Eloquent\Builder withTrashed()
  *
  * @property int                                  $id
  * @property string                               $slug
@@ -31,6 +32,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @property string                               $icon
  * @property \DateTimeImmutable                   $created_at
  * @property \DateTimeImmutable                   $updated_at
+ * @property \DateTimeImmutable|null              $deleted_at
  * @property Collection<int, UserInterface&Model> $users
  */
 interface GroupInterface extends MorphableModelInterface

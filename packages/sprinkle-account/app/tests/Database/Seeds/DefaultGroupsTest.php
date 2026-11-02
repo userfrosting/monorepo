@@ -35,8 +35,18 @@ class DefaultGroupsTest extends AccountTestCase
         // Apply seed
         $seed = new DefaultGroups();
         $seed->run();
+        $seed->run();
 
         // Assert new table state
         $this->assertCount(3, Group::all());
+
+        $group = Group::where('slug', 'hippo')->firstOrFail();
+        $group->delete();
+        $seed->run();
+
+        $this->assertCount(3, Group::all());
+        $restoredGroup = Group::withTrashed()->where('slug', 'hippo')->first();
+        $this->assertInstanceOf(Group::class, $restoredGroup);
+        $this->assertFalse($restoredGroup->trashed());
     }
 }

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use UserFrosting\Sprinkle\Account\Database\Factories\RoleFactory;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PermissionInterface;
@@ -32,6 +33,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  */
 class Role extends Model implements RoleInterface
 {
+    use SoftDeletes;
     use HasFactory;
 
     /**
@@ -46,6 +48,14 @@ class Role extends Model implements RoleInterface
         'slug',
         'name',
         'description',
+        'deleted_at',
+    ];
+
+    /**
+     * @var string[] The attributes that should be mutated to dates.
+     */
+    protected $dates = [
+        'deleted_at',
     ];
 
     /**

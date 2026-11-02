@@ -15,6 +15,7 @@ namespace UserFrosting\Sprinkle\Account\Database\Models;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use UserFrosting\Sprinkle\Account\Database\Factories\GroupFactory;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
@@ -29,6 +30,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  */
 class Group extends Model implements GroupInterface
 {
+    use SoftDeletes;
     use HasFactory;
 
     /**
@@ -44,6 +46,14 @@ class Group extends Model implements GroupInterface
         'name',
         'description',
         'icon',
+        'deleted_at',
+    ];
+
+    /**
+     * @var string[] The attributes that should be mutated to dates.
+     */
+    protected $dates = [
+        'deleted_at',
     ];
 
     /**

@@ -23,11 +23,13 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @mixin \Illuminate\Database\Eloquent\Builder
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
+ * @method static \Illuminate\Database\Eloquent\Builder withTrashed()
  *
  * @property int                                        $id
  * @property string                                     $slug
  * @property string                                     $name
  * @property string                                     $description
+ * @property \DateTimeImmutable|null                    $deleted_at
  * @property Collection<int, UserInterface&Model>       $users
  * @property Collection<int, PermissionInterface&Model> $permissions
  *

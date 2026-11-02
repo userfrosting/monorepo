@@ -17,6 +17,7 @@ use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Database\Factories\UserFactory;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v400\ActivitiesTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v610\ActivitiesV2Table;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v610\GroupAndRoleSoftDeletes;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
@@ -109,6 +110,25 @@ class MigrationsTest extends AccountTestCase
         }
     }
 
+    public function testGroupRoleSoftDeletesMigrationIsIdempotent(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $migration = new GroupAndRoleSoftDeletes($builder);
+        $migration->up();
+
+        $this->assertTrue($builder->hasColumn('groups', 'deleted_at'));
+        $this->assertTrue($builder->hasColumn('roles', 'deleted_at'));
+
+        $migrator->rollback();
+    }
+
     /** @return array<string, string[]> */
     public function tablesProvider(): array
     {
@@ -133,6 +153,7 @@ class MigrationsTest extends AccountTestCase
                 'name',
                 'description',
                 'icon',
+                'deleted_at',
                 'created_at',
                 'updated_at',
             ],
@@ -165,6 +186,7 @@ class MigrationsTest extends AccountTestCase
                 'slug',
                 'name',
                 'description',
+                'deleted_at',
                 'created_at',
                 'updated_at',
             ],
