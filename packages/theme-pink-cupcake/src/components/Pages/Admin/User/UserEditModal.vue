@@ -14,13 +14,15 @@ const props = defineProps<{
  * Emits - Define the saved event. This event is emitted when the form is saved
  * to notify the parent component to refresh the data.
  */
-const emits = defineEmits(['saved'])
+const emits = defineEmits<{
+    saved: [user_name?: string]
+}>()
 
 /**
  * Methods - Submit the form to the API and handle the response.
  */
-const formSuccess = () => {
-    emits('saved')
+const formSuccess = (user_name?: string) => {
+    emits('saved', user_name)
     UIkit.modal('#modal-user-edit-' + props.user.id).hide()
 }
 </script>
@@ -34,7 +36,7 @@ const formSuccess = () => {
     <UFModal :id="'modal-user-edit-' + props.user.id" closable>
         <template #header>{{ $t('USER.EDIT') }}</template>
         <template #default>
-            <UserForm :user="props.user" @success="formSuccess()" />
+            <UserForm :user="props.user" @success="formSuccess($event)" />
         </template>
     </UFModal>
 </template>

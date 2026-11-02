@@ -9,7 +9,9 @@ const { group } = defineProps<{
     group: GroupResponse
 }>()
 
-const emits = defineEmits(['groupUpdated'])
+const emits = defineEmits<{
+    groupUpdated: [slug?: string]
+}>()
 </script>
 
 <template>
@@ -37,7 +39,7 @@ const emits = defineEmits(['groupUpdated'])
             <div>
                 <GroupEditModal
                     :group="group"
-                    @saved="emits('groupUpdated')"
+                    @saved="emits('groupUpdated', $event)"
                     v-if="$checkAccess('update_group_field')"
                     class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-primary uk-button-small" />
                 <GroupDeleteModal

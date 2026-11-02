@@ -26,9 +26,11 @@ const permission = ref({ id: 12, name: 'Permission Name' })
 const fetchGroup = vi.fn().mockResolvedValue({ name: 'Admins', slug: 'admins' })
 const fetchRole = vi.fn().mockResolvedValue({ name: 'Administrators', slug: 'admins' })
 const fetchUser = vi.fn().mockResolvedValue({ full_name: 'Jane Doe', user_name: 'jane' })
+const replaceRoute = vi.fn()
 
 vi.mock('vue-router', () => ({
-    useRoute: () => route
+    useRoute: () => route,
+    useRouter: () => ({ replace: replaceRoute })
 }))
 
 vi.mock('@userfrosting/sprinkle-core/stores', () => ({
@@ -73,8 +75,10 @@ describe('Admin detail views', () => {
                 stubs: {
                     GroupInfo: {
                         emits: ['groupUpdated'],
-                        template:
-                            '<button data-test="group-info" @click="$emit(\'groupUpdated\')" />'
+                        template: `
+                            <button data-test="group-info" @click="$emit('groupUpdated')" />
+                            <button data-test="group-slug-updated" @click="$emit('groupUpdated', 'new-admins')" />
+                        `
                     },
                     GroupUsers: { template: '<div data-test="group-users" />' },
                     GroupActivities: GroupActivitiesStub,
@@ -93,6 +97,11 @@ describe('Admin detail views', () => {
         await wrapper.get('[data-test="group-info"]').trigger('click')
         expect(fetchGroup).toHaveBeenCalledTimes(2)
         expect(refreshActivities).toHaveBeenCalledOnce()
+        await wrapper.get('[data-test="group-slug-updated"]').trigger('click')
+        expect(replaceRoute).toHaveBeenCalledWith({
+            name: 'admin.group',
+            params: { slug: 'new-admins' }
+        })
 
         groupError.value = { status: 404 }
         const errorWrapper = mount(PageGroup, {
@@ -164,7 +173,10 @@ describe('Admin detail views', () => {
                 stubs: {
                     RoleInfo: {
                         emits: ['updated'],
-                        template: '<button data-test="role-info" @click="$emit(\'updated\')" />'
+                        template: `
+                            <button data-test="role-info" @click="$emit('updated')" />
+                            <button data-test="role-slug-updated" @click="$emit('updated', 'new-admins')" />
+                        `
                     },
                     RoleUsers: { template: '<div data-test="role-users" />' },
                     RolePermissions: {
@@ -186,6 +198,11 @@ describe('Admin detail views', () => {
         await wrapper.get('[data-test="role-info"]').trigger('click')
         expect(fetchRole).toHaveBeenCalledTimes(2)
         expect(refreshActivities).toHaveBeenCalledOnce()
+        await wrapper.get('[data-test="role-slug-updated"]').trigger('click')
+        expect(replaceRoute).toHaveBeenCalledWith({
+            name: 'admin.role',
+            params: { slug: 'new-admins' }
+        })
         await wrapper.get('[data-test="role-permissions"]').trigger('click')
         expect(refreshActivities).toHaveBeenCalledTimes(2)
 
@@ -220,7 +237,10 @@ describe('Admin detail views', () => {
                 stubs: {
                     UserInfo: {
                         emits: ['updated'],
-                        template: `<button data-test="user-info" @click="$emit('updated')" />`
+                        template: `
+                            <button data-test="user-info" @click="$emit('updated')" />
+                            <button data-test="user-name-updated" @click="$emit('updated', 'janedoe')" />
+                        `
                     },
                     UserRoles: {
                         emits: ['updated'],
@@ -241,6 +261,11 @@ describe('Admin detail views', () => {
         await wrapper.get('[data-test="user-info"]').trigger('click')
         expect(fetchUser).toHaveBeenCalledTimes(2)
         expect(refreshActivities).toHaveBeenCalledTimes(1)
+        await wrapper.get('[data-test="user-name-updated"]').trigger('click')
+        expect(replaceRoute).toHaveBeenCalledWith({
+            name: 'admin.user',
+            params: { user_name: 'janedoe' }
+        })
         await wrapper.get('[data-test="user-roles"]').trigger('click')
         expect(refreshActivities).toHaveBeenCalledTimes(2)
 

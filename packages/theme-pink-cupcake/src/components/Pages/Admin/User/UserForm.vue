@@ -59,7 +59,9 @@ watch(
 /**
  * Emits
  */
-const emits = defineEmits(['success'])
+const emits = defineEmits<{
+    success: [user_name?: string]
+}>()
 
 /**
  * Methods - Submit the form to the API and handle the response.
@@ -74,7 +76,7 @@ const submitForm = async () => {
         : createUser(formData.value)
     apiCall
         .then(() => {
-            emits('success')
+            emits('success', props.user ? formData.value.user_name : undefined)
             resetForm()
         })
         .catch(() => {})

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Update admin detail-page URLs after changing a user's username or a group's or role's slug.
+
 ### Changed
 - Updated role permission management to use a dedicated typed update API.
 - Split admin user controls into dedicated forms and dialogs for profile details, group assignment, roles, passwords, account status, and email verification. Group assignment can be managed independently from user creation and profile edits.

@@ -33,7 +33,9 @@ watch(
 /**
  * Emits
  */
-const emits = defineEmits(['success'])
+const emits = defineEmits<{
+    success: [slug?: string]
+}>()
 
 /**
  * Methods - Submit the form to the API and handle the response.
@@ -48,7 +50,7 @@ const submitForm = async () => {
         : createRole(formData.value)
     apiCall
         .then(() => {
-            emits('success')
+            emits('success', props.role ? formData.value.slug : undefined)
             resetForm()
         })
         .catch(() => {})

@@ -15,7 +15,9 @@ const { user } = defineProps<{
     user: UserResponse
 }>()
 
-const emits = defineEmits(['updated'])
+const emits = defineEmits<{
+    updated: [user_name?: string]
+}>()
 </script>
 
 <template>
@@ -71,7 +73,7 @@ const emits = defineEmits(['updated'])
             <div>
                 <UserEditModal
                     :user="user"
-                    @saved="emits('updated')"
+                    @saved="emits('updated', $event)"
                     v-if="$checkAccess('update_user_field')"
                     class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-primary uk-button-small" />
                 <UserGroupModal

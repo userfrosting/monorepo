@@ -364,14 +364,15 @@ describe('admin modal components', () => {
                     ...globalStubs,
                     GroupForm: {
                         emits: ['success'],
-                        template: '<button data-test="group-edit" @click="$emit(\'success\')" />'
+                        template:
+                            '<button data-test="group-edit" @click="$emit(\'success\', \'new-admins\')" />'
                     }
                 },
                 mocks: { $t: (key: string) => key }
             }
         })
         await editWrapper.get('[data-test="group-edit"]').trigger('click')
-        expect(editWrapper.emitted('saved')).toHaveLength(1)
+        expect(editWrapper.emitted('saved')).toEqual([['new-admins']])
         expect(modalMock).toHaveBeenCalledWith('#modal-group-edit-1')
 
         const deleteWrapper = mount(GroupDeleteModal, {
@@ -413,14 +414,15 @@ describe('admin modal components', () => {
                     ...globalStubs,
                     RoleForm: {
                         emits: ['success'],
-                        template: '<button data-test="role-edit" @click="$emit(\'success\')" />'
+                        template:
+                            '<button data-test="role-edit" @click="$emit(\'success\', \'new-managers\')" />'
                     }
                 },
                 mocks: { $t: (key: string) => key }
             }
         })
         await editWrapper.get('[data-test="role-edit"]').trigger('click')
-        expect(editWrapper.emitted('saved')).toHaveLength(1)
+        expect(editWrapper.emitted('saved')).toEqual([['new-managers']])
         expect(modalMock).toHaveBeenCalledWith('#modal-role-edit-2')
 
         const deleteWrapper = mount(RoleDeleteModal, {
@@ -464,7 +466,8 @@ describe('admin modal components', () => {
                     ...globalStubs,
                     UserForm: {
                         emits: ['success'],
-                        template: '<button data-test="user-edit" @click="$emit(\'success\')" />'
+                        template:
+                            '<button data-test="user-edit" @click="$emit(\'success\', \'jane-doe\')" />'
                     }
                 },
                 mocks: { $t: (key: string) => key }
@@ -473,7 +476,7 @@ describe('admin modal components', () => {
         await editWrapper.get('a').trigger('click')
         expect(updateGroups).toHaveBeenCalledTimes(0)
         await editWrapper.get('[data-test="user-edit"]').trigger('click')
-        expect(editWrapper.emitted('saved')).toHaveLength(1)
+        expect(editWrapper.emitted('saved')).toEqual([['jane-doe']])
         expect(modalMock).toHaveBeenCalledWith('#modal-user-edit-10')
 
         const deleteWrapper = mount(UserDeleteModal, {
@@ -772,6 +775,7 @@ describe('admin form components', () => {
 
         expect(groupSlugLocked.value).toBe(false)
 
+        groupSlugLocked.value = true
         const editWrapper = mount(GroupForm, {
             props: { group: baseGroup },
             global: {
@@ -779,9 +783,12 @@ describe('admin form components', () => {
                 mocks: { $t: (key: string) => key }
             }
         })
+        await editWrapper.get('button.uk-form-button').trigger('click')
+        await editWrapper.get('input[data-test="slug"]').setValue('new-admins')
         await editWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
         expect(updateGroup).toHaveBeenCalledWith('admins', groupFormData.value)
+        expect(editWrapper.emitted('success')).toEqual([['new-admins']])
     })
 
     test('prevents submit for invalid role form and then submits update when valid', async () => {
@@ -814,10 +821,12 @@ describe('admin form components', () => {
                 mocks: { $t: (key: string) => key }
             }
         })
-        await validWrapper.get('input[data-test="name"]').setValue('Updated Role')
+        await validWrapper.get('button.uk-form-button').trigger('click')
+        await validWrapper.get('input[data-test="slug"]').setValue('new-managers')
         await validWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
         expect(updateRole).toHaveBeenCalledWith('managers', roleFormData.value)
+        expect(validWrapper.emitted('success')).toEqual([['new-managers']])
     })
 
     test('role slug lock toggle', async () => {
@@ -925,6 +934,7 @@ describe('admin form components', () => {
 
         expect(editWrapper.get('input[data-test="user_name"]').attributes('disabled')).toBeDefined()
         await editWrapper.get('button.uk-form-button').trigger('click')
+        await editWrapper.get('input[data-test="user_name"]').setValue('jane-doe')
         expect(
             editWrapper.get('input[data-test="user_name"]').attributes('disabled')
         ).toBeUndefined()
@@ -932,6 +942,7 @@ describe('admin form components', () => {
         await editWrapper.get('form').trigger('submit.prevent')
         await flushPromises()
         expect(updateUser).toHaveBeenCalledWith('jane', userFormData.value)
+        expect(editWrapper.emitted('success')).toEqual([['jane-doe']])
     })
 
     test('submits the separate user group form', async () => {

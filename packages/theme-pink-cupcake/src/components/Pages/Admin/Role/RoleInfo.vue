@@ -9,7 +9,9 @@ const { role } = defineProps<{
     role: RoleResponse
 }>()
 
-const emits = defineEmits(['updated'])
+const emits = defineEmits<{
+    updated: [slug?: string]
+}>()
 </script>
 
 <template>
@@ -34,7 +36,7 @@ const emits = defineEmits(['updated'])
             <div>
                 <RoleEditModal
                     :role="role"
-                    @saved="emits('updated')"
+                    @saved="emits('updated', $event)"
                     v-if="$checkAccess('update_role_field')"
                     class="uk-width-1-1 uk-margin-small-bottom uk-button uk-button-primary uk-button-small" />
                 <RoleDeleteModal

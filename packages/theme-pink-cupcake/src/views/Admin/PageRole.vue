@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { useRoleApi } from '@userfrosting/sprinkle-admin/composables'
 import RoleInfo from '../../components/Pages/Admin/Role/RoleInfo.vue'
@@ -13,6 +13,7 @@ import type { RoleResponse } from '@userfrosting/sprinkle-admin/interfaces'
  * Variables and composables
  */
 const route = useRoute()
+const router = useRouter()
 const page = usePageMeta()
 const role = ref<RoleResponse>({
     id: 0,
@@ -38,6 +39,14 @@ function fetch() {
     roleActivities.value?.refresh()
 }
 
+function handleRoleUpdated(slug?: string) {
+    if (slug && slug !== route.params.slug?.toString()) {
+        return router.replace({ name: 'admin.role', params: { slug } })
+    }
+
+    fetch()
+}
+
 /**
  * Watcher - Update page on slug change
  */
@@ -55,7 +64,7 @@ watch(
     <template v-else>
         <div uk-grid>
             <div class="uk-width-1-3@l">
-                <RoleInfo :role="role" @updated="fetch()" />
+                <RoleInfo :role="role" @updated="handleRoleUpdated" />
             </div>
             <div class="uk-width-2-3@l">
                 <div class="uk-child-width-1-1" uk-grid>

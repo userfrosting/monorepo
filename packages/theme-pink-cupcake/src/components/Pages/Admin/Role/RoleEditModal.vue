@@ -14,13 +14,15 @@ const props = defineProps<{
  * Emits - Define the saved event. This event is emitted when the form is saved
  * to notify the parent component to refresh the data.
  */
-const emits = defineEmits(['saved'])
+const emits = defineEmits<{
+    saved: [slug?: string]
+}>()
 
 /**
  * Methods - Submit the form to the API and handle the response.
  */
-const formSuccess = () => {
-    emits('saved')
+const formSuccess = (slug?: string) => {
+    emits('saved', slug)
     UIkit.modal('#modal-role-edit-' + props.role.id).hide()
 }
 </script>
@@ -34,7 +36,7 @@ const formSuccess = () => {
     <UFModal :id="'modal-role-edit-' + props.role.id" closable>
         <template #header> {{ $t('ROLE.EDIT') }} </template>
         <template #default>
-            <RoleForm :role="props.role" @success="formSuccess()" />
+            <RoleForm :role="props.role" @success="formSuccess($event)" />
         </template>
     </UFModal>
 </template>

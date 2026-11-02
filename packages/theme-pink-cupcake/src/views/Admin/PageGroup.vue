@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { useGroupApi } from '@userfrosting/sprinkle-admin/composables'
 import GroupInfo from '../../components/Pages/Admin/Group/GroupInfo.vue'
@@ -12,6 +12,7 @@ import type { GroupResponse } from '@userfrosting/sprinkle-admin/interfaces'
  * Variables and composables
  */
 const route = useRoute()
+const router = useRouter()
 const page = usePageMeta()
 const group = ref<GroupResponse>({
     id: 0,
@@ -38,6 +39,14 @@ function fetch() {
     groupActivities.value?.refresh()
 }
 
+function handleGroupUpdated(slug?: string) {
+    if (slug && slug !== route.params.slug?.toString()) {
+        return router.replace({ name: 'admin.group', params: { slug } })
+    }
+
+    fetch()
+}
+
 /**
  * Watcher - Update page on slug change
  */
@@ -55,7 +64,7 @@ watch(
     <template v-else>
         <div uk-grid>
             <div class="uk-width-1-3@l">
-                <GroupInfo :group="group" @groupUpdated="fetch()" />
+                <GroupInfo :group="group" @groupUpdated="handleGroupUpdated" />
             </div>
             <div class="uk-width-2-3@l" v-if="$checkAccess('view_group_field')">
                 <div class="uk-child-width-1-1" uk-grid>

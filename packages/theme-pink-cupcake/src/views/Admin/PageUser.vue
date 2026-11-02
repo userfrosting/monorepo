@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { usePageMeta } from '@userfrosting/sprinkle-core/stores'
 import { useUserApi } from '@userfrosting/sprinkle-admin/composables'
 import UserInfo from '../../components/Pages/Admin/User/UserInfo.vue'
@@ -13,6 +13,7 @@ import type { UserResponse } from '@userfrosting/sprinkle-admin/interfaces'
  * Variables and composables
  */
 const route = useRoute()
+const router = useRouter()
 const page = usePageMeta()
 const user = ref<UserResponse>({
     id: 0,
@@ -53,11 +54,19 @@ function fetch() {
     refreshUserActivities()
 }
 
+function handleUserUpdated(user_name?: string) {
+    if (user_name && user_name !== route.params.user_name?.toString()) {
+        return router.replace({ name: 'admin.user', params: { user_name } })
+    }
+
+    fetch()
+}
+
 /**
  * Watcher - Match page title to the user full name
  */
 watch(
-    () => route.params.slug,
+    () => route.params.user_name,
     () => fetch(),
     { immediate: true }
 )
@@ -70,7 +79,7 @@ watch(
     <template v-else>
         <div uk-grid>
             <div class="uk-width-1-3@l">
-                <UserInfo :user="user" @updated="fetch()" />
+                <UserInfo :user="user" @updated="handleUserUpdated" />
             </div>
             <div class="uk-width-2-3@l">
                 <div class="uk-child-width-1-1" uk-grid>
