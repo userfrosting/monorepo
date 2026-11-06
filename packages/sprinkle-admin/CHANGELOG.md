@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Fixed
+- A new user, group or role can now reuse the username, email or slug of a soft deleted one (#32).
 - Automatically unlock custom group and role slugs in edit forms so name changes do not replace them.
 
 ### Changed

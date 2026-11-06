@@ -16,9 +16,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use UserFrosting\Sprinkle\Account\Database\Factories\RoleFactory;
+use UserFrosting\Sprinkle\Account\Database\Models\Concerns\AnonymizesOnSoftDelete;
+use UserFrosting\Sprinkle\Account\Database\Models\Events\RoleSoftDeletedEvent;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PermissionInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
@@ -33,7 +34,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  */
 class Role extends Model implements RoleInterface
 {
-    use SoftDeletes;
+    use AnonymizesOnSoftDelete;
     use HasFactory;
 
     /**
@@ -59,6 +60,14 @@ class Role extends Model implements RoleInterface
     ];
 
     /**
+     * @var array<string, string> Events fired on model lifecycle.
+     */
+    // @phpstan-ignore property.phpDocType
+    protected $dispatchesEvents = [
+        'trashed' => RoleSoftDeletedEvent::class,
+    ];
+
+    /**
      * Cast nullable description to empty string if null.
      *
      * @param string|null $value
@@ -68,6 +77,34 @@ class Role extends Model implements RoleInterface
     public function getDescriptionAttribute(?string $value): string
     {
         return $value ?? '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getAnonymizedAttributes(): array
+    {
+        return [
+            'slug'        => 'deleted_role_' . $this->getKey(),
+            'name'        => 'ROLE.DELETED',
+            'description' => '',
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected static function isReservedIdentifier(string $value, string $identifier): bool
+    {
+        return $identifier === 'slug' && preg_match('/^deleted_role_\d+$/i', $value) === 1;
+    }
+
+    /**
+     * Get the translated name for soft deleted roles.
+     */
+    public function getNameAttribute(?string $value): string
+    {
+        return $this->translateIfDeleted('ROLE.DELETED', $value);
     }
 
     /**

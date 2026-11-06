@@ -201,7 +201,7 @@ class GroupEditAction
      */
     protected function validateGroupSlug(string $slug): void
     {
-        $group = $this->groupModel::withTrashed()->where('slug', $slug)->first();
+        $group = $this->groupModel::findUnique($slug, 'slug');
         if ($group !== null) {
             $e = new GroupException();
             $message = new UserMessage('SLUG_IN_USE', ['slug' => $slug]);

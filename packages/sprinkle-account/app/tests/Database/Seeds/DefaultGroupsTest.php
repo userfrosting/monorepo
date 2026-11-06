@@ -45,8 +45,7 @@ class DefaultGroupsTest extends AccountTestCase
         $seed->run();
 
         $this->assertCount(3, Group::all());
-        $restoredGroup = Group::withTrashed()->where('slug', 'hippo')->first();
-        $this->assertInstanceOf(Group::class, $restoredGroup);
-        $this->assertFalse($restoredGroup->trashed());
+        $this->assertCount(1, Group::onlyTrashed()->get());
+        $this->assertNotNull(Group::where('slug', 'hippo')->first());
     }
 }

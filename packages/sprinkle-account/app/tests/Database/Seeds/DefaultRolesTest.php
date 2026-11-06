@@ -45,8 +45,7 @@ class DefaultRolesTest extends AccountTestCase
         $seed->run();
 
         $this->assertCount(3, Role::all());
-        $restoredRole = Role::withTrashed()->where('slug', 'user')->first();
-        $this->assertInstanceOf(Role::class, $restoredRole);
-        $this->assertFalse($restoredRole->trashed());
+        $this->assertCount(1, Role::onlyTrashed()->get());
+        $this->assertNotNull(Role::where('slug', 'user')->first());
     }
 }

@@ -95,6 +95,8 @@ EMAIL:
   VERIFICATION_REQUIRED: Email (vérification requise - utiliser une adresse réelle!)
 FIRST_NAME: Prénom
 GUEST: Invité
+GROUP:
+  DELETED: Groupe supprimé
 HEADER_MESSAGE_ROOT: VOUS ÊTES CONNECTÉ EN TANT QUE L'UTILISATEUR ROOT
 LAST_NAME: Nom de famille
 LOCALE:
@@ -156,8 +158,12 @@ REGISTRATION:
     Veuillez contacter votre administrateur.
   UNKNOWN: Un problème a été rencontré lors du processus d'enregistrement du compte.
 REMEMBER_ME: Se souvenir de moi!
+ROLE:
+  DELETED: Rôle supprimé
 TOS_AGREEMENT: En créant un compte avec {{site_title}}, vous acceptez les termes et
   conditions.
+USER:
+  DELETED: Utilisateur supprimé
 USER_NAME: '{{&USERNAME}}'
 USERNAME:
   '@TRANSLATION': Nom d'utilisateur

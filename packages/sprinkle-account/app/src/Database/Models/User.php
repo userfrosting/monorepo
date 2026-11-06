@@ -21,12 +21,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\Expression;
 use UserFrosting\Config\Config;
 use UserFrosting\Sprinkle\Account\Authenticate\Interfaces\HasherInterface;
 use UserFrosting\Sprinkle\Account\Database\Factories\UserFactory;
+use UserFrosting\Sprinkle\Account\Database\Models\Concerns\AnonymizesOnSoftDelete;
+use UserFrosting\Sprinkle\Account\Database\Models\Events\UserSoftDeletedEvent;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\ActivityInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\PermissionInterface;
@@ -45,7 +46,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  */
 class User extends Model implements UserInterface
 {
-    use SoftDeletes {
+    use AnonymizesOnSoftDelete {
         forceDelete as forceDeleteSoftModel;
     }
     use HasFactory;
@@ -110,6 +111,7 @@ class User extends Model implements UserInterface
     protected $dispatchesEvents = [
         'saved'   => Events\DeleteUserCacheEvent::class,
         'deleted' => Events\DeleteUserCacheEvent::class,
+        'trashed' => UserSoftDeletedEvent::class,
     ];
 
     /**
@@ -137,7 +139,38 @@ class User extends Model implements UserInterface
      */
     public function getFullNameAttribute(): string
     {
+        if ($this->first_name === 'USER.DELETED') {
+            return $this->translateIfDeleted('USER.DELETED', $this->first_name);
+        }
+
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected static function isReservedIdentifier(string $value, string $identifier): bool
+    {
+        return match ($identifier) {
+            'user_name' => preg_match('/^deleted_user_\d+$/i', $value) === 1,
+            'email'     => preg_match('/^deleted_user_\d+@deleted\.invalid$/i', $value) === 1,
+            default     => false,
+        };
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getAnonymizedAttributes(): array
+    {
+        return [
+            'user_name'     => 'deleted_user_' . $this->getKey(),
+            'email'         => 'deleted_user_' . $this->getKey() . '@deleted.invalid',
+            'first_name'    => 'USER.DELETED',
+            'last_name'     => '',
+            'password'      => bin2hex(random_bytes(32)), // Not a valid hash : can't be used to login
+            'flag_enabled'  => 0,
+        ];
     }
 
     /**

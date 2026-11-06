@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Tests\Database\Models;
 
+use Illuminate\Events\Dispatcher;
+use UserFrosting\Sprinkle\Account\Database\Models\Events\RoleSoftDeletedEvent;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\RoleInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
@@ -67,8 +69,28 @@ class RoleTest extends AccountTestCase
         $this->assertSame(1, Role::withTrashed()->count());
         $this->assertTrue($fetched->trashed());
 
-        $fetched->restore();
+        // Soft deleted role is anonymized, original slug is free
+        $this->assertSame('deleted_role_' . $role->id, $fetched->slug);
+        $this->assertNull(Role::findUnique('test', 'slug'));
+        $this->assertNotNull(Role::findUnique('deleted_role_999', 'slug'));
+        $this->assertSame('Deleted Role', $fetched->name);
+        Role::create(['slug' => 'test', 'name' => 'Test']);
         $this->assertSame(1, Role::count());
+    }
+
+    public function testSoftDeleteEvent(): void
+    {
+        $fired = null;
+        /** @var Dispatcher */
+        $dispatcher = Role::getEventDispatcher();
+        $dispatcher->listen(RoleSoftDeletedEvent::class, function (RoleSoftDeletedEvent $event) use (&$fired) {
+            $fired = $event->role->getPreDeleteAttributes()['slug'];
+        });
+
+        /** @var Role */
+        $role = Role::factory()->create(['slug' => 'evt']);
+        $role->delete();
+        $this->assertSame('evt', $fired);
     }
 
     public function testUserRelation(): void

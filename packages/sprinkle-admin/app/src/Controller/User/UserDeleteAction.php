@@ -66,10 +66,13 @@ class UserDeleteAction
      */
     public function __invoke(UserInterface $user, Response $response): Response
     {
+        // Capture user data before deletion, as it will be anonymized
+        $data = $user->toArray();
+
         $this->handle($user);
 
         // Message
-        $message = $this->translator->translate('DELETION_SUCCESSFUL', $user->toArray());
+        $message = $this->translator->translate('DELETION_SUCCESSFUL', $data);
 
         // Write response
         $payload = new ApiResponse($message);

@@ -36,6 +36,7 @@ use UserFrosting\Sprinkle\Account\Database\Migrations\v600\DropVerificationsTabl
 use UserFrosting\Sprinkle\Account\Database\Migrations\v600\UpdateUsersTable as V600UpdateUsersTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v600\UserVerificationTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v610\ActivitiesV2Table;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v610\AnonymizeSoftDeletedRecords;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v610\GroupAndRoleSoftDeletes;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultPermissions;
@@ -193,6 +194,7 @@ class Account implements
             // v610
             ActivitiesV2Table::class,
             GroupAndRoleSoftDeletes::class,
+            AnonymizeSoftDeletedRecords::class,
         ];
     }
 

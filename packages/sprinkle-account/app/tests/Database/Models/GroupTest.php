@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Account\Tests\Database\Models;
 
+use Illuminate\Events\Dispatcher;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use UserFrosting\Sprinkle\Account\Database\Models\Events\GroupSoftDeletedEvent;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
@@ -70,8 +72,40 @@ class GroupTest extends AccountTestCase
         $this->assertSame(1, Group::withTrashed()->count());
         $this->assertTrue($fetchedGroup->trashed());
 
-        $fetchedGroup->restore();
+        // Soft deleted group is anonymized, original slug is free
+        $this->assertSame('deleted_group_' . $group->id, $fetchedGroup->slug);
+        $this->assertSame('', $fetchedGroup->description);
+        $this->assertNull(Group::findUnique('testing', 'slug'));
+        $this->assertNotNull(Group::findUnique('deleted_group_999', 'slug'));
+        $this->assertSame(['slug' => 'testing', 'name' => 'Test Group'], array_intersect_key($fetchedGroup->getPreDeleteAttributes(), ['slug' => 1, 'name' => 1]));
+
+        // Same slug can be reused
+        Group::create(['slug' => 'testing', 'name' => 'Test Group']);
         $this->assertSame(1, Group::count());
+        $this->assertSame(2, Group::withTrashed()->count());
+    }
+
+    public function testSoftDeleteEvent(): void
+    {
+        $fired = null;
+        /** @var Dispatcher */
+        $dispatcher = Group::getEventDispatcher();
+        $dispatcher->listen(GroupSoftDeletedEvent::class, function (GroupSoftDeletedEvent $event) use (&$fired) {
+            $fired = $event->group->getPreDeleteAttributes()['slug'];
+        });
+
+        /** @var Group */
+        $group = Group::factory()->create(['slug' => 'evt']);
+        $group->delete();
+        $this->assertSame('evt', $fired);
+    }
+
+    public function testDeletedNameIsTranslated(): void
+    {
+        /** @var Group */
+        $group = Group::factory()->create();
+        $group->delete();
+        $this->assertSame('Deleted Group', $group->name);
     }
 
     public function testUserRelation(): void

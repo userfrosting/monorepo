@@ -203,7 +203,7 @@ class RoleEditAction
      */
     protected function validateSlug(string $slug): void
     {
-        $group = $this->roleModel::withTrashed()->where('slug', $slug)->first();
+        $group = $this->roleModel::findUnique($slug, 'slug');
         if ($group !== null) {
             $e = new RoleException();
             $message = new UserMessage('SLUG_IN_USE', ['slug' => $slug]);

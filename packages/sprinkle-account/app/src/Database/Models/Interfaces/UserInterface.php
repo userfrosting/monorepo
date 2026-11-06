@@ -57,10 +57,11 @@ use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
  * @property ActivityInterface|null                      $lastActivity
  * @property array<string, mixed>                        $apiData
  *
- * @method        $this joinLastActivity()
- * @method static $this joinLastActivity()
- * @method        $this forRole(int|RoleInterface $role)
- * @method static $this forRole(int|RoleInterface $role)
+ * @method        $this                joinLastActivity()
+ * @method        array<string, mixed> getPreDeleteAttributes()
+ * @method static $this                joinLastActivity()
+ * @method        $this                forRole(int|RoleInterface $role)
+ * @method static $this                forRole(int|RoleInterface $role)
  */
 interface UserInterface extends MorphableModelInterface
 {

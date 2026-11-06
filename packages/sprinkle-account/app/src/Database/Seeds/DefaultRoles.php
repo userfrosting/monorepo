@@ -28,11 +28,9 @@ class DefaultRoles implements SeedInterface
         $roles = $this->getRoles();
 
         foreach ($roles as $role) {
-            $existingRole = Role::withTrashed()->where('slug', $role->slug)->first();
+            $existingRole = Role::where('slug', $role->slug)->first();
             if (!$existingRole instanceof Role) {
                 $role->save();
-            } elseif ($existingRole->trashed()) {
-                $existingRole->restore();
             }
         }
     }

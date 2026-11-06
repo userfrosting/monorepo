@@ -24,6 +24,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  * @mixin \Illuminate\Database\Eloquent\Model
  * @mixin \UserFrosting\Sprinkle\Core\Database\Models\Model
  * @method static \Illuminate\Database\Eloquent\Builder withTrashed()
+ * @method        array<string, mixed>                  getPreDeleteAttributes()
  *
  * @property int                                        $id
  * @property string                                     $slug
