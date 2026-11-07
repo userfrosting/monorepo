@@ -105,9 +105,8 @@ class GroupDeleteActionTest extends AdminTestCase
             'description' => '',
         ], $response);
 
-        // Make sure the user is deleted from the db by querying it
-        $group = Group::where('slug', $groupToDelete->slug)->first();
-        $this->assertNull($group);
+        $this->assertNull(Group::where('slug', $groupToDelete->slug)->first());
+        $this->assertTrue(Group::withTrashed()->find($groupToDelete->id)?->trashed() ?? false);
     }
 
     public function testPostForDefaultGroup(): void
@@ -158,6 +157,31 @@ class GroupDeleteActionTest extends AdminTestCase
 
         // Assert response status & body
         $this->assertJsonResponse("You can't do that because there are still users associated with the group <strong>{$groupToDelete->name}</strong>.", $response, 'description');
+        $this->assertResponseStatus(400, $response);
+    }
+
+    public function testPostForGroupWithTrashedUsers(): void
+    {
+        /** @var User */
+        $actor = User::factory()->create();
+        $this->actAsUser($actor, permissions: ['delete_group']);
+
+        /** @var Group */
+        $groupToDelete = Group::factory()->create();
+        /** @var User */
+        $deletedUser = User::factory()->create();
+        $deletedUser->group()->associate($groupToDelete);
+        $deletedUser->save();
+        $deletedUser->delete();
+
+        $request = $this->createJsonRequest('DELETE', '/api/groups/g/' . $groupToDelete->slug);
+        $response = $this->handleRequest($request);
+
+        $this->assertJsonResponse(
+            "You can't do that because there are still users associated with the group <strong>{$groupToDelete->name}</strong>.",
+            $response,
+            'description'
+        );
         $this->assertResponseStatus(400, $response);
     }
 }

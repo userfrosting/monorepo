@@ -107,10 +107,10 @@ class RoleEditAction
         // Validate request data
         $this->validateData($schema, $data);
         if ($data['name'] !== $role->name) {
-            $this->validateName($data['name']);
+            $this->validateName($data['name'], $role->id);
         }
         if ($data['slug'] !== $role->slug) {
-            $this->validateSlug($data['slug']);
+            $this->validateSlug($data['slug'], $role->id);
         }
 
         // Determine targeted fields
@@ -183,11 +183,12 @@ class RoleEditAction
      * Validate name is not already in use.
      *
      * @param string $name
+     * @param int    $roleId
      */
-    protected function validateName(string $name): void
+    protected function validateName(string $name, int $roleId): void
     {
-        $group = $this->roleModel->where('name', $name)->first();
-        if ($group !== null) {
+        $role = $this->roleModel->where('name', $name)->whereKeyNot($roleId)->first();
+        if ($role !== null) {
             $e = new RoleException();
             $message = new UserMessage('ROLE.NAME_IN_USE', ['name' => $name]);
             $e->setDescription($message);
@@ -200,11 +201,12 @@ class RoleEditAction
      * Validate slug is not already in use.
      *
      * @param string $slug
+     * @param int    $roleId
      */
-    protected function validateSlug(string $slug): void
+    protected function validateSlug(string $slug, int $roleId): void
     {
-        $group = $this->roleModel->where('slug', $slug)->first();
-        if ($group !== null) {
+        $role = $this->roleModel::findUnique($slug, 'slug', excludeId: $roleId);
+        if ($role !== null) {
             $e = new RoleException();
             $message = new UserMessage('SLUG_IN_USE', ['slug' => $slug]);
             $e->setDescription($message);

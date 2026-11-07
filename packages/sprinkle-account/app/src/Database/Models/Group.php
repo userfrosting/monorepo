@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use UserFrosting\Sprinkle\Account\Database\Factories\GroupFactory;
+use UserFrosting\Sprinkle\Account\Database\Models\Concerns\AnonymizesOnSoftDelete;
+use UserFrosting\Sprinkle\Account\Database\Models\Events\GroupSoftDeletedEvent;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\GroupInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
@@ -29,6 +31,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  */
 class Group extends Model implements GroupInterface
 {
+    use AnonymizesOnSoftDelete;
     use HasFactory;
 
     /**
@@ -44,6 +47,22 @@ class Group extends Model implements GroupInterface
         'name',
         'description',
         'icon',
+        'deleted_at',
+    ];
+
+    /**
+     * @var string[] The attributes that should be mutated to dates.
+     */
+    protected $dates = [
+        'deleted_at',
+    ];
+
+    /**
+     * @var array<string, string> Events fired on model lifecycle.
+     */
+    // @phpstan-ignore property.phpDocType
+    protected $dispatchesEvents = [
+        'trashed' => GroupSoftDeletedEvent::class,
     ];
 
     /**
@@ -56,6 +75,34 @@ class Group extends Model implements GroupInterface
     public function getDescriptionAttribute(?string $value): string
     {
         return $value ?? '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getAnonymizedAttributes(): array
+    {
+        return [
+            'slug'        => 'deleted_group_' . $this->getKey(),
+            'name'        => 'GROUP.DELETED',
+            'description' => '',
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected static function isReservedIdentifier(string $value, string $identifier): bool
+    {
+        return $identifier === 'slug' && preg_match('/^deleted_group_\d+$/i', $value) === 1;
+    }
+
+    /**
+     * Get the translated name for soft deleted groups.
+     */
+    public function getNameAttribute(?string $value): string
+    {
+        return $this->translateIfDeleted('GROUP.DELETED', $value);
     }
 
     /**

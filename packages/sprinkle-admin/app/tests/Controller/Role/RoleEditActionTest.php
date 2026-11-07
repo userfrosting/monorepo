@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\Role;
 
+use Illuminate\Database\Connection;
+use Illuminate\Database\Schema\Blueprint;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
@@ -154,6 +156,67 @@ class RoleEditActionTest extends AdminTestCase
         $this->assertJsonResponse('Details updated for role <strong>' . $role->name . '</strong>', $response, 'title');
     }
 
+    public function testCaseOnlyNameAndSlugEdit(): void
+    {
+        /** @var Connection */
+        $connection = $this->getService(Connection::class);
+        if ($connection->getDriverName() === 'sqlite') {
+            $connection->getSchemaBuilder()->table('roles', function (Blueprint $table) {
+                $table->string('name')->collation('NOCASE')->change();
+            });
+        }
+
+        /** @var User */
+        $user = User::factory()->create();
+        $this->actAsUser($user, permissions: ['update_role_field']);
+
+        /** @var Role */
+        $role = Role::factory()->create(['name' => 'example role', 'slug' => 'example-role']);
+        $request = $this->createJsonRequest('PUT', '/api/roles/r/' . $role->slug, [
+            'name' => 'Example Role',
+            'slug' => 'Example-Role',
+        ]);
+        $response = $this->handleRequest($request);
+
+        $this->assertResponseStatus(200, $response);
+        $role->refresh();
+        $this->assertSame('Example Role', $role->name);
+        $this->assertSame('Example-Role', $role->slug);
+
+        Role::factory()->create(['name' => 'example role', 'slug' => 'another-role']);
+        $request = $this->createJsonRequest('PUT', '/api/roles/r/' . $role->slug, [
+            'name' => 'EXAMPLE ROLE',
+            'slug' => $role->slug,
+        ]);
+        $response = $this->handleRequest($request);
+
+        $this->assertResponseStatus(400, $response);
+        $this->assertJsonResponse('A role named <strong>EXAMPLE ROLE</strong> already exist', $response, 'description');
+        $role->refresh();
+        $this->assertSame('Example Role', $role->name);
+    }
+
+    public function testReservedSlugIsRejected(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        $this->actAsUser($user, permissions: ['update_role_field']);
+
+        /** @var Role */
+        $role = Role::factory()->create();
+        $slug = 'deleted_role_999';
+        $request = $this->createJsonRequest('PUT', '/api/roles/r/' . $role->slug, [
+            'name' => $role->name,
+            'slug' => $slug,
+        ]);
+        $response = $this->handleRequest($request);
+
+        $this->assertResponseStatus(400, $response);
+        $this->assertJsonResponse('A <strong>' . $slug . '</strong> slug already exists', $response, 'description');
+        $role->refresh();
+        $this->assertNotSame($slug, $role->slug);
+    }
+
     public function testPostForFailedValidation(): void
     {
         /** @var User */
@@ -227,11 +290,12 @@ class RoleEditActionTest extends AdminTestCase
         $role = Role::factory()->create();
         /** @var Group */
         $duplicate = Role::factory()->create();
+        $slug = strtoupper($duplicate->slug);
 
         // Set post payload
         $data = [
             'name'        => 'The Foo',
-            'slug'        => $duplicate->slug,
+            'slug'        => $slug,
             'description' => 'Foo description',
         ];
 
@@ -243,7 +307,7 @@ class RoleEditActionTest extends AdminTestCase
         $this->assertResponseStatus(400, $response);
         $this->assertJsonResponse([
             'title'       => 'Role error',
-            'description' => 'A <strong>' . $duplicate->slug . '</strong> slug already exists',
+            'description' => 'A <strong>' . $slug . '</strong> slug already exists',
             'status'      => 400,
         ], $response);
     }

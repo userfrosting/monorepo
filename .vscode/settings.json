@@ -13,5 +13,8 @@
         "Sprunjer",
         "tdate",
         "TOTP"
-    ]
+    ],
+    "terminal.integrated.env.linux": {
+        "XDEBUG_CONFIG": "idekey=VSCODE"
+    }
 }

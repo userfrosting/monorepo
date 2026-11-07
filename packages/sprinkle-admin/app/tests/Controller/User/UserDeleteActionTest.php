@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\User;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use UserFrosting\Sprinkle\Account\Database\Models\Activity;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Testing\WithTestUser;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
@@ -128,6 +130,12 @@ class UserDeleteActionTest extends AdminTestCase
         // Make sure the user is deleted from the db by querying it
         $user = User::where('email', $userToDelete->email)->first();
         $this->assertNull($user);
+
+        $activity = Activity::query()
+            ->where('type', AccountActivityTypes::DELETE->value)
+            ->where('subject_id', $userToDelete->id)
+            ->first();
+        $this->assertInstanceOf(Activity::class, $activity);
     }
 
     public function testPostForMasterUser(): void

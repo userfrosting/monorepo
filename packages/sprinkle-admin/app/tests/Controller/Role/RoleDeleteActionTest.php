@@ -105,9 +105,8 @@ class RoleDeleteActionTest extends AdminTestCase
             'description' => '',
         ], $response);
 
-        // Make sure the user is deleted from the db by querying it
-        $result = Role::where('slug', $role->slug)->first();
-        $this->assertNull($result);
+        $this->assertNull(Role::where('slug', $role->slug)->first());
+        $this->assertTrue(Role::withTrashed()->find($role->id)?->trashed() ?? false);
     }
 
     public function testPostForDefaultRole(): void

@@ -17,6 +17,8 @@ use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Database\Factories\UserFactory;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v400\ActivitiesTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v610\ActivitiesV2Table;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v610\AnonymizeSoftDeletedRecords;
+use UserFrosting\Sprinkle\Account\Database\Migrations\v610\GroupAndRoleSoftDeletes;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Database\Seeds\DefaultGroups;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
@@ -54,6 +56,39 @@ class MigrationsTest extends AccountTestCase
         foreach ($this->tablesProvider() as $table => $columns) {
             $this->assertSame([], $builder->getColumnListing($table));
         }
+    }
+
+    public function testAnonymizeSoftDeletedRecords(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $db = $builder->getConnection();
+        $now = date('Y-m-d H:i:s');
+        $db->table('users')->insert(['user_name' => 'old', 'email' => 'old@example.com', 'first_name' => 'Old', 'last_name' => 'User', 'password' => 'x', 'deleted_at' => $now]);
+        $db->table('users')->insert(['user_name' => 'live', 'email' => 'live@example.com', 'first_name' => 'Live', 'last_name' => 'User', 'password' => 'x']);
+        $db->table('groups')->insert(['slug' => 'oldg', 'name' => 'Old', 'deleted_at' => $now]);
+        $db->table('roles')->insert(['slug' => 'oldr', 'name' => 'Old', 'deleted_at' => $now]);
+
+        $migration = new AnonymizeSoftDeletedRecords($builder);
+        $migration->up();
+        $migration->up(); // Run again to ensure idempotency
+        $migration->down();
+
+        /** @var \stdClass $user */
+        $user = $db->table('users')->whereNotNull('deleted_at')->first();
+        $this->assertSame('deleted_user_' . $user->id, $user->user_name);
+        $this->assertSame('USER.DELETED', $user->first_name);
+        $this->assertSame('live', $db->table('users')->whereNull('deleted_at')->value('user_name'));
+        $this->assertSame('GROUP.DELETED', $db->table('groups')->whereNotNull('deleted_at')->value('name'));
+        $this->assertStringStartsWith('deleted_role_', $db->table('roles')->whereNotNull('deleted_at')->value('slug'));
+
+        $migrator->rollback();
     }
 
     public function testActivitiesV2MigrationIsIdempotent(): void
@@ -109,6 +144,59 @@ class MigrationsTest extends AccountTestCase
         }
     }
 
+    public function testGroupRoleSoftDeletesMigrationIsIdempotent(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $migration = new GroupAndRoleSoftDeletes($builder);
+        $migration->up();
+
+        $this->assertTrue($builder->hasColumn('groups', 'deleted_at'));
+        $this->assertTrue($builder->hasColumn('roles', 'deleted_at'));
+
+        $migrator->rollback();
+    }
+
+    public function testGroupRoleSoftDeletesRollbackRemovesTrashedRecords(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $db = $builder->getConnection();
+        foreach (['groups', 'roles'] as $table) {
+            $db->table($table)->insert([
+                ['slug' => 'live', 'name' => 'Live', 'deleted_at' => null],
+                ['slug' => 'deleted', 'name' => 'Deleted', 'deleted_at' => '2024-01-01 00:00:00'],
+            ]);
+        }
+
+        try {
+            $migration = new GroupAndRoleSoftDeletes($builder);
+            $migration->down();
+            $migration->down();
+
+            foreach (['groups', 'roles'] as $table) {
+                $this->assertFalse($builder->hasColumn($table, 'deleted_at'));
+                $this->assertSame(1, $db->table($table)->count());
+                $this->assertSame('Live', $db->table($table)->where('slug', 'live')->value('name'));
+                $this->assertFalse($db->table($table)->where('slug', 'deleted')->exists());
+            }
+        } finally {
+            $migrator->rollback();
+        }
+    }
+
     /** @return array<string, string[]> */
     public function tablesProvider(): array
     {
@@ -133,6 +221,7 @@ class MigrationsTest extends AccountTestCase
                 'name',
                 'description',
                 'icon',
+                'deleted_at',
                 'created_at',
                 'updated_at',
             ],
@@ -165,6 +254,7 @@ class MigrationsTest extends AccountTestCase
                 'slug',
                 'name',
                 'description',
+                'deleted_at',
                 'created_at',
                 'updated_at',
             ],
