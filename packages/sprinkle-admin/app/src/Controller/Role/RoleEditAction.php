@@ -187,7 +187,7 @@ class RoleEditAction
      */
     protected function validateName(string $name, int $roleId): void
     {
-        $role = $this->roleModel->where('name', $name)->whereKeyNot($roleId)->first();
+        $role = $this->roleModel::findUnique($name, 'name', checkDeleted: false, excludeId: $roleId);
         if ($role !== null) {
             $e = new RoleException();
             $message = new UserMessage('ROLE.NAME_IN_USE', ['name' => $name]);

@@ -185,7 +185,7 @@ class GroupEditAction
      */
     protected function validateGroupName(string $name, int $groupId): void
     {
-        $group = $this->groupModel->where('name', $name)->whereKeyNot($groupId)->first();
+        $group = $this->groupModel::findUnique($name, 'name', checkDeleted: false, excludeId: $groupId);
         if ($group !== null) {
             $e = new GroupException();
             $message = new UserMessage('GROUP.NAME_IN_USE', ['name' => $name]);

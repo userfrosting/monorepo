@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Admin\Tests\Controller\Group;
 
-use Illuminate\Database\Connection;
-use Illuminate\Database\Schema\Blueprint;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
@@ -160,14 +158,6 @@ class GroupEditActionTest extends AdminTestCase
 
     public function testCaseOnlyNameAndSlugEdit(): void
     {
-        /** @var Connection */
-        $connection = $this->getService(Connection::class);
-        if ($connection->getDriverName() === 'sqlite') {
-            $connection->getSchemaBuilder()->table('groups', function (Blueprint $table) {
-                $table->string('name')->collation('NOCASE')->change();
-            });
-        }
-
         /** @var User */
         $user = User::factory()->create();
         $this->actAsUser($user, permissions: ['update_group_field']);
