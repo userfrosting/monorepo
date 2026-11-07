@@ -65,13 +65,13 @@ trait AnonymizesOnSoftDelete
      * Identifiers reserved for anonymized records are always reported as
      * taken, so they can't collide with a future anonymization.
      */
-    public static function findUnique(string $value, string $identifier, bool $checkDeleted = true): ?static
+    public static function findUnique(string $value, string $identifier, bool $checkDeleted = true, int|string|null $excludeId = null): ?static
     {
         if (static::isReservedIdentifier($value, $identifier)) {
             return new static(); // @phpstan-ignore new.static
         }
 
-        return parent::findUnique($value, $identifier, $checkDeleted);
+        return parent::findUnique($value, $identifier, $checkDeleted, $excludeId);
     }
 
     /**

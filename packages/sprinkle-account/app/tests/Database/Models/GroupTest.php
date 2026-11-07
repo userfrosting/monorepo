@@ -77,6 +77,7 @@ class GroupTest extends AccountTestCase
         $this->assertSame('', $fetchedGroup->description);
         $this->assertNull(Group::findUnique('testing', 'slug'));
         $this->assertNotNull(Group::findUnique('deleted_group_999', 'slug'));
+        $this->assertNotNull(Group::findUnique('DELETED_GROUP_999', 'slug', excludeId: $group->id));
         $this->assertSame(['slug' => 'testing', 'name' => 'Test Group'], array_intersect_key($fetchedGroup->getPreDeleteAttributes(), ['slug' => 1, 'name' => 1]));
 
         // Same slug can be reused

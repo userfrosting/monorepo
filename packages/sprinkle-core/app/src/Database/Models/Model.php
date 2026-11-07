@@ -51,15 +51,21 @@ abstract class Model extends LaravelModel implements MorphableModelInterface
     /**
      * Determines whether a model exists by checking a unique column, including checking soft-deleted records.
      *
-     * @param string $value
-     * @param string $identifier
-     * @param bool   $checkDeleted set to true to include soft-deleted records
+     * @param string          $value
+     * @param string          $identifier
+     * @param bool            $checkDeleted set to true to include soft-deleted records
+     * @param int|string|null $excludeId    primary key to exclude from the lookup
      *
      * @return static|null
      */
-    public static function findUnique(string $value, string $identifier, bool $checkDeleted = true): ?static
+    public static function findUnique(string $value, string $identifier, bool $checkDeleted = true, int|string|null $excludeId = null): ?static
     {
-        $query = self::whereRaw("LOWER($identifier) = ?", [mb_strtolower($value)]);
+        $query = parent::query();
+        $query->getQuery()->whereRaw("LOWER($identifier) = ?", [mb_strtolower($value)]);
+
+        if ($excludeId !== null) {
+            $query->whereKeyNot($excludeId);
+        }
 
         // @phpstan-ignore-next-line hasMacro is available when $query is \Illuminate\Database\Eloquent\Builder
         if ($checkDeleted === true && (method_exists($query, 'withTrashed') || $query->hasMacro('withTrashed'))) {

@@ -73,6 +73,7 @@ class RoleTest extends AccountTestCase
         $this->assertSame('deleted_role_' . $role->id, $fetched->slug);
         $this->assertNull(Role::findUnique('test', 'slug'));
         $this->assertNotNull(Role::findUnique('deleted_role_999', 'slug'));
+        $this->assertNotNull(Role::findUnique('DELETED_ROLE_999', 'slug', excludeId: $role->id));
         $this->assertSame('Deleted Role', $fetched->name);
         Role::create(['slug' => 'test', 'name' => 'Test']);
         $this->assertSame(1, Role::count());
