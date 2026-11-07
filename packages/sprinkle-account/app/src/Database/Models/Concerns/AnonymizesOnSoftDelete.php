@@ -51,8 +51,8 @@ trait AnonymizesOnSoftDelete
 
     /**
      * Whether the identifier is reserved for anonymized records.
-     * 
-     * @param string $value The value to check.
+     *
+     * @param string $value      The value to check.
      * @param string $identifier The identifier column name.
      *
      * @return bool Whether the identifier is reserved for anonymized records.
