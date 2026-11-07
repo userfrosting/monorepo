@@ -53,6 +53,9 @@ class GroupAndRoleSoftDeletes extends Migration
     {
         foreach (['groups', 'roles'] as $tableName) {
             if ($this->schema->hasTable($tableName) && $this->schema->hasColumn($tableName, 'deleted_at')) {
+                // Delete all soft-deleted records before dropping the column so they don't reappear as active records.
+                $this->schema->getConnection()->table($tableName)->whereNotNull('deleted_at')->delete();
+
                 $this->schema->table($tableName, function (Blueprint $table) {
                     $table->dropSoftDeletes();
                 });

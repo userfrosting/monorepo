@@ -163,6 +163,40 @@ class MigrationsTest extends AccountTestCase
         $migrator->rollback();
     }
 
+    public function testGroupRoleSoftDeletesRollbackRemovesTrashedRecords(): void
+    {
+        /** @var Builder */
+        $builder = $this->getService(Builder::class);
+
+        /** @var Migrator */
+        $migrator = $this->getService(Migrator::class);
+        $migrator->reset();
+        $migrator->migrate();
+
+        $db = $builder->getConnection();
+        foreach (['groups', 'roles'] as $table) {
+            $db->table($table)->insert([
+                ['slug' => 'live', 'name' => 'Live', 'deleted_at' => null],
+                ['slug' => 'deleted', 'name' => 'Deleted', 'deleted_at' => '2024-01-01 00:00:00'],
+            ]);
+        }
+
+        try {
+            $migration = new GroupAndRoleSoftDeletes($builder);
+            $migration->down();
+            $migration->down();
+
+            foreach (['groups', 'roles'] as $table) {
+                $this->assertFalse($builder->hasColumn($table, 'deleted_at'));
+                $this->assertSame(1, $db->table($table)->count());
+                $this->assertSame('Live', $db->table($table)->where('slug', 'live')->value('name'));
+                $this->assertFalse($db->table($table)->where('slug', 'deleted')->exists());
+            }
+        } finally {
+            $migrator->rollback();
+        }
+    }
+
     /** @return array<string, string[]> */
     public function tablesProvider(): array
     {
