@@ -125,6 +125,9 @@ class UserSprunjeTest extends AdminTestCase
         $user = $this->users[0]; // @phpstan-ignore-line
         $subject = User::factory()->create();
         $group = Group::factory()->create();
+        $this->assertInstanceOf(User::class, $subject);
+        $this->assertInstanceOf(Group::class, $group);
+
         Activity::factory()->create([
             'user_id'      => $user->id,
             'subject_type' => $subject->getMorphClass(),
