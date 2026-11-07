@@ -84,7 +84,7 @@ class Group extends Model implements GroupInterface
     {
         return [
             'slug'        => 'deleted_group_' . $this->getKey(),
-            'name'        => 'GROUP.DELETE',
+            'name'        => 'GROUP.DELETED',
             'description' => '',
         ];
     }
@@ -102,7 +102,7 @@ class Group extends Model implements GroupInterface
      */
     public function getNameAttribute(?string $value): string
     {
-        return $this->translateIfDeleted('GROUP.DELETE', $value);
+        return $this->translateIfDeleted('GROUP.DELETED', $value);
     }
 
     /**
