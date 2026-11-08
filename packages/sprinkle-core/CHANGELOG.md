@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
+- Support `DB_TEST_*` environment variables for test database settings, falling back to the corresponding `DB_*` values and existing defaults.
 
 ### Fixed
 - Validate throttling configuration before creating throttle rules.
