@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - The `setup:db` command now selects and names database connections rather than drivers. The `--db-connection` option should be used instead of `--db-driver`.
+- `Model::findUnique()` accepts an optional record ID to exclude from unique-identifier lookups.
 - Added `CACHE_DRIVER` & `MEMCACHED_HOST` environment variables, defaulting to file cache and `127.0.0.1` respectively. These allow configuring the cache driver and Memcached host for Docker deployments and non-Docker production environments.
 - Added `MorphableModelInterface` to identify Eloquent models that can serve as polymorphic relation targets.
 - Added translations for refreshing a CAPTCHA challenge.

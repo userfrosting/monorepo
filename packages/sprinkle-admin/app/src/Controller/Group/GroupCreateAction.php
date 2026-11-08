@@ -175,7 +175,7 @@ class GroupCreateAction
      */
     protected function validateGroupName(string $name): void
     {
-        $group = $this->groupModel->where('name', $name)->first();
+        $group = $this->groupModel::findUnique($name, 'name', checkDeleted: false);
         if ($group !== null) {
             $e = new GroupException();
             $message = new UserMessage('GROUP.NAME_IN_USE', ['name' => $name]);
@@ -192,7 +192,7 @@ class GroupCreateAction
      */
     protected function validateGroupSlug(string $slug): void
     {
-        $group = $this->groupModel->where('slug', $slug)->first();
+        $group = $this->groupModel::findUnique($slug, 'slug');
         if ($group !== null) {
             $e = new GroupException();
             $message = new UserMessage('SLUG_IN_USE', ['slug' => $slug]);

@@ -156,6 +156,59 @@ class GroupEditActionTest extends AdminTestCase
         $this->assertJsonResponse('Details updated for group <strong>' . $group->name . '</strong>', $response, 'title');
     }
 
+    public function testCaseOnlyNameAndSlugEdit(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        $this->actAsUser($user, permissions: ['update_group_field']);
+
+        /** @var Group */
+        $group = Group::factory()->create(['name' => 'example group', 'slug' => 'example-group']);
+        $request = $this->createJsonRequest('PUT', '/api/groups/g/' . $group->slug, [
+            'name' => 'Example Group',
+            'slug' => 'Example-Group',
+        ]);
+        $response = $this->handleRequest($request);
+
+        $this->assertResponseStatus(200, $response);
+        $group->refresh();
+        $this->assertSame('Example Group', $group->name);
+        $this->assertSame('Example-Group', $group->slug);
+
+        Group::factory()->create(['name' => 'example group', 'slug' => 'another-group']);
+        $request = $this->createJsonRequest('PUT', '/api/groups/g/' . $group->slug, [
+            'name' => 'EXAMPLE GROUP',
+            'slug' => $group->slug,
+        ]);
+        $response = $this->handleRequest($request);
+
+        $this->assertResponseStatus(400, $response);
+        $this->assertJsonResponse('A group named <strong>EXAMPLE GROUP</strong> already exist', $response, 'description');
+        $group->refresh();
+        $this->assertSame('Example Group', $group->name);
+    }
+
+    public function testReservedSlugIsRejected(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        $this->actAsUser($user, permissions: ['update_group_field']);
+
+        /** @var Group */
+        $group = Group::factory()->create();
+        $slug = 'deleted_group_999';
+        $request = $this->createJsonRequest('PUT', '/api/groups/g/' . $group->slug, [
+            'name' => $group->name,
+            'slug' => $slug,
+        ]);
+        $response = $this->handleRequest($request);
+
+        $this->assertResponseStatus(400, $response);
+        $this->assertJsonResponse('A <strong>' . $slug . '</strong> slug already exists', $response, 'description');
+        $group->refresh();
+        $this->assertNotSame($slug, $group->slug);
+    }
+
     public function testPostForFailedValidation(): void
     {
         /** @var User */
@@ -231,11 +284,12 @@ class GroupEditActionTest extends AdminTestCase
         $group = Group::factory()->create();
         /** @var Group */
         $duplicate = Group::factory()->create();
+        $slug = strtoupper($duplicate->slug);
 
         // Set post payload
         $data = [
             'name'        => 'The Foo',
-            'slug'        => $duplicate->slug,
+            'slug'        => $slug,
             'icon'        => 'fas fas-icon',
             'description' => 'Foo description',
         ];
@@ -248,7 +302,7 @@ class GroupEditActionTest extends AdminTestCase
         $this->assertResponseStatus(400, $response);
         $this->assertJsonResponse([
             'title'       => 'Group error',
-            'description' => 'A <strong>' . $duplicate->slug . '</strong> slug already exists',
+            'description' => 'A <strong>' . $slug . '</strong> slug already exists',
             'status'      => 400,
         ], $response);
     }

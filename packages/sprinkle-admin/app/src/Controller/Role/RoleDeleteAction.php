@@ -63,10 +63,13 @@ class RoleDeleteAction
      */
     public function __invoke(RoleInterface $role, Response $response): Response
     {
+        // Capture role data before deletion, as it will be anonymized
+        $data = $role->toArray();
+
         $this->handle($role);
 
         // Message
-        $message = $this->translator->translate('ROLE.DELETION_SUCCESSFUL', $role->toArray());
+        $message = $this->translator->translate('ROLE.DELETION_SUCCESSFUL', $data);
 
         // Write response
         $payload = new ApiResponse($message);

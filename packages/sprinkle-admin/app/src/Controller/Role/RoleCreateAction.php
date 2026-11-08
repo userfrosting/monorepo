@@ -178,7 +178,7 @@ class RoleCreateAction
      */
     protected function validateName(string $name): void
     {
-        $group = $this->roleModel->where('name', $name)->first();
+        $group = $this->roleModel::findUnique($name, 'name', checkDeleted: false);
         if ($group !== null) {
             $e = new RoleException();
             $message = new UserMessage('ROLE.NAME_IN_USE', ['name' => $name]);
@@ -195,7 +195,7 @@ class RoleCreateAction
      */
     protected function validateSlug(string $slug): void
     {
-        $group = $this->roleModel->where('slug', $slug)->first();
+        $group = $this->roleModel::findUnique($slug, 'slug');
         if ($group !== null) {
             $e = new RoleException();
             $message = new UserMessage('SLUG_IN_USE', ['slug' => $slug]);

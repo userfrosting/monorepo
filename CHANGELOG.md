@@ -6,10 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- **Account + Admin**
-  - Introduce extensible activity recording with richer records and polymorphic subjects across account and administration workflows.
+- Introduce extensible activity recording with richer records and polymorphic subjects across account and administration workflows.
+- Soft deletes for groups and roles. Soft deleting a user, group or role now anonymizes it (`deleted_user_{id}`, `deleted_group_{id}`, `deleted_role_{id}`, translatable `*.DELETED` names), so the same username, email or slug can be reused ([#32](https://github.com/userfrosting/monorepo/issues/32)). The record is kept so activities still reference it.
+- `UserSoftDeletedEvent`, `GroupSoftDeletedEvent` and `RoleSoftDeletedEvent` model events, fired after a soft delete.
 - **Admin**
   - Split user and role mutations into focused typed APIs, with group membership managed independently from the user edit.
+  - On case-sensitive databases, a case-only slug/name edit such as foo to Foo would otherwise fails, now handled correctly.
 - **Pink-Cupcake**
   - Add contextual, translated activity history for user, group, role, and permission pages.
   - Add a button to generate a new CAPTCHA during registration and refresh it when registration validation or submission fails.
@@ -22,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - **Framework**
   - The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - **Core**
+  - Allow `Model::findUnique()` to exclude a specific record when checking unique identifiers.
   - Added `CACHE_DRIVER` & `MEMCACHED_HOST` environment variables, defaulting to file cache and `127.0.0.1` respectively. These allow configuring the cache driver and Memcached host for Docker deployments and non-Docker production environments.
   - CSRF tokens are now signed double-submit cookies instead of session-backed tokens; add `CSRF_SECRET` to the environment to define the signing key.
   - Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
@@ -32,6 +35,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Expose the factory through `CaptchaFactoryInterface` and instances through `CaptchaInterface`.
     - Consolidate generic CAPTCHA defaults under the Core `captcha` configuration.
     - Add `CaptchaProfile` to structure CAPTCHA configurations.
+- **Monorepo**
+  - Added XDebug environment variable for CLI in package settings.
+
 
 ## [6.0.3](https://github.com/userfrosting/monorepo/compare/6.0.2...6.0.3) - 2026-09-28
 

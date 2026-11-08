@@ -119,7 +119,7 @@ describe('admin activity pages', () => {
             global: deletedUserGlobal
         })
 
-        expect(wrapper.text()).toContain('USER.DELETED')
+        expect(wrapper.text()).toContain('USER.UNKNOWN')
         expect(wrapper.find('[data-test="user-link"]').exists()).toBe(false)
         expect(wrapper.find('[data-test="description"]').text()).toBe(row.occurred_at)
     })
@@ -144,7 +144,7 @@ describe('admin activity pages', () => {
             global: deletedUserGlobal
         })
 
-        expect(wrapper.text()).toContain('USER.DELETED')
+        expect(wrapper.text()).toContain('USER.UNKNOWN')
         expect(wrapper.find('[data-test="user-link"]').exists()).toBe(false)
         expect(wrapper.find('[data-test="description"]').text()).toBe(row.occurred_at)
     })

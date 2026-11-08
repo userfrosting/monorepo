@@ -97,7 +97,7 @@ class GroupDeleteAction
 
         // Check if there are any users in this group
         // @phpstan-ignore-next-line False negative from Laravel
-        if ($group->users()->count() > 0) {
+        if ($group->users()->withTrashed()->count() > 0) {
             $e = new GroupException();
             $message = new UserMessage('GROUP.NOT_EMPTY', $group->toArray());
             $e->setDescription($message);
@@ -110,6 +110,9 @@ class GroupDeleteAction
         $currentUser = $this->authenticator->user();
 
         // Begin transaction - DB will be rolled back if an exception occurs
+        // Keep the name before deletion, as it will be anonymized
+        $name = $group->name;
+
         $this->db->transaction(function () use ($group, $currentUser) {
             $group->delete();
 
@@ -122,7 +125,7 @@ class GroupDeleteAction
         });
 
         return new UserMessage('GROUP.DELETION_SUCCESSFUL', [
-            'name' => $group->name,
+            'name' => $name,
         ]);
     }
 

@@ -410,7 +410,7 @@ describe('Admin basic views', () => {
             }
         })
 
-        expect(activities.text()).toContain('USER.DELETED')
+        expect(activities.text()).toContain('USER.UNKNOWN')
 
         const groupsNoAccess = mount(PageGroups, {
             global: {

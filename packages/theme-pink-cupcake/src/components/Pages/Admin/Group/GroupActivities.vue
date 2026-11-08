@@ -47,7 +47,7 @@ defineExpose({ refresh })
                     <div class="uk-text-meta">{{ row.ip_address }}</div>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn v-else>
-                    <i>{{ $t('USER.DELETED') }}</i>
+                    <i>{{ $t('USER.UNKNOWN') }}</i>
                 </UFSprunjeColumn>
                 <UFSprunjeColumn>
                     <ActivityDescription :activity="row" />

@@ -14,9 +14,11 @@ namespace UserFrosting\Sprinkle\Account\Tests\Database\Models;
 
 use Carbon\Carbon;
 use Illuminate\Cache\Repository as Cache;
+use Illuminate\Events\Dispatcher;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use UserFrosting\Config\Config;
+use UserFrosting\Sprinkle\Account\Database\Models\Events\UserSoftDeletedEvent;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
@@ -85,6 +87,39 @@ class UserTest extends AccountTestCase
 
         // Assert soft delete
         $this->assertSame(1, User::withTrashed()->count());
+    }
+
+    public function testSoftDeleteAnonymizes(): void
+    {
+        /** @var User */
+        $user = User::factory()->create(['user_name' => 'bob', 'email' => 'bob@example.com']);
+        $id = $user->id;
+
+        $fired = null;
+        /** @var Dispatcher */
+        $dispatcher = User::getEventDispatcher();
+        $dispatcher->listen(UserSoftDeletedEvent::class, function (UserSoftDeletedEvent $event) use (&$fired) {
+            $fired = $event->user->getPreDeleteAttributes()['email'];
+        });
+
+        $user->delete();
+
+        $this->assertSame('bob@example.com', $fired);
+        /** @var User $deleted */
+        $deleted = User::withTrashed()->where('id', $id)->first();
+        $this->assertSame('deleted_user_' . $id, $deleted->user_name);
+        $this->assertSame('deleted_user_' . $id . '@deleted.invalid', $deleted->email);
+        $this->assertSame('Deleted User', $deleted->full_name);
+        $this->assertSame(0, (int) $deleted->flag_enabled);
+
+        // Identifiers are free again, reserved ones are not
+        $this->assertNull(User::findUnique('bob', 'user_name'));
+        $this->assertNull(User::findUnique('bob@example.com', 'email'));
+        $this->assertNotNull(User::findUnique('deleted_user_999', 'user_name'));
+        $this->assertNotNull(User::findUnique('deleted_user_999@deleted.invalid', 'email'));
+        $this->assertNull(User::findUnique('other', 'first_name'));
+        User::factory()->create(['user_name' => 'bob', 'email' => 'bob@example.com']);
+        $this->assertSame(1, User::count());
     }
 
     public function testUserIsMaster(): void

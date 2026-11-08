@@ -228,7 +228,7 @@ describe('admin widget components', () => {
         })
 
         expect(emptyActivities.find('[data-test="sprunje-table"]').exists()).toBe(true)
-        expect(emptyActivities.find('[data-test="sprunje-table"]').text()).toContain('USER.DELETED')
+        expect(emptyActivities.find('[data-test="sprunje-table"]').text()).toContain('USER.UNKNOWN')
     })
 
     test('renders group and permission widgets', async () => {

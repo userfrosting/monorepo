@@ -9,8 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Introduced typed activity recording with registered activity types, richer metadata, and polymorphic subjects, backed by a new activity database table schema. All activities are now recorded using this new structure via the ActivityRecorder service.
+- Soft deletes for groups and roles. Soft deleting a user, group or role now anonymizes it (`deleted_user_{id}`, `deleted_group_{id}`, `deleted_role_{id}`, translatable `*.DELETED` names), so the same username, email or slug can be reused. The record is kept so activities still reference it.
+- `UserSoftDeletedEvent`, `GroupSoftDeletedEvent` and `RoleSoftDeletedEvent` model events, fired after a soft delete. Original values are available via `getPreDeleteAttributes()`.
+- `AnonymizeSoftDeletedRecords` migration anonymizing existing soft deleted records. `down()` does not revert the anonymization.
 
 ### Changed
+- Identifiers reserved for anonymized records (`deleted_user_{id}`, `deleted_group_{id}`, `deleted_role_{id}`) are reported as taken by `findUnique`.
 - Expanded activity logging to cover profile changes and additional account workflows.
 - Implemented new registration captcha. The captcha challenges are now stored in the cache with an opaque cookie instead of PHP session state.
 - Renamed `CaptchaAction` to `RegistrationCaptchaAction`.
