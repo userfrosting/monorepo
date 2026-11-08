@@ -37,6 +37,9 @@ RUN pecl install xdebug \
 RUN pecl install memcached \
     && docker-php-ext-enable memcached
 
+RUN pecl install redis \
+    && docker-php-ext-enable redis
+
 # Install Composer
 RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer \
     && php /tmp/composer.phar --install-dir=/usr/local/bin --filename=composer

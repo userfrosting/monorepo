@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace UserFrosting\Tests\Cache;
 
 use Illuminate\Cache\Repository as Cache;
+use Predis\Client;
+use Predis\Connection\ConnectionException;
 use UserFrosting\Cache\RedisStore;
 
 /**
@@ -20,15 +22,41 @@ use UserFrosting\Cache\RedisStore;
  */
 class RedisStoreTest extends StoreTestCase
 {
+    private static bool $redisAvailabilityChecked = false;
+    private static ?string $redisUnavailableReason = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!self::$redisAvailabilityChecked) {
+            $host = env('REDIS_HOST', '127.0.0.1');
+            $client = new Client([
+                'host'    => $host === false || $host === '' ? '127.0.0.1' : $host,
+                'port'    => 6379,
+                'timeout' => 0.2,
+            ]);
+
+            try {
+                $client->ping();
+            } catch (ConnectionException $exception) {
+                self::$redisUnavailableReason = $exception->getMessage();
+            }
+
+            self::$redisAvailabilityChecked = true;
+        }
+
+        if (self::$redisUnavailableReason !== null) {
+            $this->markTestSkipped('Redis server is unavailable: ' . self::$redisUnavailableReason);
+        }
+    }
+
     /** {@inheritdoc} */
     protected function createStore(): Cache
     {
-        // Create $cache with default config in CI, and tweaked in Lando
-        $config = [];
-        if (getenv('LANDO') === 'ON') {
-            $config['host'] = 'redis-cache';
-        }
-        $cacheStore = new RedisStore($config);
+        // Create $cache with default config in CI
+        $host = env('REDIS_HOST', '127.0.0.1');
+        $cacheStore = new RedisStore($host === false || $host === '' ? [] : ['host' => $host]);
 
         return $cacheStore->instance();
     }
