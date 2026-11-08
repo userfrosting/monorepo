@@ -46,6 +46,16 @@ return [
                 'unix_socket' => env('DB_TEST_SOCKET', env('DB_SOCKET', '')),
             ],
 
+            'mariadb' => [
+                'url'         => env('DB_TEST_URL', env('DB_URL')),
+                'host'        => env('DB_TEST_HOST', env('DB_HOST', 'localhost')),
+                'port'        => env('DB_TEST_PORT', env('DB_PORT', '3306')),
+                'database'    => env('DB_TEST_NAME', env('DB_NAME')),
+                'username'    => env('DB_TEST_USER', env('DB_USER')),
+                'password'    => env('DB_TEST_PASSWORD', env('DB_PASSWORD')),
+                'unix_socket' => env('DB_TEST_SOCKET', env('DB_SOCKET', '')),
+            ],
+
             'sqlite' => [
                 'url'                     => env('DB_TEST_URL', env('DB_URL')),
                 'database'                => env('DB_TEST_NAME', env('DB_NAME', 'database.sqlite')),

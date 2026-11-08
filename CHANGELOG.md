@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Added `CACHE_DRIVER` & `MEMCACHED_HOST` environment variables, defaulting to file cache and `127.0.0.1` respectively. These allow configuring the cache driver and Memcached host for Docker deployments and non-Docker production environments.
   - CSRF tokens are now signed double-submit cookies instead of session-backed tokens; add `CSRF_SECRET` to the environment to define the signing key.
   - Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
+  - The `setup:db` command now selects and names database connections rather than drivers. The `--db-connection` option should be used instead of `--db-driver`.
   - Refactor CAPTCHA to use the cache service instead of the session service:
     - Store CAPTCHA data in the shared cache to avoid race conditions ([Monorepo#64](https://github.com/userfrosting/monorepo/issues/64)).
     - Add a `CaptchaFactory` for creating instances with distinct profiles.

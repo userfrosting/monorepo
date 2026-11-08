@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Validate throttling configuration before creating throttle rules.
 
 ### Changed
+- The `setup:db` command now selects and names database connections rather than drivers. The `--db-connection` option should be used instead of `--db-driver`.
 - Added `CACHE_DRIVER` & `MEMCACHED_HOST` environment variables, defaulting to file cache and `127.0.0.1` respectively. These allow configuring the cache driver and Memcached host for Docker deployments and non-Docker production environments.
 - Added `MorphableModelInterface` to identify Eloquent models that can serve as polymorphic relation targets.
 - Added translations for refreshing a CAPTCHA challenge.

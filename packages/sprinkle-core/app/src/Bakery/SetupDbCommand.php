@@ -57,8 +57,8 @@ class SetupDbCommand extends Command
      */
     protected function configure(): void
     {
-        // Get available db drivers
-        $drivers = implode(', ', $this->getDatabaseDriversList());
+        // Get available db connections
+        $connections = implode(', ', $this->getDatabaseConnectionsList());
 
         // Wrap method in a try catch to suppress any errors.
         // Exception will be properly formatted when the command is run.
@@ -72,7 +72,7 @@ class SetupDbCommand extends Command
              ->setDescription('UserFrosting Database Configuration Wizard')
              ->setHelp("Helper command to setup the database configuration. This can also be done manually by editing the <comment>$path</comment> file or using global server environment variables.")
              ->addOption('force', null, InputOption::VALUE_NONE, 'Force setup if db is already configured')
-             ->addOption('db_driver', null, InputOption::VALUE_OPTIONAL, "The database driver $drivers")
+             ->addOption('db_connection', null, InputOption::VALUE_OPTIONAL, "The database connection $connections")
              ->addOption('db_name', null, InputOption::VALUE_OPTIONAL, 'The database name')
              ->addOption('db_host', null, InputOption::VALUE_OPTIONAL, 'The database hostname')
              ->addOption('db_port', null, InputOption::VALUE_OPTIONAL, 'The database port')
@@ -154,7 +154,7 @@ class SetupDbCommand extends Command
         // N.B.: Can't use the `$dbParams` keys directly since they differ from
         // the config one later used to update the config
         $fileContent = [
-            'DB_CONNECTION' => $dbParams['driver'],
+            'DB_CONNECTION' => $dbParams['connection'],
             'DB_HOST'       => $dbParams['host'],
             'DB_PORT'       => $dbParams['port'],
             'DB_NAME'       => $dbParams['database'],
@@ -184,33 +184,33 @@ class SetupDbCommand extends Command
      */
     protected function askForDatabase(InputInterface $args): array
     {
-        // Get the db driver choices
-        $drivers = $this->databaseDrivers();
-        $driversList = array_column($drivers, 'name');
+        // Get the db connection choices
+        $connections = $this->databaseConnections();
+        $connectionsList = array_column($connections, 'name');
 
-        // Ask for database type if not defined in command arguments
-        $selectedDriver = $args->getOption('db_driver');
-        if (is_string($selectedDriver) && $selectedDriver !== '') {
-            $driver = array_filter($drivers, function ($value) use ($selectedDriver) {
-                return $value['driver'] === $selectedDriver;
+        // Ask for database connection if not defined in command arguments
+        $selectedConnection = $args->getOption('db_connection');
+        if (is_string($selectedConnection) && $selectedConnection !== '') {
+            $connection = array_filter($connections, function ($value) use ($selectedConnection) {
+                return $value['connection'] === $selectedConnection;
             });
         } else {
-            $selectedDriver = $this->io->choice('Database type', $driversList);
-            $driver = array_filter($drivers, function ($value) use ($selectedDriver) {
-                return $value['name'] === $selectedDriver;
+            $selectedConnection = $this->io->choice('Database connection', $connectionsList);
+            $connection = array_filter($connections, function ($value) use ($selectedConnection) {
+                return $value['name'] === $selectedConnection;
             });
         }
 
-        // Get the selected driver (first one in array). Make sure driver was found.
-        $driver = array_shift($driver);
-        if ($driver === null) {
-            throw new Exception('Invalid database driver: ' . strval($selectedDriver));
+        // Get the selected connection (first one in array). Make sure it was found.
+        $connection = array_shift($connection);
+        if ($connection === null) {
+            throw new Exception('Invalid database connection: ' . strval($selectedConnection));
         }
 
-        // Ask further questions based on driver
-        if ($driver['driver'] === 'sqlite') {
+        // Ask further questions based on the selected connection
+        if ($connection['connection'] === 'sqlite') {
             $path = (string) $args->getOption('db_name');
-            $path = ($path !== '') ? $path : (string) $this->io->ask('Database path', $driver['defaultDBName']);
+            $path = ($path !== '') ? $path : (string) $this->io->ask('Database path', $connection['defaultDBName']);
 
             // Check if file exists, attempt to create it otherwise
             if (!file_exists($path)) {
@@ -221,22 +221,23 @@ class SetupDbCommand extends Command
             }
 
             return [
-                'driver'   => 'sqlite',
-                'host'     => '127.0.0.1',
-                'port'     => '',
-                'database' => $path,
-                'username' => '',
-                'password' => '',
+                'connection' => $connection['connection'],
+                'driver'     => 'sqlite',
+                'host'       => '127.0.0.1',
+                'port'       => '',
+                'database'   => $path,
+                'username'   => '',
+                'password'   => '',
             ];
         } else {
             $host = (string) $args->getOption('db_host');
             $host = ($host !== '') ? $host : (string) $this->io->ask('Hostname', 'localhost');
 
             $port = (string) $args->getOption('db_port');
-            $port = ($port !== '') ? $port : (string) $this->io->ask('Port', (string) $driver['defaultPort']);
+            $port = ($port !== '') ? $port : (string) $this->io->ask('Port', (string) $connection['defaultPort']);
 
             $path = (string) $args->getOption('db_name');
-            $path = ($path !== '') ? $path : (string) $this->io->ask('Database name', $driver['defaultDBName']);
+            $path = ($path !== '') ? $path : (string) $this->io->ask('Database name', $connection['defaultDBName']);
 
             $user = (string) $args->getOption('db_user');
             $user = ($user !== '') ? $user : (string) $this->io->ask('Username', 'userfrosting');
@@ -248,12 +249,13 @@ class SetupDbCommand extends Command
             });
 
             return [
-                'driver'   => $driver['driver'],
-                'host'     => $host,
-                'port'     => $port,
-                'database' => $path,
-                'username' => $user,
-                'password' => $password,
+                'connection' => $connection['connection'],
+                'driver'     => $connection['driver'],
+                'host'       => $host,
+                'port'       => $port,
+                'database'   => $path,
+                'username'   => $user,
+                'password'   => $password,
             ];
         }
     }
@@ -275,32 +277,43 @@ class SetupDbCommand extends Command
     }
 
     /**
-     * Return the database choices for the env setup.
+     * Return the database connection choices for the env setup.
      *
-     * @return array{driver: string, name: string, defaultDBName:string, defaultPort:int}[]
+     * @return array{connection: string, driver: string, name: string, defaultDBName:string, defaultPort:int}[]
      */
-    protected function databaseDrivers(): array
+    protected function databaseConnections(): array
     {
         return [
             [
+                'connection'    => 'mysql',
                 'driver'        => 'mysql',
-                'name'          => 'MySQL / MariaDB',
+                'name'          => 'MySQL',
                 'defaultDBName' => 'userfrosting',
                 'defaultPort'   => 3306,
             ],
             [
+                'connection'    => 'mariadb',
+                'driver'        => 'mysql',
+                'name'          => 'MariaDB',
+                'defaultDBName' => 'userfrosting',
+                'defaultPort'   => 3306,
+            ],
+            [
+                'connection'    => 'pgsql',
                 'driver'        => 'pgsql',
                 'name'          => 'ProgreSQL',
                 'defaultDBName' => 'userfrosting',
                 'defaultPort'   => 5432,
             ],
             [
+                'connection'    => 'sqlsrv',
                 'driver'        => 'sqlsrv',
                 'name'          => 'SQL Server',
                 'defaultDBName' => 'userfrosting',
                 'defaultPort'   => 1433,
             ],
             [
+                'connection'    => 'sqlite',
                 'driver'        => 'sqlite',
                 'name'          => 'SQLite',
                 'defaultDBName' => (string) $this->locator->getResource('database://userfrosting.db', true),
@@ -310,16 +323,16 @@ class SetupDbCommand extends Command
     }
 
     /**
-     * Returns a list of available drivers.
+     * Returns a list of available connections.
      *
      * @return string[]
      */
-    protected function getDatabaseDriversList(): array
+    protected function getDatabaseConnectionsList(): array
     {
-        $dbDriverList = $this->databaseDrivers();
-        $dbDriverList = array_column($dbDriverList, 'driver');
+        $list = $this->databaseConnections();
+        $list = array_column($list, 'connection');
 
-        return $dbDriverList;
+        return $list;
     }
 
     /**
@@ -359,15 +372,18 @@ class SetupDbCommand extends Command
      */
     protected function updateServices(array $dbParams): void
     {
+        $connectionName = $dbParams['connection'];
+        unset($dbParams['connection']);
+
         // Update config first
-        $this->config->set('db.default', $dbParams['driver']);
-        $driverConfig = $this->config->getArray('db.connections.' . $dbParams['driver'], []);
-        $driverConfig = array_merge($driverConfig, $dbParams);
-        $this->config->set('db.connections.' . $dbParams['driver'], $driverConfig);
+        $this->config->set('db.default', $connectionName);
+        $connectionConfig = $this->config->getArray('db.connections.' . $connectionName, []);
+        $connectionConfig = array_merge($connectionConfig, $dbParams);
+        $this->config->set('db.connections.' . $connectionName, $connectionConfig);
 
         // Also set the default connection to the new value in the db.
-        $this->capsule->addConnection($dbParams, $dbParams['driver']);
-        $this->capsule->getDatabaseManager()->setDefaultConnection($dbParams['driver']);
-        $this->capsule->getDatabaseManager()->purge($dbParams['driver']);
+        $this->capsule->addConnection($dbParams, $connectionName);
+        $this->capsule->getDatabaseManager()->setDefaultConnection($connectionName);
+        $this->capsule->getDatabaseManager()->purge($connectionName);
     }
 }
