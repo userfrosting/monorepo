@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y apt-utils curl git unzip gnupg2 \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libjpeg-dev \
+    libmemcached-dev \
     zip \
     default-mysql-client \
     # Clean up the package cache to reduce image size
@@ -32,6 +33,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
 # Install XDebug via PECL
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
+
+RUN pecl install memcached \
+    && docker-php-ext-enable memcached
 
 # Install Composer
 RUN curl -sSfo /tmp/composer.phar https://getcomposer.org/installer \

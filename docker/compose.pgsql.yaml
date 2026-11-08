@@ -18,6 +18,7 @@ services:
       retries: 20
       start_period: 30s
     networks: [backend]
+    profiles: [pgsql]
 volumes:
   pgsql-db:
 networks:

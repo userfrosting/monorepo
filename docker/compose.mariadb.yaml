@@ -19,6 +19,7 @@ services:
       retries: 20
       start_period: 30s
     networks: [backend]
+    profiles: [mariadb]
 volumes:
   mariadb-db:
 networks:
