@@ -164,6 +164,7 @@ class RoleCreateActionTest extends AdminTestCase
         // Create a group
         /** @var Role */
         $role = Role::factory()->create();
+        $role->delete();
 
         // Set post payload
         $data = [

@@ -102,6 +102,7 @@ class RoleApiTest extends AdminTestCase
             'description',
             'created_at',
             'updated_at',
+            'deleted_at',
             'users_count',
         ], $response);
     }

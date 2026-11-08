@@ -15,9 +15,11 @@ namespace UserFrosting\Sprinkle\Admin\Tests\Sprunje;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use UserFrosting\Sprinkle\Account\Database\Models\Activity;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Log\AccountActivityTypes;
 use UserFrosting\Sprinkle\Account\Log\ActivityTypeRegistryInterface;
+use UserFrosting\Sprinkle\Admin\Log\AdminAccountActivityTypes;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Admin\Tests\AdminTestCase;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
@@ -115,6 +117,49 @@ class UserSprunjeTest extends AdminTestCase
         }
 
         $this->assertSame('User <strong>First 0 Name 0</strong> created', $activityDescription);
+    }
+
+    public function testLastActivityDescriptionIncludesTrashedContextAndSubject(): void
+    {
+        /** @var User */
+        $user = $this->users[0]; // @phpstan-ignore-line
+        $subject = User::factory()->create();
+        $group = Group::factory()->create();
+        $this->assertInstanceOf(User::class, $subject);
+        $this->assertInstanceOf(Group::class, $group);
+
+        Activity::factory()->create([
+            'user_id'      => $user->id,
+            'subject_type' => $subject->getMorphClass(),
+            'subject_id'   => $subject->id,
+            'context_type' => $group->getMorphClass(),
+            'context_id'   => $group->id,
+            'type'         => AdminAccountActivityTypes::ADD_TO_GROUP->value,
+            'occurred_at'  => new \DateTime('2023-05-15'),
+        ]);
+        $subject->delete();
+        $group->delete();
+
+        /** @var UserSprunje */
+        $sprunje = $this->getService(UserSprunje::class);
+        $data = $sprunje->getArray();
+
+        $activityDescription = null;
+        foreach ($data['rows'] as $row) {
+            if (!is_array($row) || ($row['id'] ?? null) !== $user->id) {
+                continue;
+            }
+
+            $lastActivity = $row['last_activity'] ?? null;
+            if (is_array($lastActivity)) {
+                $activityDescription = $lastActivity['description'] ?? null;
+            }
+        }
+
+        $this->assertSame(
+            'User <strong>Deleted User</strong> added to group <strong>Deleted Group</strong>',
+            $activityDescription
+        );
     }
 
     public function testLastActivityCompositionSkipsUsersWithoutActivities(): void

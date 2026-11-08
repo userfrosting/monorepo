@@ -167,6 +167,7 @@ class GroupCreateActionTest extends AdminTestCase
         // Create a group
         /** @var Group */
         $group = Group::factory()->create();
+        $group->delete();
 
         // Set post payload
         $data = [

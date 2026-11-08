@@ -107,10 +107,10 @@ class GroupEditAction
         // Validate request data
         $this->validateData($schema, $data);
         if ($data['name'] !== $group->name) {
-            $this->validateGroupName($data['name']);
+            $this->validateGroupName($data['name'], $group->id);
         }
         if ($data['slug'] !== $group->slug) {
-            $this->validateGroupSlug($data['slug']);
+            $this->validateGroupSlug($data['slug'], $group->id);
         }
 
         // Determine targeted fields
@@ -181,10 +181,11 @@ class GroupEditAction
      * Validate group name is not already in use.
      *
      * @param string $name
+     * @param int    $groupId
      */
-    protected function validateGroupName(string $name): void
+    protected function validateGroupName(string $name, int $groupId): void
     {
-        $group = $this->groupModel->where('name', $name)->first();
+        $group = $this->groupModel::findUnique($name, 'name', checkDeleted: false, excludeId: $groupId);
         if ($group !== null) {
             $e = new GroupException();
             $message = new UserMessage('GROUP.NAME_IN_USE', ['name' => $name]);
@@ -195,13 +196,14 @@ class GroupEditAction
     }
 
     /**
-     * Validate group name is not already in use.
+     * Validate group slug is not already in use.
      *
      * @param string $slug
+     * @param int    $groupId
      */
-    protected function validateGroupSlug(string $slug): void
+    protected function validateGroupSlug(string $slug, int $groupId): void
     {
-        $group = $this->groupModel->where('slug', $slug)->first();
+        $group = $this->groupModel::findUnique($slug, 'slug', excludeId: $groupId);
         if ($group !== null) {
             $e = new GroupException();
             $message = new UserMessage('SLUG_IN_USE', ['slug' => $slug]);

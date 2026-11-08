@@ -99,12 +99,27 @@ class ModelTest extends CoreTestCase
         $model->delete();
         $result = PizzaModel::findUnique('TeSt', 'type', true);
         $this->assertEquals('test', $result?->type);
+        $this->assertNull(PizzaModel::findUnique('TeSt', 'type', true, $model->getKey()));
 
         $result = PizzaModel::findUnique('TeSt', 'type', false);
         $this->assertNull($result);
 
         // Revert custom migration
         $migration->down();
+    }
+
+    public function testFindUniqueExcludesOnlyTheSpecifiedRecord(): void
+    {
+        $first = new Throttle(['type' => 'test']);
+        $first->save();
+        $second = new Throttle(['type' => 'TEST']);
+        $second->save();
+
+        $this->assertSame($second->getKey(), Throttle::findUnique('Test', 'type', excludeId: $first->getKey())?->getKey());
+        $this->assertSame($first->getKey(), Throttle::findUnique('Test', 'type', excludeId: $second->getKey())?->getKey());
+        $this->assertNull(Throttle::findUnique('other', 'type', excludeId: $first->getKey()));
+        $second->delete();
+        $this->assertNull(Throttle::findUnique('Test', 'type', excludeId: $first->getKey()));
     }
 
     public function testRelationExists(): void

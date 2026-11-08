@@ -202,7 +202,6 @@ USER:
   CREATED: User <strong>{{user_name}}</strong> has been successfully created
   DELETE: Delete user
   DELETE_CONFIRM: Are you sure you want to delete the user <strong>{{full_name}} ({{user_name}})</strong>?
-  DELETED: User deleted
   DISABLE: Disable user
   DISABLE_CONFIRM: Are you sure you want to disable <strong>{{full_name}} ({{user_name}})</strong>
     ?
@@ -216,4 +215,5 @@ USER:
   PAGE_DESCRIPTION: A listing of the users for your site. Provides management tools
     including the ability to edit user details, manually activate users, enable/disable
     users, and more.
+  UNKNOWN: User Unknown
   VIEW_ALL: View all users

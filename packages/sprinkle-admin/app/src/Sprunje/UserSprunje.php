@@ -15,6 +15,7 @@ namespace UserFrosting\Sprinkle\Admin\Sprunje;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use UserFrosting\I18n\Translator;
@@ -90,7 +91,10 @@ class UserSprunje extends Sprunje
         // Load all activities corresponding to the collected IDs, including
         // their context and subject relations.
         $activities = $this->activityModel->newQuery()
-            ->with(['context', 'subject'])
+            ->with([
+                'context' => fn (MorphTo $relation) => $relation->withTrashed(),
+                'subject' => fn (MorphTo $relation) => $relation->withTrashed(),
+            ])
             ->findMany(array_unique($activityIds))
             ->keyBy('id');
 

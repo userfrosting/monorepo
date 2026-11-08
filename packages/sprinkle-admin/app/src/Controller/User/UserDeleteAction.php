@@ -66,10 +66,13 @@ class UserDeleteAction
      */
     public function __invoke(UserInterface $user, Response $response): Response
     {
+        // Capture user data before deletion, as it will be anonymized
+        $data = $user->toArray();
+
         $this->handle($user);
 
         // Message
-        $message = $this->translator->translate('DELETION_SUCCESSFUL', $user->toArray());
+        $message = $this->translator->translate('DELETION_SUCCESSFUL', $data);
 
         // Write response
         $payload = new ApiResponse($message);
@@ -88,23 +91,19 @@ class UserDeleteAction
         // Access-controlled page based on the user.
         $this->validateAccess($user);
 
-        // Backup username for logging
-        $username = $user->user_name;
-
         // Alias current user for convenience. Won't be null, since it's AuthGuarded.
         /** @var UserInterface $currentUser */
         $currentUser = $this->authenticator->user();
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        $this->db->transaction(function () use ($user, $username, $currentUser) {
+        $this->db->transaction(function () use ($user, $currentUser) {
             $user->delete();
 
             // Create activity record
             $this->logger->record(
                 user: $currentUser,
                 type: AccountActivityTypes::DELETE,
-                subject: $user,
-                metadata: ['username' => $username]
+                subject: $user
             );
         });
     }
