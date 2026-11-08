@@ -8,7 +8,7 @@ This Docker configuration is intended only for developing UserFrosting in the mo
 
 ### Prerequisites
 
-Install [Docker Compose or Docker Desktop](https://docs.docker.com/compose/install/).
+Install [Docker Compose or Docker Desktop](https://docs.docker.com/compose/install/). Compose 2.20 or newer is required for the provider-specific `include` files.
 
 ### Initial Setup
 
