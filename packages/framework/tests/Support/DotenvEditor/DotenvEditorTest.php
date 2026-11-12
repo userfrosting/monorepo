@@ -151,10 +151,8 @@ class DotenvEditorTest extends TestCase
         $tmp = sys_get_temp_dir() . '/uf_env_' . uniqid();
         copy($src, $tmp);
 
-        // Create a small subclass to override temp dir to a non-writable dir
+        // Use a directory that does not exist, since root can write to chmod'd directories.
         $badDir = sys_get_temp_dir() . '/uf_bad_' . uniqid();
-        mkdir($badDir);
-        chmod($badDir, 0444);
 
         $editor = new class($badDir) extends DotenvEditor {
             private string $dir;
@@ -177,9 +175,6 @@ class DotenvEditorTest extends TestCase
         try {
             $editor->save();
         } finally {
-            // Cleanup
-            chmod($badDir, 0755);
-            rmdir($badDir);
             unlink($tmp);
         }
     }
