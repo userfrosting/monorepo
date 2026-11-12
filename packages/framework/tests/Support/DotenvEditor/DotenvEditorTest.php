@@ -297,10 +297,6 @@ class DotenvEditorTest extends TestCase
 
     public function testSavePreservesExistingPermissions(): void
     {
-        if (posix_geteuid() === 0) {
-            $this->markTestSkipped('Cannot test file permissions as root.');
-        }
-
         $tmp = sys_get_temp_dir() . '/uf_env_perms_' . uniqid();
         file_put_contents($tmp, "FOO=bar\n");
         chmod($tmp, 0640);
@@ -321,10 +317,6 @@ class DotenvEditorTest extends TestCase
 
     public function testSaveNewFileHasDefaultPermissions(): void
     {
-        if (posix_geteuid() === 0) {
-            $this->markTestSkipped('Cannot test file permissions as root.');
-        }
-
         $tmp = sys_get_temp_dir() . '/uf_env_newperms_' . uniqid();
         if (file_exists($tmp)) {
             unlink($tmp);
