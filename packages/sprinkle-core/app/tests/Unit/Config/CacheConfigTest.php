@@ -44,6 +44,20 @@ class CacheConfigTest extends TestCase
         $this->assertSame('127.0.0.1', $config['cache']['memcached']['host']);
     }
 
+    public function testRedisHostCanBeSetThroughEnvironment(): void
+    {
+        $config = $this->loadDefaultConfig('REDIS_HOST', 'redis');
+
+        $this->assertSame('redis', $config['cache']['redis']['host']);
+    }
+
+    public function testRedisHostDefaultsToLocalhost(): void
+    {
+        $config = $this->loadDefaultConfig('REDIS_HOST', null);
+
+        $this->assertSame('127.0.0.1', $config['cache']['redis']['host']);
+    }
+
     /**
      * @return array<string, mixed>
      */

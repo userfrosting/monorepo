@@ -1,20 +1,56 @@
 # Monorepo Docker services are for local development only.
+include:
+  - ./docker/compose.mysql.yaml
+  - ./docker/compose.mariadb.yaml
+  - ./docker/compose.pgsql.yaml
+  - ./docker/compose.mailpit.yaml
+  - ./docker/compose.mysql-test.yaml
+  - ./docker/compose.mariadb-test.yaml
+  - ./docker/compose.pgsql-test.yaml
+  - ./docker/compose.memcached.yaml
+  - ./docker/compose.redis.yaml
 services:
   app:
     restart: unless-stopped
     tty: true
-    build:
-      context: ./docker/app
     depends_on:
       mysql:
         condition: service_healthy
+        required: false
+      mariadb:
+        condition: service_healthy
+        required: false
+      pgsql:
+        condition: service_healthy
+        required: false
+      mysql-test:
+        condition: service_healthy
+        required: false
+      mariadb-test:
+        condition: service_healthy
+        required: false
+      pgsql-test:
+        condition: service_healthy
+        required: false
+    build:
+      context: ./docker/app
+      args:
+        APP_UID: ${DOCKER_UID:-1000}
+        APP_GID: ${DOCKER_GID:-1000}
     environment:
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: "3306"
-      DB_NAME: ${MYSQL_DATABASE:-userfrosting}
-      DB_USER: ${MYSQL_USER:-docker}
-      DB_PASSWORD: ${MYSQL_PASSWORD:-secret}
+      DB_CONNECTION: ${DOCKER_DB_CONNECTION:-mysql}
+      DB_HOST: ${DOCKER_DB_CONNECTION:-mysql}
+      DB_NAME: ${DOCKER_DB_NAME:-userfrosting}
+      DB_USER: ${DOCKER_DB_USER:-docker}
+      DB_PASSWORD: ${DOCKER_DB_PASSWORD:-secret}
+      DB_TEST_CONNECTION: ${DOCKER_DB_TEST_CONNECTION:-memory}
+      DB_TEST_HOST: ${DOCKER_DB_TEST_HOST:-${DOCKER_DB_TEST_CONNECTION:-memory}-test}
+      DB_TEST_NAME: ${DOCKER_DB_TEST_NAME:-userfrosting_test}
+      DB_TEST_USER: ${DOCKER_DB_TEST_USER:-userfrosting_test}
+      DB_TEST_PASSWORD: ${DOCKER_DB_TEST_PASSWORD:-testsecret}
+      CACHE_DRIVER: ${DOCKER_CACHE_DRIVER:-file}
+      MEMCACHED_HOST: memcached
+      REDIS_HOST: redis
     volumes:
       - .:/app
       - node-modules:/app/node_modules
@@ -25,8 +61,8 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:80"
-      - "[::1]:${DOCKER_HTTP_PORT:-8080}:80"
+      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:8080"
+      - "[::1]:${DOCKER_HTTP_PORT:-8080}:8080"
     build:
       context: ./docker/nginx
     volumes:
@@ -44,6 +80,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/vue/Dockerfile
+      args:
+        NODE_UID: ${DOCKER_UID:-1000}
+        NODE_GID: ${DOCKER_GID:-1000}
     ports:
       - "127.0.0.1:${DOCKER_VITE_PORT:-5173}:5173"
       - "[::1]:${DOCKER_VITE_PORT:-5173}:5173"
@@ -52,42 +91,8 @@ services:
       - node-modules:/app/node_modules
     networks:
       - frontend
-  mysql:
-    restart: unless-stopped
-    tty: true
-    build:
-      context: ./docker/mysql
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-userfrosting}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-secret}
-      MYSQL_USER: ${MYSQL_USER:-docker}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-secret}
-    ports:
-      - "127.0.0.1:${DOCKER_MYSQL_PORT:-8503}:3306"
-      - "[::1]:${DOCKER_MYSQL_PORT:-8503}:3306"
-    volumes:
-      - userfrosting-db:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping --protocol=tcp --host=127.0.0.1 --user=root --password=\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 30s
-    networks:
-      - backend
-  mailpit:
-    image: 'axllent/mailpit:latest'
-    ports:
-      - '127.0.0.1:${DOCKER_SMTP_PORT:-1025}:1025'
-      - '[::1]:${DOCKER_SMTP_PORT:-1025}:1025'
-      - '127.0.0.1:${DOCKER_MAILPIT_PORT:-8025}:8025'
-      - '[::1]:${DOCKER_MAILPIT_PORT:-8025}:8025'
-    networks:
-      - backend
 volumes:
   node-modules:
-    driver: local
-  userfrosting-db:
     driver: local
 networks:
   frontend:

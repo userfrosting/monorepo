@@ -33,7 +33,45 @@ return [
      * Define in memory db for testing
      */
     'db' => [
-        'default' => env('DB_TEST_CONNECTION', 'memory'),
+        'default' => env('DB_TEST_CONNECTION', env('DB_CONNECTION', 'memory')),
+
+        'connections' => [
+            'mysql' => [
+                'url'         => env('DB_TEST_URL', env('DB_URL')),
+                'host'        => env('DB_TEST_HOST', env('DB_HOST', 'localhost')),
+                'port'        => env('DB_TEST_PORT', env('DB_PORT', '3306')),
+                'database'    => env('DB_TEST_NAME', env('DB_NAME')),
+                'username'    => env('DB_TEST_USER', env('DB_USER')),
+                'password'    => env('DB_TEST_PASSWORD', env('DB_PASSWORD')),
+                'unix_socket' => env('DB_TEST_SOCKET', env('DB_SOCKET', '')),
+            ],
+
+            'mariadb' => [
+                'url'         => env('DB_TEST_URL', env('DB_URL')),
+                'host'        => env('DB_TEST_HOST', env('DB_HOST', 'localhost')),
+                'port'        => env('DB_TEST_PORT', env('DB_PORT', '3306')),
+                'database'    => env('DB_TEST_NAME', env('DB_NAME')),
+                'username'    => env('DB_TEST_USER', env('DB_USER')),
+                'password'    => env('DB_TEST_PASSWORD', env('DB_PASSWORD')),
+                'unix_socket' => env('DB_TEST_SOCKET', env('DB_SOCKET', '')),
+            ],
+
+            'sqlite' => [
+                'url'                     => env('DB_TEST_URL', env('DB_URL')),
+                'database'                => env('DB_TEST_NAME', env('DB_NAME', 'database.sqlite')),
+                'foreign_key_constraints' => env('DB_TEST_FOREIGN_KEYS', env('DB_FOREIGN_KEYS', true)),
+            ],
+
+            'pgsql' => [
+                'url'            => env('DB_TEST_URL', env('DB_URL')),
+                'host'           => env('DB_TEST_HOST', env('DB_HOST', '127.0.0.1')),
+                'port'           => env('DB_TEST_PORT', env('DB_PORT', '5432')),
+                'database'       => env('DB_TEST_NAME', env('DB_NAME')),
+                'username'       => env('DB_TEST_USER', env('DB_USER')),
+                'password'       => env('DB_TEST_PASSWORD', env('DB_PASSWORD')),
+                'unix_socket'    => env('DB_TEST_SOCKET', env('DB_SOCKET', '')),
+            ],
+        ],
     ],
 
     /*
