@@ -1,8 +1,12 @@
 # Use the official PHP 8.5 FPM image
 FROM php:8.5-fpm
 
+ARG APP_UID=1000
+ARG APP_GID=1000
+
 # Set environment variables for non-interactive installations
 ENV DEBIAN_FRONTEND=noninteractive
+ENV NPM_CONFIG_CACHE=/tmp/npm-cache
 
 # Update and install all necessary system dependencies in a single RUN command
 RUN apt-get update && apt-get install -y apt-utils curl git unzip gnupg2 \
@@ -50,3 +54,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) pcntl pdo pdo_mysql pdo_pgsql zip
 
 WORKDIR /app
+
+RUN groupmod --non-unique --gid "${APP_GID}" www-data \
+    && usermod --non-unique --uid "${APP_UID}" --gid "${APP_GID}" www-data \
+    && mkdir -p /app/node_modules \
+    && chown www-data:www-data /app/node_modules
+
+USER www-data

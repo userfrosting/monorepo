@@ -18,6 +18,24 @@ final class ComposeConfigTest extends TestCase
         $this->assertSame('file', $services['app']['environment']['CACHE_DRIVER']);
         $this->assertSame('service_healthy', $services['app']['depends_on']['mysql']['condition']);
         $this->assertFalse($services['app']['depends_on']['mysql']['required']);
+        $this->assertSame('1000', $services['app']['build']['args']['APP_UID']);
+        $this->assertSame('1000', $services['app']['build']['args']['APP_GID']);
+        $this->assertSame(8080, $services['nginx']['ports'][0]['target']);
+        $this->assertSame('1000', $services['vue-frontend']['build']['args']['NODE_UID']);
+        $this->assertSame('1000', $services['vue-frontend']['build']['args']['NODE_GID']);
+        $this->assertSame('node-modules', $services['app']['volumes'][1]['source']);
+        $this->assertSame('node-modules', $services['vue-frontend']['volumes'][1]['source']);
+    }
+
+    public function testHostIdentityIsPassedToWritableServices(): void
+    {
+        $services = $this->composeConfig([
+            'DOCKER_UID' => '501',
+            'DOCKER_GID' => '20',
+        ])['services'];
+
+        $this->assertSame(['APP_GID' => '20', 'APP_UID' => '501'], $services['app']['build']['args']);
+        $this->assertSame(['NODE_GID' => '20', 'NODE_UID' => '501'], $services['vue-frontend']['build']['args']);
     }
 
     #[DataProvider('optionalServices')]
@@ -138,6 +156,8 @@ final class ComposeConfigTest extends TestCase
         $root = dirname(__DIR__, 2);
         $defaults = [
             'COMPOSE_PROFILES'           => '',
+            'DOCKER_UID'                 => '1000',
+            'DOCKER_GID'                 => '1000',
             'DOCKER_DB_CONNECTION'       => 'mysql',
             'DOCKER_DB_TEST_CONNECTION'  => 'memory',
             'DOCKER_DB_TEST_HOST'        => false,

@@ -34,6 +34,9 @@ services:
         required: false
     build:
       context: ./docker/app
+      args:
+        APP_UID: ${DOCKER_UID:-1000}
+        APP_GID: ${DOCKER_GID:-1000}
     environment:
       DB_CONNECTION: ${DOCKER_DB_CONNECTION:-mysql}
       DB_HOST: ${DOCKER_DB_CONNECTION:-mysql}
@@ -58,8 +61,8 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:80"
-      - "[::1]:${DOCKER_HTTP_PORT:-8080}:80"
+      - "127.0.0.1:${DOCKER_HTTP_PORT:-8080}:8080"
+      - "[::1]:${DOCKER_HTTP_PORT:-8080}:8080"
     build:
       context: ./docker/nginx
     volumes:
@@ -77,6 +80,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/vue/Dockerfile
+      args:
+        NODE_UID: ${DOCKER_UID:-1000}
+        NODE_GID: ${DOCKER_GID:-1000}
     ports:
       - "127.0.0.1:${DOCKER_VITE_PORT:-5173}:5173"
       - "[::1]:${DOCKER_VITE_PORT:-5173}:5173"
