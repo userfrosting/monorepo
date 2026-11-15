@@ -33,11 +33,11 @@ return [
      * Define in memory db for testing
      */
     'db' => [
-        'default' => env('DB_TEST_CONNECTION', env('DB_CONNECTION', 'memory')),
+        'default' => env('DB_TEST_CONNECTION', 'memory'),
 
         'connections' => [
             'mysql' => [
-                'url'         => env('DB_TEST_URL', env('DB_URL')),
+                'url'         => env('DB_TEST_URL'),
                 'host'        => env('DB_TEST_HOST', env('DB_HOST', 'localhost')),
                 'port'        => env('DB_TEST_PORT', env('DB_PORT', '3306')),
                 'database'    => env('DB_TEST_NAME', env('DB_NAME')),

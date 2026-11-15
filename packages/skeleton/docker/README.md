@@ -318,11 +318,11 @@ Edit the root Docker `.env` file:
 nano .env
 ```
 
-Replace **both** sample MySQL passwords:
-```env
-MYSQL_ROOT_PASSWORD=replace-this-before-production <-- Change this !
-MYSQL_PASSWORD=replace-this-before-production <-- Change this !
-```
+Set production mode and replace both database passwords in the project-root `.env`:
+
+    DOCKER_MODE=production
+    DOCKER_DB_ROOT_PASSWORD=replace-with-a-unique-root-secret
+    DOCKER_DB_PASSWORD=replace-with-a-unique-app-secret
 
 Next, edit the project `app/.env` file:
 ```bash
