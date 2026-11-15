@@ -153,6 +153,18 @@ cp docker/.env.example .env
 
 After changing `.env`, apply the settings with `docker compose up -d`. An existing container does not receive changed environment variables until Compose recreates it. When disabling profiles, stop the old services explicitly or use `docker compose down --remove-orphans` before restarting. Avoid removing volumes unless you intend to delete data.
 
+### Selecting the PHP version
+
+Set `DOCKER_PHP_VERSION` in the project-root `.env` to `8.3`, `8.4`, or `8.5`. It defaults to `8.5`. Rebuild the app image after changing the value:
+
+```dotenv
+DOCKER_PHP_VERSION=8.4
+```
+
+```bash
+docker compose up -d --build app
+```
+
 ### Docker structure
 
 The root [`compose.yaml`](../compose.yaml) defines the core services and includes the individual service files in the `docker/` directory:

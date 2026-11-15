@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - **Monorepo**: Improved security by running services with host-ID-mapped users. Run PHP as host-ID-mapped `www-data`, nginx with the unprivileged image, and Vite as host-ID-mapped `node`; preserve writable dependency/runtime paths and host ports.
   - Fix the Vite development entrypoint to enabled HMR in develop mode. 
   - Update to PHP 8.5
+  - Allow selecting PHP 8.3–8.5 for Docker images with `DOCKER_PHP_VERSION` (default: 8.5).
 - **Framework**
   - The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - **Core**

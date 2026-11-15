@@ -18,6 +18,7 @@ final class ComposeConfigTest extends TestCase
         $this->assertSame('file', $services['app']['environment']['CACHE_DRIVER']);
         $this->assertSame('service_healthy', $services['app']['depends_on']['mysql']['condition']);
         $this->assertFalse($services['app']['depends_on']['mysql']['required']);
+        $this->assertSame('8.5', $services['app']['build']['args']['PHP_VERSION']);
         $this->assertSame('1000', $services['app']['build']['args']['APP_UID']);
         $this->assertSame('1000', $services['app']['build']['args']['APP_GID']);
         $this->assertSame(8080, $services['nginx']['ports'][0]['target']);
@@ -34,8 +35,14 @@ final class ComposeConfigTest extends TestCase
             'DOCKER_GID' => '20',
         ])['services'];
 
-        $this->assertSame(['APP_GID' => '20', 'APP_UID' => '501'], $services['app']['build']['args']);
+        $this->assertSame(['APP_GID' => '20', 'APP_UID' => '501', 'PHP_VERSION' => '8.5'], $services['app']['build']['args']);
         $this->assertSame(['NODE_GID' => '20', 'NODE_UID' => '501'], $services['vue-frontend']['build']['args']);
+    }
+
+    public function testPhpVersionCanBeSelected(): void
+    {
+        $services = $this->composeConfig(['DOCKER_PHP_VERSION' => '8.4'])['services'];
+        $this->assertSame('8.4', $services['app']['build']['args']['PHP_VERSION']);
     }
 
     #[DataProvider('optionalServices')]
@@ -156,6 +163,7 @@ final class ComposeConfigTest extends TestCase
         $root = dirname(__DIR__, 2);
         $defaults = [
             'COMPOSE_PROFILES'           => '',
+            'DOCKER_PHP_VERSION'         => '8.5',
             'DOCKER_UID'                 => '1000',
             'DOCKER_GID'                 => '1000',
             'DOCKER_DB_CONNECTION'       => 'mysql',

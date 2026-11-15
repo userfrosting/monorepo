@@ -1,5 +1,5 @@
-# Use the official PHP 8.5 FPM image
-FROM php:8.5-fpm
+ARG PHP_VERSION=8.5
+FROM php:${PHP_VERSION}-fpm
 
 ARG APP_UID=1000
 ARG APP_GID=1000

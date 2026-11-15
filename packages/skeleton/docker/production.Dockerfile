@@ -18,7 +18,8 @@ RUN if [ -f package-lock.json ]; then \
     && npm install --no-audit --no-fund \
     && npm run vite:build
 
-FROM php:8.5-fpm AS app
+ARG PHP_VERSION=8.5
+FROM php:${PHP_VERSION}-fpm AS app
 
 ARG APP_UID=1000
 ARG APP_GID=1000
