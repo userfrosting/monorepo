@@ -2,6 +2,7 @@
 
 This Docker configuration is intended only for developing UserFrosting in the monorepo. It includes development services and is not suitable for production. For the Skeleton app's development and production options, see the [Skeleton Docker Guide](../packages/skeleton/docker/README.md).
 
+> [!NOTE]
 > You can find the complete version of this guide at [UserFrosting Learn](https://learn.userfrosting.com/installation/environment/docker).
 
 ## Installation
@@ -40,7 +41,7 @@ echo "DOCKER_GID=$(id -g)"
 Copy the two displayed lines into `.env`. This lets the app run as `www-data` and the Vite frontend as `node` while keeping files created in bind mounts and the shared `node_modules` volume accessible to your host account. If the checkout or runtime directories are already owned by another user, fix their ownership before starting the containers.
 
 > [!TIP]
-> You can use a root `.env` file (copied from `docker/.env.example`) to define `COMPOSE_PROJECT_NAME`, which determines the names of containers, images, networks, and volumes. If it is unset, Compose uses the checkout directory name instead. You can set it to a unique value to avoid conflicts with other projects or branch checkouts.
+> You can use the root `.env` file (copied from `docker/.env.example`) to define `COMPOSE_PROJECT_NAME`, which determines the names of containers, images, networks, and volumes. If it is unset, Compose uses the checkout directory name instead. You can set it to a unique value to avoid conflicts with other projects or branch checkouts.
 >
 > You can also define other environment variables here, such as database credentials or service ports. See [Advanced configuration](#advanced-configuration) for details.
 
@@ -235,7 +236,7 @@ As with the application database, the test database credentials can be customize
 > [!WARNING]
 > Server-backed tests may reset the configured test database. Never point them at an application database, and do not run concurrent suites against the same test database. Test data is stored in memory and is lost when its container stops or is recreated. These services are for testing, not persistent application data.
 
-### Optional caches
+### Selecting the cache provider
 
 Memcached and Redis are optional, independent services. Enable the service profile **and** set `DOCKER_CACHE_DRIVER` to use it from the app. For example:
 
