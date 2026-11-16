@@ -1,3 +1,4 @@
+ARG PHP_VERSION=8.5
 FROM node:24-bookworm AS frontend
 
 WORKDIR /app
@@ -18,7 +19,6 @@ RUN if [ -f package-lock.json ]; then \
     && npm install --no-audit --no-fund \
     && npm run vite:build
 
-ARG PHP_VERSION=8.5
 FROM php:${PHP_VERSION}-fpm AS app
 
 ARG APP_UID=1000
