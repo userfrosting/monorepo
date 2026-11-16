@@ -66,7 +66,7 @@ class SetupDbCommandTest extends CoreTestCase
     {
         // Force locator return with Mockery
         $locator = Mockery::mock(ResourceLocatorInterface::class);
-        $locator->shouldReceive('getResource')->andReturn(null); // For databaseDrivers method
+        $locator->shouldReceive('getResource')->andReturn(null); // For databaseConnections method
         $locator->shouldReceive('findResource')->andReturn(null);
         $this->getContainer()->set(ResourceLocatorInterface::class, $locator);
 
@@ -133,7 +133,7 @@ class SetupDbCommandTest extends CoreTestCase
         /** @var SetupDbCommand */
         $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
-            '3',
+            '4',
             $this->dbFile,
         ]);
 
@@ -164,7 +164,7 @@ class SetupDbCommandTest extends CoreTestCase
         /** @var SetupDbCommand */
         $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
-            '3',
+            '4',
             $this->dbFile,
         ]);
 
@@ -201,7 +201,7 @@ class SetupDbCommandTest extends CoreTestCase
     }
 
     /**
-     * Simulate when the command define the same database driver, but with new
+     * Simulate when the command defines the same database connection, but with new
      * config. This make sure the existing connection is properly purged.
      *
      * @depends testCommand
@@ -227,11 +227,11 @@ class SetupDbCommandTest extends CoreTestCase
         /** @var SetupDbCommand */
         $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, userInput: [
-            '3',
+            '4',
             $this->dbFile,
         ]);
         $result2 = BakeryTester::runCommand($command, input: ['--force' => true], userInput: [
-            '3',
+            '4',
             $dbFile2,
         ]);
 
@@ -269,13 +269,13 @@ class SetupDbCommandTest extends CoreTestCase
         /** @var SetupDbCommand */
         $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, verbosity: OutputInterface::VERBOSITY_VERBOSE, input: [
-            '--force'       => true,
-            '--db_driver'   => 'mysql',
-            '--db_name'     => 'database_name',
-            '--db_host'     => 'localhost',
-            '--db_port'     => '3306',
-            '--db_user'     => 'database_user',
-            '--db_password' => 'database_password',
+            '--force'         => true,
+            '--db_connection' => 'mariadb',
+            '--db_name'       => 'database_name',
+            '--db_host'       => 'localhost',
+            '--db_port'       => '3306',
+            '--db_user'       => 'database_user',
+            '--db_password'   => 'database_password',
         ]);
 
         // Assertions
@@ -283,6 +283,15 @@ class SetupDbCommandTest extends CoreTestCase
         $this->assertStringContainsString('Save path for database credentials', $result->getDisplay());
         $this->assertStringContainsString('Database connection successful', $result->getDisplay());
         $this->assertStringContainsString('Database config successfully saved', $result->getDisplay());
+
+        /** @var Config */
+        $config = $this->getService(Config::class);
+        $this->assertSame('mariadb', $config->get('db.default'));
+        $this->assertSame('mysql', $config->get('db.connections.mariadb.driver'));
+
+        $dotenvEditor = new DotenvEditor();
+        $dotenvEditor->load(__DIR__ . '/data/env/.env');
+        $this->assertSame('mariadb', $dotenvEditor->getValue('DB_CONNECTION'));
     }
 
     public function testCommandForBadNewConfig(): void
@@ -298,13 +307,13 @@ class SetupDbCommandTest extends CoreTestCase
         /** @var SetupDbCommand */
         $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, input: [
-            '--force'       => true,
-            '--db_driver'   => 'mysql',
-            '--db_name'     => 'database_name',
-            '--db_host'     => 'localhost',
-            '--db_port'     => '3306',
-            '--db_user'     => 'database_user',
-            '--db_password' => 'database_password',
+            '--force'         => true,
+            '--db_connection' => 'mysql',
+            '--db_name'       => 'database_name',
+            '--db_host'       => 'localhost',
+            '--db_port'       => '3306',
+            '--db_user'       => 'database_user',
+            '--db_password'   => 'database_password',
         ]);
 
         // Assertions
@@ -339,18 +348,18 @@ class SetupDbCommandTest extends CoreTestCase
         $this->assertStringContainsString('Database config successfully saved', $result->getDisplay());
     }
 
-    public function testCommandForBadDriver(): void
+    public function testCommandForBadConnection(): void
     {
         // Run command and assert result
         /** @var SetupDbCommand */
         $command = $this->getService(SetupDbCommand::class);
         $result = BakeryTester::runCommand($command, input: [
-            '--force'       => true,
-            '--db_driver'   => 'foo',
+            '--force'         => true,
+            '--db_connection' => 'foo',
         ]);
 
         // Assertions
         $this->assertSame(1, $result->getStatusCode());
-        $this->assertStringContainsString('Invalid database driver: foo', $result->getDisplay());
+        $this->assertStringContainsString('Invalid database connection: foo', $result->getDisplay());
     }
 }

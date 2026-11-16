@@ -17,10 +17,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Add a button to generate a new CAPTCHA during registration and refresh it when registration validation or submission fails.
 - **Docker**
   - **Monorepo**: Keep Compose development-only; run Vite from the repository root for workspace HMR; pass MySQL settings to PHP; start Nginx after Vite; and add a VS Code task for Mailpit.
-  - **Skeleton**: Add development and production Compose configurations, with production providing built assets, Memcached, private MySQL, and separate production app settings.
+  - **Skeleton**: 
+    - Add development and production Compose configurations, with production providing built assets, Memcached, private MySQL, and separate production app settings.
+    - Split development and production Compose services into separate, mode-specific files under `docker/`.
+    - Added optional MariaDB, PostgreSQL, and Redis providers; added optional Memcached and provider-backed database testing profiles for development, with provider selection for production.
+    - Run PHP, Vite, and Nginx services as non-root users and configure host UID/GID mapping for development bind mounts.
   - **Monorepo**: Share a Docker-managed `node-modules` volume between the app and Vue containers; have Bakery install dependencies and wait for them before starting Vite.
+  - **Monorepo**: Improved security by running services with host-ID-mapped users. Run PHP as host-ID-mapped `www-data`, nginx with the unprivileged image, and Vite as host-ID-mapped `node`; preserve writable dependency/runtime paths and host ports.
   - Fix the Vite development entrypoint to enabled HMR in develop mode. 
   - Update to PHP 8.5
+  - Allow selecting PHP 8.3–8.5 for Docker images with `DOCKER_PHP_VERSION` (default: 8.5).
 - **Framework**
   - The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
 - **Core**
@@ -28,6 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - Added `CACHE_DRIVER` & `MEMCACHED_HOST` environment variables, defaulting to file cache and `127.0.0.1` respectively. These allow configuring the cache driver and Memcached host for Docker deployments and non-Docker production environments.
   - CSRF tokens are now signed double-submit cookies instead of session-backed tokens; add `CSRF_SECRET` to the environment to define the signing key.
   - Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
+  - The `setup:db` command now selects and names database connections rather than drivers. The `--db-connection` option should be used instead of `--db-driver`.
   - Refactor CAPTCHA to use the cache service instead of the session service:
     - Store CAPTCHA data in the shared cache to avoid race conditions ([Monorepo#64](https://github.com/userfrosting/monorepo/issues/64)).
     - Add a `CaptchaFactory` for creating instances with distinct profiles.

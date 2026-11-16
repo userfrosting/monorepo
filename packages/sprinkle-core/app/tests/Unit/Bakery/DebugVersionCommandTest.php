@@ -31,10 +31,6 @@ class DebugVersionCommandTest extends TestCase
 
     public function testCommandWarnsForUnreadableEnv(): void
     {
-        if (posix_geteuid() === 0) {
-            $this->markTestSkipped('Cannot test file permissions as root.');
-        }
-
         $tmpDir = sys_get_temp_dir() . '/uf_test_env_' . uniqid();
         mkdir($tmpDir);
         $envFile = $tmpDir . '/.env';
@@ -42,7 +38,7 @@ class DebugVersionCommandTest extends TestCase
         chmod($envFile, 0000);
 
         try {
-            $command = $this->buildCommand($tmpDir);
+            $command = $this->buildCommand($tmpDir, false);
             $tester = new CommandTester($command);
             $tester->execute([]);
 
@@ -88,7 +84,7 @@ class DebugVersionCommandTest extends TestCase
     /**
      * Build the command with mocked dependencies.
      */
-    private function buildCommand(string $basePath): DebugVersionCommand
+    private function buildCommand(string $basePath, ?bool $envFileReadable = null): DebugVersionCommand
     {
         $dispatcher = Mockery::mock(EventDispatcherInterface::class);
 
@@ -113,14 +109,32 @@ class DebugVersionCommandTest extends TestCase
         $locator = Mockery::mock(ResourceLocatorInterface::class);
         $locator->shouldReceive('getBasePath')->andReturn($basePath);
 
-        return new DebugVersionCommand(
-            $dispatcher,
-            $sprinkleManager,
-            $phpVersion,
-            $phpDeprecation,
-            $nodeVersion,
-            $npmVersion,
-            $locator,
-        );
+        return new class($dispatcher, $sprinkleManager, $phpVersion, $phpDeprecation, $nodeVersion, $npmVersion, $locator, $envFileReadable, ) extends DebugVersionCommand {
+            public function __construct(
+                EventDispatcherInterface $eventDispatcher,
+                SprinkleManager $sprinkleManager,
+                PhpVersionValidator $phpVersionValidator,
+                PhpDeprecationValidator $phpDeprecationValidator,
+                NodeVersionValidator $nodeVersionValidator,
+                NpmVersionValidator $npmVersionValidator,
+                ResourceLocatorInterface $locator,
+                private ?bool $envFileReadable,
+            ) {
+                parent::__construct(
+                    $eventDispatcher,
+                    $sprinkleManager,
+                    $phpVersionValidator,
+                    $phpDeprecationValidator,
+                    $nodeVersionValidator,
+                    $npmVersionValidator,
+                    $locator,
+                );
+            }
+
+            protected function isEnvFileReadable(string $path): bool
+            {
+                return $this->envFileReadable ?? parent::isEnvFileReadable($path);
+            }
+        };
     }
 }

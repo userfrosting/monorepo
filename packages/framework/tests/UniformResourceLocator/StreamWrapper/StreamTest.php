@@ -317,7 +317,7 @@ class StreamTest extends TestCase
         });
 
         touch($this->file); // Touch basic file
-        $this->assertFalse(chgrp($this->file, 'root'));
+        $this->assertFalse(chgrp($this->file, '__userfrosting_missing_group_' . uniqid()));
         unlink($this->file);  // Reset state
     }
 

@@ -183,6 +183,11 @@
             "command": "docker compose exec app vendor/bin/phpunit"
         },
         {
+            "label": "Docker - Compose Config Test",
+            "type": "shell",
+            "command": "vendor/bin/phpunit --no-coverage --no-logging docker/tests/ComposeConfigTest.php"
+        },
+        {
             "label": "Docker - PHP CS Fixer",
             "type": "shell",
             "command": "docker compose exec app vendor/bin/php-cs-fixer fix"

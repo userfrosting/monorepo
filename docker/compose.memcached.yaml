@@ -1,0 +1,8 @@
+services:
+  memcached:
+    image: memcached:1.6-alpine
+    restart: unless-stopped
+    networks: [backend]
+    profiles: [memcached]
+networks:
+  backend:
