@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: ${DOCKER_DB_NAME:-userfrosting}
       POSTGRES_USER: ${DOCKER_DB_USER:-docker}
-      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD:-?Set DOCKER_DB_PASSWORD in the project .env}
+      POSTGRES_PASSWORD: ${DOCKER_DB_PASSWORD:?Set DOCKER_DB_PASSWORD in the project .env}
     volumes:
       - userfrosting-pgsql:/var/lib/postgresql/data
     healthcheck:

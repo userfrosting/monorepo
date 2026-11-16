@@ -32,7 +32,7 @@ services:
       DB_PORT: ${DOCKER_DB_PORT:-3306}
       DB_NAME: ${DOCKER_DB_NAME:-userfrosting}
       DB_USER: ${DOCKER_DB_USER:-docker}
-      DB_PASSWORD: ${DOCKER_DB_PASSWORD:-?Set DOCKER_DB_PASSWORD in the project .env}
+      DB_PASSWORD: ${DOCKER_DB_PASSWORD:?Set DOCKER_DB_PASSWORD in the project .env}
       CACHE_DRIVER: ${DOCKER_CACHE_DRIVER:-memcached}
       MEMCACHED_HOST: memcached
       REDIS_HOST: redis

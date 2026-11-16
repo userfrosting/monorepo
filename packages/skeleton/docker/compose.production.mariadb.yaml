@@ -4,9 +4,9 @@ services:
     restart: unless-stopped
     environment:
       MARIADB_DATABASE: ${DOCKER_DB_NAME:-userfrosting}
-      MARIADB_ROOT_PASSWORD: ${DOCKER_DB_ROOT_PASSWORD:-?Set DOCKER_DB_ROOT_PASSWORD in the project .env}
+      MARIADB_ROOT_PASSWORD: ${DOCKER_DB_ROOT_PASSWORD:?Set DOCKER_DB_ROOT_PASSWORD in the project .env}
       MARIADB_USER: ${DOCKER_DB_USER:-${MYSQL_USER:-userfrosting}}
-      MARIADB_PASSWORD: ${DOCKER_DB_PASSWORD:-?Set DOCKER_DB_PASSWORD in the project .env}
+      MARIADB_PASSWORD: ${DOCKER_DB_PASSWORD:?Set DOCKER_DB_PASSWORD in the project .env}
     volumes:
       - userfrosting-mariadb:/var/lib/mysql
     healthcheck:
