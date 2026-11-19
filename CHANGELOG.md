@@ -6,44 +6,58 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Introduce extensible activity recording with richer records and polymorphic subjects across account and administration workflows.
-- Soft deletes for groups and roles. Soft deleting a user, group or role now anonymizes it (`deleted_user_{id}`, `deleted_group_{id}`, `deleted_role_{id}`, translatable `*.DELETED` names), so the same username, email or slug can be reused ([#32](https://github.com/userfrosting/monorepo/issues/32)). The record is kept so activities still reference it.
-- `UserSoftDeletedEvent`, `GroupSoftDeletedEvent` and `RoleSoftDeletedEvent` model events, fired after a soft delete.
-- **Admin**
-  - Split user and role mutations into focused typed APIs, with group membership managed independently from the user edit.
-  - On case-sensitive databases, a case-only slug/name edit such as foo to Foo would otherwise fails, now handled correctly.
-- **Pink-Cupcake**
-  - Add contextual, translated activity history for user, group, role, and permission pages.
-  - Add a button to generate a new CAPTCHA during registration and refresh it when registration validation or submission fails.
-- **Docker**
-  - **Monorepo**: Keep Compose development-only; run Vite from the repository root for workspace HMR; pass MySQL settings to PHP; start Nginx after Vite; and add a VS Code task for Mailpit.
-  - **Skeleton**: 
-    - Add development and production Compose configurations, with production providing built assets, Memcached, private MySQL, and separate production app settings.
-    - Split development and production Compose services into separate, mode-specific files under `docker/`.
-    - Added optional MariaDB, PostgreSQL, and Redis providers; added optional Memcached and provider-backed database testing profiles for development, with provider selection for production.
-    - Run PHP, Vite, and Nginx services as non-root users and configure host UID/GID mapping for development bind mounts.
-  - **Monorepo**: Share a Docker-managed `node-modules` volume between the app and Vue containers; have Bakery install dependencies and wait for them before starting Vite.
-  - **Monorepo**: Improved security by running services with host-ID-mapped users. Run PHP as host-ID-mapped `www-data`, nginx with the unprivileged image, and Vite as host-ID-mapped `node`; preserve writable dependency/runtime paths and host ports.
-  - Fix the Vite development entrypoint to enabled HMR in develop mode. 
-  - Update to PHP 8.5
-  - Allow selecting PHP 8.3–8.5 for Docker images with `DOCKER_PHP_VERSION` (default: 8.5).
-- **Framework**
-  - The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
-- **Core**
-  - Allow `Model::findUnique()` to exclude a specific record when checking unique identifiers.
-  - Added `CACHE_DRIVER` & `MEMCACHED_HOST` environment variables, defaulting to file cache and `127.0.0.1` respectively. These allow configuring the cache driver and Memcached host for Docker deployments and non-Docker production environments.
-  - CSRF tokens are now signed double-submit cookies instead of session-backed tokens; add `CSRF_SECRET` to the environment to define the signing key.
-  - Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
-  - The `setup:db` command now selects and names database connections rather than drivers. The `--db-connection` option should be used instead of `--db-driver`.
-  - Refactor CAPTCHA to use the cache service instead of the session service:
-    - Store CAPTCHA data in the shared cache to avoid race conditions ([Monorepo#64](https://github.com/userfrosting/monorepo/issues/64)).
-    - Add a `CaptchaFactory` for creating instances with distinct profiles.
-    - Expose the factory through `CaptchaFactoryInterface` and instances through `CaptchaInterface`.
-    - Consolidate generic CAPTCHA defaults under the Core `captcha` configuration.
-    - Add `CaptchaProfile` to structure CAPTCHA configurations.
-- **Monorepo**
-  - Added XDebug environment variable for CLI in package settings.
+- **New activity recording feature.** Records richer entries with polymorphic subjects to display more detailed activity history and context. Provides a more detailed audit trail for user and administrative actions.
+- **Soft deletes for groups and roles.** Soft deleting a user, group or role now anonymizes it so the same username, email or slug can be reused ([#32](https://github.com/userfrosting/monorepo/issues/32)). The record is kept so activities still reference it and maintain a complete audit trail.
+- **Docker overhaul.** Significant improvements to the Docker setup, including better development, a new production configuration, enhanced security, and support for multiple PHP versions. Docker can provides Mailpit, Memcached, Redis, and other optional services. Allows to choose the desired database provider for both development and production environments, as well as PHPUnit testing.
+- **Improved CSRF security.** CSRF tokens are now signed double-submit cookies instead of session-backed tokens, enhancing security and flexibility. Add `CSRF_SECRET` to the environment to define the signing key.
+- **CAPTCHA refactor.** CAPTCHA now uses the cache service instead of the session service, improving reliability and avoiding race conditions.
+- **YAML Dictionaries.** Locale dictionaries now support YAML and JSON files; PHP array files remain supported as a deprecated compatibility feature.
 
+### Monorepo
+- Added XDebug environment variable for CLI in package settings. 
+- Updated Docker setup to support multiple PHP versions and optional services like Mailpit, Memcached, and Redis. See below for details.
+
+### Core Sprinkle
+- Allow `Model::findUnique()` to exclude a specific record when checking unique identifiers.
+- Added `CACHE_DRIVER` & `MEMCACHED_HOST` environment variables, defaulting to file cache and `127.0.0.1` respectively. These allow configuring the cache driver and Memcached host for Docker deployments and non-Docker production environments.
+- CSRF tokens are now signed double-submit cookies instead of session-backed tokens; add `CSRF_SECRET` to the environment to define the signing key.
+- Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
+- The `setup:db` command now selects and names database connections rather than drivers. The `--db-connection` option should be used instead of `--db-driver`.
+- Validate throttling configuration before creating throttle rules.
+- Refactor CAPTCHA to use the cache service instead of the session service:
+  - Store CAPTCHA data in the shared cache to avoid race conditions ([#64](https://github.com/userfrosting/monorepo/issues/64)).
+  - Add a `CaptchaFactory` for creating instances with distinct profiles.
+  - Expose the factory through `CaptchaFactoryInterface` and instances through `CaptchaInterface`.
+  - Consolidate generic CAPTCHA defaults under the Core `captcha` configuration.
+  - Add `CaptchaProfile` to structure CAPTCHA configurations.
+
+### Framework
+- The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
+
+### Admin Sprinkle
+- Split user and role mutations into focused typed APIs, with group membership managed independently from the user edit.
+- On case-sensitive databases, a case-only slug/name edit such as `foo` to `Foo` would otherwise fails, now handled correctly.
+
+### Account Sprinkle
+- `UserSoftDeletedEvent`, `GroupSoftDeletedEvent` and `RoleSoftDeletedEvent` model events, fired after a soft delete.
+- Added soft delete support for groups and roles, allowing them to be marked as deleted without being permanently removed from the database.
+
+### Pink-Cupcake
+- Add contextual, translated activity history for user, group, role, and permission pages.
+- Add a button to generate a new CAPTCHA during registration and refresh it when registration validation or submission fails.
+
+### Docker
+- Added Docker specific environment file `docker/.env.example` for configuring environment variables used by Docker Compose.
+- Added optional MariaDB, PostgreSQL, Memcached, and Redis providers through Docker Compose profiles.
+- Added optional provider-backed database testing profiles for development (PHPUnit testing).
+- Added `COMPOSE_PROJECT_NAME` env variable for Docker Compose project naming
+- Default to PHP 8.5; Added `DOCKER_PHP_VERSION` env variable to select the PHP version for Docker images (default: 8.5)
+- Fix the Vite development entrypoint to enabled HMR in develop mode
+- Improved security by running services with host-ID-mapped users. Run PHP as host-ID-mapped `www-data`, nginx with the unprivileged image, and Vite as host-ID-mapped `node`; configure host UID/GID mapping to preserve writable volumes
+- Share a Docker-managed `node-modules` volume between the app and Vue containers; have Bakery install dependencies and wait for them before starting Vite
+- Split Compose services into separate, mode-specific files under `docker/`.
+- [Monorepo] Added a VS Code task (shortcut) to open Mailpit 
+- [Skeleton] Add production specific Compose configurations, with production providing built assets, Memcached, private MySQL, and separate production app settings.
 
 ## [6.0.3](https://github.com/userfrosting/monorepo/compare/6.0.2...6.0.3) - 2026-09-28
 

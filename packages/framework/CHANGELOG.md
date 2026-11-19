@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Changed
 - The full-application `TestCase` now exposes lifecycle-safe typed accessors and a generic `getService()` helper for class-based container lookups.
-- Locale dictionaries now support YAML and JSON files; PHP array files remain supported as a deprecated compatibility feature.
+- [i18n] Locale dictionaries now support YAML and JSON files; PHP array files remain supported as a deprecated compatibility feature.
 
 ## [6.0.3](https://github.com/userfrosting/framework/compare/6.0.2...6.0.3) - 2026-09-28
 
