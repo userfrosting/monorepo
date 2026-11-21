@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license   https://github.com/userfrosting/sprinkle-core/blob/master/LICENSE.md (MIT License)
  */
 
-namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
+namespace UserFrosting\Tests\Session;
 
 use Illuminate\Filesystem\Filesystem;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +20,7 @@ use UserFrosting\Session\Session;
 /**
  * Integration tests for the session service.
  */
-class SessionFileHandlerTest extends TestCase
+class FileSessionHandlerTest extends TestCase
 {
     protected string $testSessionDir = __DIR__ . '/data';
 
@@ -77,6 +77,35 @@ class SessionFileHandlerTest extends TestCase
 
         // Check filesystem to make sure it's gone
         $this->assertFalse($fs->exists($session_file));
+    }
+
+    /**
+     * Test that the session handler correctly writes and reads session data.
+     *
+     * @depends testSessionWrite
+     */
+    public function testValidateIdReturnsFalseForMissingSession(): void
+    {
+        $handler = new FileSessionHandler(new Filesystem(), $this->testSessionDir, 120);
+
+        $this->assertFalse($handler->validateId('missing-' . bin2hex(random_bytes(8))));
+    }
+
+    /**
+     * Test that updateTimestamp writes a missing session.
+     *
+     * @depends testSessionWrite
+     */
+    public function testUpdateTimestampWritesMissingSession(): void
+    {
+        $fs = new Filesystem();
+        $session_id = 'missing-' . bin2hex(random_bytes(8));
+        $session_file = $this->testSessionDir . '/' . $session_id;
+        $handler = new FileSessionHandler($fs, $this->testSessionDir, 120);
+
+        $this->assertTrue($handler->updateTimestamp($session_id, 'data'));
+        $this->assertSame('data', $fs->get($session_file));
+        $fs->delete($session_file);
     }
 
     public function testUnchangedConcurrentSessionPreservesUpdate(): void

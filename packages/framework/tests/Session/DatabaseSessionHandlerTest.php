@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 /*
- * UserFrosting Core Sprinkle (http://www.userfrosting.com)
+ * UserFrosting Framework (http://www.userfrosting.com)
  *
- * @link      https://github.com/userfrosting/sprinkle-core
- * @copyright Copyright (c) 2013-2024 Alexander Weissman & Louis Charette
- * @license   https://github.com/userfrosting/sprinkle-core/blob/master/LICENSE.md (MIT License)
+ * @link      https://github.com/userfrosting/framework
+ * @copyright Copyright (c) 2013-2024 Alexander Weissman, Louis Charette, Jordan Mele
+ * @license   https://github.com/userfrosting/framework/blob/master/LICENSE.md (MIT License)
  */
 
 namespace UserFrosting\Sprinkle\Core\Tests\Integration\Session;
@@ -24,7 +24,7 @@ use UserFrosting\Sprinkle\Core\Tests\CoreTestCase as TestCase;
 /**
  * Integration tests for the session service.
  */
-class SessionDatabaseHandlerTest extends TestCase
+class DatabaseSessionHandlerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -55,6 +55,27 @@ class SessionDatabaseHandlerTest extends TestCase
 
         // Check table exist
         $this->assertTrue($this->connection->getSchemaBuilder()->hasTable($table));
+    }
+
+    /**
+     * Test that validateId returns false for a missing session.
+     */
+    public function testValidateIdReturnsFalseForMissingSession(): void
+    {
+        $handler = $this->getService(DatabaseSessionHandler::class);
+
+        $this->assertFalse($handler->validateId('missing-session'));
+    }
+
+    /**
+     * Test that updateTimestamp inserts a missing session.
+     */
+    public function testUpdateTimestampInsertsMissingSession(): void
+    {
+        $handler = $this->getService(DatabaseSessionHandler::class);
+
+        $this->assertTrue($handler->updateTimestamp('missing-session', 'data'));
+        $this->assertSame(base64_encode('data'), SessionTable::find('missing-session')->payload);
     }
 
     /**
