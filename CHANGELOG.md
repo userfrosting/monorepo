@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - **Improved CSRF security.** CSRF tokens are now signed double-submit cookies instead of session-backed tokens, enhancing security and flexibility. Add `CSRF_SECRET` to the environment to define the signing key.
 - **CAPTCHA refactor.** CAPTCHA now uses the cache service instead of the session service, improving reliability and avoiding race conditions.
 - **YAML Dictionaries.** Locale dictionaries now support YAML and JSON files; PHP array files remain supported as a deprecated compatibility feature.
+- **Garbage collection for prunable models.** Introduced a mechanism to prune expired or obsolete records from the database [#40](https://github.com/userfrosting/monorepo/issues/40).
 
 ### Monorepo
 - Added XDebug environment variable for CLI in package settings. 
@@ -24,6 +25,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
 - The `setup:db` command now selects and names database connections rather than drivers. The `--db-connection` option should be used instead of `--db-driver`.
 - Validate throttling configuration before creating throttle rules.
+- Added `clean:database` Bakery command to prune expired records from prunable models.
+- Add `clean` and `clean:cache` Bakery commands; keep `clear-cache` as a deprecated alias.
 - Refactor CAPTCHA to use the cache service instead of the session service:
   - Store CAPTCHA data in the shared cache to avoid race conditions ([#64](https://github.com/userfrosting/monorepo/issues/64)).
   - Add a `CaptchaFactory` for creating instances with distinct profiles.

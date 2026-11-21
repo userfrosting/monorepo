@@ -17,7 +17,9 @@ use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserVerificationInt
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Database\Models\UserVerification;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
+use UserFrosting\Sprinkle\Core\Bakery\CleanDatabaseCommand;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
+use UserFrosting\Testing\BakeryTester;
 
 /**
  * UserVerificationTest Class. Tests the User Verification Model.
@@ -130,5 +132,54 @@ class UserVerificationTest extends AccountTestCase
 
         $this->assertSame(1, UserVerification::count());
         $this->assertTrue(UserVerification::query()->whereKey($notExpired->id)->exists()); // @phpstan-ignore-line
+    }
+
+    public function testPruneExpiredRemovesExpiredVerificationsIncludingCompletedOnes(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+
+        UserVerification::create([
+            'code'         => '111111',
+            'user_id'      => $user->id,
+            'expires_at'   => Carbon::now()->subMinute(),
+            'completed_at' => null,
+        ]);
+        UserVerification::create([
+            'code'         => '222222',
+            'user_id'      => $user->id,
+            'expires_at'   => Carbon::now()->subMinute(),
+            'completed_at' => Carbon::now()->subMinutes(2),
+        ]);
+        $active = new UserVerification([
+            'code'         => '333333',
+            'user_id'      => $user->id,
+            'expires_at'   => Carbon::now()->addMinute(),
+            'completed_at' => null,
+        ]);
+        $active->save();
+
+        $this->assertSame(2, (new UserVerification())->pruneAll());
+        $this->assertSame(1, UserVerification::count());
+        $this->assertNotNull(UserVerification::find($active->getKey()));
+    }
+
+    public function testCleanDatabaseCommandPrunesAccountModels(): void
+    {
+        /** @var User */
+        $user = User::factory()->create();
+        UserVerification::create([
+            'code'         => '111111',
+            'user_id'      => $user->id,
+            'expires_at'   => Carbon::now()->subMinute(),
+            'completed_at' => null,
+        ]);
+
+        /** @var CleanDatabaseCommand */
+        $command = $this->getService(CleanDatabaseCommand::class);
+        $result = BakeryTester::runCommand($command);
+
+        $this->assertSame(0, $result->getStatusCode());
+        $this->assertSame(0, UserVerification::count());
     }
 }

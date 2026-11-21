@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserVerificationInterface;
+use UserFrosting\Sprinkle\Core\Database\Models\Concerns\Prunable;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\PrunableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -28,8 +30,10 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
  *
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class UserVerification extends Model implements UserVerificationInterface
+class UserVerification extends Model implements PrunableModelInterface, UserVerificationInterface
 {
+    use Prunable;
+
     /**
      * @var string The name of the table for the current model.
      */
@@ -57,6 +61,17 @@ class UserVerification extends Model implements UserVerificationInterface
     protected $casts = [
         'user_id'   => 'integer',
     ];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function prunable(): Builder
+    {
+        $query = $this->newQuery();
+        $query->where('expires_at', '<', Carbon::now());
+
+        return $query;
+    }
 
     /**
      * {@inheritDoc}

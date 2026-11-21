@@ -16,6 +16,7 @@ use UserFrosting\Event\EventListenerRecipe;
 use UserFrosting\Sprinkle\Account\Bakery\BakeCommandListener;
 use UserFrosting\Sprinkle\Account\Bakery\CreateAdminUser;
 use UserFrosting\Sprinkle\Account\Bakery\CreateUser;
+use UserFrosting\Sprinkle\Account\Bakery\DatabasePruneListener;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v400\ActivitiesTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v400\GroupsTable;
 use UserFrosting\Sprinkle\Account\Database\Migrations\v400\PasswordResetsTable;
@@ -67,6 +68,7 @@ use UserFrosting\Sprinkle\Account\Sprinkle\Recipe\ActivityRecipe;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\BakeryRecipe;
 use UserFrosting\Sprinkle\Core\Bakery\Event\BakeCommandEvent;
+use UserFrosting\Sprinkle\Core\Bakery\Event\DatabasePruneEvent;
 use UserFrosting\Sprinkle\Core\Core;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\MigrationRecipe;
 use UserFrosting\Sprinkle\Core\Sprinkle\Recipe\SeedRecipe;
@@ -221,6 +223,9 @@ class Account implements
         return [
             BakeCommandEvent::class       => [
                 BakeCommandListener::class,
+            ],
+            DatabasePruneEvent::class     => [
+                DatabasePruneListener::class,
             ],
             UserCreatedEvent::class       => [
                 AssignDefaultRoles::class,

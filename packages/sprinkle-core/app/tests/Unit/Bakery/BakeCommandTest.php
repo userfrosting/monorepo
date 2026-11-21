@@ -103,6 +103,7 @@ class BakeCommandTest extends TestCase
 
         $this->assertSame(0, $commandTester->getStatusCode());
         $this->assertSame(['setup:db', 'setup:mail', 'setup:csrf-secret'], array_slice($listener->commands, 0, 3));
+        $this->assertContains('clean', $listener->commands);
     }
 }
 

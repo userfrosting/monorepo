@@ -56,6 +56,8 @@ class ClearCacheCommandTest extends CoreTestCase
 
         /** @var ClearCacheCommand */
         $command = $this->getService(ClearCacheCommand::class);
+        $this->assertSame('clean:cache', $command->getName());
+        $this->assertContains('clear-cache', $command->getAliases());
         $result = BakeryTester::runCommand($command);
 
         // Assert some output

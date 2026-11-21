@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+- Add model-based pruning for database sessions and throttles, plus the account sprinkle's user verifications, through the `clean:database` Bakery command.
+- Add `clean` and `clean:cache` Bakery commands; keep `clear-cache` as a deprecated alias.
 - Add `setup:csrf-secret` Bakery command to initialize `CSRF_SECRET` securely and include it in `bake`.
 - Support `DB_TEST_*` environment variables for test database settings, falling back to the corresponding `DB_*` values and existing defaults.
 

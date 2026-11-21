@@ -12,7 +12,13 @@ declare(strict_types=1);
 
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use LogicException;
+use UserFrosting\Sprinkle\Core\Database\Models\Concerns\Prunable;
+use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\PrunableModelInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\ThrottleModelInterface;
+use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 
 /**
  * Throttle Class.
@@ -22,8 +28,10 @@ use UserFrosting\Sprinkle\Core\Database\Models\Interfaces\ThrottleModelInterface
  * @mixin \Illuminate\Database\Eloquent\Builder
  * @mixin \Illuminate\Database\Eloquent\Model
  */
-class Throttle extends Model implements ThrottleModelInterface
+class Throttle extends Model implements PrunableModelInterface, ThrottleModelInterface
 {
+    use Prunable;
+
     /**
      * @var string The name of the table for the current model.
      */
@@ -37,4 +45,30 @@ class Throttle extends Model implements ThrottleModelInterface
         'ip',
         'request_data',
     ];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function prunable(): Builder
+    {
+        if (static::$ci === null) {
+            throw new LogicException('The application container must be initialized before pruning throttles.');
+        }
+
+        /** @var Throttler */
+        $throttler = static::$ci->get(Throttler::class);
+        $retentionSeconds = 0;
+
+        foreach ($throttler->getThrottleRules() as $rule) {
+            if ($rule !== null) {
+                $maxDelay = max(array_merge([0], $rule->getDelays()));
+                $retentionSeconds = max($retentionSeconds, $rule->getInterval() + $maxDelay);
+            }
+        }
+
+        $query = $this->newQuery();
+        $query->where('created_at', '<', Carbon::now()->subSeconds($retentionSeconds));
+
+        return $query;
+    }
 }

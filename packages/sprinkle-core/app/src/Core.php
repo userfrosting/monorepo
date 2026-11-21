@@ -27,6 +27,8 @@ use UserFrosting\Sprinkle\Core\Bakery\AssetsUpdateCommand;
 use UserFrosting\Sprinkle\Core\Bakery\AssetsViteCommand;
 use UserFrosting\Sprinkle\Core\Bakery\AssetsWebpackCommand;
 use UserFrosting\Sprinkle\Core\Bakery\BakeCommand;
+use UserFrosting\Sprinkle\Core\Bakery\CleanCommand;
+use UserFrosting\Sprinkle\Core\Bakery\CleanDatabaseCommand;
 use UserFrosting\Sprinkle\Core\Bakery\ClearCacheCommand;
 use UserFrosting\Sprinkle\Core\Bakery\DebugCommand;
 use UserFrosting\Sprinkle\Core\Bakery\DebugConfigCommand;
@@ -37,6 +39,7 @@ use UserFrosting\Sprinkle\Core\Bakery\DebugMailCommand;
 use UserFrosting\Sprinkle\Core\Bakery\DebugTwigCommand;
 use UserFrosting\Sprinkle\Core\Bakery\DebugVersionCommand;
 use UserFrosting\Sprinkle\Core\Bakery\Event\AssetsBuildCommandEvent;
+use UserFrosting\Sprinkle\Core\Bakery\Event\CleanCommandEvent;
 use UserFrosting\Sprinkle\Core\Bakery\LocaleCompareCommand;
 use UserFrosting\Sprinkle\Core\Bakery\LocaleDictionaryCommand;
 use UserFrosting\Sprinkle\Core\Bakery\LocaleInfoCommand;
@@ -151,6 +154,8 @@ class Core implements
             AssetsWebpackCommand::class,
             AssetsViteCommand::class,
             BakeCommand::class,
+            CleanCommand::class,
+            CleanDatabaseCommand::class,
             ClearCacheCommand::class,
             DebugCommand::class,
             DebugConfigCommand::class,
@@ -324,6 +329,7 @@ class Core implements
             AssetsBuildCommandEvent::class => [
                 AssetsBuildCommandListener::class,
             ],
+            CleanCommandEvent::class => [],
         ];
     }
 }

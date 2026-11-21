@@ -50,8 +50,10 @@ class ClearCacheCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setName('clear-cache')
-             ->setDescription('Clears the application cache. Includes cache service, Twig and Router cached data');
+        $this->setName('clean:cache')
+             ->setAliases(['clear-cache'])
+             ->setDescription('Clears the application cache. Includes cache service, Twig and Router cached data')
+             ->setHelp('The `clear-cache` alias is deprecated. Use `clean:cache` instead.');
     }
 
     /**

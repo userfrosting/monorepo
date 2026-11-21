@@ -37,7 +37,7 @@ final class BakeCommand extends Command
         'debug',
         'migrate',
         'assets:build',
-        'clear-cache',
+        'clean',
     ];
 
     /**
