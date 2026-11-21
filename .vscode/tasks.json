@@ -102,10 +102,14 @@
                     "XDEBUG_CONFIG": "idekey=VSCODE"
                 }
             },
-            "command": "printf '\\33c\\e[3J' && vendor/bin/phpunit --stop-on-failure --stop-on-error",
+            "command": "vendor/bin/phpunit --stop-on-failure --stop-on-error",
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "presentation": {
+                "clear": true,
+                "panel": "dedicated"
             }
         },
         {
@@ -180,7 +184,11 @@
         {
             "label": "Docker - PHPUnit",
             "type": "shell",
-            "command": "docker compose exec app vendor/bin/phpunit"
+            "command": "docker compose exec app vendor/bin/phpunit",
+            "presentation": {
+                "clear": true,
+                "panel": "dedicated"
+            }
         },
         {
             "label": "Docker - Compose Config Test",
@@ -201,7 +209,15 @@
             "label": "Docker - Shell (App)",
             "type": "shell",
             "command": "docker compose exec app bash",
-            "isBackground": true
+            "isBackground": true,
+            "runOptions": {
+                "instanceLimit": 99
+            },
+            "presentation": {
+                "panel": "new",
+                "close": true,
+                "showReuseMessage": false
+            }
         }
     ]
 }
