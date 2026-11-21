@@ -125,7 +125,7 @@
                 "vendor/bin/php-cs-fixer fix --config packages/framework/.php-cs-fixer.php &&",
                 "vendor/bin/php-cs-fixer fix --config packages/sprinkle-account/.php-cs-fixer.php &&",
                 "vendor/bin/php-cs-fixer fix --config packages/sprinkle-admin/.php-cs-fixer.php &&",
-                "vendor/bin/php-cs-fixer fix --config packages/sprinkle-core/.php-cs-fixer.php &&"
+                "vendor/bin/php-cs-fixer fix --config packages/sprinkle-core/.php-cs-fixer.php"
             ],
         },
 
@@ -200,7 +200,8 @@
         {
             "label": "Docker - Shell (App)",
             "type": "shell",
-            "command": "docker compose exec app bash"
+            "command": "docker compose exec app bash",
+            "isBackground": true
         }
     ]
 }
