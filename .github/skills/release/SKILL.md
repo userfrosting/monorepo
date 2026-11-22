@@ -9,11 +9,11 @@ Execute a full release of the UserFrosting 6 monorepo autonomously. Follow each 
 
 ## Step 1 : Confirm branch and clean working directory
 
-Verify the current branch is `6.0` by running `git branch --show-current`. If it is not `6.0`, abort immediately and report: 'Release must be run from the `6.0` branch. Currently on: BRANCH_NAME.' Verify that `git status --porcelain` is empty. If the working directory is dirty, abort and report the full status; never stash, reset, or discard those changes. After fetching remote state, verify that `HEAD` matches `origin/6.0` before starting.
+Verify the current branch is `6.1` by running `git branch --show-current`. If it is not `6.1`, abort immediately and report: 'Release must be run from the `6.1` branch. Currently on: BRANCH_NAME.' Verify that `git status --porcelain` is empty. If the working directory is dirty, abort and report the full status; never stash, reset, or discard those changes. After fetching remote state, verify that `HEAD` matches `origin/6.1` before starting.
 
 ## Step 2: Confirm the Version
 
-Ask the user which version to release (e.g. `6.0.1`, `6.1.0-rc.1`).
+Ask the user which version to release (e.g. `6.1.1`, `6.1.0-rc.1`).
 
 Validate that the version matches the pattern `^6\.\d+\.\d+(-(alpha|beta|rc)\.\d+)?$`. If it does not match, reject it and re-prompt before continuing.
 
@@ -71,7 +71,7 @@ AFTER:
 ## [6.0.0](https://github.com/userfrosting/REPO/compare/5.2.0...6.0.0) - 2024-01-01
 ```
 
-Commit: `git commit -m "docs: update changelogs for VERSION"` and push to the remote `6.0` branch before proceeding to the next step. Verify that the pushed commit is visible at `origin/6.0` before continuing.
+Commit: `git commit -m "docs: update changelogs for VERSION"` and push to the remote `6.1` branch before proceeding to the next step. Verify that the pushed commit is visible at `origin/6.1` before continuing.
 
 ## Step 5: Merge Composer Configuration
 
@@ -79,7 +79,7 @@ Commit: `git commit -m "docs: update changelogs for VERSION"` and push to the re
 vendor/bin/monorepo-builder merge
 ```
 
-Check for changes with `git diff --exit-code composer.json`; if the exit code is non-zero, stage and commit: `git add composer.json && git commit -m "chore: merge composer.json changes"` and push to the remote `6.0` branch. If there are no changes, continue. Verify that the local branch is clean and synchronized with `origin/6.0` before Step 6.
+Check for changes with `git diff --exit-code composer.json`; if the exit code is non-zero, stage and commit: `git add composer.json && git commit -m "chore: merge composer.json changes"` and push to the remote `6.1` branch. If there are no changes, continue. Verify that the local branch is clean and synchronized with `origin/6.1` before Step 6.
 
 ## Step 6: Run the Release
 
@@ -89,7 +89,7 @@ vendor/bin/monorepo-builder release VERSION
 
 If this command fails after partially executing (e.g., some tags already pushed), do NOT retry automatically. Stop and report: "monorepo-builder release partially failed. Manually verify which tags were pushed with `git ls-remote --tags origin` before taking any further action."
 
-Commit and push any remaining changes if necessary, but do NOT create any tags manually — the `release` command handles tag creation. Before running it, record whether the release tag exists. If the command fails, compare the before/after remote tag state and stop with the partial-failure message if the tag was created or pushed. Do not retry a command that may have pushed a tag. On success, verify the release tag exists remotely, the `prepare release` commit is pushed to `origin/6.0`, and the working tree is clean.
+Commit and push any remaining changes if necessary, but do NOT create any tags manually — the `release` command handles tag creation. Before running it, record whether the release tag exists. If the command fails, compare the before/after remote tag state and stop with the partial-failure message if the tag was created or pushed. Do not retry a command that may have pushed a tag. On success, verify the release tag exists remotely, the `prepare release` commit is pushed to `origin/6.1`, and the working tree is clean.
 
 ## Step 7: GitHub Releases (Monorepo)
 
@@ -118,7 +118,7 @@ After creation, run `gh release view VERSION --repo userfrosting/monorepo --json
 | `packages/theme-pink-cupcake` | `userfrosting/theme-pink-cupcake`   | `packages/theme-pink-cupcake/CHANGELOG.md` |
 | `packages/skeleton`           | `userfrosting/UserFrosting`         | `packages/skeleton/CHANGELOG.md`           |
 
-> **Critical:** The monorepo split syncs **commits** but does **not** push tags. Tags must be created manually on each package repo. Always get the `6.0` branch HEAD SHA from the **individual repo** — never assume it matches the monorepo SHA.
+> **Critical:** The monorepo split syncs **commits** but does **not** push tags. Tags must be created manually on each package repo. Always get the `6.1` branch HEAD SHA from the **individual repo** — never assume it matches the monorepo SHA.
 
 **1. Wait for the monorepo split to complete:**
 
@@ -132,11 +132,11 @@ To confirm the correct run, match the workflow run's `headSha` against the relea
 
 **2. For each repo in the table above, sequentially, one after another without stopping between repos unless an error occurs:**
 
-Process one repository at a time. Before creating a tag or release, check whether it already exists. If an existing tag points to the expected `6.0` branch SHA, continue to its release; if it points elsewhere, abort. If an existing release is already correct, verify it and continue; do not blindly recreate it.
+Process one repository at a time. Before creating a tag or release, check whether it already exists. If an existing tag points to the expected `6.1` branch SHA, continue to its release; if it points elsewhere, abort. If an existing release is already correct, verify it and continue; do not blindly recreate it.
 
 Get the correct SHA:
 ```bash
-gh api repos/userfrosting/REPO/branches/6.0 --jq '.commit.sha'
+gh api repos/userfrosting/REPO/branches/6.1 --jq '.commit.sha'
 ```
 
 Create the tag:
@@ -149,7 +149,7 @@ Generate the release notes. Include a "## What's Changed" header followed by the
 
 Create the release:
 ```bash
-gh release create VERSION --repo userfrosting/REPO --title "VERSION" --notes-file /tmp/uf_release_notes.md [--prerelease] --target 6.0
+gh release create VERSION --repo userfrosting/REPO --title "VERSION" --notes-file /tmp/uf_release_notes.md [--prerelease] --target 6.1
 ```
 
 After each release, verify its body with `gh release view VERSION --repo userfrosting/REPO --json body,tagName`. The body must begin with `## What's Changed`; a body containing `/tmp/uf_release_notes.md` is invalid and must be corrected with `gh release edit VERSION --repo userfrosting/REPO --notes-file /tmp/uf_release_notes.md`.
