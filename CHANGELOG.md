@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Align development database volume names with the monorepo Compose configuration.
+
 ## [6.1.0-beta.1](https://github.com/userfrosting/monorepo/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 - **New activity recording feature.** Records richer entries with polymorphic subjects to display more detailed activity history and context. Provides a more detailed audit trail for user and administrative actions.
 - **Soft deletes for groups and roles.** Soft deleting a user, group or role now anonymizes it so the same username, email or slug can be reused ([#32](https://github.com/userfrosting/monorepo/issues/32)). The record is kept so activities still reference it and maintain a complete audit trail.
