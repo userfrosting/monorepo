@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.1.0-beta.1](https://github.com/userfrosting/sprinkle-admin/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 ### Fixed
 - A new user, group or role can now reuse the username, email or slug of a soft deleted one (#32).
 - On case-sensitive databases, a case-only slug/name edit such as foo to Foo would otherwise fails, now handled correctly.

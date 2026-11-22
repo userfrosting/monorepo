@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.1.0-beta.1](https://github.com/userfrosting/sprinkle-account/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 ### Added
 - Add model-based pruning for expired user verification records through the `clean:database` Bakery command.
 - Introduced typed activity recording with registered activity types, richer metadata, and polymorphic subjects, backed by a new activity database table schema. All activities are now recorded using this new structure via the ActivityRecorder service.

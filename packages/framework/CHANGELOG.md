@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [6.1.0-beta.1](https://github.com/userfrosting/framework/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 ### Fixed
 - [Cache] TaggableFileStore : Locks now work with the taggable file store and preserve its configured key separator.
 

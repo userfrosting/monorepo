@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.1.0-beta.1](https://github.com/userfrosting/theme-pink-cupcake/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 ### Fixed
 - Update admin detail-page URLs after changing a user's username or a group's or role's slug.
 - Respect `site.registration.captcha` when rendering the registration CAPTCHA.

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.1.0-beta.1](https://github.com/userfrosting/sprinkle-core/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 ### Added
 - Add model-based pruning for database sessions and throttles, plus the account sprinkle's user verifications, through the `clean:database` Bakery command.
 - Add `clean` and `clean:cache` Bakery commands; keep `clear-cache` as a deprecated alias.

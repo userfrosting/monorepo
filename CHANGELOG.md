@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [6.1.0-beta.1](https://github.com/userfrosting/monorepo/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 - **New activity recording feature.** Records richer entries with polymorphic subjects to display more detailed activity history and context. Provides a more detailed audit trail for user and administrative actions.
 - **Soft deletes for groups and roles.** Soft deleting a user, group or role now anonymizes it so the same username, email or slug can be reused ([#32](https://github.com/userfrosting/monorepo/issues/32)). The record is kept so activities still reference it and maintain a complete audit trail.
 - **Docker overhaul.** Significant improvements to the Docker setup, including better development, a new production configuration, enhanced security, and support for multiple PHP versions. Docker can provides Mailpit, Memcached, Redis, and other optional services. Allows to choose the desired database provider for both development and production environments, as well as PHPUnit testing.
