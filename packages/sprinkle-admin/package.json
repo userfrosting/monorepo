@@ -1,6 +1,6 @@
 {
     "name": "@userfrosting/sprinkle-admin",
-    "version": "6.0.3",
+    "version": "6.1.0-beta.1",
     "type": "module",
     "description": "Admin Sprinkle for UserFrosting 6",
     "funding": "https://opencollective.com/userfrosting",
@@ -65,8 +65,8 @@
         "node": ">= 20"
     },
     "peerDependencies": {
-        "@userfrosting/sprinkle-account": "^6.0.0-beta",
-        "@userfrosting/sprinkle-core": "^6.0.0-beta",
+        "@userfrosting/sprinkle-account": "^6.1.0-beta",
+        "@userfrosting/sprinkle-core": "^6.1.0-beta",
         "axios": "^1.16.0",
         "limax": "^4.2.1",
         "pinia": "^2.1.6",

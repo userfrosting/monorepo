@@ -1,6 +1,6 @@
 {
     "name": "@userfrosting/theme-pink-cupcake",
-    "version": "6.0.3",
+    "version": "6.1.0-beta.1",
     "type": "module",
     "description": "Pink Cupcake Theme for UserFrosting",
     "funding": "https://opencollective.com/userfrosting",
@@ -76,9 +76,9 @@
         "uikit": "^3.16.26"
     },
     "peerDependencies": {
-        "@userfrosting/sprinkle-account": "^6.0.0-beta",
-        "@userfrosting/sprinkle-admin": "^6.0.0-beta",
-        "@userfrosting/sprinkle-core": "^6.0.0-beta",
+        "@userfrosting/sprinkle-account": "^6.1.0-beta",
+        "@userfrosting/sprinkle-admin": "^6.1.0-beta",
+        "@userfrosting/sprinkle-core": "^6.1.0-beta",
         "axios": "^1.16.0",
         "pinia": "^2.1.6",
         "pinia-plugin-persistedstate": "^3.2.0",

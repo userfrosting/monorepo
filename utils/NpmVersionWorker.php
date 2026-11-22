@@ -17,7 +17,7 @@ final class NpmVersionWorker implements ReleaseWorkerInterface
 
     public function work(Version $version) : void
     {
-        $npmVersionCommand = \sprintf('npm version %s --workspaces --git-tag-version false', $version->getVersionString());
+        $npmVersionCommand = \sprintf('npm version %s --workspaces --git-tag-version false --allow-same-version', $version->getVersionString());
         $this->processRunner->run($npmVersionCommand);
     }
 
