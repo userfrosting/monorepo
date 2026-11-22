@@ -6,7 +6,7 @@ import UFAlert from '../../../../components/UFAlert.vue'
 import UFModal from '../../../../components/Modals/UFModal.vue'
 import FaCode from '../../../../components/Content/2FaCode.vue'
 
-const { mockAxiosGet, mockedRouterPush } = vi.hoisted(() => ({
+const { mockAxiosGet, mockCaptchaEnabled, mockedRouterPush } = vi.hoisted(() => ({
     mockAxiosGet: vi.fn((url: string) => {
         if (url === '/c/tos') {
             return Promise.resolve({ data: 'TOS...' })
@@ -16,6 +16,7 @@ const { mockAxiosGet, mockedRouterPush } = vi.hoisted(() => ({
         }
         return Promise.resolve({ data: {} })
     }),
+    mockCaptchaEnabled: { value: true },
     mockedRouterPush: vi.fn()
 }))
 
@@ -90,7 +91,11 @@ vi.mock('@userfrosting/sprinkle-account/composables', () => ({
 // Mock the config & translator store
 vi.mock('@userfrosting/sprinkle-core/stores', () => ({
     useConfigStore: () => ({
-        get: vi.fn().mockReturnValue('Test Site')
+        get: vi.fn((key: string) => {
+            if (key === 'site.title') return 'Test Site'
+            if (key === 'site.registration.captcha') return mockCaptchaEnabled.value
+            return undefined
+        })
     }),
     useTranslator: () => ({
         translate: vi.fn().mockImplementation((key) => {
@@ -111,6 +116,7 @@ describe('FormRegister.vue', () => {
     let wrapper: any
 
     beforeEach(() => {
+        mockCaptchaEnabled.value = true
         mockedRouterPush.mockReset()
         mockSubmitRegistration.mockReset().mockResolvedValue(undefined)
         mockSubmitVerificationCode.mockReset().mockResolvedValue(undefined)
@@ -149,6 +155,24 @@ describe('FormRegister.vue', () => {
         expect(wrapper.find('input[data-test="captcha"]').exists()).toBe(true)
         expect(wrapper.find('button[data-test="captcha-refresh"]').exists()).toBe(true)
         expect(wrapper.find('button[data-test="submit"]').exists()).toBe(true)
+    })
+
+    test('hides captcha when disabled by configuration', () => {
+        mockCaptchaEnabled.value = false
+        const noCaptchaWrapper = mount(FormRegister, {
+            global: {
+                stubs: {
+                    UFAlert: UFAlert,
+                    UFModal: UFModal,
+                    UFFormValidationError: { template: '<span></span>' },
+                    FontAwesomeIcon: { template: '<span></span>' }
+                }
+            }
+        })
+
+        expect(noCaptchaWrapper.find('input[data-test="captcha"]').exists()).toBe(false)
+        expect(noCaptchaWrapper.find('[data-test="captcha-image"]').exists()).toBe(false)
+        expect(noCaptchaWrapper.find('button[data-test="captcha-refresh"]').exists()).toBe(false)
     })
 
     test('refreshes the captcha and clears the current answer', async () => {

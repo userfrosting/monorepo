@@ -32,6 +32,8 @@ const {
  * Variables - Copy the default form data to a reactive variable.
  */
 const router = useRouter()
+const config = useConfigStore()
+const captchaEnabled = computed(() => config.get('site.registration.captcha', false))
 const code = ref<string>('')
 const displayVerification = ref(false)
 let captchaRefreshKey = Date.now()
@@ -81,7 +83,6 @@ const suggestUsername = async () => {
  * Computed - Generate the TOS agreement localized link
  */
 const tos = computed(() => {
-    const config = useConfigStore()
     const { translate } = useTranslator()
     return translate('TOS_AGREEMENT', {
         site_title: config.get('site.title')
@@ -248,8 +249,7 @@ onMounted(async () => {
                     <UFFormValidationError :errors="r$.$errors.locale" />
                 </div>
 
-                <!-- {% if site.registration.captcha %} -->
-                <div class="uk-margin">
+                <div class="uk-margin" v-if="captchaEnabled">
                     <label class="uk-form-label" for="r-form-captcha">{{ $t('CAPTCHA') }}</label>
                     <div class="uk-form-controls uk-grid-small" uk-grid>
                         <div class="uk-width-2-3@s">
@@ -283,8 +283,6 @@ onMounted(async () => {
                         </div>
                     </div>
                 </div>
-                <!-- {% endif %} -->
-
                 <!-- TOS modal -->
                 <div class="uk-margin uk-text-center">
                     <p v-html="tos"></p>

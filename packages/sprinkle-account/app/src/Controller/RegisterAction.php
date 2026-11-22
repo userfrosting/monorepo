@@ -122,11 +122,11 @@ class RegisterAction
      */
     protected function handle(Request $request): array
     {
-        // Throttle requests.
-        $this->throttle();
-
         // Get POST parameters
         $params = (array) $request->getParsedBody();
+
+        // Throttle and record every permitted attempt before validation.
+        $this->throttle($params);
 
         // Validate each elements
         $this->validateRegistrationIsEnabled();
@@ -163,9 +163,6 @@ class RegisterAction
         // Ready to save
         /** @var UserInterface */
         $user = $this->db->transaction(function () use ($user) {
-            // Log throttle-able event
-            $this->throttler->logEvent('registration_attempt');
-
             // Store new user to database
             $user->save();
 
@@ -329,16 +326,41 @@ class RegisterAction
     }
 
     /**
-     * Throttle requests.
+     * Throttle and record registration attempts by IP and email address.
+     *
+     * The email is stored as a digest so the throttle data does not contain
+     * the submitted address.
+     *
+     * registration_email_attempt - Throttle key for email-based registration attempts.
+     * registration_attempt - Throttle key for ip-based registration attempts.
+     *
+     * @param mixed[] $params
      */
-    protected function throttle(): void
+    protected function throttle(array $params): void
     {
+        $email = $params['email'] ?? null;
+        $emailHash = is_string($email) && trim($email) !== ''
+            ? hash('sha256', strtolower(trim($email)))
+            : null;
+
         $delay = $this->throttler->getDelay('registration_attempt');
+        if ($emailHash !== null) {
+            $delay = max(
+                $delay,
+                $this->throttler->getDelay('registration_email_attempt', ['email_hash' => $emailHash])
+            );
+        }
+
         if ($delay > 0) {
             $e = new ThrottlerDelayException();
             $e->setDelay($delay);
 
             throw $e;
+        }
+
+        $this->throttler->logEvent('registration_attempt');
+        if ($emailHash !== null) {
+            $this->throttler->logEvent('registration_email_attempt', ['email_hash' => $emailHash]);
         }
     }
 }

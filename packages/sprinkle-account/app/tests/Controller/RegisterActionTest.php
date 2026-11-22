@@ -19,9 +19,11 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\AccountTestCase;
 use UserFrosting\Sprinkle\Account\Util\CaptchaProfiles;
+use UserFrosting\Sprinkle\Core\Database\Models\Throttle;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Testing\RefreshDatabase;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
+use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Util\CaptchaFactoryInterface;
 use UserFrosting\Sprinkle\Core\Util\CaptchaInterface;
 
@@ -118,6 +120,8 @@ class RegisterActionTest extends AccountTestCase
     public function testWithFailedCaptcha(): void
     {
         $this->setMasterUser();
+        $config = $this->getService(Config::class);
+        $config->set('site.registration.captcha', true);
 
         // Create request with method and url and fetch response
         $request = $this->createJsonRequest('POST', '/account/register', [
@@ -137,14 +141,12 @@ class RegisterActionTest extends AccountTestCase
     public function testRegister(): void
     {
         $this->setMasterUser();
-        $captcha = $this->getCode();
         $this->forceLocaleConfig();
         $this->setRequireEmailVerification(false);
 
         // Set POST data
         $data = [
             'spiderbro'     => 'http://',
-            'captcha'       => $captcha->getCode(),
             'user_name'     => 'RegisteredUser',
             'first_name'    => 'Testing',
             'last_name'     => 'Register',
@@ -155,7 +157,7 @@ class RegisterActionTest extends AccountTestCase
         ];
 
         // Create request with method and url and fetch response
-        $request = $this->withCaptchaCookie($this->createJsonRequest('POST', '/account/register', $data), $captcha);
+        $request = $this->createJsonRequest('POST', '/account/register', $data);
         $response = $this->handleRequest($request);
 
         // Assert response status & body
@@ -173,34 +175,58 @@ class RegisterActionTest extends AccountTestCase
     public function testRegisterWithFailedValidation(): void
     {
         $this->setMasterUser();
-        $captcha = $this->getCode();
         $this->forceLocaleConfig();
         $this->setRequireEmailVerification(false);
 
-        // Set POST data
-        $data = [
-            'spiderbro'     => 'http://',
-            'captcha'       => $captcha->getCode(),
-            'user_name'     => 'RegisteredUser',
-            'first_name'    => 'Testing',
-            'last_name'     => 'Register',
-            'email'         => 'foo', // <-- Bad Email on purpose
-            'password'      => 'FooBarFooBar123',
-            'passwordc'     => 'FooBarFooBar123',
-            'locale'        => '',
-        ];
+        $config = $this->getService(Config::class);
+        $config->set('site.registration.captcha', false);
 
-        // Create request with method and url and fetch response
-        $request = $this->withCaptchaCookie($this->createJsonRequest('POST', '/account/register', $data), $captcha);
-        $response = $this->handleRequest($request);
+        $throttler = new Throttler(new Throttle());
+        $throttler->addThrottleRule('registration_attempt', new ThrottleRule('ip', 3600, [1 => 60]));
+        $throttler->addThrottleRule('registration_email_attempt', new ThrottleRule('data', 3600, [1 => 60]));
+        $this->getContainer()->set(Throttler::class, $throttler);
 
-        // Assert response status & body
-        $this->assertJsonResponse([
-            'title'       => 'Validation error',
-            'description' => 'Invalid email address.',
-            'status'      => 400,
-        ], $response);
-        $this->assertResponseStatus(400, $response);
+        $originalRemoteAddress = $_SERVER['REMOTE_ADDR'] ?? null;
+        try {
+            $_SERVER['REMOTE_ADDR'] = '192.0.2.1';
+            $request = $this->createJsonRequest('POST', '/account/register', [
+                'spiderbro'  => 'http://',
+                'user_name'  => 'RegisteredUser',
+                'first_name' => 'Testing',
+                'last_name'  => 'Register',
+                'email'      => 'foo',
+                'password'   => 'FooBarFooBar123',
+                'passwordc'  => 'FooBarFooBar123',
+                'locale'     => '',
+            ]);
+            $response = $this->handleRequest($request);
+            $this->assertResponseStatus(400, $response);
+            $this->assertJsonResponse([
+                'title'       => 'Validation error',
+                'description' => 'Invalid email address.',
+                'status'      => 400,
+            ], $response);
+
+            $_SERVER['REMOTE_ADDR'] = '192.0.2.2';
+            $request = $this->createJsonRequest('POST', '/account/register', [
+                'spiderbro'  => 'http://',
+                'user_name'  => 'RegisteredUser',
+                'first_name' => 'Testing',
+                'last_name'  => 'Register',
+                'email'      => 'foo',
+                'password'   => 'FooBarFooBar123',
+                'passwordc'  => 'FooBarFooBar123',
+                'locale'     => '',
+            ]);
+            $response = $this->handleRequest($request);
+            $this->assertResponseStatus(429, $response);
+        } finally {
+            if ($originalRemoteAddress === null) {
+                unset($_SERVER['REMOTE_ADDR']);
+            } else {
+                $_SERVER['REMOTE_ADDR'] = $originalRemoteAddress;
+            }
+        }
     }
 
     public function testRegisterWithEmailVerification(): void
@@ -216,6 +242,8 @@ class RegisterActionTest extends AccountTestCase
         $captcha = $this->getCode();
         $this->forceLocaleConfig();
         $this->setRequireEmailVerification(true);
+        $config = $this->getService(Config::class);
+        $config->set('site.registration.captcha', true);
 
         // Set POST data
         $data = [

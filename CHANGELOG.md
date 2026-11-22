@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - **Soft deletes for groups and roles.** Soft deleting a user, group or role now anonymizes it so the same username, email or slug can be reused ([#32](https://github.com/userfrosting/monorepo/issues/32)). The record is kept so activities still reference it and maintain a complete audit trail.
 - **Docker overhaul.** Significant improvements to the Docker setup, including better development, a new production configuration, enhanced security, and support for multiple PHP versions. Docker can provides Mailpit, Memcached, Redis, and other optional services. Allows to choose the desired database provider for both development and production environments, as well as PHPUnit testing.
 - **Improved CSRF security.** CSRF tokens are now signed double-submit cookies instead of session-backed tokens, enhancing security and flexibility. Add `CSRF_SECRET` to the environment to define the signing key.
-- **CAPTCHA refactor.** CAPTCHA now uses the cache service instead of the session service, improving reliability and avoiding race conditions.
+- **CAPTCHA refactor.** CAPTCHA now uses the cache service instead of the session service, improving reliability and avoiding race conditions. It's also disabled by default and can be enabled in site configuration ([#37](https://github.com/userfrosting/monorepo/issues/37)).
 - **YAML Dictionaries.** Locale dictionaries now support YAML and JSON files; PHP array files remain supported as a deprecated compatibility feature.
 - **Garbage collection for prunable models.** Introduced a mechanism to prune expired or obsolete records from the database [#40](https://github.com/userfrosting/monorepo/issues/40).
 
@@ -44,10 +44,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Account Sprinkle
 - `UserSoftDeletedEvent`, `GroupSoftDeletedEvent` and `RoleSoftDeletedEvent` model events, fired after a soft delete.
 - Added soft delete support for groups and roles, allowing them to be marked as deleted without being permanently removed from the database.
+- Disable registration CAPTCHA by default ([#37](https://github.com/userfrosting/monorepo/issues/37)) and strengthen registration throttling with IP and email-based limits that count failed attempts.
 
 ### Pink-Cupcake
 - Add contextual, translated activity history for user, group, role, and permission pages.
 - Add a button to generate a new CAPTCHA during registration and refresh it when registration validation or submission fails.
+- Respect `site.registration.captcha` when rendering the registration CAPTCHA.
 
 ### Docker
 - Added Docker specific environment file `docker/.env.example` for configuring environment variables used by Docker Compose.

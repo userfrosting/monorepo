@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Update admin detail-page URLs after changing a user's username or a group's or role's slug.
+- Respect `site.registration.captcha` when rendering the registration CAPTCHA.
 
 ### Changed
 - Updated role permission management to use a dedicated typed update API.

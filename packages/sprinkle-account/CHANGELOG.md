@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Identifiers reserved for anonymized records (`deleted_user_{id}`, `deleted_group_{id}`, `deleted_role_{id}`) are reported as taken by `findUnique`.
 - Expanded activity logging to cover profile changes and additional account workflows.
+- Registration CAPTCHA is disabled by default and can be enabled in site configuration ([#37](https://github.com/userfrosting/monorepo/issues/37)).
+- Registration attempts are throttled by IP and email digest, and are recorded before validation so failed submissions count.
 - Implemented new registration captcha. The captcha challenges are now stored in the cache with an opaque cookie instead of PHP session state.
 - Renamed `CaptchaAction` to `RegistrationCaptchaAction`.
 

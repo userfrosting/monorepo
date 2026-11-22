@@ -47,6 +47,18 @@ return [
                 7 => 600,
             ],
         ],
+        'registration_email_attempt' => [
+            'method'   => 'data',
+            'interval' => 3600,
+            'delays'   => [
+                2 => 5,
+                3 => 10,
+                4 => 20,
+                5 => 40,
+                6 => 80,
+                7 => 600,
+            ],
+        ],
         'sign_in_attempt' => [
             'method'   => 'ip',
             'interval' => 3600,

@@ -135,7 +135,7 @@ return [
         ],
         'registration' => [
             'enabled'                    => true, //if this set to false, you probably want to also set require_email_verification to false as well to disable the link on the signup page
-            'captcha'                    => true,
+            'captcha'                    => false,
             'require_email_verification' => true,
             // Default roles and other settings for newly registered users
             'user_defaults' => [
@@ -165,6 +165,7 @@ return [
     'throttles' => [
         'check_username_request'         => null,
         'registration_attempt'           => null,
+        'registration_email_attempt'     => null,
         'sign_in_attempt'                => null,
         'account.password.reset.request' => null,
         'account.verify.request'         => null,
