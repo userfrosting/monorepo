@@ -22,9 +22,6 @@ RUN groupmod --non-unique --gid "${NODE_GID}" node \
 # Use the host identity configured for the app so both services can write to the shared volume.
 USER node
 
-# Expose Vite dev port
-EXPOSE 5173
-
 # Add node_modules/.bin to PATH
 ENV PATH=/app/node_modules/.bin:$PATH
 

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Align development database volume names with the monorepo Compose configuration.
+- [Docker] Vite port is now correctly configurable via the `DOCKER_VITE_PORT` environment variable.
 
 ## [6.1.0-beta.1](https://github.com/userfrosting/monorepo/compare/6.0.3...6.1.0-beta.1) - 2026-11-22
 - **New activity recording feature.** Records richer entries with polymorphic subjects to display more detailed activity history and context. Provides a more detailed audit trail for user and administrative actions.

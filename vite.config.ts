@@ -7,7 +7,7 @@ import ViteYaml from '@modyfi/vite-plugin-yaml'
 const envDir = 'packages/skeleton/app'
 const env = loadEnv('development', envDir, ['VITE_', 'UF_'])
 
-// Get vite port from env, default to 5173
+// Get Vite port from env, default to 5173
 const vitePort = parseInt(env.VITE_PORT || process.env.VITE_PORT || '5173', 10)
 
 // https://vitejs.dev/config/

@@ -8,9 +8,11 @@ services:
       args:
         NODE_UID: ${DOCKER_UID:-1000}
         NODE_GID: ${DOCKER_GID:-1000}
+    environment:
+      VITE_PORT: ${DOCKER_VITE_PORT:-5173}
     ports:
-      - "127.0.0.1:${DOCKER_VITE_PORT:-5173}:5173"
-      - "[::1]:${DOCKER_VITE_PORT:-5173}:5173"
+      - "127.0.0.1:${DOCKER_VITE_PORT:-5173}:${DOCKER_VITE_PORT:-5173}"
+      - "[::1]:${DOCKER_VITE_PORT:-5173}:${DOCKER_VITE_PORT:-5173}"
     volumes:
       - ..:/app
       - node-modules:/app/node_modules

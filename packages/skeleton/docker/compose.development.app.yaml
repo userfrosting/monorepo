@@ -46,6 +46,7 @@ services:
       DB_TEST_USER: ${DOCKER_DB_TEST_USER:-userfrosting_test}
       DB_TEST_PASSWORD: ${DOCKER_DB_TEST_PASSWORD:-testsecret}
       CACHE_DRIVER: ${DOCKER_CACHE_DRIVER:-file}
+      VITE_PORT: ${DOCKER_VITE_PORT:-5173}
       MEMCACHED_HOST: memcached
       REDIS_HOST: redis
     volumes:
